@@ -1,0 +1,50 @@
+#summary Notes on key repeat delay implementation
+= Fixing the Aaautoo -Rreppeatt Problem =
+
+= The Why =
+
+Call me clumsy or Mr. 'thumbs no fingers', but I personally find it quite difficult to hold down the rather clunky buttons on the Chinese '9X radio for less than the time it take the stock ER/TH9X firmware to start auto-repeating. Consequently, I very often skip pas the settings I want, and then back too far the other way, and on and on. I just couldn't take it any more. I could have asked Mr. ER to do something about, which I'm sure he probably would -- but where was the fun in that? :-D
+
+= The Fix =
+
+After about an hour of getting my head around the code in `drivers.cpp` and just how the rather impressive keypad handling is done -- all the while thinking there might be a bug -- I finally realised that the design simply didn't have a 'before first repeat' state built in at all. Once at that point, adding the required code was easy.
+
+At about line 125 of drivers.cpp, here is the business end of the resulting code:
+
+{{{
+    case KSTATE_START:
+      putEvent(EVT_KEY_FIRST(enuk));
+      m_dblcnt++;
+#ifdef RPTDELAY
+      m_state   = KSTATE_RPTDELAY;
+#else
+      m_state   = 16;
+#endif
+      m_cnt     = 0;
+      break;
+#ifdef RPTDELAY
+    case KSTATE_RPTDELAY: // gruvin: longer delay before first key repeat
+      if(m_cnt == 24) putEvent(EVT_KEY_LONG(enuk)); // need to catch this inside RPTDELAY time
+      if (m_cnt == 40) {
+        m_state = 16;
+        m_cnt = 0;
+      }
+      break;
+#endif
+    case 16:
+}}}
+
+You can tell which is my additions and what was the original from the `#ifdef ... #endif` compiler pragmas.
+
+In essence, I've implemented a new `'m_state'` named KSTATE_RPTDELAY, which is defined earlier in the code as ...
+
+{{{
+#ifdef RPTDELAY
+  #define KSTATE_RPTDELAY 95 // gruvin: longer delay before key repeating starts
+#endif
+}}}
+
+
+== Summary ==
+
+I wanted to show this for anyone else who might be 'taking the plunge' and attempting to make code changes. The use of `#ifdef ... #endif`, using Makefile directives to control which version of the code is built is quite important, I think. In this case, `make KEYRPT=DELAY` enables my new code, thus allowing for my stuff to be left out entirely if not appreciated.
