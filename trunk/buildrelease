@@ -15,4 +15,9 @@ make clean
 make EXT=FRSKY BEEPER=SPEAKER KEYRPT=DELAY
 mv er9x.hex ../gruvin9x.hex
 make clean
-
+make BEEPER=SPEAKER KEYRPT=DELAY
+mv er9x.hex ../gruvin9x-std-speaker.hex
+make clean
+make EXT=FRSKY BEEPER=BUZZER KEYRPT=DELAY
+mv er9x.hex ../gruvin9x-frsky-nospeaker.hex
+make clean
