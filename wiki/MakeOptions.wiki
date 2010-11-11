@@ -1,6 +1,8 @@
 #summary Custom and Default 'make' directive documentation
 
-= Defaults =
+= Make Options =
+
+== Defaults ==
 
 By default, simply running 'make' from the src/ directory will build er9x.hex in the configuration currently in use by the developer. As at revision 6, this is equivalent to ...
 
@@ -8,7 +10,7 @@ By default, simply running 'make' from the src/ directory will build er9x.hex in
 
 The Makefile also default to the 'usbtiny' AVR programmer type.
 
-= Available Build Directives =
+== Available Build Directives ==
 
 <ul>
 <li>EXT=
