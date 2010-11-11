@@ -12,6 +12,13 @@ Now, I'm perfectly capable of putting most any plane down like a feather just th
 
 AoA is a variable, analogue measuring device, intended to be superior to the basic stall warning. Many argue that's it's completely redundant and that we've got along fine for years without it. However, I'm not one of them and this is not about full-size air craft anyway.
 
+== OK, OK ... enough already. Sheesh! :-D ==
+Wow. OK. The flak is already coming in. For the record, I do not _need_ this thing. I want it. 
+
+I think the achievement of making it work will be worth the effort, even though I'm almost certain it will not practically help me land a model better. It might warm me of sudden wind changes once and a while ... but the attitude of the model does that via the eyes much quicker than my brain will register some beeping sound. At least, I would hope so.
+
+Besides all that, I still want the ability to play different tones out of my 9X. I'm toying with the idea of an MP3 player or at least a DAAST chip, if those are still around. I will, because I can. Yay for me! \o/ 
+
 == How? ==
 
 What I plan is to use varying pitch tones like the rise/sink tone generators in modern sail planes. Sink comes across as a constant, relatively low tone, falling more in pitch as the sink is greater. Rise is an intermittent "bip bip bip" tone, rising in pitch and frequency as lift increases. It's very intuitive and allows you to know exactly what's going on without staring at an instrument panel. (In this case, a series of fast, high-pitched "bips" will tell me I'm about to stall.)
