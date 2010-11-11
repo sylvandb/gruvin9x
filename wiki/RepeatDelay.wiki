@@ -3,7 +3,7 @@
 
 == The Why ==
 
-Call me clumsy or Mr. 'thumbs no fingers', but I personally find it quite difficult to hold down the rather clunky buttons on the Chinese '9X radio for less than the time it take the stock ER/TH9X firmware to start auto-repeating. Consequently, I very often skip pas the settings I want, and then back too far the other way, and on and on. I just couldn't take it any more. I could have asked Mr. ER to do something about, which I'm sure he probably would -- but where was the fun in that? :-D
+Call me clumsy or Mr. 'thumbs no fingers', but I personally find it quite difficult to hold down the rather clunky buttons on the Chinese '9X radio for less than the time it takes the stock ER/TH9X firmware to start auto-repeating. Consequently, I very often skip past the settings I want, and then back too far the other way, and on and on. I just couldn't take it any more. I could have asked Mr. TH or Mr. ER to do something about it, which I'm sure one of them probably would have ... but where was the fun in that? :-D
 
 == The Fix ==
 
