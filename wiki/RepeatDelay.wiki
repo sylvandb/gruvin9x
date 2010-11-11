@@ -47,4 +47,6 @@ In essence, I've implemented a new `'m_state'` named KSTATE_RPTDELAY, which is d
 
 == Summary ==
 
-I wanted to show this for anyone else who might be 'taking the plunge' and attempting to make code changes. The use of `#ifdef ... #endif`, using Makefile directives to control which version of the code is built is quite important, I think. In this case, `make KEYRPT=DELAY` enables my new code, thus allowing for my stuff to be left out entirely if not appreciated.
+I wanted to show this for anyone else who might be 'taking the plunge' and attempting to make code changes. The use of `#ifdef ... #endif`, using Makefile directives to control which version of the code is built is quite important, I think. 
+
+In this case, my `Makefile` is set up such that `make KEYRPT=DELAY` results in passing a `-DRPTDELAY` argument to the compiler, thus enabling my new code and allowing for my stuff to be left out entirely if not appreciated.
