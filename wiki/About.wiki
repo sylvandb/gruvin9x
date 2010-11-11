@@ -12,13 +12,13 @@ As of revision 6, the following two features have been added ...
 
 *Feature 1 -- Key-repeat delay*
 
-The stock ER9X/TH9X code does not implement a delay between a menu button press and when that button starts auto-repeating. This results in the occasional skipping over desired settings. The KEYRPT=DELAY make directive (defaults to on) fixes this.
+The stock ER9X/TH9X code does not implement a delay between a menu button press and when that button starts auto-repeating. This results in the occasional skipping over desired settings. The _KEYRPT=DELAY_ make directive (defaults to on) fixes this.
 
 *Feature 2 -- Buzzer replaced with Speaker for variable pitch tones etc*
 
-Apart from the fact that the stock '9X 'beeper' is incredibly upsetting to the ear ... useful telemetry feedback while flying a model aircraft necessitates the use of something other that visual readout on the LCD display. An intuitive array of various sounds, including short tunes, rising and falling pitch etc seems the obvious choice.
+Apart from the fact that the stock '9X 'beeper' is incredibly upsetting to the ear ... useful telemetry feedback while flying a model aircraft necessitates the use of something other than visual readout on an LCD display. An intuitive array of various sounds, including short tunes, rising and falling pitch and what not seems the obvious choice.
 
-The BEEPER=SPEAKER make directive implements such a feature. The onboard beep gets disconnected and replaced by a small speaker (from some cheap headphones) being connected between Vdd (ground) and through a 4u7 capacitor directly to port PE3. This is available on the beeper/power-switch board as the input of the buffer transistor feeding the original beeper module.
+The _BEEPER=SPEAKER_ make directive (the default) implements such a feature. The onboard beeper is disconnected and replaced by a small speaker (from some cheap headphones) being connected between Vss (ground) and through a 4u7 capacitor directly to port PE3. The latter is available on the beeper/power-switch board as the input to the buffer transistor feeding the original beeper module.
 
 Once installed, you may well find that turning key beeps back on will not be such an unpleasant thing! But yet better things are to come.
 
