@@ -7,7 +7,7 @@ Call me clumsy or Mr. 'thumbs no fingers', but I personally find it quite diffic
 
 == The Fix ==
 
-After about an hour of getting my head around the code in `drivers.cpp` and just how the rather impressive keypad handling is done -- all the while thinking there might be a bug -- I finally figured that the design simply didn't have a 'before first repeat' state built in at all. Once at that point, adding the required code seemd easy.
+After about an hour of getting my head around the code in `drivers.cpp` and just how the rather impressive keypad handling is done -- all the while thinking there might be a bug -- I finally figured that the design simply didn't have a 'before first repeat' state built in at all. Once at that point, adding the required code seemed easy.
 
 At about line 125 of drivers.cpp, here is the business end of the resulting code:
 
@@ -46,11 +46,11 @@ In essence, I've implemented a new `'m_state'` named KSTATE_RPTDELAY, which is d
 
 == But Wait! (Pun intended) ==
 
-A day or two later, I found that TH9X differs from ER9X in the way this is handled. I'm sure both code-sets were the same the day I did this, but perhaps I just missed it?
+A day or two later, I found that TH9X differs from ER9X in the way this is handled. I thought both versions were identical here, but I guess I either missed it,or MR. TH has made changes just recently.
 
-TH9X includes an `m_state=32` on top of the 16, 8, 4, 2 and 1 that the code used for incrementally increasing the auto-repeat rate, the longer a key is held down.
+TH9X includes an `m_state=32` on top of the 16, 8, 4, 2 and 1 that the code used for incrementally increasing the auto-repeat rate, the longer a key is held down. He's also got a higher initial 'between repeats' delay of 640ms, vs. 480ms.
 
-I actually nearly did my fix in exactly this way, but I wasn't confident it would work in the way I wanted. It seems to me that the same delay will be applied for all (up to two?) characters in the first 640ms in TH9X's code. Hmmm.
+I actually nearly did my fix in the way. But there's no way to get the first delay anything but double that of the next speed -- which just wouldn't yield anything quite like I wanted. So I opted for the above solution instead. [[shrug]]
 
 == Summary ==
 
