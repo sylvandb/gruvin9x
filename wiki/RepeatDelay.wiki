@@ -7,7 +7,7 @@ Call me clumsy or Mr. 'thumbs no fingers', but I personally find it quite diffic
 
 == The Fix ==
 
-After about an hour of getting my head around the code in `drivers.cpp` and just how the rather impressive keypad handling is done -- all the while thinking there might be a bug -- I finally realised that the design simply didn't have a 'before first repeat' state built in at all. Once at that point, adding the required code was easy.
+After about an hour of getting my head around the code in `drivers.cpp` and just how the rather impressive keypad handling is done -- all the while thinking there might be a bug -- I finally figured that the design simply didn't have a 'before first repeat' state built in at all. Once at that point, adding the required code seemd easy.
 
 At about line 125 of drivers.cpp, here is the business end of the resulting code:
 
@@ -44,9 +44,18 @@ In essence, I've implemented a new `'m_state'` named KSTATE_RPTDELAY, which is d
 #endif
 }}}
 
+== But Wait! (Pun intended) ==
+
+A day or two later, I found that TH9X differs from ER9X in the way this is handled. I'm sure both code-sets were the same the day I did this, but perhaps I just missed it?
+
+TH9X includes an `m_state=32` on top of the 16, 8, 4, 2 and 1 that the code used for incrementally increasing the auto-repeat rate, the longer a key is held down.
+
+I actually nearly did my fix in exactly this way, but I wasn't confident it would work in the way I wanted. It seems to me that the same delay will be applied for all (up to two?) characters in the first 640ms in TH9X's code. Hmmm.
 
 == Summary ==
 
-I wanted to show this for anyone else who might be 'taking the plunge' and attempting to make code changes. The use of `#ifdef ... #endif`, using Makefile directives to control which version of the code is built is quite important, I think. 
+I wanted to show my solution and code for anyone else who might be 'taking the plunge' and attempting to make code changes. It strikes me that using `#ifdef ... #endif` with Makefile directives in order to control which version of the code is built is quite important for completely new features. 
 
 In this case, my `Makefile` is set up such that `make KEYRPT=DELAY` results in passing a `-DRPTDELAY` argument to the compiler, thus enabling my new code and allowing for my stuff to be left out entirely if not appreciated.
+
+Well, maybe the TH9X version is better in the end.
