@@ -142,6 +142,10 @@ void Key::input(bool val, EnumKeys enuk)
       break;
 #endif
     case 16:
+#ifndef RPTDELAY
+      if(m_cnt == 24) putEvent(EVT_KEY_LONG(enuk));
+      //fallthrough
+#endif
     case 8:
     case 4:
     case 2:
