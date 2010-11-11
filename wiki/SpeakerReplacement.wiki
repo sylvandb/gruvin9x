@@ -1,4 +1,4 @@
-#summary One-sentence summary of this page.
+#summary Why I replaced the stock beeper with a speaker
 
 = Replacing the Stock Beeper with a Speaker =
 
