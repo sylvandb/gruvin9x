@@ -776,7 +776,9 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
       PORTE |=  (1<<OUT_E_BUZZER); // speaker output 'high'
     else
       PORTE &=  ~(1<<OUT_E_BUZZER); // speaker output 'low'
-  }
+  } 
+  else
+      PORTE &=  ~(1<<OUT_E_BUZZER); // speaker output 'low'
   // gruvin: END Tone Generator
 
   static uint8_t cnt10ms = 156; // execute 10ms code once every 156 cycles
