@@ -738,7 +738,9 @@ getADCp getADC[3] = {
 volatile uint8_t g_tmr16KHz;
 ISR(TIMER0_OVF_vect) //continuous timer 16ms (16MHz/1024/256) -- 8-bit counter overflow
 {
-  g_tmr16KHz++; // gruvin: Not. It's about 62.5Hz
+  g_tmr16KHz++; // gruvin: Not. It's about 62.5Hz (1/256th pf 16KHz) to give 16ms intervals.
+                // However, g_tmr16KHz appears to be used to software-construct a 16-bit timer
+                // from TIMER-0 (8-bit). See getTmr16KHz, below.
 }
 
 uint16_t getTmr16KHz()
@@ -785,10 +787,20 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
   if (cnt10ms-- == 0)
   {
     // Begin 10ms event
-
-    cnt10ms = 156;  
+    cnt10ms = 156; 
     
 #endif
+/*
+    // DEBUG: gruvin: crude test to time if I have in fact still got 10ms
+    // Test confirms 1 second bips, at about 1/60th a second slow, just as original code.
+    static uint8_t test10ms = 100;
+    if (test10ms-- == 0)
+    {
+      test10ms = 100;
+      g_beepCnt = 5;
+      beepOn = true; // beep each second (beepOn function turns beep off)
+    }
+*/
 
     //cnt >/=0
     //beepon/off
@@ -830,6 +842,7 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
       toneOn = false;
       toneFreq = saveFreq;
     }
+
 #else
     if(beepOn){
     static bool warbleC;
@@ -842,7 +855,6 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
       PORTE &= ~(1<<OUT_E_BUZZER);
     }
 #endif
-
     per10ms();
     heartbeat |= HEART_TIMER10ms;
 #ifdef BEEPSPKR
