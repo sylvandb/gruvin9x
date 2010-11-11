@@ -1,0 +1,43 @@
+#summary Custom and Default 'make' directive documentation
+
+= Defaults =
+
+By default, simply running 'make' from the src/ directory will build er9x.hex in the configuration currently in use by the developer. As at revision 6, this is equivalent to ...
+
+<blockquote><pre>make EXT=FRSKY KEYRPT=DELAY BEEPER=SPEAKER</pre></blockquote>
+
+The Makefile also default to the 'usbtiny' AVR programmer type.
+
+= Available Build Directives =
+
+<ul>
+<li>EXT=
+
+Values: STD, FRSKY (default), JETI
+
+</li>
+<li>KEYRPT=
+
+Values: STD, DELAY (default)
+
+</li>
+<li>BEEPER=
+
+Values: BUZZER, SPEAKER (default)
+
+</li>
+</ul>
+
+== Standard ER9X make commands ==
+
+All other stand ER9X make commands remain present. Examples include ...
+
+<blockquote><pre>*make* - builds er9x.hex with the default configuration
+
+*make wflash* [[PROGRAMMER=usbtiny]] - programs/flashes the 9X using er9x.hex and optional programmer type override
+
+*make reeprom* [[TARGET=models]] - reads the 9X eeprom (model/settings) data into er9x.bin with optional target override
+
+*make weeprom* [[TARGET=models]] - writes er9x.bin to the 9X eeprom with optional target (source) override
+
+etc</pre></blockquote>
