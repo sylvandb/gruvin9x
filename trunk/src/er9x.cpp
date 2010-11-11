@@ -562,6 +562,12 @@ void perMain()
         // g_vbat100mV += g_vbat100mV*g_eeGeneral.vBatCalib/256;
         //g_vbat100mV = (g_anaIns[7]*35+g_anaIns[7]/4*g_eeGeneral.vBatCalib) / 256;
         uint16_t ab = anaIn(7);
+#ifdef BATAVERAGE
+        static uint16_t ab_mean[4] = { 0x00, 0x00, 0x00, 0x00 };
+        ab_mean[0] = ab_mean[1]; ab_mean[1] = ab_mean[2]; ab_mean[2] = ab_mean[3];
+        ab_mean[3] = ab;
+        ab = ((uint32_t)(ab_mean[0] + ab_mean[1] + ab_mean[2] + ab_mean[3])) / 4;
+#endif        
         g_vbat100mV = (ab*35 + ab / 4 * g_eeGeneral.vBatCalib) / 512;
 
         static uint8_t s_batCheck;

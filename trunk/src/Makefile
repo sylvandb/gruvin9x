@@ -54,6 +54,9 @@ KEYRPT = DELAY
 # gruvin: BEEPER. Values = BUZZER or SPEAKER
 BEEPER = SPEAKER
 
+# gruvin: Battery voltage averaging over last 4 samples. Values = STD or AVERAGE
+BATVOLTS = AVERAGE
+
 # List C++ source files here. (C dependencies are automatically generated.)
 CPPSRC = $(TARGET).cpp stamp.cpp menus.cpp pers.cpp file.cpp lcd.cpp drivers.cpp templates.cpp
 
@@ -130,6 +133,11 @@ endif
 # gruvin: If buzzer speaker replacment supported 
 ifeq ($(BEEPER), SPEAKER)
  CPPDEFS += -DBEEPSPKR
+endif
+
+# gruvin: Battery voltage averaging
+ifeq ($(BATVOLTS), AVERAGE)
+  CPPDEFS += -DBATAVERAGE
 endif
 
 #---------------- Compiler Options C ----------------
