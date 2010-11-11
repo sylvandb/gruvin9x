@@ -20,8 +20,12 @@ Apart from the fact that the stock '9X 'beeper' is incredibly upsetting to the e
 
 The _BEEPER=SPEAKER_ make directive (the default) implements such a feature. The onboard beeper is disconnected and replaced by a small speaker (from some cheap headphones) being connected between Vss (ground) and through a 4u7 capacitor directly to port PE3. The latter is available on the beeper/power-switch board as the input to the buffer transistor feeding the original beeper module.
 
+Please see <a href="http://code.google.com/p/gruvin9x/downloads/detail?name=spkr-install.jpg">this image file</a> for the ugly low down of exactly how Gruvin installed his speaker.
+
 Once installed, you may well find that turning key beeps back on will not be such an unpleasant thing! But yet better things are to come.
 
 (It's also intended to install a headphone jack so this feature can be used more appropriately at the field.)
+
+== The Future ==
 
 Future feature update documentation will be published elsewhere in this wiki. Mailing lists will be created at some point, time etc allowing.
