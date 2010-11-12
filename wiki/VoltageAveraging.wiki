@@ -13,7 +13,7 @@ Whilst yet more SRAM is needed for this, I note that the final result is still w
 
 (Actually, there are 10 storage cells used, but I've just realised I'm only averaging the current plus the previous 9 samples, thus wasting one byte of SRAM. Oops. I may fix this later some time. It's no biggie for now.)
 
-*In hind sight*, this might have better implemented as a simple running average -- `new_value = (last_value + new_sample) / 2`. Hmmm.
+*In hind sight*, this might have been better implemented as a simple running average -- `new_value = (last_value + new_sample) / 2`. Hmmm.
 
 == Make Options ==
 
