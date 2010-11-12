@@ -563,12 +563,26 @@ void perMain()
         //g_vbat100mV = (g_anaIns[7]*35+g_anaIns[7]/4*g_eeGeneral.vBatCalib) / 256;
         uint16_t ab = anaIn(7);
 #ifdef BATAVERAGE
-        static uint16_t ab_mean[4] = { 0x00, 0x00, 0x00, 0x00 };
-        ab_mean[0] = ab_mean[1]; ab_mean[1] = ab_mean[2]; ab_mean[2] = ab_mean[3];
-        ab_mean[3] = ab;
-        ab = ((uint32_t)(ab_mean[0] + ab_mean[1] + ab_mean[2] + ab_mean[3])) / 4;
-#endif        
+        uint8_t vbat100mV = (ab*35 + ab / 4 * g_eeGeneral.vBatCalib) / 512;
+#else
         g_vbat100mV = (ab*35 + ab / 4 * g_eeGeneral.vBatCalib) / 512;
+#endif
+#ifdef BATAVERAGE
+        static uint8_t v_mean[10] = { 0x00 };
+        uint8_t i;
+
+        if (v_mean[0]==0) // initialize all 10 slots to first sample if on first averaging cycle
+          for (i=0; i<10; i++) v_mean[i] = vbat100mV;
+
+        uint16_t sum100mV = 0;
+        for (i=0; i<9; i++)
+        {
+          v_mean[i] = v_mean[i+1];
+          sum100mV += v_mean[i];
+        }
+        v_mean[9] = vbat100mV;
+        g_vbat100mV = (sum100mV + v_mean[9]) / 10;
+#endif        
 
         static uint8_t s_batCheck;
         s_batCheck+=32;
