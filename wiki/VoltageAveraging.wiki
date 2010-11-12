@@ -9,7 +9,7 @@ Whilst my own '9X seems fairly stable when taking ADC samples of battery voltage
 
 The ER9X code I am currently basing my code on samples battery voltage roughly once every 320ms (at least, if the code comments are accurate.) My additions as of revision 38 now record the previous 10 samples and average these each 320ms cycle. 
 
-Whilst yet more SRAM is needed for this, I note that the final result is still well under 2KBYtes of the available 4KBytes in the ATmega64A.
+Whilst yet more SRAM is needed for this, I note that the final result is still well under 2KBytes out of the available 4KBytes in the ATmega64A.
 
 (Actually, there are 10 storage cells used, but I've just realised I'm only averaging the current plus the previous 9 samples, thus wasting one byte of SRAM. Oops. I may fix this later some time. It's no biggie for now.)
 
