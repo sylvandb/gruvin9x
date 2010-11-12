@@ -1,0 +1,21 @@
+#summary Battery voltage averaging. Why, how and turning it off
+= Why =
+
+Whilst my own '9X seems fairly stable when taking ADC samples of battery voltage, I've come across several that have considerably more 'jitter'. This results in the battery voltage flickering up and down significantly -- for example, between 8.8V and 9.4V, even though it may read 9.4V most of the time. This can of course cause annoying false low-bat alarms.
+
+= The Fix =
+
+*SVN Revision:* 38
+
+The ER9X code I am currently basing my code on samples battery voltage roughly once every 320ms (at least, if the code comments are accurate.) My additions as of revision 38 now record the previous 10 samples and average these each 320ms cycle. 
+
+Whilst yet more SRAM is needed for this, I note that the final result is still well under 2KBYtes of the available 4KBytes in the ATmega64A.
+
+(Actually, there are 10 storage cells used, but I've just realised I'm only averaging the current plus the previous 9 samples, thus wasting one byte of SRAM. Oops. I may fix this later some time. It's no biggie for now.)
+
+
+== Make Options ==
+
+The battery voltage averaging feature is now compiled by default. If you want to disable it, you can include `BATVOLTS=STD` on your '`make`' command line.
+
+
