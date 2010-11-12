@@ -2305,9 +2305,12 @@ void menuProcJeti(uint8_t event)
 
   for (uint8_t i = 0; i < 16; i++)
   {
-  lcd_putcAtt((i+2)*FW,   3*FH, TelemBuffer[i], BSS_NO_INV);
+    lcd_putcAtt((i+2)*FW,   3*FH, TelemBuffer[i], BSS_NO_INV);
     lcd_putcAtt((i+2)*FW,   4*FH, TelemBuffer[i+16], BSS_NO_INV);
   }
+
+  // DEBUG display toneFreq
+  // lcd_outdezAtt( 6*FW, 2*FH,toneFreq,0);
 
 }
 #endif

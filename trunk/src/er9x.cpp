@@ -31,7 +31,7 @@ ModelData  g_model;
 
 #ifdef BEEPSPKR
 // gruvin: Tone Generator Globals
-uint8_t toneFreq = 60;
+uint8_t toneFreq = BEEP_DEFAULT_FREQ;
 uint8_t toneOn = false;
 #endif
 
@@ -352,24 +352,30 @@ uint8_t checkTrim(uint8_t event)
     if (thro) v = 4; // if throttle trim and trim trottle then step=4
     int16_t x = (k&1) ? g_model.trim[idx] + v : g_model.trim[idx] - v;   // positive = k&1
 
-    if(((x==0)  ||  ((x>=0) != (g_model.trim[idx]>=0))) && (!thro) && (g_model.trim[idx]!=0)){
+    if(((x==0)  ||  ((x>=0) != (g_model.trim[idx]>=0))) && (!thro) && (g_model.trim[idx]!=0))
+    {
       g_model.trim[idx]=0;
       killEvents(event);
       warble = false;
-      beepWarn();
+      beepWarn2();
     }
     else if(x>-125 && x<125){
       g_model.trim[idx] = (int8_t)x;
       STORE_MODELVARS;
       if(event & _MSK_KEY_REPT) warble = true;
-      beepWarn1();//beepKey();
+#ifdef BEEPSPKR
+      // toneFreq higher/lower according to trim position
+      beepTrimSpkr((x/3)+60);  // range -125 to 125 = Freq: 19 to 101
+#else
+      beepKey();
+#endif
     }
     else
     {
       g_model.trim[idx] = (x>0) ? 125 : -125;
       STORE_MODELVARS;
       warble = false;
-      beepWarn();
+      beepWarn2();
     }
 
     return 0;
@@ -399,11 +405,19 @@ bool checkIncDecGen2(uint8_t event, void *i_pval, int16_t i_min, int16_t i_max, 
   }
   if(event==EVT_KEY_FIRST(kpl) || event== EVT_KEY_REPT(kpl) || (s_editMode && (event==EVT_KEY_FIRST(KEY_UP) || event== EVT_KEY_REPT(KEY_UP))) ) {
     newval++;
+#ifdef BEEPSPKR
+    beepKeySpkr(BEEP_KEY_UP_FREQ);
+#else
     beepKey();
+#endif
     kother=kmi;
   }else if(event==EVT_KEY_FIRST(kmi) || event== EVT_KEY_REPT(kmi) || (s_editMode && (event==EVT_KEY_FIRST(KEY_DOWN) || event== EVT_KEY_REPT(KEY_DOWN))) ) {
     newval--;
+#ifdef BEEPSPKR
+    beepKeySpkr(BEEP_KEY_DOWN_FREQ);
+#else
     beepKey();
+#endif
     kother=kpl;
   }
   if((kother != (uint8_t)-1) && keyState((EnumKeys)kother)){
@@ -419,13 +433,13 @@ bool checkIncDecGen2(uint8_t event, void *i_pval, int16_t i_min, int16_t i_max, 
   {
     newval = i_max;
     killEvents(event);
-    beepWarn();
+    beepKey(); // beepWarn();
   }
   if(newval < i_min)
   {
     newval = i_min;
     killEvents(event);
-    beepWarn();
+    beepKey(); // beepWarn();
   }
   if(newval != val){
     if(newval==0) {
@@ -789,12 +803,12 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
 
 #ifdef BEEPSPKR
   // gruvin: Begin Tone Generator
-  static uint8_t toneCounter;
-  // toneOn = PINC & (1<<INP_C_AileDR); // DEBUG
+  static uint16_t toneCounter;
+
   if (toneOn)
   {
     toneCounter += toneFreq;
-    if (toneCounter & 0x80)
+    if ((toneCounter & 0x100) == 0x100)
       PORTE |=  (1<<OUT_E_BUZZER); // speaker output 'high'
     else
       PORTE &=  ~(1<<OUT_E_BUZZER); // speaker output 'low'
@@ -832,7 +846,8 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
         }
         g_beepCnt--;
     }
-    else {
+    else 
+    {
         if(beepAgain && beepAgainOrig) {
             beepOn = !beepOn;
             g_beepCnt = beepOn ? beepAgainOrig : 8;
@@ -842,16 +857,16 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
             beepAgainOrig = 0;
             beepOn = false;
             warble = false;
+#ifdef BEEPSPKR
+            // toneFreq=BEEP_DEFAULT_FREQ;
+#endif
         }
     }
 
 #ifdef BEEPSPKR
     // gruvin: use new tone generator for beeps
-    static uint8_t saveFreq;
     if(beepOn)
     {
-      saveFreq = toneFreq;
-      toneFreq = 120;
       static bool warbleC;
       warbleC = warble && !warbleC;
       if(warbleC)
@@ -860,7 +875,6 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
         toneOn = true;
     }else{
       toneOn = false;
-      toneFreq = saveFreq;
     }
 
 #else
