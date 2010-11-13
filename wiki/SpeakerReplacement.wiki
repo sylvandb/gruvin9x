@@ -14,6 +14,8 @@ Now, I am perfectly capable of putting most any plane down like a feather just v
 
 == How? ==
 
+Some kind of AoA sensor will be added to an available model plane, in at tleast the 40-size category. Fr-Sky telemetry will be used to send data back to my custom '9X radio.
+
 What I plan is to use varying pitch tones, similar to the sensitive rise/sink tone generators in modern sail planes. Sink comes across as a constant, relatively low tone, falling more in pitch as the sink is greater. Rise is an intermittent "bip bip bip" tone, rising in pitch and frequency as lift increases. The sounds are very intuitive and allow you to know exactly what's going on without staring at an instrument panel. Of course, my tones will be indicating relative angle-of-attack or lift reserve, not rise/sink.
 
 With that, and a suitably functional AoA sensor on my aircraft (and that's a whole other story!) ... I should be able to gauge the an appropriate landing approach for the plane. Any sudden turbulence should result in the tones going a little crazy... but my own eyes and brain should realise that far quicker I should think. Still, that aspect may also be interesting and perhaps even of some use.
