@@ -6,31 +6,25 @@
 
 One could easily wonder why beeps and buzzes are so important that I had to write a bunch of code and change my hardware for it. Well, let me explain my motives ...
 
-<img src="http://www.mountainflying.com/Pages/articles/images/LRI.jpg" align="right" width="160">The one thing I have always most wanted from telemetry is an AoA ([http://en.wikipedia.org/wiki/Angle_of_attack Angle of Attack]) instrument. What's an AoA instrument? ... Well in short, it's used to assist in landing and as I understand it, is usually calibrated as a Lift Reserve Indicator or LRI. 
+<img src="http://www.mountainflying.com/Pages/articles/images/LRI.jpg" align="right" width="160"> Aside from replicating features found on other brand radios, such as low/mid/high point trim tones and the like, the one thing I have always most wanted from telemetry is an AoA ([http://en.wikipedia.org/wiki/Angle_of_attack Angle of Attack]) instrument. What's an AoA instrument? ... Well in short, it's used to assist in landing and as I understand it, is usually calibrated as a Lift Reserve Indicator or LRI. 
 
-Now, I'm perfectly capable of putting most any plane down like a feather just through my flying experience to date. However, the job would still be easier, and perhaps more fun, if I had tones in my ear telling of my relative AoA.
+AoA or LRI is an analogue feedback device, intended to be superior to the basic stall warning. Many argue that's it's completely redundant and that we've got along fine for years without it. However, I'm not one of them and this project is not about full-size air craft anyway.
 
-AoA is a variable, analogue measuring device, intended to be superior to the basic stall warning. Many argue that's it's completely redundant and that we've got along fine for years without it. However, I'm not one of them and this is not about full-size air craft anyway.
-
-== OK, OK ... enough already. Sheesh! :-D ==
-Wow. OK. The flak is already coming in. For the record, I do not _need_ this thing. I want it. 
-
-I think the achievement of making it work will be worth the effort, even though I'm almost certain it will not practically help me land a model better. It might warm me of sudden wind changes once and a while ... but the attitude of the model does that via the eyes much quicker than my brain will register some beeping sound. At least, I would hope so.
-
-Besides all that, I still want the ability to play different tones out of my 9X. I'm toying with the idea of an MP3 player or at least a DAAST chip, if those are still around. I will, because I can. Yay for me! \o/ 
+Now, I am perfectly capable of putting most any plane down like a feather just visually from my years of experience to date. And I no longer care much for stall warning switches or airspeed indication, as I've come to doubt such would really help much in practice, if at all. Never the less, at this stage, I still believe that appropriately configured audio LRI feedback could be at least reassuring, if not fun. It should not even need calibration, really, since our ears and brain will remember what sounds 'about right' at the point of minimum lift and for any given model, after a just a few landings, I'm sure.
 
 == How? ==
 
-What I plan is to use varying pitch tones like the rise/sink tone generators in modern sail planes. Sink comes across as a constant, relatively low tone, falling more in pitch as the sink is greater. Rise is an intermittent "bip bip bip" tone, rising in pitch and frequency as lift increases. It's very intuitive and allows you to know exactly what's going on without staring at an instrument panel. (In this case, a series of fast, high-pitched "bips" will tell me I'm about to stall.)
+What I plan is to use varying pitch tones, similar to the sensitive rise/sink tone generators in modern sail planes. Sink comes across as a constant, relatively low tone, falling more in pitch as the sink is greater. Rise is an intermittent "bip bip bip" tone, rising in pitch and frequency as lift increases. The sounds are very intuitive and allow you to know exactly what's going on without staring at an instrument panel. Of course, my tones will be indicating relative angle-of-attack or lift reserve, not rise/sink.
 
-With that, and a suitably functional AoA sensor on my aircraft (that's a whole other story!) ... I'll be able to gauge the precise approach speed for the plane -- and even get warning if there's a sudden decrease in air speed due to a shift in the wind.
+With that, and a suitably functional AoA sensor on my aircraft (and that's a whole other story!) ... I should be able to gauge the an appropriate landing approach for the plane. Any sudden turbulence should result in the tones going a little crazy... but my own eyes and brain should realise that far quicker I should think. Still, that aspect may also be interesting and perhaps even of some use.
 
-Will it make my landings any better and will anyone else even care? Well, maybe not. But I'm going to have fun making it all happen. That much is for sure.
+Now, if you fly on a relatively flat chunk of land somewhere, you might be wondering what this is really all about. Well, I/we don't have such luxuries around here. One of the fields (especially) that I frequent is located in an undulated area of varying ground types, including water. One experiences a multitude of essentially unpredictable lift, sink, rotor and general turbulence on final approach, which changes in characteristic as the day wares on. We cope with it all perfectly well without fancy AoA gadgets of course, but I've already covered that angle, above.
 
-(Incidentally, this is all clearly more useful on larger, heavier nitro planes than light weight, small electrics. I certainly wouldn't bother sticking it on my foamie EDF jet! There's just be no fun in that at all.)
+Now I don't know if in practice any LRI feedback system of my own design will be rapid or responsive enough, or even help much at all for that matter. But I do want to find out. Will it make my landings any better and will anyone else even care? Well, maybe not. But I'm going to have fun making it all happen. That much is certain.
+
 
 == Speaker Installation ==
 
-Here's an image showing the ugly install I did. Hey! It works mmmkay? :-P
+Below is an image showing the first ugly speaker install I did. Hey! It works mmmkay? :-P Later I'll probably add some resistor and another capacitor or two to smooth out the square wave for a nicer tone. 
 
 [http://gruvin9x.googlecode.com/svn/trunk/doc/spkr-install.jpg]
