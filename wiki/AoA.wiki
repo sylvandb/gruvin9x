@@ -1,0 +1,11 @@
+#summary Random notes/links regarding Angle of Attack sensors
+= DIY AoA Sensor Idea =
+
+== Links ==
+
+ * http://diydrones.com/forum/topics/angle-of-attack-sensor
+
+== Random Notes (changes regularly) ==
+
+I dreamt up an idea involving two LDR's (light dependant resistors) with a wedge shaped 'light-blocker' that swings into the light path of one or the other, depending on the AoA. The more light that gets blocks, the higher the resistance becomes. Given a constant internal light source and the two LDR's wired as a resistive divider, this should produce some form of AoA:voltage output. I'm certain it will be anything but linear, no matter how I try to shape the light-path-blocker bit. But it might work. Experimentation is needed.
+
