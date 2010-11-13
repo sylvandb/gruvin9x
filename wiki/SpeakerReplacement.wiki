@@ -33,4 +33,4 @@ Below is an image showing the first ugly speaker install I did. Hey! It works mm
 
 == Results to Date ==
 
-As of gruvin9x r46, all trim switches and general +/- keypad operations have lower/mid/higher tone for down/reached-zero/up value inputs respectively. The tones are much more pleasant to the ear (IMHO) than the stock internal beeper. (I have noted that different batches of these '9X radios can have different internal beepers. Some of them aren't actually that bad. Mine was truly horrid. :-/)
+As of gruvin9x r46, all trim switches and general +/- keypad operations have lower/mid/higher tone for down/reached-zero/up value inputs respectively. The tones are much more pleasant to the ear (IMHO) than the stock internal beeper. (I have noted that different batches of these '9X radios can have significantly different sounding beepers. Some of them aren't actually that bad. Mine was truly horrid. :-/)
