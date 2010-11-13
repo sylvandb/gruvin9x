@@ -357,7 +357,11 @@ uint8_t checkTrim(uint8_t event)
       g_model.trim[idx]=0;
       killEvents(event);
       warble = false;
+#ifdef BEEPSPKR
+      beepWarn2Spkr(60);
+#else
       beepWarn2();
+#endif
     }
     else if(x>-125 && x<125){
       g_model.trim[idx] = (int8_t)x;
@@ -365,7 +369,7 @@ uint8_t checkTrim(uint8_t event)
       if(event & _MSK_KEY_REPT) warble = true;
 #ifdef BEEPSPKR
       // toneFreq higher/lower according to trim position
-      beepTrimSpkr((x/3)+60);  // range -125 to 125 = Freq: 19 to 101
+      beepTrimSpkr((x/3)+60);  // range -125 to 125 = toneFreq: 19 to 101
 #else
       beepKey();
 #endif
@@ -375,7 +379,11 @@ uint8_t checkTrim(uint8_t event)
       g_model.trim[idx] = (x>0) ? 125 : -125;
       STORE_MODELVARS;
       warble = false;
+#ifdef BEEPSPKR
+      beepWarn2Spkr((x/3)+60);
+#else
       beepWarn2();
+#endif
     }
 
     return 0;
@@ -433,18 +441,33 @@ bool checkIncDecGen2(uint8_t event, void *i_pval, int16_t i_min, int16_t i_max, 
   {
     newval = i_max;
     killEvents(event);
-    beepKey(); // beepWarn();
+#ifdef BEEPSPKR
+    beepWarn2Spkr(BEEP_KEY_UP_FREQ);
+#else
+    beepWarn2();
+#endif
   }
   if(newval < i_min)
   {
     newval = i_min;
     killEvents(event);
-    beepKey(); // beepWarn();
+#ifdef BEEPSPKR
+    beepWarn2Spkr(BEEP_KEY_DOWN_FREQ);
+#else
+    beepWarn2();
+#endif
   }
   if(newval != val){
     if(newval==0) {
       pauseEvents(event);
-      beepKey(); //beepWarn();
+#ifdef BEEPSPKR
+      if (newval>val)
+        beepWarn2Spkr(BEEP_KEY_UP_FREQ);
+      else
+        beepWarn2Spkr(BEEP_KEY_DOWN_FREQ);
+#else
+      beepWarn2();
+#endif
     }
     if(i_flags & _FL_SIZE2 ) *(int16_t*)i_pval = newval;
     else                     *( int8_t*)i_pval = newval;
