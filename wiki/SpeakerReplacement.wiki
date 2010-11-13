@@ -30,3 +30,7 @@ Now I don't know if in practice any LRI feedback system of my own design will be
 Below is an image showing the first ugly speaker install I did. Hey! It works mmmkay? :-P Later I'll probably add some resistor and another capacitor or two to smooth out the square wave for a nicer tone. 
 
 [http://gruvin9x.googlecode.com/svn/trunk/doc/spkr-install.jpg]
+
+== Results to Date ==
+
+As of gruvin9x r46, all trim switches and general +/- keypad operations have lower/mid/higher tone for down/reached-zero/up value inputs respectively. The tones are much more pleasant to the ear (IMHO) than the stock internal beeper. (I have noted that different batches of these '9X radios can have different internal beepers. Some of them aren't actually that bad. Mine was truly horrid. :-/)
