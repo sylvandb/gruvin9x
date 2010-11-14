@@ -3,29 +3,31 @@
 <img src="http://gruvin9x.googlecode.com/svn/wiki/About.attach/turnigy9x.jpg" align="right">
 = Introduction =
 
-This project started out as a kind of 'place holder' for Gruvin's personal upgrades, hacks and mods to his ER9X (http://code.google.com/p/er9x/) powered Turnigy 9X V2 RC transmitter.
+This project started out as a kind of 'place holder' for the author's personal upgrades, hacks and mods to his [http://code.google.com/p/er9x/ ER9X]-powered Turnigy 9X V2 RC transmitter. 
+
+The project's name come simply from the author's long-time online nickname. Initial intentions were to get to know the ER9X crew, maybe becoming a contributor at some point. However, gruvin9x began to fork off in its own life quite quickly.
+
+At the same time, the author was becoming more aware of the overall power of the Google Code concept. Now, since comparing the differences between all flavours of this code is made so open and easy, it allows us to glean ideas from each other, picking and choosing what we want in our custom versions -- as well as allowing end users to comment and influence those choices. 
+
+Whilst all this may well forge the proverbial two-edged sword — by producing 'too many' versions — the simple delight of working directly on such a project as, when and how the author feels like it is just to much temptation to pass up.
 
 = Details =
 
-The developer's main intention is to provide (mostly for himself, admittedly) a growing range of features and functions to support Fr-Sky telemetry natively on the '9X.
+The main intention for gruvin9x is to provide a growing range of features and functions to support Fr-Sky telemetry natively on the '9X.
 
-As of revision 6, the following two features have been added ...
+As of revision 58, the following three features have been added ...
 
-*Feature 1 -- Key-repeat delay*
+*Feature 1 -- Key-repeat delay* (optional)
 
-The stock ER9X/TH9X code does not implement a delay between a menu button press and when that button starts auto-repeating. This results in the occasional skipping over desired settings. The _KEYRPT=DELAY_ make directive (defaults to on) fixes this.
+The stock ER9X/TH9X code does not implement a delay between a menu button press and when that button starts auto-repeating. This can result in skipping desired desired settings. 
 
-*Feature 2 -- Buzzer replaced with Speaker for variable pitch tones etc*
+*Feature 2 -- Buzzer replaced with Speaker for variable pitch tones etc* (optional)
 
-Apart from the fact that the stock '9X 'beeper' is incredibly upsetting to the ear ... useful telemetry feedback while flying a model aircraft necessitates the use of something other than visual readout on an LCD display. An intuitive array of various sounds, including short tunes, rising and falling pitch and what not seems the obvious choice.
+Apart from the fact that the stock '9X 'beeper' (in some batches especially) is incredibly upsetting to the ear ... useful telemetry feedback while actually flying a model aircraft necessitates the use of something other than visual readout on an LCD display. An intuitive array of various sounds, including short melodies, rising and falling pitch and what not seems the obvious, simple choice. 
 
-The _BEEPER=SPEAKER_ make directive (the default) implements such a feature. The onboard beeper is disconnected and replaced by a small speaker (from some cheap headphones) being connected between Vss (ground) and through a 4u7 capacitor directly to port PE3. The latter is available on the beeper/power-switch board as the input to the buffer transistor feeding the original beeper module.
+Low/mid/higher pitch key and trim button beeps (values <0, 0 and >0 respectively) have already been implemented. Work on telemetry tones will commence once the hardware is available — very soon in theory.
 
-(See the wiki page SpeakerReplacement for details of why and how I did this.)
+See [SpeakerReplacement Why I replaced the stock beeper with a speaker] for more detail.
 
-Once installed, you may well find that turning key beeps back on will not be such an unpleasant thing! But yet better things are to come.
-
-(It's also intended to install a headphone jack so this feature can be used more appropriately at the field.)
-
-
-[http://gruvin9x.googlecode.com/svn/wiki/About.attach/gruvin9x-lcd.jpg]
+*Feature 3 -- More stable battery voltage display/alarms]* (optional)
+Some models/batches of the '9X, especially when using batteries with higher internal resistance than the likes of Li-Ion cells (dry cells for example) tend to exhibit significantly erratic battery voltage sampling. An 'averaged over time' enhancement fixes this problem. See [VoltageAveraging Battery voltage averaging. Why, how and turning it off] for further details.
