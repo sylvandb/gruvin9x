@@ -15,7 +15,7 @@ Whilst all this may well forge the proverbial two-edged sword — by producing '
 
 The main intention for gruvin9x is to provide a growing range of features and functions to support Fr-Sky telemetry natively on the '9X.
 
-As of revision 58, the following three features have been added ...
+As of revision 46 (r46), the following three features have been added ...
 
 *Feature 1 -- Key-repeat delay* (optional)
 
