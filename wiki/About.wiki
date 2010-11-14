@@ -1,5 +1,6 @@
 #summary About this project
 
+<img src="http://gruvin9x.googlecode.com/svn/wiki/About.attach/turnigy9x.jpg" align="right">
 = Introduction =
 
 This project started out as a kind of 'place holder' for Gruvin's personal upgrades, hacks and mods to his ER9X (http://code.google.com/p/er9x/) powered Turnigy 9X V2 RC transmitter.
@@ -27,6 +28,4 @@ Once installed, you may well find that turning key beeps back on will not be suc
 (It's also intended to install a headphone jack so this feature can be used more appropriately at the field.)
 
 
-== The Future ==
-
-Future update documentation will be published elsewhere in this wiki. Mailing lists will be created at some point, time etc allowing.
+[http://gruvin9x.googlecode.com/svn/wiki/About.attach/gruvin9x-lcd.jpg]
