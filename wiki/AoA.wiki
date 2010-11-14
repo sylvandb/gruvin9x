@@ -1,5 +1,5 @@
 #summary Random notes/links regarding Angle of Attack sensors
-= DIY AoA Sensor Idea =
+= DIY AoA Sensor Ideas / Notes =
 
 == Links ==
 
