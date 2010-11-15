@@ -13,6 +13,8 @@ When I ordered my SparkFun Pocket Programmer, I had them add a spare programming
 
 [http://gruvin9x.googlecode.com/svn/wiki/FlashGuide.attach/progwiring.jpg]
 
+*NOTE:* The two hot-glued little resistors and fine wires to the left are the re-wiring necessary to free up the ATmega64A serial comms port, which is otherwise connected to the Throttle-Hold and Aileron-DR switches. The switches get moved to two spare port pins. *This mod is only necessary* if you intend using the EXT=JETI or EXT=FRSKY (the default for _gruvin9x_) compiler tags when building the source. The code will then automatically re-assign the THH and AIL switches appropriately. See [http://code.google.com/p/er9x/wiki/JETI here] for more details.
+
 = Flashing the Firmware =
 
 == Software ==
