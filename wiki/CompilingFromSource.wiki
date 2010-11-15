@@ -8,41 +8,59 @@ The addition of a few hardware mods and the authors default preferences have res
 
 == Downloading the gruvin9x Source Code ==
 
-The gruvin9x project is fully version-tracked using Subversion, or `svn`. To download the complete project source, enter the follow at a shell prompt ...
+The gruvin9x project is fully version-tracked using Subversion, or `svn`. There are various way s of getting Subversion installed on your Mac, but in the author's opinion, the best way for a OS X based code developer is to simply install Apple's Xcode AKA Apple Developer Tools, with the Unix Dev option ticked. Xcode comes free with each version of OS X on the installation DVD. Subversion will be installed as part of all that. 
+
+To download the complete gruvin9x project source, enter the following command at a shell prompt ...
 
 {{{
 ~$ svn checkout http://gruvin9x.googlecode.com/svn/trunk/ gruvin9x
 }}}
 
-This will create a folder named `gruvin9x`.
+This will create a folder named `gruvin9x` in the folder you were in when you ran the command. Of course, the gruvin9x folder can then be safely renamed or moved anywhere you like. 
 
-To build the firmware code ready for programming (having first installed [http://www.obdev.at/products/crosspack/ CrossPack] for that purpose), change to the `src/` directory (`cd src/`) and execute one of the following `make` commands ...
+To build the firmware code ready for programming (having first installed [http://www.obdev.at/products/crosspack/ CrossPack] for that purpose), change to the `gruvin9x/src/` directory and execute `make`. Briefly ...
 
+To build gruvin9x to work on an un-modified, factory stock '9X, use ...
 
+{{{
+make EXT=STD BEEPER=BUZZER
+}}}
 
-NOTE: The FRSKY version will kill your Throttle-Hold and Aileron-Dual-Rate switches unless you’ve rewired them appropriately inside the box, which is actually a bit tricky. So you best start with the standard build first and worry about all that later.
+To build gruvin9x with the gruvin9x flavour [TelemetryMod telemetry] and [SpeakerReplacement speaker] mods enabled, simply ...
 
-*TODO ... needs major editing from old blog entry text.*
+{{{
+make
+}}}
 
+Please see the [MakeOptions Make Options] wiki page for more options. 
 
-make wflash AVRDUDE_PROGRAMMER=usbtiny
+== Flashing the 9X Using Make ==
 
-NOTE: ‘usbtiny’ it the correct programmer tag for the SparkFun Pocket Programmer. If you edit the ‘Makefile’ file and change the default programmer to ‘usbtiny’, you can then just type ‘make wflash’ on its own from that point on.
+You can manually flash the ATmega64A using AVRDUDE as described on the [FlashGuide Connecting a Flash programmer to your '9X] wiki page. Or you can use the more conveninet `make` method, which includes all the necessary options for you. (You may want to edit Makefile for your particular programmer set-up.) ...
 
-Backing up the EEPROM — which holds all your model programming! By default, each time you program a new version of the firmware, the entire ATmega64 gets wiped — including any model programming data you may have slaved over! Here’s how you take a backup of the EEPROM before re-flashing each time …
+{{{
+make wflash
+}}}
 
-make reeprom AVRDUDE_PROGRAMMER=usbtiny TARGET=backupeeprom
+HINT: Add something like `AVRDUDE_PROGRAMMER=usbtiny` to specify a different programmer, or edit Makefile to change the default.
 
-You can leave out the grey text if you’ve edited your Makefile to use ‘usbtiny’ by default. (The default target is er9x.bin I believe.)
+=== Backing up the EEPROM === 
+The gruvin9x firmware store user settings and model programming data in the ATmega64A on-board EEPROM. *This gets erased* each time you re-flash the firmware! To take a backup ... 
 
-If you don’t have the full source package, you can read the EEPROM data manually using AVRDUDE as follows …
+{{{
+make reeprom TARGET=models
+}}}
 
-avrdude -c usbtiny -p atmega64 -B 1 -U eeprom:r:backupeeprom:r
+Again, you can include something like `AVRDUDE_PROGRAMMER=usbtiny` to specify a different programmer, or edit the Makefile to your preference. (The default target is er9x.bin. The `.bin` extension is forcibly appended, so don't include it on the command line.)
 
-(You need the :r on the end to create non-existent files for some reason.)
+*NOTE:* Until I get around to fixing it, the above command currently requires that the .bin file already exists. You can create an empty file by executing the command ...
 
-In either case, your EEPROM data, (containing all your model programming data) will be stored in a file name ‘backupeeprom’. You can of course use any filename you like.
+{{{
+touch models.bin
+}}}
 
-If you want to take a peek inside that binary EEPROM data file, try something like 0xED from http://www.suavetech.com/0xed/0xed.html.
+=== Miscellaneous ===
 
-CODE SIZE: The complete ER9X compiled code base as at revision 262 appears to be less than 48KBytes — including the 8K splash screen graphic. The ATmega64 has 64KBytes of FLASH program memory and 4KBytes of static RAM. If I’m reading the data properly, only about 400 bytes of the RAM is currently in use. (Seems low though?) In any case, things are looking good for adding lots of extra functionality.
+If you want to take a peek inside that binary EEPROM data file, try something like [http://www.suavetech.com/0xed/0xed.html 0xED]. 
+
+*CODE SIZE:* The complete ER9X compiled code base as at revision 262 appears to be less than 48KBytes — including the 8K splash screen graphic. The ATmega64 has 64KBytes of FLASH program memory and 4KBytes of static RAM. If I’m reading the data properly, only about 400 bytes of the RAM is currently in use. (Seems low though?) In any case, things are looking good for adding lots of extra functionality.
