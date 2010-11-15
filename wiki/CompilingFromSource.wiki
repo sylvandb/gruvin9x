@@ -61,7 +61,7 @@ touch models.bin
 
 === Miscellaneous ===
 
-If you want to take a peek inside that binary EEPROM data file, try something like [http://www.suavetech.com/0xed/0xed.html 0xED]. 
+If you want to take a peek inside the EEPROM backup data file, try something like [http://www.suavetech.com/0xed/0xed.html 0xED]. 
 
 *CODE SIZE:* The complete ER9X compiled code base as at revision 262 appears to be less than 48KBytes — including the 8K splash screen graphic. The ATmega64 has 64KBytes of FLASH program memory and 4KBytes of static RAM. If I’m reading the data properly, only about 400 bytes of the RAM is currently in use. (Seems low though?) In any case, things are looking good for adding all of the presently planned functionality.
 
