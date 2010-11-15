@@ -1,7 +1,7 @@
 #summary Connecting a Flash programmer to your '9X
 = Getting Wired =
 
-<img src="http://gruvin9x.googlecode.com/svn/wiki/FlashGuide.attach/usbpktprog.jpg" align="right">The first thing you will need is one of the many available AVR programmer kits. Perhaps you already have an AVR programmer? I purchased a [http://www.sparkfun.com/commerce/product_info.php?products_id=9825 USB Pocket Programmer] from Spark Fun. It works really well and is not at all expensive. ([http://sparkfun.com SparkFun] have a some really cool stuff by the way. Stop by for a while and check them out!)
+<img src="http://gruvin9x.googlecode.com/svn/wiki/FlashGuide.attach/usbpktprog.jpg" align="left">The first thing you will need is one of the many available AVR programmer kits. Perhaps you already have an AVR programmer? I purchased a [http://www.sparkfun.com/commerce/product_info.php?products_id=9825 USB Pocket Programmer] from Spark Fun. It works really well and is not at all expensive. ([http://sparkfun.com SparkFun] have a some really cool stuff by the way. Stop by for a while and check them out!)
 
 You'll need to connect your programmer's ICP (In-Circuit Programming) cable to your '9X. Some people have made 'pogo boards', which are fabricated as templates around existing PCB screw mounting holes to enable solder-less, temporary connection to the ATmega64A ICP programming pads on the '9X main PCB. This is done using clever spring-loaded connector pins called [http://www.sparkfun.com/commerce/product_info.php?products_id=8870 pogo pins]. The idea is especially good for bulk re-flashing of multiple units without soiling the brand new PCB with a soldering iron. I'll only be discussing direct soldering here.
 
@@ -14,4 +14,50 @@ When I ordered my SparkFun Pocket Programmer, I had them add a spare programming
 [http://gruvin9x.googlecode.com/svn/wiki/FlashGuide.attach/progwiring.jpg]
 
 = Flashing the Firmware =
+
+== Software ==
+<img src="http://gruvin9x.googlecode.com/svn/wiki/FlashGuide.attach/avrdude.jpg" align="right"><img src="http://gruvin9x.googlecode.com/svn/wiki/FlashGuide.attach/crosspack.jpg" align="right">Whilst I'm no stranger to Windows, I strongly prefer using my Mac for all development work. Fortunately, so do many others who work with Atmel AVR chips, so there’s a nice packaged installer named [http://www.obdev.at/products/crosspack/ CrossPack] that has everything you need for cross-compiling C/C++ AVR code on your Mac. 
+
+CrossPack also comes bundled with [http://savannah.nongnu.org/projects/avrdude/ AVRDUDE], which is used to operate the programmer hardware. Even more conveniently, the 'usbtiny' programmer protocol driver that the SparkFun USB Pocket Programmer I randomly chose is also included and installed, ready-to-run as part of the CrossPack bundle. Very cool!
+
+And yes, the above software is all free! Aint it great? Be sure to say thanks or drop a donation!
+
+== Ready-to-Run "binary" firmware ==
+
+There are (at the time of this writing) four pre-compiled hex file versions of gruvin9X available and kept up to date that you can download and use to flash your '9X without having to compile the source. Here are the links ...
+
+*PLEASE NOTE* _These are snapshots of 'thought to be OK' latest builds. You should always take a backup of the last known good code you installed and keep it handy in case you need to revert_. Earlier versions can also be found in the project's `trunk/` directory using the project [http://code.google.com/p/gruvin9x/source/browse/ source browser]. (Revision navigation links are to the upper right of the browser page.)
+
+ * [http://gruvin9x.googlecode.com/svn/trunk/gruvin9x-stock.hex gruvin9x-stock.hex] -- For stock hardware (no internal re-wiring) -- includes the keypad auto-repeat and bat. voltage averaging patches.
+
+ * [http://gruvin9x.googlecode.com/svn/trunk/gruvin9x-std-speaker.hex gruvin9x-std-speaker.hex] -- For speaker upgrade only. No Fr-Sky wiring mods.
+
+ * [http://gruvin9x.googlecode.com/svn/trunk/gruvin9x-frsky-nospeaker.hex gruvin9x-frsky-nospeaker.hex] -- Fr-Sky telemetry mods but no speaker upgrade.
+
+ * [http://gruvin9x.googlecode.com/svn/trunk/gruvin9x.hex gruvin9x.hex] -- Fully 'Gruvinvized' with Fr-Sky, speaker and all other gruvin9x unique features.
+
+
+== Flashing Ready-to-Run Firmware == 
+You can now burn your gruvin9x[[-version]].hex file using AVRDUDE like this ...
+
+{{{
+avrdude -c usbtiny -p atmega64 -B 1 -U flash:w:gruin9x[-version].hex
+}}}
+
+AVRDUDE should find the USB programmer, whatever port it's connected to. If not, try unplugging the programmer and plugging it back in. (You need to do this at least once after installing CrossPack. No reboots are required. This is NOT Windows! :-P )
+
+The flash procedure will completely erase your ATmega64 chip, write in the new firmware and then read back the code to verify it all went OK. After using gruvin9x for a while, you can take a backup of your model programming data using the following AVRDUDE command ...
+
+{{{
+avrdude -c usbtiny -p atmega64 -B 1 -U eeprom:r:models.bin:r
+}}}
+
+... and restore that model data after a re-flash using ...
+
+{{{
+avrdude -c usbtiny -p atmega64 -B 1 -U eeprom:w:models.bin
+}}}
+
+Oh by the way; unless you happen to have a battery connected to the '9X, leave the tiny little switch on the programmer PCB set to “Power Target”. That will power up the 9X in a fashion it isn’t used to -- IE. switches and keypad disconnected, which it will complain bitterly about with annoying beeps. But just block your ears and ignore all the commotion. The new gruvin9x firmware will soon put a quietening end to that! 
+
 
