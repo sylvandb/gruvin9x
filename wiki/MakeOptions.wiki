@@ -1,14 +1,16 @@
 #summary Custom and Default 'make' directive documentation
 
-= Make Options =
+= Make Options (gruvin9x) =
 
 == Defaults ==
 
-By default, simply running 'make' from the src/ directory will build er9x.hex in the configuration currently in use by the developer. As at revision 6, this is equivalent to ...
+By default, simply running 'make' from the `src/` directory will build an er9x.hex in the configuration preferred by the gruvin9x primary developer. As of revision 6, running `make` with no arguments is equivalent to ...
 
-<blockquote><pre>make EXT=FRSKY KEYRPT=DELAY BEEPER=SPEAKER</pre></blockquote>
+{{{
+make EXT=FRSKY KEYRPT=DELAY BEEPER=SPEAKER
+}}}
 
-The Makefile also default to the 'usbtiny' AVR programmer type.
+The Makefile also defaults to the 'usbtiny' AVR programmer type.
 
 == Available Build Directives ==
 
@@ -36,10 +38,10 @@ All other stand ER9X make commands remain present. Examples include ...
 
 <blockquote><pre>*make* - builds er9x.hex with the default configuration
 
-*make wflash* [[PROGRAMMER=usbtiny]] - programs/flashes the 9X using er9x.hex and optional programmer type override
+*make wflash* [[PROGRAMMER=usbtiny]] - programs/flashes the ATmega64A using er9x.hex. (With optional programmer type override in [[brackets]] if not 'usbtiny')
 
-*make reeprom* [[TARGET=models]] - reads the 9X eeprom (model/settings) data into er9x.bin with optional target override
+*make reeprom TARGET=models* - reads the ATmega64A EEPROM (models/settings) data into models.bin
 
-*make weeprom* [[TARGET=models]] - writes er9x.bin to the 9X eeprom with optional target (source) override
+*make weeprom TARGET=models* - writes models.bin to the ATmega64A EEPROM, restoring models/settings
 
 etc</pre></blockquote>
