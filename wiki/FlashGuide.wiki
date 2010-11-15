@@ -60,9 +60,13 @@ avrdude -c usbtiny -p atmega64 -B 1 -U eeprom:w:models.bin
 
 Oh by the way; unless you happen to have a battery connected to the '9X, leave the tiny little switch on the programmer PCB set to “Power Target”. That will power up the 9X in a fashion it isn’t used to -- IE. switches and keypad disconnected, which it will complain bitterly about with annoying beeps. But just block your ears and ignore all the commotion. The new gruvin9x firmware will soon put a quietening end to that! 
 
+== Compiling From Source ==
+
+Please see the [CompilingFromSource Compiling From Source wiki page for details on this subject, including changes to the original Makefile defaults employed by gruvin9x.
+
 = What to Expect =
 
-After programming, you can expect to feel a little bit anxious! Do not fret. The feeling is completely normal. :-D
+After re-flashing for the first time, you can expect to feel a little bit anxious! Do not fret! The feeling is completely normal. :-D
 
 Tuck your programming cable away for now in such a way that allows you to put the rear cover back on the transmitter. *REMEMBER* to reconnect the rear-cabinet cable connector! The first time I flicked the power switch after flashing I got absolutely nothing. Not even a beep or a flicker. “Uhoh!” ... then I realised the thing just wasn't going to go so well without the power being connected! :-P
 
