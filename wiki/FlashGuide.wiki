@@ -1,0 +1,17 @@
+#summary Connecting a Flash programmer to your '9X
+= Getting Wired =
+
+<img src="http://gruvin9x.googlecode.com/svn/wiki/FlashGuide.attach/usbpktprog.jpg" align="right">The first thing you will need is one of the many available AVR programmer kits. Perhaps you already have an AVR programmer? I purchased a [http://www.sparkfun.com/commerce/product_info.php?products_id=9825 USB Pocket Programmer] from Spark Fun. It works really well and is not at all expensive. ([http://sparkfun.com SparkFun] have a some really cool stuff by the way. Stop by for a while and check them out!)
+
+You'll need to connect your programmer's ICP (In-Circuit Programming) cable to your '9X. Some people have made 'pogo boards', which are fabricated as templates around existing PCB screw mounting holes to enable solder-less, temporary connection to the ATmega64A ICP programming pads on the '9X main PCB. This is done using clever spring-loaded connector pins called [http://www.sparkfun.com/commerce/product_info.php?products_id=8870 pogo pins]. The idea is especially good for bulk re-flashing of multiple units without soiling the brand new PCB with a soldering iron. I'll only be discussing direct soldering here.
+
+There is an excellent PDF guide for Windows users [http://gruvin9x.googlecode.com/svn/trunk/doc/Flashing%20the%209x.pdf], which also shows how to connect an AVR programmer ribbon cable to the '9X. That guide though seems to rely on the colour coded cable to figure out which wire goes where. So I've included a photo below of my 'classic grey' ribbon cable installation, with numbered wires for your convenience.
+
+When I ordered my SparkFun Pocket Programmer, I had them add a spare programming cable. I cut the two 'remote' connectors off the end of that and used it to wire up my radio. Long story short — here's a photo of my installation, using a stock SparkFun cable ...
+
+  <b>IMPORTANT:</b> The picture below shows a typical ‘V2′ transmitter, as has been shipping for a few months as at time of this writing. The V1 unit  had an error on the PCB where the ‘SCK’ programming pad (wire 7 below) connected one pin too far left on the ATmega64 chip. So watch out for that! If you have a V1 unit, you can still get things going. But you’re going to have to be more careful to get a wire soldered to the right place. (Notes about this also in the linked ‘online version’ instructions below.)
+
+[http://gruvin9x.googlecode.com/svn/wiki/FlashGuide.attach/progwiring.jpg]
+
+= Flashing the Firmware =
+
