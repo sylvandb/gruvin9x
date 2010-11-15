@@ -60,4 +60,16 @@ avrdude -c usbtiny -p atmega64 -B 1 -U eeprom:w:models.bin
 
 Oh by the way; unless you happen to have a battery connected to the '9X, leave the tiny little switch on the programmer PCB set to “Power Target”. That will power up the 9X in a fashion it isn’t used to -- IE. switches and keypad disconnected, which it will complain bitterly about with annoying beeps. But just block your ears and ignore all the commotion. The new gruvin9x firmware will soon put a quietening end to that! 
 
+= What to Expect =
 
+After programming, you can expect to feel a little bit anxious! Do not fret. The feeling is completely normal. :-D
+
+Tuck your programming cable away for now in such a way that allows you to put the rear cover back on the transmitter. *REMEMBER* to reconnect the rear-cabinet cable connector! The first time I flicked the power switch after flashing I got absolutely nothing. Not even a beep or a flicker. “Uhoh!” ... then I realised the thing just wasn't going to go so well without the power being connected! :-P
+
+During boot-up, the new firmware checks a few things. You’ll get one or more “alerts” on screen, like “Throttle not set idle” and a message about there being no alarms — meaning the beeper is turned off, as it is by default. Also, all switches have to be in the “off” state — that is, all front switches ‘up’ and top switches ‘back’. Oh and don’t worry — all these power-up warnings can be disabled through settings in the new '9X menus if you don’t want them.
+
+Once you clear those messages away (by pressing [EXIT] for each or satisfying the switch requests), you should see the (also optional) 'ER9X splash/title screen'. (I may get even more cheeky and design my own 'gruvin9x' logo some day. :-P) And from this point, it just gets better and better.
+
+The first thing you’ll want to do is set the ‘mode’ to ‘Mode 1′, for your throttle on the right, right? — since no one in their right mind would _ever_ use Mode 2 now, would they? :-P OK, maybe a few might. Mode 2 is in fact the default, and I haven't changed that at this stage. All these settings get backed up along with model programming data (as described above), so it's really no biggie.
+
+Oh! To access that menu, press and hold [LEFT] (original '+') button. And on that note, now would be a really good time to give the [http://er9x.googlecode.com/svn/trunk/doc/ER9x%20Users%20Guide.pdf ER9X Users Guide] a thorough once-over. If you haven't already, I think you'll be impressed with how powerful this firmware is. It truly does completely transform an otherwise rather average "Chinese '9X" radio into something quite fun to use and own.
