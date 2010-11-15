@@ -1,0 +1,48 @@
+#summary Compiling gruvin9x from source
+
+= Compiling gruvin9x from Source =
+*NOTE:* Intended for Mac OS X audiences. Details for Windows (and mention of Linux) can be found in the original ER9X project document [http://gruvin9x.googlecode.com/svn/trunk/doc/Flashing%20the%209x.pdf Flashing the 9x.pdf].
+
+=== IMPORTANT: Makefile Changes ===
+The addition of a few hardware mods and the authors default preferences have resulted in a number of changes to the TH/ER9X Makefile. In brief, running `make` with no arguments builds an er9x.hex file containing ALL the author's default features -- Fr-Sky, Speaker upgrade, key delay, etc. Please see the [MakeOptions Make Options] wiki page for details. 
+
+== Downloading the gruvin9x Source Code ==
+
+The gruvin9x project is fully version-tracked using Subversion, or `svn`. To download the complete project source, enter the follow at a shell prompt ...
+
+{{{
+~$ svn checkout http://gruvin9x.googlecode.com/svn/trunk/ gruvin9x
+}}}
+
+This will create a folder named `gruvin9x`.
+
+To build the firmware code ready for programming (having first installed [http://www.obdev.at/products/crosspack/ CrossPack] for that purpose), change to the `src/` directory (`cd src/`) and execute one of the following `make` commands ...
+
+
+
+NOTE: The FRSKY version will kill your Throttle-Hold and Aileron-Dual-Rate switches unless you’ve rewired them appropriately inside the box, which is actually a bit tricky. So you best start with the standard build first and worry about all that later.
+
+*TODO ... needs major editing from old blog entry text.*
+
+
+make wflash AVRDUDE_PROGRAMMER=usbtiny
+
+NOTE: ‘usbtiny’ it the correct programmer tag for the SparkFun Pocket Programmer. If you edit the ‘Makefile’ file and change the default programmer to ‘usbtiny’, you can then just type ‘make wflash’ on its own from that point on.
+
+Backing up the EEPROM — which holds all your model programming! By default, each time you program a new version of the firmware, the entire ATmega64 gets wiped — including any model programming data you may have slaved over! Here’s how you take a backup of the EEPROM before re-flashing each time …
+
+make reeprom AVRDUDE_PROGRAMMER=usbtiny TARGET=backupeeprom
+
+You can leave out the grey text if you’ve edited your Makefile to use ‘usbtiny’ by default. (The default target is er9x.bin I believe.)
+
+If you don’t have the full source package, you can read the EEPROM data manually using AVRDUDE as follows …
+
+avrdude -c usbtiny -p atmega64 -B 1 -U eeprom:r:backupeeprom:r
+
+(You need the :r on the end to create non-existent files for some reason.)
+
+In either case, your EEPROM data, (containing all your model programming data) will be stored in a file name ‘backupeeprom’. You can of course use any filename you like.
+
+If you want to take a peek inside that binary EEPROM data file, try something like 0xED from http://www.suavetech.com/0xed/0xed.html.
+
+CODE SIZE: The complete ER9X compiled code base as at revision 262 appears to be less than 48KBytes — including the 8K splash screen graphic. The ATmega64 has 64KBytes of FLASH program memory and 4KBytes of static RAM. If I’m reading the data properly, only about 400 bytes of the RAM is currently in use. (Seems low though?) In any case, things are looking good for adding lots of extra functionality.
