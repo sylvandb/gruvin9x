@@ -32,13 +32,11 @@ Values: BUZZER, SPEAKER (default)
 </li>
 </ul>
 
-== Standard ER9X make commands ==
+== Standard TH/ER9X Make Commands ==
 
-All other stand ER9X make commands remain present. Examples include ...
+All other standard ER9X make commands remain present. Examples include ...
 
-<blockquote><pre>*make* - builds er9x.hex with the default configuration
-
-*make wflash* [[PROGRAMMER=usbtiny]] - programs/flashes the ATmega64A using er9x.hex. (With optional programmer type override in [[brackets]] if not 'usbtiny')
+<blockquote><pre>*make wflash* [[PROGRAMMER=usbtiny]] - programs/flashes the ATmega64A using er9x.hex. (With optional programmer type override in [[brackets]] if not 'usbtiny')
 
 *make reeprom TARGET=models* - reads the ATmega64A EEPROM (models/settings) data into models.bin
 
