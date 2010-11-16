@@ -254,18 +254,22 @@ void per10ms()
     1<<INP_D_TRM_RH_DWN,
     1<<INP_D_TRM_RH_UP
   };
-  in = ~PIND;
+  in = ~PIND; // read trim switches from 8-bit port D (switch on = 1)
+
+#if (defined(USART1SDCARD) || defined(USART1USB))
+  // mask out original INP_D_TRM_LV_UP and INP_D_TRM_LV_DWN bits
+  in &= ~((1<<INP_D_TRM_LV_UP) | (1<<INP_D_TRM_LV_DWN));
+
+  // merge in the two new switch port values
+  in |= (~PINC & (1<<INP_C_TRM_LV_UP)) ? (1<<INP_D_TRM_LV_UP) : 0;
+  in |= (~PING & (1<<INP_G_TRM_LV_DWN)) ? (1<<INP_D_TRM_LV_DWN) : 0;
+#endif
+
   for(int i=0; i<8; i++)
   {
     // INP_D_TRM_RH_UP   0 .. INP_D_TRM_LH_UP   7
     keys[enuk].input(in & pgm_read_byte(crossTrim+i),(EnumKeys)enuk);
     ++enuk;
   }
-  //  for(int i=0; i<8; i++)
-  //  {
-  //    g_anaIns[i] = anaIn(i);
-  //  }
-
-  //  STARTADCONV;            // Analogkanäle lesen
 
 }

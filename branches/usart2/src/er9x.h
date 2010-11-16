@@ -120,6 +120,12 @@
 #define INP_D_TRM_RH_DWN  1
 #define INP_D_TRM_RH_UP   0
 
+#if (defined(USART1SDCARD) || defined(USART1USB))
+// do not undef the original INP_D_TRM_LV_DWN/UP as we need them later
+  #define INP_C_TRM_LV_UP 0
+  #define INP_G_TRM_LV_DWN 2
+#endif
+
 #define INP_E_PPM_IN  7
 #define INP_E_ID2     6
 #define INP_E_Trainer 5

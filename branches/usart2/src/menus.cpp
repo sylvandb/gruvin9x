@@ -2312,6 +2312,10 @@ void menuProcJeti(uint8_t event)
   // DEBUG display toneFreq
   // lcd_outdezAtt( 6*FW, 2*FH,toneFreq,0);
 
+  // DEBUG PC0 and PG2display toneFreq
+  lcd_outhex4( 6*FW, 2*FH, ~PINC);
+  lcd_outhex4( 12*FW, 2*FH, ~PING);
+
 }
 #endif
 
