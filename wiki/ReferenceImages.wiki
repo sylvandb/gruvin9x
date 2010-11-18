@@ -1,0 +1,39 @@
+#summary Hardware Reference Images
+#labels Phase-Design,Featured
+
+= Hardware Reference Images =
+
+Here are some annotated photos of various '9X hardware components to assist with part identification, PCB replication, LCD replacement, etc.
+
+Note: Some of the images are fairly high resolution on purpose.
+
+== LCD Screen ==
+I do not know the controller chip for the LCD screen off the top of my head. There may be a comment in the source code and/or in the various forums/discussion groups.
+
+[http://gruvin9x.googlecode.com/svn/wiki/ReferenceImages.attach/lcd-ref.jpg]
+
+== Connectors ==
+See the PCB reference images for dimensions
+
+<img src="http://gruvin9x.googlecode.com/svn/wiki/ReferenceImages.attach/connector-ref1.jpg" width="600">
+
+<img src="http://gruvin9x.googlecode.com/svn/wiki/ReferenceImages.attach/connector-ref2.jpg" width="300">
+
+
+== Inside ==
+
+Inside the front section of the cabinet (main PCB removed).
+
+== Main PCB ==
+
+=== Top ===
+This is after a number of mods I've made to free up both ATmega64A USART ports. (Hi-res.)
+
+(The strange looking coil of wire on a white former (lower left) is simply wire storage for later when I have something to connect them to.)
+
+<img src="http://gruvin9x.googlecode.com/svn/wiki/ReferenceImages.attach/pcb-ref-top.jpg" width="600">
+
+=== Bottom ===
+I removed the LCD screen foam packer to reveal all the traces. (Hi-res.)
+
+<img src="http://gruvin9x.googlecode.com/svn/wiki/ReferenceImages.attach/pcb-ref-bottom.jpg" width="600">
