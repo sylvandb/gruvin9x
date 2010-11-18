@@ -1,4 +1,5 @@
 #summary Connecting a Flash programmer to your '9X
+#labels Phase-Implementation,Featured
 = Getting Wired =
 
 <img src="http://gruvin9x.googlecode.com/svn/wiki/FlashGuide.attach/usbpktprog.jpg" align="left">The first thing you will need is one of the many available AVR programmer kits. Perhaps you already have an AVR programmer? I purchased a [http://www.sparkfun.com/commerce/product_info.php?products_id=9825 USB Pocket Programmer] from Spark Fun. It works really well and is not at all expensive. ([http://sparkfun.com SparkFun] have a some really cool stuff by the way. Stop by for a while and check them out!)
