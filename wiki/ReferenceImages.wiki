@@ -24,6 +24,9 @@ See the PCB reference images for dimensions
 
 Inside the front section of the cabinet (main PCB removed).
 
+<img src="http://gruvin9x.googlecode.com/svn/wiki/ReferenceImages.attach/inside-ref1.jpg" width="600">
+
+
 == Main PCB ==
 
 === Top ===
