@@ -31,6 +31,8 @@ Inside the front section of the cabinet (main PCB removed).
 
 == Main PCB ==
 
+My '9X is a Turnigy 9X from HobbyKing.com. This is the "V2" version. Note the additional 3.3V regulator and bunch of resistors above the ATmega64A MCU for driving the new 3.3V LCD screen.
+
 === Top ===
 This is after a number of mods I've made to free up both ATmega64A USART ports. (Hi-res.)
 
