@@ -10,6 +10,8 @@ Note: Some of the images are fairly high resolution on purpose.
 == LCD Screen ==
 I do not know the controller chip for the LCD screen off the top of my head. There may be a comment in the source code and/or in the various forums/discussion groups.
 
+I've not personally owned a V1 '9X, but apparently the V2 changed from a 5V LCD screen to a 3.3V version. An additional 3.3V regulator and a bunch of voltage-divider resistors are used to interface this to the 5V ATmega64A MCU.
+
 [http://gruvin9x.googlecode.com/svn/wiki/ReferenceImages.attach/lcd-ref.jpg]
 
 == Connectors ==
