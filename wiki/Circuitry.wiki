@@ -16,7 +16,9 @@ A PCB design has been worked up from scratch in KiCAD to replicate the wiring an
 
 == Why? ==
 
-The intention is to start from a near copy of the stock circuit (completed), then make changes to facilitate the freeing up of more I/O ports on the ATmega64 for use with a view to using them for telemetry data acquisition and mass storage -- and possible to interface to a coffee machine. (Joking on that last bit! :-P) Oh and, I also intend installing an ATmega128A to double the program and EEPROM storage space available. (Double the model memory capacity and enough program space to allow for the SD/MMC card FAT file system code library and all the telemetry 'dashboard' plans.)
+The intention is to start from a near copy of the stock circuit (completed), then make changes to facilitate the freeing up of more I/O ports on the ATmega64, with a view to using them for telemetry data acquisition and SD/MMC card mass storage -- and possible to interface to a coffee machine. (Joking on that last bit! :-P) 
+
+Oh and, I also intend installing an ATmega128A to double the Flash program code and EEPROM memory space. (Double the model memory capacity and enough program space to allow for the SD/MMC card FAT file system code library and all the telemetry 'dashboard' plans.)
 
 As of this writing, this design has been completed and is the stock circuitry plus just one extra component -- a 10 pin AVR programmer header in the lower right of the board.
 
