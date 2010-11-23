@@ -15,3 +15,5 @@ The intention is to start from a near copy of the stock circuit, then make chang
 As of this writing, this design has been completed and is the stock circuitry plus just one extra component -- a 10 pin AVR programmer header in the lower right of the board.
 
 PCB file links etc to come when I get a little more time
+
+[http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/PCB-final-mock.jpg]
