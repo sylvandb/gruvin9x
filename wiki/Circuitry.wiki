@@ -1,5 +1,7 @@
 #summary Notes and links to information about the internals of the '9X hardware
 
+See also: The [ReferenceImages Reference Images] wiki page
+
 <a href="http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/gruvin9x_v2_actual.pdf"><img src="http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/schematic_thm.jpg" align="right"></a>
 
 = V2 Schematic =
