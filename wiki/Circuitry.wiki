@@ -4,14 +4,14 @@
 
 There exists (in trunk/doc) a PDF circuit schematic, which appears to be from the version 1 radio. Here is link to a V2 schematic, which includes a couple of changes, most notable being the addition of a regulator and voltage-splitter resistor network to drive a 3.3V LCD display.
 
-[http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/gruvin0x_v2_actual.pdf]
+[http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/gruvin9x_v2_actual.pdf]
 
-Add your content here.
+= New PCB =
 
+A PCB design has been worked up from scratch in KiCAD to replicate the wiring and function of the V2 '9X hardware. It's closely based on the layout of the original PCB -- especially in terms of component placement. 
 
-= Details =
+The intention is to start from a near copy of the stock circuit, then make changes to facilitate the freeing up of more I/O ports on the ATmega64 for use with a view to using them for telemetry data acquisition and mass storage -- and possible to interface to a coffee machine. (Joking on that last bit! :-P)
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+As of this writing, this design has been completed and is the stock circuitry plus just one extra component -- a 10 pin AVR programmer header in the lower right of the board.
+
+PCB file links etc to come when I get a little more time
