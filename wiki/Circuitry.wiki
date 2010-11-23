@@ -1,6 +1,6 @@
 #summary Notes and links to information about the internals of the '9X hardware
 
-= V2 Schematic =
+<img src="http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/schematic_thm.jpg" align="right">= V2 Schematic =
 
 There exists (in trunk/doc) a PDF circuit schematic, which appears to be from the version 1 radio. Here is link to a V2 schematic, which includes a couple of changes, most notable being the addition of a regulator and voltage-splitter resistor network to drive a 3.3V LCD display.
 
