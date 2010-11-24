@@ -22,7 +22,17 @@ Oh and, I also intend installing an ATmega128A to double the Flash program code 
 
 As of this writing, this design has been completed and is the stock circuitry plus just one extra component -- a 10 pin AVR programmer header in the lower right of the board.
 
-PCB file links etc to come when I get a little more time
+== KiCAD Files ==
+
+The KiCAD Schematic and PCB file are now in the source tree at `trunk/pcb/`. If you just want the PCB design without the full source and docs tree ...
+
+{{{
+svn checkout http://gruvin9x.googlecode.com/svn/trunk/pcb gruvin9x-pcb
+}}}
+
+... or of course you can use the Google Code 'browse' link above to find them that way.
+
+== Preview ==
 
 [http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/PCB-final-mock.jpg]
 
