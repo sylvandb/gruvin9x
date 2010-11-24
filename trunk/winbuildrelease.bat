@@ -1,12 +1,15 @@
 svn update
 cd src
 make clean
-make EXT=JETI
-mv er9x.hex ../er9x-jeti.hex
+make EXT=STD BEEPER=BUZZER KEYRPT=DELAY
+mv er9x.hex ../gruvin9x-stock.hex
+make clean  
+make 
+mv er9x.hex ../gruvin9x.hex
 make clean
-make EXT=FRSKY
-mv er9x.hex ../er9x-frsky.hex
+make BEEPER=SPEAKER KEYRPT=DELAY
+mv er9x.hex ../gruvin9x-std-speaker.hex
 make clean
-make
-mv er9x.hex ../er9x.hex
-make clean 
+make EXT=FRSKY BEEPER=BUZZER KEYRPT=DELAY
+mv er9x.hex ../gruvin9x-frsky-nospeaker.hex
+make clean
