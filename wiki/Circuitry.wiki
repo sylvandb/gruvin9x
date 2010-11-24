@@ -27,3 +27,7 @@ PCB file links etc to come when I get a little more time
 [http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/PCB-final-mock.jpg]
 
 NOTE: The above image is just a PhotoShop mock-up based on the various layers output from KiCAD. Present best quote for low volume PCB manufacture is around the USD$15 mark. Manufacturing of prototypes will not happen until the telemetry and mass storage wiring mods (plus a few other things perhaps) have been completed. 
+
+[http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/kicad-pcb-3d-top.jpg]
+
+[http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/kicad-pcb-3d-bottom.jpg]
