@@ -1,4 +1,4 @@
-EESchema Schematic File Version 2  date 25/11/2010 10:01:41 a.m.
+EESchema Schematic File Version 2  date 26/11/2010 9:53:01 a.m.
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -35,8 +35,8 @@ EELAYER END
 $Descr A3 16535 11700
 Sheet 1 1
 Title "Main Controller PCB (Stock)"
-Date "24 nov 2010"
-Rev "1.0"
+Date "25 nov 2010"
+Rev "1.1"
 Comp "gruvin9x"
 Comment1 "(Layout designed to suit easy conversion to 2xA4 if required.)"
 Comment2 "for use with KiCad. Some corrections and notation improvements have been made."
@@ -2895,7 +2895,7 @@ L R R26
 U 1 1 4CE70B44
 P 6500 8600
 F 0 "R26" V 6580 8600 50  0000 C CNN
-F 1 "220" V 6500 8600 50  0000 C CNN
+F 1 "200" V 6500 8600 50  0000 C CNN
 	1    6500 8600
 	0    1    1    0   
 $EndComp

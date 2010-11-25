@@ -1,4 +1,4 @@
-update=24/11/2010 10:21:11 p.m.
+update=26/11/2010 11:50:05 a.m.
 version=1
 last_client=pcbnew
 [cvpcb]
@@ -11,8 +11,6 @@ LibDir=
 NetType=0
 [cvpcb/libraries]
 EquName1=devcms
-[general]
-version=1
 [eeschema]
 version=1
 LibDir=
@@ -79,6 +77,8 @@ LibName27=opto
 LibName28=atmel
 LibName29=contrib
 LibName30=valves
+[general]
+version=1
 [pcbnew]
 version=1
 PadDrlX=394
