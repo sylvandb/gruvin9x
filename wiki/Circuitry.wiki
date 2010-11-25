@@ -30,7 +30,7 @@ As of this writing, this design has been completed and is the stock circuitry pl
  * Hacked V2 Main PCB - [http://gruvin9x.googlecode.com/svn/trunk/pcb/gruvin9x-hacked.pdf PDF] | [http://gruvin9x.googlecode.com/svn/trunk/pcb/gruvin9x-hacked.ps PS] (Speaker, Fr-Sky telemetry RXD and USART1 freed)
 
 
-== KiCAD Files ==
+== KiCAD Circuit Schematic and PCB Files ==
 
 Sporadic updates of the _all new_ main PCB schematic and board design in KiCAD are committed to the source repository from time to time. These exist in the `/trunk/pcb/` folder. 
 
