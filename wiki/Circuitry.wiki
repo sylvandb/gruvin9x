@@ -26,8 +26,8 @@ As of this writing, this design has been completed and is the stock circuitry pl
 
 === Schematics ===
 
- * Stock V2 Main PCB - [http://gruvin9x.googlecode.com/svn/trunk/pcb/gruvin9x_v2_actual.pdf PDF] | [http://gruvin9x.googlecode.com/svn/trunk/pcb/gruvin9x_v2_actual.pdf PS]
- * Hacked V2 Main PCB - [http://gruvin9x.googlecode.com/svn/trunk/pcb/gruvin9x-hacked.pdf PDF] | [http://gruvin9x.googlecode.com/svn/trunk/pcb/gruvin9x-hacked.pdf PS] (Speaker, Fr-Sky telemetry RXD and USART1 freed)
+ * Stock V2 Main PCB - [http://gruvin9x.googlecode.com/svn/trunk/pcb/gruvin9x_v2_actual.pdf PDF] | [http://gruvin9x.googlecode.com/svn/trunk/pcb/gruvin9x_v2_actual.ps PS]
+ * Hacked V2 Main PCB - [http://gruvin9x.googlecode.com/svn/trunk/pcb/gruvin9x-hacked.pdf PDF] | [http://gruvin9x.googlecode.com/svn/trunk/pcb/gruvin9x-hacked.ps PS] (Speaker, Fr-Sky telemetry RXD and USART1 freed)
 
 
 == KiCAD Files ==
