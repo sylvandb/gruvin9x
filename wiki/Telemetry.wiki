@@ -13,8 +13,6 @@ Here's how it looks ...
 
 [http://gruvin9x.googlecode.com/svn/wiki/Progress.attach/FrSky%20RX%20Voltage.jpg]
 
-The frequency of voltage display updates is considerably faster than I expected. To the eye, it looks near instantaneous, which is great!
+The frequency of voltage bar display updates is considerably faster than I expected. To the eye, it looks near instantaneous, which is great!
 
 In this particular case, the receiver is running from a 4n alkaline 4-cell pack on the test bench. As a side not, it's interesting to see how the relatively high internal resistance of such batteries allow the receiver voltage to significantly dip when moving three servos about (under no load). 
-
-
