@@ -32,11 +32,15 @@ As of this writing, this design has been completed and is the stock circuitry pl
 
 == KiCAD Files ==
 
-The KiCAD Schematic and PCB file are now in the source tree at `trunk/pcb/`. If you just want the PCB design without the full source and docs tree ...
+Sporadic updates of the _all new_ main PCB schematic and board design in KiCAD are committed to the source repository from time to time. These exist in the `/trunk/pcb/` folder. 
+
+To download all the PCB design related file _without the full source and docs_ coming too ...
 
 {{{
 svn checkout http://gruvin9x.googlecode.com/svn/trunk/pcb gruvin9x-pcb
 }}}
+
+... or just check out or update the full trunk
 
 ... or of course you can use the Google Code 'browse' link above to find them that way.
 
