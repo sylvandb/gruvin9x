@@ -57,9 +57,9 @@ BEEPER = SPEAKER
 # gruvin: Battery voltage averaging over last 4 samples. Values = STD or AVERAGE
 BATVOLTS = AVERAGE
 
-# gruvin: Mass storage device support (hardware mod to free USART2 required)
+# gruvin: Mass storage device support (hardware mod to free USART1 required)
 # STORAGE options: NONE (no hardware mod), SDCARD, USBFLASH
-STORAGE=NONE
+STORAGE=SDCARD
 
 # List C++ source files here. (C dependencies are automatically generated.)
 CPPSRC = $(TARGET).cpp stamp.cpp menus.cpp pers.cpp file.cpp lcd.cpp drivers.cpp templates.cpp
@@ -144,7 +144,7 @@ ifeq ($(BATVOLTS), AVERAGE)
   CPPDEFS += -DBATAVERAGE
 endif
 
-# gruvin: Optional  storage device support on USART2
+# gruvin: Optional  storage device support on USART1
 ifeq ($(STORAGE), SDCARD)
   CPPDEFS += -DUSART1SDCARD
 endif

@@ -20,7 +20,7 @@
 
 
 uint8_t linkBuffer[9]; // 4 bytes, worst case 8 bytes with byte stuff + 1
-uint8_t TelemBuffer[] = "A1:     A2:     Rx RSSI:   dB   ";
+uint8_t TelemBuffer[] = "A1:     A2:     Rx RSSI:   dB   RX Batt:  .  V  ";
 uint8_t FrskyBufferReady;
 
 

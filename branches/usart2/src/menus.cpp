@@ -2225,9 +2225,10 @@ void menuProcJeti(uint8_t event)
 
 #ifdef FRSKY
 
-uint8_t hex2dec(uint8_t number, uint8_t multiplier)
+// gruvin: changed to unit16_t to accomodate number higher than 255.
+uint8_t hex2dec(uint16_t number, uint8_t multiplier)
 {
-  uint8_t value = 0;
+  uint16_t value = 0;
 
   switch (multiplier)
   {
@@ -2250,7 +2251,7 @@ uint8_t hex2dec(uint8_t number, uint8_t multiplier)
       break;
   }
 
-  value += 48;
+  value += 48; // convert to ASCII digit
   return value;
 
 }
@@ -2269,6 +2270,9 @@ void menuProcJeti(uint8_t event)
       chainMenu(menuProc0);
       break;
   }
+    
+  static uint8_t timeOutCount = 0;
+  static uint16_t centaVolts = 0;
 
   if (FrskyBufferReady)
   {
@@ -2278,6 +2282,9 @@ void menuProcJeti(uint8_t event)
       i++;
       linkBuffer[i] ^= 0x20;
     }
+    
+    uint8_t telemA1 = linkBuffer[i];
+
     TelemBuffer[3] = hex2dec(linkBuffer[i], 100);
     TelemBuffer[4] = hex2dec(linkBuffer[i], 10);
     TelemBuffer[5] = hex2dec(linkBuffer[i], 1);
@@ -2287,6 +2294,7 @@ void menuProcJeti(uint8_t event)
       i++;
       linkBuffer[i] ^= 0x20;
     }
+
     TelemBuffer[11] = hex2dec(linkBuffer[i], 100);
     TelemBuffer[12] = hex2dec(linkBuffer[i], 10);
     TelemBuffer[13] = hex2dec(linkBuffer[i], 1);
@@ -2299,23 +2307,53 @@ void menuProcJeti(uint8_t event)
     TelemBuffer[24] = hex2dec(linkBuffer[i], 100);
     TelemBuffer[25] = hex2dec(linkBuffer[i], 10);
     TelemBuffer[26] = hex2dec(linkBuffer[i], 1);
-    FrskyBufferReady = 0;
-  }
 
+    // 255 = 6.6V
+    centaVolts = (660 * (uint32_t)(telemA1) / 255) - 10;
+    TelemBuffer[41] = hex2dec(centaVolts, 100);
+    TelemBuffer[43] = hex2dec(centaVolts, 10);
+    TelemBuffer[44] = hex2dec(centaVolts, 1);
+
+    FrskyBufferReady = 0;
+    timeOutCount = 0;
+  } else
+  {
+    if (timeOutCount > 200)
+      lcd_puts_P(128-(FW*7), 0, PSTR("NO DATA"));
+    else
+      timeOutCount++;
+  }
 
   for (uint8_t i = 0; i < 16; i++)
   {
-    lcd_putcAtt((i+2)*FW,   3*FH, TelemBuffer[i], BSS_NO_INV);
-    lcd_putcAtt((i+2)*FW,   4*FH, TelemBuffer[i+16], BSS_NO_INV);
+    lcd_putcAtt((i+2)*FW,   2*FH, TelemBuffer[i], BSS_NO_INV);
+    lcd_putcAtt((i+2)*FW,   3*FH, TelemBuffer[i+16], BSS_NO_INV);
+    lcd_putcAtt((i+2)*FW,   4*FH, TelemBuffer[i+32], BSS_NO_INV);
   }
+
+  // Temporary -- display RX voltage bar - 4.2V to 6.6V over 120 pixels
+
+  lcd_puts_P(0, FH*6, PSTR("4.2V"));
+  lcd_vline(3, 58, 6);
+  if (centaVolts > 419)
+  {
+    uint8_t vbarLen = (centaVolts - 420) >> 1;
+    for (uint8_t i = 59; i < 63; i++) // Bar 4 pixels thick (high)
+      lcd_hline(4, i, vbarLen);
+  }
+  lcd_vline(64, 58, 6);
+  lcd_puts_P(64-(FW*2), FH*6, PSTR("5.4V"));
+
+  lcd_vline(125, 58, 6);
+  lcd_puts_P(128-(FW*4), FH*6, PSTR("6.6V"));
 
   // DEBUG display toneFreq
   // lcd_outdezAtt( 6*FW, 2*FH,toneFreq,0);
 
   // DEBUG PC0 and PG2display toneFreq
-  lcd_outhex4( 6*FW, 2*FH, ~PINC);
-  lcd_outhex4( 12*FW, 2*FH, ~PING);
-
+  // lcd_outhex4( 6*FW, 2*FH, ~PINC);
+  // lcd_outhex4( 12*FW, 2*FH, ~PING);
+  
 }
 #endif
 
