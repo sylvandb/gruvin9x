@@ -1,4 +1,4 @@
-EESchema Schematic File Version 2  date 25/11/2010 6:39:17 p.m.
+EESchema Schematic File Version 2  date 25/11/2010 7:00:05 p.m.
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -43,8 +43,6 @@ Comment2 "for use with KiCad. Some corrections and notation improvements have be
 Comment3 "This is a re-work of an orgininal reverse engineered schematic by an unknown author"
 Comment4 ""
 $EndDescr
-Text Notes 4850 650  0    98   ~ 20
-NOTE: Component numbering does NOT match the\nactual '9X hardware. Components values should be\naccurate in all cases but some have not been physically\nconfirmed.The author accepts no responsibily for the\naccuracy or use of this diagram.
 Wire Wire Line
 	13300 4450 13300 4550
 Wire Wire Line
@@ -970,6 +968,8 @@ Wire Wire Line
 Connection ~ 13500 4350
 Wire Wire Line
 	13300 2400 13300 4050
+Text Notes 4850 650  0    98   ~ 20
+NOTE: Component numbering does NOT match the\nactual '9X hardware. Components values should be\naccurate in all cases but some have not been physically\nconfirmed.The author accepts no responsibily for the\naccuracy or use of this diagram.
 $Comp
 L GND #PWR?
 U 1 1 4CEB317B
