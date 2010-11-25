@@ -22,11 +22,13 @@ Oh and, I also intend installing an ATmega128A to double the Flash program code 
 
 As of this writing, this design has been completed and is the stock circuitry plus just one extra component -- a 10 pin AVR programmer header in the lower right of the board.
 
-== PostScript/PDF Files ==
+== PostScript and PDF Files ==
 
 === Schematics ===
 
- * [http://gruvin9x.googlecode.com/svn/trunk/pcb/gruvin9x_v2_actual.pdf Stock V2 Main PCB]
+ * Stock V2 Main PCB - [http://gruvin9x.googlecode.com/svn/trunk/pcb/gruvin9x_v2_actual.pdf PDF] | [http://gruvin9x.googlecode.com/svn/trunk/pcb/gruvin9x_v2_actual.pdf PS]
+ * Hacked V2 Main PCB - [http://gruvin9x.googlecode.com/svn/trunk/pcb/gruvin9x-hacked.pdf PDF] | [http://gruvin9x.googlecode.com/svn/trunk/pcb/gruvin9x-hacked.pdf PS] (Speaker, Fr-Sky telemetry RXD and USART1 freed)
+
 
 == KiCAD Files ==
 
