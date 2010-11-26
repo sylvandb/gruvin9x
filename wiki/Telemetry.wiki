@@ -13,6 +13,15 @@ Here's how it looks ...
 
 [http://gruvin9x.googlecode.com/svn/wiki/Progress.attach/FrSky%20RX%20Voltage.jpg]
 
-The frequency of voltage bar display updates is considerably faster than I expected. To the eye, it looks near instantaneous, which is great!
+== Responsiveness ==
 
-In this particular case, the receiver is running from a 4n alkaline 4-cell pack on the test bench. As a side not, it's interesting to see how the relatively high internal resistance of such batteries allow the receiver voltage to significantly dip when moving three servos about (under no load). 
+The actual voltage bar (as shown above) is being refreshed on the LCD screen 100 times a second (I've not changed that), regardless of telemetry data availability. That said, the frequency of actual voltage data updates over the Fr-Sky system seems impressive. To the eye, it looks near instantaneous (though it's not, of course), which is great!
+
+=== Trivial Banter (Alkaline < Ni-MH < Ni-Cd ?!) ===
+
+As a side note, in this particular case, the receiver is running from an alkaline 4-cell pack on the test bench. It is interesting to see how the relatively high internal resistance of such cells allow the receiver voltage to significantly dip when moving three servos about. With just a little load, I can observe the voltage dip right below 4.2 Volts! So I certainly wouldn't recommend using this kind of power source in a 40-size RC model plane -- not that anyone would dream of that anyway, right? :-P 
+
+Just to be sure, I exchanged the receiver pack for an 11.1V, Li-Po powered 5V BEC. That read 4.97V with much less voltage dip under, even under higher servo loads -- barely any in fact, as you may well hope!
+
+Not surprisingly, Ni-MH cells have lower resistance than alkalines and hence smaller voltage drops under the same conditions. But it may surprise you to know that typical (modern) Ni-Cd cells are actually even better. We're led to believe that they have other issues concerning shelf life and the like, so we don't tend to use them. But I do wonder how much of that is merely successful marketing on the part of Ni-MH manufacturers. For now though, a higher voltage Li-Po pack with a 6V regulating BEC (UBEC) seems the best way to go if you want fastest practical servo speeds and rock solid receiver performance.
+
