@@ -7,7 +7,7 @@ Why [http://www.frsky-rc.com/ Fr-Sky]? Well, local tests have shown the brand to
 
 = Progress to Date =
 
-So far I've implemented rudimentary receiver battery voltage display on the pre-existing FRSKY menu, accessed by pressing [DOWN LONG] (assuming you've made the FRSKY/JETI hardware mods and compiled your firmware appropriately.)
+So far I've implemented rudimentary receiver battery voltage display on the pre-existing FRSKY menu, accessed by pressing [[DOWN LONG]] (assuming you've made the FRSKY/JETI hardware mods and compiled your firmware appropriately.)
 
 Here's how it looks ...
 
