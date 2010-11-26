@@ -1,4 +1,5 @@
 #summary Notes and links to information about the internals of the '9X hardware
+#labels Phase-Design,Featured
 
 See also: The [ReferenceImages Reference Images] wiki page
 
@@ -56,7 +57,7 @@ The above image is merely a PhotoShop mock-up based on the various layer outputs
 
 === Cost ===
 
-The present best quote for low volume PCB manufacture is around the USD$15 mark. Manufacturing of a prototype board will likely not happen until at least the telemetry and mass storage mods have been done. That will include break-outs for any remaining spare port pins and should get the hardware to a point where nothing additional is needed. 
+The present best quote for low volume PCB manufacture is around the USD$15 mark -- for one of 10 boards with no components installed. Manufacturing of a prototype board will likely not happen until at least the telemetry and mass storage mods have been done. That will include break-outs for any remaining spare port pins and should get the hardware to a point where nothing additional is needed. 
 
 [http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/kicad-pcb-3d-top.jpg]
 
