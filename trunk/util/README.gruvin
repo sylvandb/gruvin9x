@@ -1,0 +1,28 @@
+The C++ code in 'telemetry-test.cpp' is a bare bones half program I (gruvin) specifically
+wrote for OS X and my FTDI USB-Serial port.
+
+Compile it using:
+
+   >  g++ telemetry-test.cpp -o telemetry-test
+   
+It's purpose is to interpret telemetry data on the Mac, filtering packets such that only
+"user data" sent through the Fr-Skry RECEIVER data port winds up on the Mac terminal display.
+
+(Of course, theFr-Sky telemetry transmitter is also connected to the Mac's USB serial 
+interface for this to work.)
+
+The source also has (commented out) code to display the A1/A2/RSSI values as they arrive. But
+that scrolls up the screen, which I didn't want.
+
+ - - - - - -
+
+'xbm2lbm.rb' is a Ruby script designed to convert an xmb monochrome graphic image into
+an 'lbm' file, which can then be included by the er9x C compiler, thus allowing said graphical
+image to be displayed on the '9X LCD screen.
+
+I (gruvin) have not so far beenable to make it work. There's some error about some library 
+I don't have. As good as Ruby is -- and it truly is -- I doubt many people know much about it. 
+
+I'd like to rewrite this utility in wxWidgets, so it can be used from the GUI in Windows/Linux/OS X. 
+I'll either do that "some day", or I'll write some docs to allow others to get the ruby thing 
+working, when and if I ever do. :-D
