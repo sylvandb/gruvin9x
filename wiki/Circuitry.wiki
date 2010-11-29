@@ -17,9 +17,10 @@ A PCB design has been worked up from scratch in KiCAD to replicate the wiring an
 
 == Why? ==
 
-The intention is to start from a near copy of the stock circuit (completed), then make changes to facilitate the freeing up of more I/O ports on the ATmega64, with a view to using them for telemetry data acquisition and SD/MMC card mass storage -- and possible to interface to a coffee machine. (Joking on that last bit! :-P) 
+The intention is to start from a near copy of the stock circuit (completed), then make changes to facilitate the freeing up of more I/O ports on the ATmega64 (all of Port B in fact!), with a view to using them for telemetry data acquisition and SD/MMC card mass storage (MISO/MOSI/SCK in SPI mode) -- and possibly to interface to a coffee machine. (OK -- joking on that last bit! :-P) 
 
-Oh and, I also intend installing an ATmega128A to double the Flash program code and EEPROM memory space. (Double the model memory capacity and enough program space to allow for the SD/MMC card FAT file system code library and all the telemetry 'dashboard' plans.)
+Oh and, I also intend installing an ATmega128A to double the Flash program code and EEPROM memory space. (Double the model memory capacity and enough program space to allow for the SD/MMC card FAT file system code library and all the telemetry 'dashboard' plans.) There has been some thought of going even further, to one of the 100 pin ATmega chips with even more EEPROM and SRAM etc. But I'm not sure about the PCB design requirements for that. I don't think it will be needed anyway... but I agree it would be good, IF I can manage it. (I'm only just barely clever enough to do what I've managed so far! :-P) 
+
 
 == Progress ==
 
