@@ -1,4 +1,5 @@
 #summary Why I replaced the stock beeper with a speaker
+#labels Phase-Design
 
 = Replacing the Stock Beeper with a Speaker =
 
@@ -10,7 +11,7 @@ One could easily wonder why beeps and buzzes are so important that I had to writ
 
 AoA or LRI is an analogue feedback device, intended to be superior to the basic stall warning. Many argue that's it's completely redundant and that we've got along fine for years without it. However, I'm not one of them and this project is not about full-size air craft anyway.
 
-Now, I am perfectly capable of putting most any plane down like a feather just visually from my years of experience to date. And I no longer care much for stall warning switches or airspeed indication, as I've come to doubt such would really help much in practice, if at all. Never the less, at this stage, I still believe that appropriately configured audio LRI feedback could be at least reassuring, if not fun. It should not even need calibration, really, since our ears and brain will remember what sounds 'about right' at the point of minimum lift and for any given model, after a just a few landings, I'm sure.
+Now, I am perfectly capable of putting most any plane down like a feather just visually from my years of experience to date. And I no longer care much for stall warning switches or airspeed indication, as I've come to doubt such would really help much in practice, if at all. Never the less, at this stage, I still believe that appropriately configured audio LRI feedback could at least be fun, if not reassuring. It should not even need much calibration, since our ears/brain will remember what sounds 'about right', near the point of minimum lift reserve, after a just a few landings.
 
 == How? ==
 
