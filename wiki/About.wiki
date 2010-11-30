@@ -51,7 +51,6 @@ These and other requirements led to a state of temporary insanity and the starti
 
 Plans include a more powerful Atmel CPU to replace the ATmega64A, as well as break-outs for any and all I/O port pins that might be useful for future development -- including the CLK line for the event one ends up with a 'fuse bricked' controller. The heralded PB7 LCD back light interface will not be forgotten either. 
 
-*Progress* towards this goal is being documented on the Circuitry wiki page. As of this writing, a PCB design closely replicating the stock design has been completed as a reference point. That design already includes an AVR SPI programming connector. The next step is to carry on from there, making more of the planned changes and additions.
+*Progress* towards this goal is being documented on the [Circuitry] wiki page. As of this writing, a PCB design closely replicating the stock design has been completed as a reference point. That design already includes an AVR SPI programming connector. The next step is to carry on from there, making more of the planned changes and additions.
 
 <img src="http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/kicad-pcb-3d-top.jpg" width="480">
-
