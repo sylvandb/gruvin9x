@@ -1,4 +1,4 @@
-EESchema Schematic File Version 2  date 30/11/2010 5:48:28 p.m.
+EESchema Schematic File Version 2  date 30/11/2010 5:48:11 p.m.
 LIBS:conn_5
 LIBS:atmega64
 LIBS:power
@@ -38,7 +38,7 @@ $Descr A3 16535 11700
 Sheet 1 1
 Title "Main Controller PCB (Stock)"
 Date "30 nov 2010"
-Rev "2.1"
+Rev "2.0"
 Comp "gruvin9x"
 Comment1 ""
 Comment2 "for use with KiCad. Some corrections and notation improvements have been made."
