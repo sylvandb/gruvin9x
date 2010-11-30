@@ -32,3 +32,26 @@ See [SpeakerReplacement Why I replaced the stock beeper with a speaker] for more
 
 *Feature 3 -- More stable battery voltage display/alarms]* (optional)
 Some models/batches of the '9X, especially when using batteries with higher internal resistance than the likes of Li-Ion cells (dry cells for example) tend to exhibit significantly erratic battery voltage sampling. An 'averaged over time' enhancement fixes this problem. See [VoltageAveraging Battery voltage averaging. Why, how and turning it off] for further details.
+
+== Fr-Sky Telemetry Support ==
+
+<img src="http://gruvin9x.googlecode.com/svn/wiki/Progress.attach/FrSky%20RX%20Voltage.jpg" align="right" width="320">
+Following on from the beginnings of Fr-Sky/JETI support already included in ER9X, a little more progress is being made towards the goal of extensive support for Fr-Sky telemetry. So far (2010-11-30) this work (and other stuff too) is being done in an experimental code branch -- `.../svn/branches/usart2`
+
+== RCModelReviews.com Telemetry Hub Support ==
+
+Plans exist to support the [http://www.rcmodelreviews.com/frsky_telemetry_project.shtml RCModelReviews (RCMR) Telemetry Hub], once it is ready for public release. The basic goal here will be to duplicate the functions of the stand-alone 'dashboard' partner for the hub, inside the 9X, using it's own display, user interface, etc.
+
+
+= Bigger Plans - A Whole New Main Board =
+
+There are a number of somewhat challenging '9X hardware wiring modifications required just to get access to telemetry data. That alone is not too bad -- but we also want access to more of the IO pins currently (lazily) spread out over nearly all the higher function ports of the host ATmega64A chip. For example, access to MOSI/MISO/SCK (on Port B) for SPI mode data transfer to/from an MMC/SDCARD is desired for mass storage of telemetry and model data. 
+
+These and other requirements led to a state of temporary insanity and the starting of a complete re-design of the entire main board PCB! 
+
+Plans include a more powerful Atmel CPU to replace the ATmega64A, as well as break-outs for any and all I/O port pins that might be useful for future development -- including the CLK line for the event one ends up with a 'fuse bricked' controller. The heralded PB7 LCD back light interface will not be forgotten either. 
+
+*Progress* towards this goal is being documented on the Circuitry wiki page. As of this writing, a PCB design closely replicating the stock design has been completed as a reference point. That design already includes an AVR SPI programming connector. The next step is to carry on from there, making more of the planned changes and additions.
+
+<img src="http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/kicad-pcb-3d-top.jpg" width="480">
+
