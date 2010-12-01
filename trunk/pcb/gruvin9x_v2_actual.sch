@@ -1,4 +1,4 @@
-EESchema Schematic File Version 2  date 26/11/2010 9:53:01 a.m.
+EESchema Schematic File Version 2  date 1/12/2010 4:57:59 p.m.
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -35,7 +35,7 @@ EELAYER END
 $Descr A3 16535 11700
 Sheet 1 1
 Title "Main Controller PCB (Stock)"
-Date "25 nov 2010"
+Date "1 dec 2010"
 Rev "1.1"
 Comp "gruvin9x"
 Comment1 "(Layout designed to suit easy conversion to 2xA4 if required.)"
@@ -1450,7 +1450,7 @@ F 1 "CONN_6" V 15500 7200 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 Text Label 13600 9850 0    60   ~ 0
-ADROT
+TCut_SW
 Text Label 13600 9750 0    60   ~ 0
 Hov_Pit
 Text Label 13600 9650 0    60   ~ 0
@@ -2801,7 +2801,7 @@ EleDR_SW
 Text Label 3250 2550 0    60   ~ 0
 AilDR_SW
 Text Label 3250 2400 0    60   ~ 0
-ADROT
+TCut_SW
 $Comp
 L GND #PWR6
 U 1 1 4CE71587
@@ -2887,7 +2887,7 @@ EleDR_SW
 Text Label 700  8300 0    60   ~ 0
 AilDR_SW
 Text Label 700  8200 0    60   ~ 0
-ADROT
+TCut_SW
 Text Label 700  8500 0    60   ~ 0
 Speaker
 $Comp
