@@ -62,6 +62,10 @@ This new main board will receive an ATmega2561 (256K Flash, 4K EEPROM, 8K SRAM).
 
 [http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/kicad-pcb-r21-3d-top.jpg]
 
+NOTE: These 3D images do not show the numerous PCB vias included to connect the upper and lower ground planes in a multitude of places. These are in the actual design. (You can see some in the PhotoShop mock-up image below.) The vias are important to eliminate capacitive effects and possible RF pick-up around 2.4GHz. 
+
+=== Previously ===
+
 NOTE: These images (below) as at r122 ...
 
 [http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/PCB-final-mock.jpg]
