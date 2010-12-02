@@ -11,9 +11,9 @@ There exists (in trunk/doc) a PDF circuit schematic, which appears to be from th
 
 [http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/gruvin9x_v2_actual.pdf]
 
-= New PCB =
+= Custom Main Board PCB Design =
 
-A PCB design has been worked up from scratch in KiCAD to replicate the wiring and function of the V2 '9X hardware. It's closely based on the layout of the original PCB -- especially in terms of component placement. 
+A PCB design has been worked up from scratch in KiCAD to replicate the wiring and function of the V2 '9X hardware. It's closely based on the layout of the original PCB -- especially in terms of component placement. See [http://code.google.com/p/gruvin9x/source/browse/#svn/trunk/pcb/original /trunk/pcb/original/] (as of r155).
 
 == Why? ==
 
