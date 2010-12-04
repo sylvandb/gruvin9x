@@ -30,3 +30,7 @@ No, I've not implemented a pretty, running graph of the A1/A2/RSSI values like t
 TODO: However, I do intend adding a field where you can type in the max. voltage for a given down-converter module you might be using on A1 or A2. That will then allow the program to display the actual calculated voltage for you, rather than just a number from 0 to 255.
 
 The signal strength bar running along the top of the window is predominantly just eye candy. It is not calibrated to any specific standard, though I did try to make it represent practical observations. For example, it will turn red at about the time point the Fr-Sky transmitter starts beeping its 'low signal strength' alarm. It's also possible to get a signal level higher than the top of the graph. But it seems rare.
+
+= Open Source =
+
+This application will be published as Open Source. I just haven't had time to get my dead around using Subversion with Xcode. Looks pretty simple, by Apple have a document on the topic that I want to read before I go make a mess of things. Watch this space!
