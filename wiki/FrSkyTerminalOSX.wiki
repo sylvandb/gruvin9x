@@ -33,4 +33,4 @@ The signal strength bar running along the top of the window is predominantly jus
 
 = Open Source =
 
-This application will be published as Open Source. I just haven't had time to get my dead around using Subversion with Xcode. Looks pretty simple, by Apple have a document on the topic that I want to read before I go make a mess of things. Watch this space!
+This program is published as open source under GNU Public License v3. It has its own home on Google Code at http://code.google.com/p/frsky-terminal/
