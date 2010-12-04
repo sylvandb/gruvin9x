@@ -9,7 +9,7 @@ This application is my first in OS X Xcode (Objective-C) and represents the end 
 The application is a 'universal' build, built on an OX S 10.6 (Snow Leopard) machine. It _should_ work on versions of OS X down to about 10.3, and it _should_ work on PowerPC (non-Intel) machines. Unfortunately, I have no way to test any of that. So I've love to hear feedback from people running something older than Snow Leopard and/or on a PowerPC platform -- does it actually work?
 
 = Download =
-Here is the [http://gruvin9x.googlecode.com/svn/wiki/FrSky%20Terminal.attach/Fr-Sky%20Terminal%20v0.9b.dmg link to download] the DMG disk image for installation. Just drag the application into your Applications folder in the accustomed manner -- or run it from your Destop.
+Here is the [http://gruvin9x.googlecode.com/svn/wiki/FrSky%20Terminal.attach/Fr-Sky%20Terminal%20v0.9b.dmg link to download] the .dmg disk image for installation. Just drag the application into your Applications folder in the accustomed manner -- or run it from your Destop.
 
 = Usage =
 
