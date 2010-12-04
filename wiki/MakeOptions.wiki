@@ -2,7 +2,7 @@
 
 = Make Options (gruvin9x) =
 
-ER9X.C/H FILENAME CHANGE NOTICE -- As of gruvin9x revision 179, all occurrences or 'er9x' have been changed to 'gruvin9x'. I had planned to leave er9x in place, as I figured it did no harm. But things started getting too confusing when switching between versions. I ended up accidentally editing the wrong file in the wrong directory. So it is done. 
+*ER9X.C/H FILENAME CHANGE NOTICE* -- As of gruvin9x revision 179, all occurrences or 'er9x' have been changed to 'gruvin9x'. I had planned to leave er9x in place, as I figured it did no harm. But things started getting too confusing when switching between versions. I ended up accidentally editing the wrong file in the wrong directory. So it is done. 
 
 == Defaults ==
 
