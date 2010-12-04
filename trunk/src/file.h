@@ -1,7 +1,9 @@
 /*
- * Author - Erez Raviv <erezraviv@gmail.com>
- * 
- * Based on th9x -> http://code.google.com/p/th9x/
+ * gruvin9x Author Bryan J.Rentoul (Gruvin) <gruvin@gmail.com>
+ *
+ * gruvin9x is based on code named er9x by
+ * Author - Erez Raviv <erezraviv@gmail.com>, which is in turn
+ * based on th9x -> http://code.google.com/p/th9x/
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as

@@ -1,5 +1,7 @@
 /*
- * Author - Erez Raviv <erezraviv@gmail.com>
+ * gruvin9x Author Bryan J.Rentoul (Gruvin) <gruvin@gmail.com>
+ *
+ * templates.cpp original author - Erez Raviv <erezraviv@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as

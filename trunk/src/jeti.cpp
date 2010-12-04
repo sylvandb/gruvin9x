@@ -1,5 +1,7 @@
 /*
- * Author - Karl Szmutny <shadow@privy.de>
+ * gruvin9x Author Bryan J.Rentoul (Gruvin) <gruvin@gmail.com>
+ *
+ * jeti.cpp original author - Karl Szmutny <shadow@privy.de>
  *
  * Based on the Code from Peter "woggle" Mack, mac@denich.net
  * -> http://svn.mikrokopter.de/filedetails.php?repname=Projects&path=/Transportables_Koptertool/trunk/jeti.c

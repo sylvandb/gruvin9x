@@ -1,8 +1,9 @@
 /*
  * 
- * Author - Philip Moss
- * Adapted from jeti.cpp code by Karl Szmutny <shadow@privy.de>
+ * gruvin9x Author Bryan J.Rentoul (Gruvin) <gruvin@gmail.com>
  *
+ * frsky.cpp original author - Philip Moss
+ * Adapted from jeti.cpp code by Karl Szmutny <shadow@privy.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
