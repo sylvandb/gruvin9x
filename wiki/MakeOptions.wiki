@@ -2,9 +2,11 @@
 
 = Make Options (gruvin9x) =
 
+ER9X.C/H FILENAME CHANGE NOTICE -- As of gruvin9x revision 179, all occurrences or 'er9x' have been changed to 'gruvin9x'. I had planned to leave er9x in place, as I figured it did no harm. But things started getting too confusing when switching between versions. I ended up accidentally editing the wrong file in the wrong directory. So it is done. 
+
 == Defaults ==
 
-By default, simply running 'make' from the `src/` directory will build an er9x.hex in the configuration preferred by the gruvin9x primary developer. As of revision 6, running `make` with no arguments is equivalent to ...
+By default, simply running 'make' from the `src/` directory will build an gruvin9x.hex in the configuration preferred by Gruvin -- this project's owner. As of revision 6, running `make` with no arguments is equivalent to ...
 
 {{{
 make EXT=FRSKY KEYRPT=DELAY BEEPER=SPEAKER
