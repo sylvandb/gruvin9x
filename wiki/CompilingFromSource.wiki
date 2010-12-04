@@ -4,7 +4,7 @@
 = Compiling gruvin9x from Source =
 *NOTE:* Intended for Mac OS X audiences. Details for Windows (and mention of Linux) can be found in the original TH/ER9X project document [http://gruvin9x.googlecode.com/svn/trunk/doc/Flashing%20the%209x.pdf Flashing the 9x.pdf].
 
-*ER9X.C/H FILENAME CHANGE NOTICE* -- As of revision 179, all occurrences or 'er9x' have been changed to 'gruvin9x'. I had planned to leave er9x in place, as I figured it did no harm. But things started getting too confusing when switching between versions. I ended up accidentally editing the wrong file in the wrong directory. So it is done. 
+*ER9X.C/H FILENAME CHANGE NOTICE* -- As of gruvin9x revision 179, all occurrences or 'er9x' have been changed to 'gruvin9x'. I had planned to leave er9x in place, as I figured it did no harm. But things started getting too confusing when switching between versions. I ended up accidentally editing the wrong file in the wrong directory. So it is done. 
 
 === IMPORTANT: Makefile Changes ===
 The addition of a few hardware mods and the authors default preferences have resulted in a number of changes to the TH/ER9X Makefile. In brief, running `make` with no arguments builds an gruvin9x.hex file containing ALL of Gruvin's default features -- Fr-Sky, Speaker upgrade, key delay, etc. Please see the [MakeOptions Make Options] wiki page for details. 
