@@ -1,0 +1,32 @@
+#summary Fr-Sky Terminal for OS X
+
+= Fr-Sky Terminal for OS X =
+
+I (Gruvin) wanted a Mac OS X native application for viewing Fr-Sky telemetry data and setting the transmitter module's four on-board alarms. Thus was born, "Fr-Sky Terminal for OS X version 0.9beta"
+
+This application is my first in OS X Xcode (Objective-C) and represents the end of a long and tedious learning curve within that new-to-me framework. The exercise has been well worth it however, since I am now able to produce just about anything I want as a native OS X app. I am well pleased! :-D
+
+The application is a 'universal' build, built on an OX S 10.6 (Snow Leopard) machine. It _should_ work on versions of OS X down to about 10.3, and it _should_ work on PowerPC (non-Intel) machines. Unfortunately, I have no way to test any of that. So I've love to hear feedback from people running something older than Snow Leopard and/or on a PowerPC platform -- does it actually work?
+
+= Download =
+Here is the [http://gruvin9x.googlecode.com/svn/wiki/FrSky%20Terminal.attach/Fr-Sky%20Terminal%20v0.9b.dmg link to download] the DMG disk image for installation. Just drag the application into your Applications folder in the accustomed manner -- or run it from your Destop.
+
+= Usage =
+
+Unless you happen to be using an FTDI USB-to-Serial interface, then you'll need to past in the device name of your serial driver. In general, you can find that by doing an `ls /dev/tty.*`. If you get several results and don't know which one is your serial interface, then do that twice -- once with the interface unplugged, and once with it plugged in. Copy the device name only (exclude the /dev/) and paste it into the Device Name box at the top of the program. Then click "Set" next to that, and all should be well. The program does save the setting for future sessions, so you shouldn't have to change it, once set.
+
+The rest, hopefully, is pretty much self explanatory.
+
+= Screen-Shot =
+
+NOTE: The Rx. Buffer you see to the right is not a Fr-Sky thing. It's just the serial comms buffer of the application itself. It probably doesn't need to be there. But serial comms is not an event driven friendly thing, and I wanted to see that my comms polling timer was clearing the data often enough, but not so often as to waste too much local CPU time.
+
+[http://gruvin9x.googlecode.com/svn/wiki/FrSky%20Terminal.attach/frsky-terminal-screenshot.png]
+
+= Notes =
+
+No, I've not implemented a pretty, running graph of the A1/A2/RSSI values like the Windows Fr-Sky supplied program. Such a 'feature' really didn't seem to have a point to me. 
+
+TODO: However, I do intend adding a field where you can type in the max. voltage for a given down-converter module you might be using on A1 or A2. That will then allow the program to display the actual calculated voltage for you, rather than just a number from 0 to 255.
+
+The signal strength bar running along the top of the window is predominantly just eye candy. It is not calibrated to any specific standard, though I did try to make it represent practical observations. For example, it will turn red at about the time point the Fr-Sky transmitter starts beeping its 'low signal strength' alarm. It's also possible to get a signal level higher than the top of the graph. But it seems rare.
