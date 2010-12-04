@@ -16,7 +16,7 @@
  *
  */
 
-#include "er9x.h"
+#include "gruvin9x.h"
 
 
 uint8_t displayBuf[DISPLAY_W*DISPLAY_H/8];

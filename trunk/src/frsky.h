@@ -18,7 +18,7 @@
 #define frsky_h
 
 
-#include "er9x.h"
+#include "gruvin9x.h"
 
 
 extern uint8_t linkBuffer[9]; // 4 bytes, worst case 8 bytes with byte stuff + 1

@@ -39,7 +39,7 @@
  *
  */
 
-#include "er9x.h"
+#include "gruvin9x.h"
 #include "templates.h"
 
 MixData* setDest(uint8_t dch)

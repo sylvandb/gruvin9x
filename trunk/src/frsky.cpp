@@ -17,7 +17,7 @@
  */
 
 #include "frsky.h"
-#include "er9x.h"
+#include "gruvin9x.h"
 
 
 uint8_t linkBuffer[9]; // 4 bytes, worst case 8 bytes with byte stuff + 1

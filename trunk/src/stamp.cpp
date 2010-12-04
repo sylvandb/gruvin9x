@@ -1,5 +1,5 @@
-#include "er9x.h"
-#include "stamp-er9x.h"
+#include "gruvin9x.h"
+#include "stamp-gruvin9x.h"
 
 #define STR2(s) #s
 #define DEFNUMSTR(s)  STR2(s)

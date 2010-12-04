@@ -17,7 +17,7 @@
 #define lcd_h
 
 
-#include "er9x.h"
+#include "gruvin9x.h"
 
 
 #define DISPLAY_W 128

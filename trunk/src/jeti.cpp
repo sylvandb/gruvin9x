@@ -18,7 +18,7 @@
  */
 
 #include "jeti.h"
-#include "er9x.h"
+#include "gruvin9x.h"
 
 uint16_t jeti_keys = JETI_KEY_NOCHANGE;
 uint8_t JetiBuffer[32]; // 32 characters

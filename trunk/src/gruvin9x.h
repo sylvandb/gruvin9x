@@ -15,8 +15,8 @@
  * GNU General Public License for more details.
  *
  */
-#ifndef er9x_h
-#define er9x_h
+#ifndef gruvin9x_h
+#define gruvin9x_h
 
 #define VERS 1
 
@@ -628,5 +628,5 @@ inline void _beepSpkr(uint8_t d, uint8_t f)
 
 #endif
 
-#endif // er9x_h
+#endif // gruvin9x_h
 /*eof*/

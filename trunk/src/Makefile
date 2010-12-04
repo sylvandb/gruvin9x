@@ -36,7 +36,7 @@ F_CPU = 16000000
 FORMAT = ihex
 
 # Target file name (without extension).
-TARGET = er9x
+TARGET = gruvin9x
 
 # Object files directory
 OBJDIR = obj
@@ -350,7 +350,7 @@ REMOVEDIR = rm -rf
 COPY = cp
 WINSHELL = cmd
 
-# th9x/er9x-specific
+# th9x/gruvin9x-specific
 XBM2LBM = ruby ../util/xbm2lbm.rb
 AREV = $(shell sh -c "cat .svn/entries | sed -n '4p'")
 REV = $(shell echo $$(( $(AREV) + 1 )))
@@ -396,7 +396,7 @@ ALL_CFLAGS = -mmcu=$(MCU) -I. $(CFLAGS) $(GENDEPFLAGS)
 ALL_CPPFLAGS = -mmcu=$(MCU) -I. -x c++ $(CPPFLAGS) $(GENDEPFLAGS)
 ALL_ASFLAGS = -mmcu=$(MCU) -I. -x assembler-with-cpp $(ASFLAGS)
 
-AVER = ${shell sh -c "grep \"SUB_VERS\" stamp-er9x.h | egrep -o \"[[:digit:]]*\""}
+AVER = ${shell sh -c "grep \"SUB_VERS\" stamp-gruvin9x.h | egrep -o \"[[:digit:]]*\""}
 VER = $(shell echo $$(( $(AVER) + 1 )))
 
 
@@ -424,12 +424,12 @@ lib: $(LIBNAME)
 stamp:
 	@echo
 	@echo "Generate Version-stamp:"
-	@echo "//Automatically generated file - do not edit" > stamp-er9x.h
-	@echo "#define DATE_STR \"`date +%d.%m.%Y`\"" >> stamp-er9x.h
-	@echo "#define TIME_STR \"`date +%H:%I:%S`\"" >> stamp-er9x.h
-	@echo "#define SUB_VERS $(VER)-gruvin" >> stamp-er9x.h
-	@echo "#define SVN_VERS \"trunk-r$(REV)\"" >> stamp-er9x.h
-	@cat stamp-er9x.h
+	@echo "//Automatically generated file - do not edit" > stamp-gruvin9x.h
+	@echo "#define DATE_STR \"`date +%d.%m.%Y`\"" >> stamp-gruvin9x.h
+	@echo "#define TIME_STR \"`date +%H:%I:%S`\"" >> stamp-gruvin9x.h
+	@echo "#define SUB_VERS $(VER)-gruvin" >> stamp-gruvin9x.h
+	@echo "#define SVN_VERS \"trunk-r$(REV)\"" >> stamp-gruvin9x.h
+	@cat stamp-gruvin9x.h
 
 font.lbm: font_6x1.xbm
 	@echo
