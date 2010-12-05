@@ -1,4 +1,4 @@
-#summary About this project
+#summary About this project / Contact information
 #labels Featured
 
 <img src="http://gruvin9x.googlecode.com/svn/wiki/About.attach/turnigy9x.jpg" align="right">
