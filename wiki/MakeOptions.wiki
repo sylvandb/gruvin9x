@@ -6,33 +6,42 @@
 
 == Makefile Defaults ==
 
-By default, simply running 'make' from the `src/` directory will build an gruvin9x.hex in the configuration preferred by Gruvin -- this project's owner. As of revision 6, running `make` with no arguments is equivalent to ...
+By default, simply running 'make' from the `src/` directory will build gruvin9x.hex in the configuration preferred/needed by Gruvin -- this project's owner. As of revision 186, running `make` with no arguments is equivalent to ...
 
 {{{
-make EXT=FRSKY KEYRPT=DELAY BEEPER=SPEAKER
+make EXT=FRSKY BEEPER=SPEAKER USART1=FREED
 }}}
 
-The Makefile also defaults to the 'usbtiny' AVR programmer type.
+The Makefile also defaults to the 'usbtiny' AVR programmer type, since that's what Gruvin uses.
 
-== Available Build Directives ==
+== Hardware Modification Related Make Options ==
 
 <ul>
 <li>EXT=
 
 Values: STD, FRSKY (default), JETI
 
-</li>
-<li>KEYRPT=
-
-Values: STD, DELAY (default)
+This is for when you've freed ports E0 (ThrCut) and E1 (AilDR) for telemetry data use by moving those two switch inputs to unused pins PC6 and PC7 respectively.
 
 </li>
 <li>BEEPER=
 
 Values: BUZZER, SPEAKER (default)
 
+This is for when the stock "on/off" electronic beeper/buzzer has been replaced with a small speaker. This enables varying frequency tones for keypad beeps, alarms, etc.
+
+</li>
+<li>USART1=
+
+Values: STD, FREED (default)
+
+This is for if you have freed USART1's TX/RX pins by moving LH_Trim_Up/Dwn switches to spare ports PC0 and PG2, respectively. Gruvin (but no one else to my knowledge) originally performed this hardware mod to free USART1 for use with USB Flash or SDCARD serial-driven interfaces. However, native SDCARD access via the SPI interface on Port B is planned with a new PCB design -- or at least an ATmega2561 upgrade chip on the stock PCB. 
+
+USART1 may still be used at a later date. However, this mod is not compatible with PCB design rev2.11, which currently uses all of Port E (including the USART1 pins) for a 4x4 scanned key-switch interface.
+ 
 </li>
 </ul>
+
 
 == Standard TH/ER9X Make Commands ==
 
