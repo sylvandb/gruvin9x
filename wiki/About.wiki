@@ -54,3 +54,7 @@ Plans include a more powerful Atmel CPU to replace the ATmega64A, as well as bre
 *Progress* towards this goal is being documented on the [Circuitry] wiki page. As of this writing, a PCB design closely replicating the stock design has been completed as a reference point. That design already includes an AVR SPI programming connector. The next step is to carry on from there, making more of the planned changes and additions.
 
 <img src="http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/kicad-pcb-3d-top.jpg" width="480">
+
+= Contacting Gruvin =
+
+Oh dear -- as of this writing, the Google Code system for obtaining owner email addresses is broken. Hopefully, Google will fix this very soon. Normally, you would visit my Google Projects user profile, then click the '...' in gru...@gmail.com to reveal the full address. On the other hand, if you're very clever, you might just be able to work that out for yourself. Hint: My user name is "gruvin", not "gru...". ;-) 
