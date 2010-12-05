@@ -39,7 +39,9 @@ There are (at the time of this writing) four pre-compiled hex file versions of g
 
  * [http://gruvin9x.googlecode.com/svn/trunk/gruvin9x-frsky-nospeaker.hex gruvin9x-frsky-nospeaker.hex] -- Fr-Sky telemetry mods but no speaker upgrade.
 
- * [http://gruvin9x.googlecode.com/svn/trunk/gruvin9x.hex gruvin9x.hex] -- Fully 'Gruvinvized' with Fr-Sky, speaker and all other gruvin9x unique features.
+ * [http://gruvin9x.googlecode.com/svn/trunk/gruvin9x-frsky-speaker.hex gruvin9x-frsky-speaker.hex] -- Fr-Sky telemetry and Speaker mods in place.
+
+ * [http://gruvin9x.googlecode.com/svn/trunk/gruvin9x.hex gruvin9x.hex] -- Fully 'Gruvinvized' with Fr-Sky, speaker and other 'random' gruvin9x features, such as moving LH_Trim_Up/Dwn away from USART1 to free same for secondary serial communications. (The latter mod is still experimental and little to no documentation exists for it.)
 
 
 == Flashing Ready-to-Run Firmware == 
