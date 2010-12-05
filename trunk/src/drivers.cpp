@@ -77,13 +77,11 @@ class Key
 #define FILTERBITS      4
 #define FFVAL          ((1<<FILTERBITS)-1)
 #define KSTATE_OFF      0
-#ifdef RPTDELAY
-  #define KSTATE_RPTDELAY 95 // gruvin: longer dely before key repeating starts
-#endif
-  //#define KSTATE_SHORT   96
-#define KSTATE_START   97
-#define KSTATE_PAUSE   98
-#define KSTATE_KILLED  99
+#define KSTATE_RPTDELAY 95 // gruvin: delay state before key repeating starts
+//#define KSTATE_SHORT   96
+#define KSTATE_START    97
+#define KSTATE_PAUSE    98
+#define KSTATE_KILLED   99
   uint8_t m_vals:FILTERBITS;   // key debounce?  4 = 40ms
   uint8_t m_dblcnt:2;
   uint8_t m_cnt;
@@ -127,27 +125,19 @@ void Key::input(bool val, EnumKeys enuk)
     case KSTATE_START:
       putEvent(EVT_KEY_FIRST(enuk));
       m_dblcnt++;
-#ifdef RPTDELAY
       m_state   = KSTATE_RPTDELAY;
-#else
-      m_state   = 16;
-#endif
       m_cnt     = 0;
       break;
-#ifdef RPTDELAY
-    case KSTATE_RPTDELAY: // gruvin: longer delay before first key repeat
-      if(m_cnt == 24) putEvent(EVT_KEY_LONG(enuk)); // need to catch this inside RPTDELAY time
+
+    case KSTATE_RPTDELAY: // gruvin: delay state before first key repeat
+      if(m_cnt == 24) putEvent(EVT_KEY_LONG(enuk)); 
       if (m_cnt == 40) {
         m_state = 16;
         m_cnt = 0;
       }
       break;
-#endif
+
     case 16:
-#ifndef RPTDELAY
-      if(m_cnt == 24) putEvent(EVT_KEY_LONG(enuk));
-      //fallthrough
-#endif
     case 8:
     case 4:
     case 2:
@@ -257,6 +247,17 @@ void per10ms()
     1<<INP_D_TRM_RH_UP
   };
   in = ~PIND;
+
+// Legacy support for USART1 free hardware mod [DEPRECATED]
+#if defined(USART1FREED)
+  // mask out original INP_D_TRM_LV_UP and INP_D_TRM_LV_DWN bits
+  in &= ~((1<<INP_D_TRM_LV_UP) | (1<<INP_D_TRM_LV_DWN));
+
+  // merge in the two new switch port values
+  in |= (~PINC & (1<<INP_C_TRM_LV_UP)) ? (1<<INP_D_TRM_LV_UP) : 0;
+  in |= (~PING & (1<<INP_G_TRM_LV_DWN)) ? (1<<INP_D_TRM_LV_DWN) : 0;
+#endif
+
   for(int i=0; i<8; i++)
   {
     // INP_D_TRM_RH_UP   0 .. INP_D_TRM_LH_UP   7
