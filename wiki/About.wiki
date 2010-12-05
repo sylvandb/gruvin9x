@@ -57,4 +57,4 @@ Plans include a more powerful Atmel CPU to replace the ATmega64A, as well as bre
 
 = Contacting Gruvin =
 
-Oh dear -- as of this writing, the Google Code system for obtaining owner email addresses is broken. Hopefully, Google will fix this very soon. Normally, you would visit my Google Projects user profile, then click the '...' in gru...@gmail.com to reveal the full address. On the other hand, if you're very clever, you might just be able to work that out for yourself. Hint: My user name is "gruvin", not "gru...". ;-) 
+Oh dear -- as of this writing, the Google Code system for obtaining owner email addresses is broken. Hopefully, Google will fix this very soon. Normally, you would visit my Google Projects user profile, then click the '...' in gru...@gmail.com to reveal the full address. On the other hand, if you're very clever, you might just be able to work that out for yourself. Hint: My user alias is `gruvin`, not `gru...` ;-) 
