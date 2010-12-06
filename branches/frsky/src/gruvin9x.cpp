@@ -871,9 +871,6 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
             beepAgainOrig = 0;
             beepOn = false;
             warble = false;
-#ifdef BEEPSPKR
-            // toneFreq=BEEP_DEFAULT_FREQ;
-#endif
         }
     }
 
@@ -892,6 +889,7 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
     }
 
 #else
+    // gruvin: use original external buzzer for beeps
     if(beepOn){
     static bool warbleC;
     warbleC = warble && !warbleC;
@@ -991,7 +989,7 @@ int main(void)
   //TCCR0  = (1<<WGM01)|(7 << CS00);//  CTC mode, clk/1024
   TCCR0  = (7 << CS00);//  Norm mode, clk/1024
 #ifdef BEEPSPKR
-  OCR0   = 1;   // 7812.5 interrupts / second for tone generator
+  OCR0   = 1;   // gruvin: 7812.5 interrupts / second for tone generator
 #else
   OCR0   = 156; // 10ms
 #endif
