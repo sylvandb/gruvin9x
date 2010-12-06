@@ -16,3 +16,8 @@ The source also has (commented out) code to display the A1/A2/RSSI values as the
 'xbm2lbm.rb' is a Ruby script (presumably originally written by Thomas Husterer of TH9x) designed to convert an XBM (X-Windows Bit-Map) monochrome graphic image into an 'lbm' file. The script is run automatically from the main Makefile. Hence, all you need to do is update one of the .xbm files (../src/font_6x1.xbm  ../src/s9xsplash.xbm  ../src/sticks_4x1.xbm) and they will be automatically converted for inclusion in the final .hex output file.
 
 For this script to work, you must have the 'ruby' language/interpretter installed on your system. It comes standard with Mac OS X and can be downloaded for Windows. (Google is your freind.)
+
+For creating XBM files from other formats under Mac OS X, I use and recommend "ToyViewer" (free) from http://www7a.biglobe.ne.jp/~ogihara/software/OSX/toyv-eng.html.
+
+NOTE: The screen resoution of the '9X is 128x64 pixels.
+
