@@ -24,7 +24,6 @@
 #define FRSKY_TIMEOUT10ms 20
 
 extern uint8_t frskyBuffer[19]; // 9 bytes (full packet), worst case 18 bytes with byte-stuffing (+1)
-extern uint8_t TelemBuffer[49]; // 48 bytes plus a terminating null (Holds the text to be displayed on screen)
 extern uint8_t FrskyBufferReady;
 
 // Global Fr-Sky telemetry data variables

@@ -20,7 +20,6 @@
 #include "gruvin9x.h"
 
 uint8_t frskyBuffer[19]; // 9 bytes (full packet), worst case 18 bytes with byte-stuffing (+1)
-uint8_t TelemBuffer[] = "A1:     A2:     Rx RSSI:   dB   RX Batt:  .  V  ";
 uint8_t FrskyBufferReady = 0;
 
 uint8_t frskyA1;
@@ -63,7 +62,12 @@ void processFrskyPacket(uint8_t *packet)
     case 0xfe: // A1/A2/RSSI values
       frskyA1 = packet[1];
       frskyA2 = packet[2];
-      frskyRSSI = ((lastRSSI == 0) ? packet[3] : (lastRSSI = (packet[3] + ((uint16_t)lastRSSI * 9)) / 10));
+
+      if (lastRSSI == 0)
+        frskyRSSI = packet[3];
+      else
+        frskyRSSI = ((uint16_t)packet[3] + ((uint16_t)lastRSSI * 15)) >> 4; // >>4 = divide by 16 the fast way
+      lastRSSI = frskyRSSI;
       break;
 
     case 0xfd: // User Data packet not yet implemented

@@ -2276,51 +2276,54 @@ void menuProcFrSky(uint8_t event)
   if (frskyStreaming == 0)
     lcd_puts_P(128-(FW*7), 0, PSTR("NO DATA"));
   
-  // blinking if no data stream
-  if (frskyStreaming || (blinkCount++ > 50)) // 50:255 off:on ratio
-  {
-    TelemBuffer[3] = hex2dec(frskyA1, 100);
-    TelemBuffer[4] = hex2dec(frskyA1, 10);
-    TelemBuffer[5] = hex2dec(frskyA1, 1);
-    
-    TelemBuffer[11] = hex2dec(frskyA2, 100);
-    TelemBuffer[12] = hex2dec(frskyA2, 10);
-    TelemBuffer[13] = hex2dec(frskyA2, 1);
+  // Data labels
+  lcd_puts_P(2*FW, 2*FH, PSTR("A1:"));
+  lcd_puts_P(11*FW, 2*FH, PSTR("A2:"));
+  lcd_puts_P(2*FW, 3*FH, PSTR("Rx RSSI:   dB"));
+  lcd_puts_P(2*FW, 4*FH, PSTR("Rx Batt:"));
+  lcd_putc(11*FW,4*FH, '.');
 
-    TelemBuffer[24] = hex2dec(frskyRSSI, 100);
-    TelemBuffer[25] = hex2dec(frskyRSSI, 10);
-    TelemBuffer[26] = hex2dec(frskyRSSI, 1);
+  // Rx batt voltage bar frame
+  lcd_puts_P(0, FH*6, PSTR("4.2V"));
+  lcd_vline(3, 58, 6);
+  lcd_vline(64, 58, 6);
+  lcd_puts_P(64-(FW*2), FH*6, PSTR("5.4V"));
+  lcd_vline(125, 58, 6);
+  lcd_puts_P(128-(FW*4), FH*6, PSTR("6.6V"));
+
+  // blinking if no data stream
+  if (frskyStreaming || ((blinkCount++ % 128) > 25)) // 50:255 off:on ratio at double speed
+  {
     
-    // 255 = 6.6V
+    // A1 raw value, zero padded
+    lcd_putc(5*FW,2*FH,hex2dec(frskyA1, 100));
+    lcd_putc(6*FW,2*FH,hex2dec(frskyA1, 10));
+    lcd_putc(7*FW,2*FH,hex2dec(frskyA1, 1));
+    
+    // A2 raw value, zero padded
+    lcd_putc(14*FW,2*FH,hex2dec(frskyA2, 100));
+    lcd_putc(15*FW,2*FH,hex2dec(frskyA2, 10));
+    lcd_putc(16*FW,2*FH,hex2dec(frskyA2, 1));
+
+    // RSSI value 
+    lcd_putc(10*FW,3*FH,(frskyRSSI > 99) ? hex2dec(frskyRSSI, 100) : ' ');
+    lcd_putc(11*FW,3*FH,(frskyRSSI > 9) ? hex2dec(frskyRSSI, 10) : ' ');
+    lcd_putc(12*FW,3*FH,hex2dec(frskyRSSI, 1));
+
+    // Rx Batt: volts (255 = 6.6V) -10 to calibrate XXX FIX THIS
     uint16_t centaVolts = (frskyA1 > 0) ? (660 * (uint32_t)(frskyA1) / 255) - 10 : 0;
-    TelemBuffer[41] = hex2dec(centaVolts, 100);
-    TelemBuffer[43] = hex2dec(centaVolts, 10);
-    TelemBuffer[44] = hex2dec(centaVolts, 1);
+    lcd_putc(10*FW,4*FH, hex2dec(centaVolts, 100));
+    lcd_putc(12*FW,4*FH, hex2dec(centaVolts, 10));
+    lcd_putc(13*FW,4*FH, hex2dec(centaVolts, 1));
     
-    // wrote out the three lines of text from TelemBuffer
-    for (uint8_t i = 0; i < 16; i++)
-    {
-      lcd_putcAtt((i+2)*FW,   2*FH, TelemBuffer[i], BSS_NO_INV);
-      lcd_putcAtt((i+2)*FW,   3*FH, TelemBuffer[i+16], BSS_NO_INV);
-      lcd_putcAtt((i+2)*FW,   4*FH, TelemBuffer[i+32], BSS_NO_INV);
-    }
-    
-    // Temporary(?) eye candy -- display RX voltage bar - 4.2V to 6.6V over 120 pixels
-    
-    lcd_puts_P(0, FH*6, PSTR("4.2V"));
-    lcd_vline(3, 58, 6);
+    // draw the actual voltage bar
     if (centaVolts > 419)
     {
       uint8_t vbarLen = (centaVolts - 420) >> 1;
       for (uint8_t i = 59; i < 63; i++) // Bar 4 pixels thick (high)
       lcd_hline(4, i, vbarLen);
     }
-    lcd_vline(64, 58, 6);
-    lcd_puts_P(64-(FW*2), FH*6, PSTR("5.4V"));
-    
-    lcd_vline(125, 58, 6);
-    lcd_puts_P(128-(FW*4), FH*6, PSTR("6.6V"));
-  }
+  } // if data streaming / blink choice
     
 }
 #endif
