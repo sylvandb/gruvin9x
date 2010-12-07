@@ -90,6 +90,13 @@ MenuFuncP_PROGMEM APM menuTabDiag[] = {
 };
 
 
+#ifdef FRSKY
+MenuFuncP_PROGMEM APM menuTabFrsky[] = {
+  menuProcFrsky,
+  menuProcFrskyAlarms
+};
+#endif
+
 //#define PARR8(args...) (__extension__({static prog_uint8_t APM __c[] = args;&__c[0];}))
 struct MState2
 {
@@ -2259,23 +2266,20 @@ uint8_t hex2dec(uint16_t number, uint8_t multiplier)
 }
 
 // FRSKY menu
-void menuProcFrSky(uint8_t event)
+void menuProcFrsky(uint8_t event)
 {
   static uint8_t blinkCount = 0; // let's blink the data on and off if there's no data stream
-
+  static MState2 mstate2;
   TITLE("FrSky");
-  
-  switch(event)
-  {
-    case EVT_KEY_FIRST(KEY_EXIT):
-      FRSKY_DisableRXD();
-      chainMenu(menuProc0);
-      break;
-  }
+  MSTATE_CHECK_V(1,menuTabFrsky,1); // curr,menuTab,numRows(including the page counter [1/2] etc)
+  int8_t  sub    = mstate2.m_posVert; // alias sub to m_posvert. Clever Mr. TH :-D
 
   if (frskyStreaming == 0)
-    lcd_puts_P(128-(FW*7), 0, PSTR("NO DATA"));
-  
+  {
+    lcd_putsAtt(30, 0, PSTR("NO"), DBLSIZE);
+    lcd_putsAtt(62, 0, PSTR("DATA"), DBLSIZE);
+  }
+
   // Data labels
   lcd_puts_P(2*FW, 2*FH, PSTR("A1:"));
   lcd_puts_P(11*FW, 2*FH, PSTR("A2:"));
@@ -2326,6 +2330,29 @@ void menuProcFrSky(uint8_t event)
   } // if data streaming / blink choice
     
 }
+
+// FRSKY Alarms menu
+void menuProcFrskyAlarms(uint8_t event)
+{
+  static MState2 mstate2;
+  TITLE("FrSky Alarms");
+  MSTATE_CHECK_V(2,menuTabFrsky,3);
+  int8_t  sub    = mstate2.m_posVert;
+
+  static uint8_t testVal = 0;
+  static uint8_t testVal2 = 0;
+
+  lcd_puts_P(3*FW, 3*FH, PSTR("Test 1:"));
+  lcd_putsnAtt(11*FW, 3*FH, PSTR("ABCD")+testVal, 1, (sub == 1) ? INVERS : 0);
+  if (sub==1) CHECK_INCDEC_H_GENVAR_BF(event, testVal, 0, 3);
+
+  lcd_puts_P(3*FW, 4*FH, PSTR("Test 2:"));
+  lcd_putsnAtt(11*FW, 4*FH, PSTR("1234")+testVal2, 1, (sub == 2) ? INVERS : 0);
+  if (sub==2) CHECK_INCDEC_H_GENVAR_BF(event, testVal2, 0, 3);
+
+}
+
+// end ifdef FRSKY
 #endif
 
 void menuProcStatistic(uint8_t event)
@@ -2449,7 +2476,7 @@ void menuProc0(uint8_t event)
 #endif
 #ifdef FRSKY
       FRSKY_EnableRXD(); // enable FrSky-Telemetry reception
-      chainMenu(menuProcFrSky);
+      pushMenu(menuProcFrsky);
 #endif
       killEvents(event);
       break;

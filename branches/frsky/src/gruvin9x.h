@@ -542,7 +542,10 @@ void menuProcModelSelect(uint8_t event);
 void menuProcTemplates(uint8_t event);
 void menuProcSwitches(uint8_t event);
 
-
+#ifdef FRSKY
+void menuProcFrsky(uint8_t event);
+void menuProcFrskyAlarms(uint8_t event);
+#endif
 
 void menuProcStatistic2(uint8_t event);
 void menuProcStatistic(uint8_t event);
