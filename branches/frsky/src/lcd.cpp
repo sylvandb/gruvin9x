@@ -127,11 +127,6 @@ void lcd_outdez(uint8_t x,uint8_t y,int16_t val)
 {
   lcd_outdezAtt(x,y,val,0);
 }
-// void lcd_outdezAtt(uint8_t x,uint8_t y,int16_t val,uint8_t mode)
-// {
-//   lcd_outdezAtt(x,y,val,mode);
-// }
-//void lcd_outdezAtt(uint8_t x,uint8_t y,int16_t val,uint8_t len,uint8_t mode)
 void lcd_outdezAtt(uint8_t x,uint8_t y,int16_t val,uint8_t mode)
 {
   lcd_outdezNAtt( x,y,val,mode,5);

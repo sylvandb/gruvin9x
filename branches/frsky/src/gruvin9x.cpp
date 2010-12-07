@@ -400,7 +400,13 @@ int16_t p1valdiff;
 
 bool checkIncDecGen2(uint8_t event, void *i_pval, int16_t i_min, int16_t i_max, uint8_t i_flags)
 {
-  int16_t val = i_flags & _FL_SIZE2 ? *(int16_t*)i_pval : *(int8_t*)i_pval ;
+  int16_t val;
+  
+  if (i_flags & _FL_UNSIGNED8)
+    val = i_flags & _FL_SIZE2 ? *(uint16_t*)i_pval : *(uint8_t*)i_pval ;
+  else
+    val = i_flags & _FL_SIZE2 ? *(int16_t*)i_pval : *(int8_t*)i_pval ;
+
   int16_t newval = val;
   uint8_t kpl=KEY_RIGHT, kmi=KEY_LEFT, kother = -1;
 
@@ -461,7 +467,7 @@ bool checkIncDecGen2(uint8_t event, void *i_pval, int16_t i_min, int16_t i_max, 
   }
   if(newval != val){
     if(newval==0) {
-      pauseEvents(event);
+      pauseEvents(event); // delay before auto-repeat continues
 #ifdef BEEPSPKR
       if (newval>val)
         beepWarn2Spkr(BEEP_KEY_UP_FREQ);
@@ -471,8 +477,13 @@ bool checkIncDecGen2(uint8_t event, void *i_pval, int16_t i_min, int16_t i_max, 
       beepWarn2();
 #endif
     }
-    if(i_flags & _FL_SIZE2 ) *(int16_t*)i_pval = newval;
-    else                     *( int8_t*)i_pval = newval;
+    // gruvin: added support for unsigned values to be returned
+    if(i_flags & _FL_SIZE2)
+      if (i_flags & _FL_UNSIGNED8) *(uint16_t*)i_pval = newval;
+      else                        *( int16_t*)i_pval = newval;
+    else
+      if (i_flags & _FL_UNSIGNED8) *(uint8_t*)i_pval = newval;
+      else                        *( int8_t*)i_pval = newval;
     eeDirty(i_flags & (EE_GENERAL|EE_MODEL));
     return checkIncDec_Ret=true;
   }
@@ -499,7 +510,6 @@ int8_t checkIncDec_vg(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max)
   checkIncDecGen2(event,&i_val,i_min,i_max,_FL_VERT|EE_GENERAL);
   return i_val;
 }
-
 MenuFuncP lastPopMenu()
 {
   return  g_menuStack[g_menuStackPtr+1];

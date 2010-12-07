@@ -16,8 +16,8 @@
  *
  */
 
-#include "frsky.h"
 #include "gruvin9x.h"
+#include "frsky.h"
 
 uint8_t frskyBuffer[19]; // 9 bytes (full packet), worst case 18 bytes with byte-stuffing (+1)
 uint8_t FrskyBufferReady = 0;
@@ -26,7 +26,15 @@ uint8_t frskyA1;
 uint8_t frskyA2;
 uint8_t frskyRSSI; 
 uint8_t frskyStreaming = 0;
-struct struct_frskyAlarm frskyAlarms[4];
+struct FrskyAlarm frskyAlarms[4];
+
+/*
+   Write out an alarm settings programming packet for given alarm slot (0-4)
+*/
+void frskyWriteAlarm(uint8_t slot)
+{
+  return; // do nothing yet
+}
 
 /*
    Called from somewhere in the main loop or a low prioirty interrupt
@@ -244,3 +252,172 @@ void FRSKY_EnableRXD(void)
   UCSR0B |= (1 << RXEN0);  // enable RX
   UCSR0B |= (1 << RXCIE0); // enable Interrupt
 }
+
+/*
+   FRSKY MENUS BEGIN HERE
+   FRSKY MENUS BEGIN HERE
+   FRSKY MENUS BEGIN HERE
+*/
+
+uint8_t hex2dec(uint16_t number, uint8_t multiplier)
+{
+	uint16_t value = 0;
+	
+	switch (multiplier)
+	{
+		case 1:
+			value = number%100;
+			value = value%10;
+			break;
+			
+		case 10:
+			value = number%100;
+			value = value /10;
+			break;
+			
+		case 100:
+			value = number/100;
+			break;
+			
+		default:
+			
+			break;
+	}
+	
+	value += 48; // convert to ASCII digit
+	return value;
+	
+}
+
+MenuFuncP_PROGMEM APM menuTabFrsky[] = {
+  menuProcFrsky,
+  menuProcFrskyAlarms
+};
+
+// FRSKY menu
+void menuProcFrsky(uint8_t event)
+{
+  static uint8_t blinkCount = 0; // let's blink the data on and off if there's no data stream
+  static MState2 mstate2;
+  TITLE("FRSKY");
+  MSTATE_CHECK_V(1,menuTabFrsky,1); // curr,menuTab,numRows(including the page counter [1/2] etc)
+  // int8_t  sub    = mstate2.m_posVert; // alias sub to m_posvert. Clever Mr. TH :-D
+
+  if (frskyStreaming == 0)
+  {
+    lcd_putsAtt(30, 0, PSTR("NO"), DBLSIZE);
+    lcd_putsAtt(62, 0, PSTR("DATA"), DBLSIZE);
+  }
+
+  // Data labels
+  lcd_puts_P(2*FW, 2*FH, PSTR("A1:"));
+  lcd_puts_P(11*FW, 2*FH, PSTR("A2:"));
+  lcd_puts_P(2*FW, 3*FH, PSTR("Rx RSSI:   dB"));
+  lcd_puts_P(2*FW, 4*FH, PSTR("Rx Batt:"));
+  lcd_putc(11*FW,4*FH, '.');
+
+  // Rx batt voltage bar frame
+  lcd_puts_P(0, FH*6, PSTR("4.2V"));
+  lcd_vline(3, 58, 6);
+  lcd_vline(64, 58, 6);
+  lcd_puts_P(64-(FW*2), FH*6, PSTR("5.4V"));
+  lcd_vline(125, 58, 6);
+  lcd_puts_P(128-(FW*4), FH*6, PSTR("6.6V"));
+
+  // blinking if no data stream
+  if (frskyStreaming || ((blinkCount++ % 128) > 25)) // 50:255 off:on ratio at double speed
+  {
+
+    // A1 raw value, zero padded
+    lcd_putc(5*FW,2*FH,hex2dec(frskyA1, 100));
+    lcd_putc(6*FW,2*FH,hex2dec(frskyA1, 10));
+    lcd_putc(7*FW,2*FH,hex2dec(frskyA1, 1));
+
+    // A2 raw value, zero padded
+    lcd_putc(14*FW,2*FH,hex2dec(frskyA2, 100));
+    lcd_putc(15*FW,2*FH,hex2dec(frskyA2, 10));
+    lcd_putc(16*FW,2*FH,hex2dec(frskyA2, 1));
+
+    // RSSI value 
+    lcd_putc(10*FW,3*FH,(frskyRSSI > 99) ? hex2dec(frskyRSSI, 100) : ' ');
+    lcd_putc(11*FW,3*FH,(frskyRSSI > 9) ? hex2dec(frskyRSSI, 10) : ' ');
+    lcd_putc(12*FW,3*FH,hex2dec(frskyRSSI, 1));
+
+    // Rx Batt: volts (255 = 6.6V) -10 to calibrate XXX FIX THIS
+    uint16_t centaVolts = (frskyA1 > 0) ? (660 * (uint32_t)(frskyA1) / 255) - 10 : 0;
+    lcd_putc(10*FW,4*FH, hex2dec(centaVolts, 100));
+    lcd_putc(12*FW,4*FH, hex2dec(centaVolts, 10));
+    lcd_putc(13*FW,4*FH, hex2dec(centaVolts, 1));
+    
+    // draw the actual voltage bar
+    if (centaVolts > 419)
+    {
+      uint8_t vbarLen = (centaVolts - 420) >> 1;
+      for (uint8_t i = 59; i < 63; i++) // Bar 4 pixels thick (high)
+      lcd_hline(4, i, vbarLen);
+    }
+  } // if data streaming / blink choice
+    
+}
+
+// FRSKY Alarms menu
+void menuProcFrskyAlarms(uint8_t event)
+{
+  static MState2 mstate2;
+  TITLE("FRSKY ALARMS");
+  MSTATE_TAB = {1,4}; // horizontal column count for MSTAT_CHECK_VxH
+  MSTATE_CHECK_VxH(2,menuTabFrsky,5); // current page=2, 5 rows of settings including page counter top/right
+
+  int8_t  sub    = mstate2.m_posVert - 1; // vertical position (1 = page counter, top/right)
+  uint8_t subSub = mstate2.m_posHorz + 1; // horizontal position
+
+  switch(event)
+  {
+    case EVT_ENTRY:
+      s_editMode = false;
+      break;
+    case EVT_KEY_FIRST(KEY_MENU):
+      if(sub>=0) s_editMode = !s_editMode;
+      break;
+    case EVT_KEY_FIRST(KEY_EXIT):
+      if(s_editMode)
+      {
+        s_editMode = false;
+        killEvents(event);
+      }
+      break;
+  }
+
+  lcd_puts_P(0, 2*FH,PSTR("Slot Level > < Value"));
+  for(uint8_t i=0; i<4; i++) // 4 alarm slots
+  {
+    uint8_t y=(i+3)*FH;
+    FrskyAlarm *ad = &frskyAlarms[i];
+    for(uint8_t j=0; j<4;j++) // 4 settings each slot
+    {
+      uint8_t attr = ((sub==i && subSub==j) ? (s_editMode ? BLINK : INVERS) : 0);
+      switch(j)
+      {
+        case 0:
+          lcd_putsnAtt(0,y,PSTR("A1a""A1b""A2a""A2b")+i*3,3, (sub==i) ? INVERS : 0);
+          break;
+        case 1:
+          lcd_putsnAtt(5*FW,y,PSTR("---""Yel""Org""Red")+ad->level*3,3, attr);
+          if(attr && (s_editMode || p1valdiff)) // p1valdiff is analog user input via Pot 1 (rear/left)
+            if(checkIncDecGen2( event, &ad->level, 0, 3, _FL_UNSIGNED8)) frskyWriteAlarm(i);
+          break;
+        case 2:
+          lcd_putsnAtt(11*FW,y,PSTR("LT<""GT>")+ad->greater*3,3, attr);
+          if(attr && s_editMode)
+            if(checkIncDecGen2( event, &ad->greater, 0, 1, _FL_UNSIGNED8)) frskyWriteAlarm(i);
+          break;
+        case 3:
+          lcd_outdezAtt(19*FW,y, ad->value, attr);
+          if(attr && (s_editMode || p1valdiff))
+            if(checkIncDecGen2( event, &ad->value, 0, 255, _FL_UNSIGNED8)) frskyWriteAlarm(i);
+          break;
+      }
+    }
+  }
+}
+

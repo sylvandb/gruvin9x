@@ -420,14 +420,24 @@ int8_t checkIncDec_hg(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max);
 ///Hilfs-funktion zum Aufruf von checkIncDecGen2 fuer bitfield Variablen
 int8_t checkIncDec_vg(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max);
 
+#ifdef FRSKY
+// Gruvin: This uses a new _FL_UNSIGNED flag to allow for unsigned values, so 0-255 works in an 8bit var. 
+int8_t checkIncDec_Frsky(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max);
+#endif
+
 extern bool    checkIncDec_Ret;//global helper vars
 extern uint8_t s_editMode;     //global editmode
 
-#define _FL_SIZE2     4
-#define _FL_VERT      8
+#define _FL_SIZE2      4
+#define _FL_VERT       8
+#define _FL_UNSIGNED8 16
 
 #define CHECK_INCDEC_H_GENVAR( event, var, min, max)     \
   checkIncDecModVar<min,max>(event,&var,(sizeof(var)==2 ? _FL_SIZE2 : 0)|EE_GENERAL) \
+
+// gruvin: need a function to handle unsigned 8-bit values
+#define CHECK_INCDEC_H_GENVAR_U( event, var, min, max)     \
+  checkIncDecModVar<min,max>(event,&var,(sizeof(var)==2 ? _FL_SIZE2 : 0)|EE_GENERAL|_FL_UNSIGNED) \
 
 #define CHECK_INCDEC_H_MODELVAR( event, var, min, max)     \
   checkIncDecModVar<min,max>(event,&var,(sizeof(var)==2 ? _FL_SIZE2 : 0)|EE_MODEL) \

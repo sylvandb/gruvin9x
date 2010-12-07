@@ -18,42 +18,8 @@
 
 #include "gruvin9x.h"
 #include "templates.h"
-
-#define IS_THROTTLE(x)  (((2-(g_eeGeneral.stickMode&1)) == x) && (x<4))
-#define GET_DR_STATE(x) (!getSwitch(g_model.expoData[x].drSw1,0) ?   \
-                          DR_HIGH :                                  \
-                          !getSwitch(g_model.expoData[x].drSw2,0)?   \
-                          DR_MID : DR_LOW);
-
-#define DO_SQUARE(xx,yy,ww)         \
-    lcd_vline(xx-ww/2,yy-ww/2,ww);  \
-    lcd_hline(xx-ww/2,yy+ww/2,ww);  \
-    lcd_vline(xx+ww/2,yy-ww/2,ww);  \
-    lcd_hline(xx-ww/2,yy-ww/2,ww);
-
-#define DO_CROSS(xx,yy,ww)          \
-    lcd_vline(xx,yy-ww/2,ww);  \
-    lcd_hline(xx-ww/2,yy,ww);  \
-
-#define V_BAR(xx,yy,ll)       \
-    lcd_vline(xx-1,yy-ll,ll); \
-    lcd_vline(xx  ,yy-ll,ll); \
-    lcd_vline(xx+1,yy-ll,ll); \
-
-#define NO_HI_LEN 25
-
-#define WCHART 32
-#define X0     (128-WCHART-2)
-#define Y0     32
-#define WCHARTl 32l
-#define X0l     (128l-WCHARTl-2)
-#define Y0l     32l
-#define RESX    1024
-#define RESXu   1024u
-#define RESXul  1024ul
-#define RESXl   1024l
-#define RESKul  100ul
-#define RESX_PLUS_TRIM (RESX+128)
+#include "frsky.h"
+#include "menus.h"
 
 int16_t calibratedStick[7];
 int16_t ex_chans[NUM_CHNOUT];          // Outputs + intermidiates
@@ -63,11 +29,7 @@ uint8_t s_noHi;
 
 int16_t g_chans512[NUM_CHNOUT];
 
-extern bool warble;
-extern int16_t p1valdiff;
-
 #include "sticks.lbm"
-typedef PROGMEM void (*MenuFuncP_PROGMEM)(uint8_t event);
 
 MenuFuncP_PROGMEM APM menuTabModel[] = {
   menuProcModelSelect,
@@ -88,31 +50,6 @@ MenuFuncP_PROGMEM APM menuTabDiag[] = {
   menuProcDiagAna,
   menuProcDiagCalib
 };
-
-
-#ifdef FRSKY
-MenuFuncP_PROGMEM APM menuTabFrsky[] = {
-  menuProcFrsky,
-  menuProcFrskyAlarms
-};
-#endif
-
-//#define PARR8(args...) (__extension__({static prog_uint8_t APM __c[] = args;&__c[0];}))
-struct MState2
-{
-  uint8_t m_posVert;
-  uint8_t m_posHorz;
-  void init(){m_posVert=m_posHorz=0;};
-  prog_uint8_t *m_tab;
-  static uint8_t event;
-  void check_v(uint8_t event,  uint8_t curr,MenuFuncP *menuTab, uint8_t menuTabSize, uint8_t maxrow);
-  void check(uint8_t event,  uint8_t curr,MenuFuncP *menuTab, uint8_t menuTabSize, prog_uint8_t*subTab,uint8_t subTabMax,uint8_t maxrow);
-};
-#define MSTATE_TAB  static prog_uint8_t APM mstate_tab[]
-#define MSTATE_CHECK0_VxH(numRows) mstate2.check(event,0,0,0,mstate_tab,DIM(mstate_tab)-1,numRows-1)
-#define MSTATE_CHECK0_V(numRows) mstate2.check_v(event,0,0,0,numRows-1)
-#define MSTATE_CHECK_VxH(curr,menuTab,numRows) mstate2.check(event,curr,menuTab,DIM(menuTab),mstate_tab,DIM(mstate_tab)-1,numRows-1)
-#define MSTATE_CHECK_V(curr,menuTab,numRows) mstate2.check_v(event,curr,menuTab,DIM(menuTab),numRows-1)
 
 
 void MState2::check_v(uint8_t event,  uint8_t curr,MenuFuncP *menuTab, uint8_t menuTabSize, uint8_t maxrow)
@@ -210,9 +147,6 @@ void MState2::check(uint8_t event,  uint8_t curr,MenuFuncP *menuTab, uint8_t men
   }
 }
 
-
-#define TITLEP(pstr) lcd_putsAtt(0,0,pstr,INVERS)
-#define TITLE(str)   TITLEP(PSTR(str))
 
 static uint8_t s_curveChan;
 
@@ -967,6 +901,7 @@ void menuProcMix(uint8_t event)
       s_currMixInsMode = true;
       markedIdx        = i;
     }
+
     if(s_mixTab[k].hasDat){ //show data
       MixData *md2=&md[s_mixTab[k].editIdx];
       uint8_t attr = sub==s_mixTab[k].selDat ? INVERS : 0;
@@ -2230,129 +2165,6 @@ void menuProcJeti(uint8_t event)
     jeti_keys = JETI_KEY_NOCHANGE;
   }
 }
-#endif
-
-#ifdef FRSKY
-
-// gruvin: changed to unit16_t to accomodate number higher than 255.
-uint8_t hex2dec(uint16_t number, uint8_t multiplier)
-{
-	uint16_t value = 0;
-	
-	switch (multiplier)
-	{
-		case 1:
-			value = number%100;
-			value = value%10;
-			break;
-			
-		case 10:
-			value = number%100;
-			value = value /10;
-			break;
-			
-		case 100:
-			value = number/100;
-			break;
-			
-		default:
-			
-			break;
-	}
-	
-	value += 48; // convert to ASCII digit
-	return value;
-	
-}
-
-// FRSKY menu
-void menuProcFrsky(uint8_t event)
-{
-  static uint8_t blinkCount = 0; // let's blink the data on and off if there's no data stream
-  static MState2 mstate2;
-  TITLE("FrSky");
-  MSTATE_CHECK_V(1,menuTabFrsky,1); // curr,menuTab,numRows(including the page counter [1/2] etc)
-  int8_t  sub    = mstate2.m_posVert; // alias sub to m_posvert. Clever Mr. TH :-D
-
-  if (frskyStreaming == 0)
-  {
-    lcd_putsAtt(30, 0, PSTR("NO"), DBLSIZE);
-    lcd_putsAtt(62, 0, PSTR("DATA"), DBLSIZE);
-  }
-
-  // Data labels
-  lcd_puts_P(2*FW, 2*FH, PSTR("A1:"));
-  lcd_puts_P(11*FW, 2*FH, PSTR("A2:"));
-  lcd_puts_P(2*FW, 3*FH, PSTR("Rx RSSI:   dB"));
-  lcd_puts_P(2*FW, 4*FH, PSTR("Rx Batt:"));
-  lcd_putc(11*FW,4*FH, '.');
-
-  // Rx batt voltage bar frame
-  lcd_puts_P(0, FH*6, PSTR("4.2V"));
-  lcd_vline(3, 58, 6);
-  lcd_vline(64, 58, 6);
-  lcd_puts_P(64-(FW*2), FH*6, PSTR("5.4V"));
-  lcd_vline(125, 58, 6);
-  lcd_puts_P(128-(FW*4), FH*6, PSTR("6.6V"));
-
-  // blinking if no data stream
-  if (frskyStreaming || ((blinkCount++ % 128) > 25)) // 50:255 off:on ratio at double speed
-  {
-    
-    // A1 raw value, zero padded
-    lcd_putc(5*FW,2*FH,hex2dec(frskyA1, 100));
-    lcd_putc(6*FW,2*FH,hex2dec(frskyA1, 10));
-    lcd_putc(7*FW,2*FH,hex2dec(frskyA1, 1));
-    
-    // A2 raw value, zero padded
-    lcd_putc(14*FW,2*FH,hex2dec(frskyA2, 100));
-    lcd_putc(15*FW,2*FH,hex2dec(frskyA2, 10));
-    lcd_putc(16*FW,2*FH,hex2dec(frskyA2, 1));
-
-    // RSSI value 
-    lcd_putc(10*FW,3*FH,(frskyRSSI > 99) ? hex2dec(frskyRSSI, 100) : ' ');
-    lcd_putc(11*FW,3*FH,(frskyRSSI > 9) ? hex2dec(frskyRSSI, 10) : ' ');
-    lcd_putc(12*FW,3*FH,hex2dec(frskyRSSI, 1));
-
-    // Rx Batt: volts (255 = 6.6V) -10 to calibrate XXX FIX THIS
-    uint16_t centaVolts = (frskyA1 > 0) ? (660 * (uint32_t)(frskyA1) / 255) - 10 : 0;
-    lcd_putc(10*FW,4*FH, hex2dec(centaVolts, 100));
-    lcd_putc(12*FW,4*FH, hex2dec(centaVolts, 10));
-    lcd_putc(13*FW,4*FH, hex2dec(centaVolts, 1));
-    
-    // draw the actual voltage bar
-    if (centaVolts > 419)
-    {
-      uint8_t vbarLen = (centaVolts - 420) >> 1;
-      for (uint8_t i = 59; i < 63; i++) // Bar 4 pixels thick (high)
-      lcd_hline(4, i, vbarLen);
-    }
-  } // if data streaming / blink choice
-    
-}
-
-// FRSKY Alarms menu
-void menuProcFrskyAlarms(uint8_t event)
-{
-  static MState2 mstate2;
-  TITLE("FrSky Alarms");
-  MSTATE_CHECK_V(2,menuTabFrsky,3);
-  int8_t  sub    = mstate2.m_posVert;
-
-  static uint8_t testVal = 0;
-  static uint8_t testVal2 = 0;
-
-  lcd_puts_P(3*FW, 3*FH, PSTR("Test 1:"));
-  lcd_putsnAtt(11*FW, 3*FH, PSTR("ABCD")+testVal, 1, (sub == 1) ? INVERS : 0);
-  if (sub==1) CHECK_INCDEC_H_GENVAR_BF(event, testVal, 0, 3);
-
-  lcd_puts_P(3*FW, 4*FH, PSTR("Test 2:"));
-  lcd_putsnAtt(11*FW, 4*FH, PSTR("1234")+testVal2, 1, (sub == 2) ? INVERS : 0);
-  if (sub==2) CHECK_INCDEC_H_GENVAR_BF(event, testVal2, 0, 3);
-
-}
-
-// end ifdef FRSKY
 #endif
 
 void menuProcStatistic(uint8_t event)
