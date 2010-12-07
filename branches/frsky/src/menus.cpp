@@ -2261,61 +2261,67 @@ uint8_t hex2dec(uint16_t number, uint8_t multiplier)
 // FRSKY menu
 void menuProcFrSky(uint8_t event)
 {
-	TITLE("FrSky");
-	
-	switch(event)
-	{
-          case EVT_KEY_FIRST(KEY_EXIT):
-	    FRSKY_DisableRXD();
-	    chainMenu(menuProc0);
-	    break;
-	}
-    
-        TelemBuffer[3] = hex2dec(frskyA1, 100);
-        TelemBuffer[4] = hex2dec(frskyA1, 10);
-        TelemBuffer[5] = hex2dec(frskyA1, 1);
-        
-        TelemBuffer[11] = hex2dec(frskyA2, 100);
-        TelemBuffer[12] = hex2dec(frskyA2, 10);
-        TelemBuffer[13] = hex2dec(frskyA2, 1);
+  static uint8_t blinkCount = 0; // let's blink the data on and off if there's no data stream
 
-        TelemBuffer[24] = hex2dec(frskyRSSI, 100);
-        TelemBuffer[25] = hex2dec(frskyRSSI, 10);
-        TelemBuffer[26] = hex2dec(frskyRSSI, 1);
-        
-        // 255 = 6.6V
-        uint16_t centaVolts = (frskyA1 > 0) ? (660 * (uint32_t)(frskyA1) / 255) - 10 : 0;
-        TelemBuffer[41] = hex2dec(centaVolts, 100);
-        TelemBuffer[43] = hex2dec(centaVolts, 10);
-        TelemBuffer[44] = hex2dec(centaVolts, 1);
-        
-        if (frskyStreaming == 0)
-          lcd_puts_P(128-(FW*7), 0, PSTR("NO DATA"));
-	
-        // wrote out the three lines of text from TelemBuffer
-	for (uint8_t i = 0; i < 16; i++)
-	{
-          lcd_putcAtt((i+2)*FW,   2*FH, TelemBuffer[i], BSS_NO_INV);
-          lcd_putcAtt((i+2)*FW,   3*FH, TelemBuffer[i+16], BSS_NO_INV);
-          lcd_putcAtt((i+2)*FW,   4*FH, TelemBuffer[i+32], BSS_NO_INV);
-	}
-	
-	// Temporary(?) eye candy -- display RX voltage bar - 4.2V to 6.6V over 120 pixels
-	
-	lcd_puts_P(0, FH*6, PSTR("4.2V"));
-	lcd_vline(3, 58, 6);
-	if (centaVolts > 419)
-	{
-          uint8_t vbarLen = (centaVolts - 420) >> 1;
-          for (uint8_t i = 59; i < 63; i++) // Bar 4 pixels thick (high)
-          lcd_hline(4, i, vbarLen);
-	}
-	lcd_vline(64, 58, 6);
-	lcd_puts_P(64-(FW*2), FH*6, PSTR("5.4V"));
-	
-	lcd_vline(125, 58, 6);
-	lcd_puts_P(128-(FW*4), FH*6, PSTR("6.6V"));
-	
+  TITLE("FrSky");
+  
+  switch(event)
+  {
+    case EVT_KEY_FIRST(KEY_EXIT):
+      FRSKY_DisableRXD();
+      chainMenu(menuProc0);
+      break;
+  }
+
+  if (frskyStreaming == 0)
+    lcd_puts_P(128-(FW*7), 0, PSTR("NO DATA"));
+  
+  // blinking if no data stream
+  if (frskyStreaming || (blinkCount++ > 50)) // 50:255 off:on ratio
+  {
+    TelemBuffer[3] = hex2dec(frskyA1, 100);
+    TelemBuffer[4] = hex2dec(frskyA1, 10);
+    TelemBuffer[5] = hex2dec(frskyA1, 1);
+    
+    TelemBuffer[11] = hex2dec(frskyA2, 100);
+    TelemBuffer[12] = hex2dec(frskyA2, 10);
+    TelemBuffer[13] = hex2dec(frskyA2, 1);
+
+    TelemBuffer[24] = hex2dec(frskyRSSI, 100);
+    TelemBuffer[25] = hex2dec(frskyRSSI, 10);
+    TelemBuffer[26] = hex2dec(frskyRSSI, 1);
+    
+    // 255 = 6.6V
+    uint16_t centaVolts = (frskyA1 > 0) ? (660 * (uint32_t)(frskyA1) / 255) - 10 : 0;
+    TelemBuffer[41] = hex2dec(centaVolts, 100);
+    TelemBuffer[43] = hex2dec(centaVolts, 10);
+    TelemBuffer[44] = hex2dec(centaVolts, 1);
+    
+    // wrote out the three lines of text from TelemBuffer
+    for (uint8_t i = 0; i < 16; i++)
+    {
+      lcd_putcAtt((i+2)*FW,   2*FH, TelemBuffer[i], BSS_NO_INV);
+      lcd_putcAtt((i+2)*FW,   3*FH, TelemBuffer[i+16], BSS_NO_INV);
+      lcd_putcAtt((i+2)*FW,   4*FH, TelemBuffer[i+32], BSS_NO_INV);
+    }
+    
+    // Temporary(?) eye candy -- display RX voltage bar - 4.2V to 6.6V over 120 pixels
+    
+    lcd_puts_P(0, FH*6, PSTR("4.2V"));
+    lcd_vline(3, 58, 6);
+    if (centaVolts > 419)
+    {
+      uint8_t vbarLen = (centaVolts - 420) >> 1;
+      for (uint8_t i = 59; i < 63; i++) // Bar 4 pixels thick (high)
+      lcd_hline(4, i, vbarLen);
+    }
+    lcd_vline(64, 58, 6);
+    lcd_puts_P(64-(FW*2), FH*6, PSTR("5.4V"));
+    
+    lcd_vline(125, 58, 6);
+    lcd_puts_P(128-(FW*4), FH*6, PSTR("6.6V"));
+  }
+    
 }
 #endif
 
