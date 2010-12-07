@@ -264,11 +264,10 @@ void per10ms()
     keys[enuk].input(in & pgm_read_byte(crossTrim+i),(EnumKeys)enuk);
     ++enuk;
   }
-  //  for(int i=0; i<8; i++)
-  //  {
-  //    g_anaIns[i] = anaIn(i);
-  //  }
 
-  //  STARTADCONV;            // Analogkanäle lesen
-
+#ifdef FRSKY
+  // Used to detect presence of valid FrSky telemetry packets inside the 
+  // last FRSKY_TIMEOUT10ms 10ms intervals
+  if (frskyStreaming > 0) frskyStreaming--;
+#endif
 }

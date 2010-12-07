@@ -1,3 +1,13 @@
+Description of files in the folder
+----------------------------------
+
+The file 'readall' is a unix shell script to backup ALL 9X flash,eeprom,fuses and calibrartion data. You should do this with your factory standard unit before attempting any re-flashing what-so-ever. 
+
+The script is easily adapted to Windows by simply renaming it to readall.bat (or readall.cmd on Windows XP and above) and removing the first line containing #!/bin/sh.
+
+
+- - - - - -
+
 The C++ code in 'telemetry-test.cpp' is a bare bones half program I (gruvin) specifically
 wrote for OS X and my FTDI USB-Serial port.
 

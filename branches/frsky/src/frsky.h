@@ -20,10 +20,27 @@
 
 #include "gruvin9x.h"
 
+// .20 seconds
+#define FRSKY_TIMEOUT10ms 20
 
-extern uint8_t linkBuffer[9]; // 4 bytes, worst case 8 bytes with byte stuff + 1
-extern uint8_t TelemBuffer[49]; // 48 bytes plus a terminating null
+extern uint8_t frskyBuffer[19]; // 9 bytes (full packet), worst case 18 bytes with byte-stuffing (+1)
+extern uint8_t TelemBuffer[49]; // 48 bytes plus a terminating null (Holds the text to be displayed on screen)
 extern uint8_t FrskyBufferReady;
+
+// Global Fr-Sky telemetry data variables
+extern uint8_t frskyA1;
+extern uint8_t frskyA2;
+extern uint8_t frskyRSSI; // RSSI (virtual 10 slot) running average
+struct struct_frskyAlarm {
+  uint8_t level;    // The alarm''s 'urgency' level. 0=disabled, 1=yellow, 2=orange, 3=red
+  uint8_t greater;  // 1 = 'if greater than'. 0 = 'if less than'
+  uint8_t value;    // The threshold above or below which the alarm will sound
+};
+extern struct struct_frskyAlarm frskyAlarms[4];
+extern uint8_t frskyStreaming; // >0 (true) == data is streaming in. 0 = nodata detected for some time
+
+
+void processFrskyPacket(uint8_t *packet);
 
 void FRSKY_Init(void);
 void FRSKY_DisableTXD (void);
