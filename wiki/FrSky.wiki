@@ -4,7 +4,7 @@
 
 The gruvin9x project was born mostly out of a desire to add support for Fr-Sky telemetry data, including the ability to program the built-in Fr-Sky alarm settings.
 
-As of `branches/frsky` r213, the above goals have been completed to a beta stage.
+As of `branches/frsky` r211, the above goals have been completed to a beta testing stage.
 
 Bearing in mind that one would not typically be looking at the '9X LCD screen while actually flying a plane, following is how it all looks, so far. 
 
