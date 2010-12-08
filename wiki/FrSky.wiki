@@ -30,7 +30,9 @@ Here we immediately see existing alarms values, as stored in the Fr-Sky transmit
 
 Each field is editable. Select a field using `[UP]`, `[DOWN]`, `[LEFT]` and `[RIGHT]`. Press `[MENU]` to enter edit mode and make your selection using `[LEFT]` and `[RIGHT]`.
 
-Press `[MENU]` again to exit edit mode. This is when the new alarm settings for the row in question are written out to the Fr-Sky transmitter module.
+Pressing `[MENU]` again exits edit mode and it is at this point that the new alarm settings for that row are written out to the Fr-Sky transmitter module.
+
+The ordering of the alarm settings -- with A2 above A1 -- is to save memory space. For some strange reason, the Chinese designers ordered things in this way and it simply saves code and RAM space to not bother re-organising it. Even on the receiver casing, we see the input channels labelled 'backwards' -- 'A2 A1', left to right. `*shrug*`
 
 = TO DO =
 
