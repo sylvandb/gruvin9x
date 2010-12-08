@@ -647,8 +647,8 @@ void perMain()
   }
 
 #ifdef FRSKY
-  if (FrskyBufferReady)
-    processFrskyPacket(frskyBuffer);
+//  if (FrskyRxBufferReady)
+//    processFrskyPacket(frskyRxBuffer);
 #endif
 }
 volatile uint16_t captureRing[16];

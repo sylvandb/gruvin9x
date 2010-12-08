@@ -2287,7 +2287,7 @@ void menuProc0(uint8_t event)
       chainMenu(menuProcJeti);
 #endif
 #ifdef FRSKY
-      FRSKY_EnableRXD(); // enable FrSky-Telemetry reception
+      // gruvin: RX/TX already enabled at system start-up
       pushMenu(menuProcFrsky);
 #endif
       killEvents(event);

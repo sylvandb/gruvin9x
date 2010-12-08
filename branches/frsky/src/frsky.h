@@ -23,8 +23,10 @@
 // .20 seconds
 #define FRSKY_TIMEOUT10ms 20
 
-extern uint8_t frskyBuffer[19]; // 9 bytes (full packet), worst case 18 bytes with byte-stuffing (+1)
-extern uint8_t FrskyBufferReady;
+extern uint8_t frskyRxBuffer[19];   // Receive buffer. 9 bytes (full packet), worst case 18 bytes with byte-stuffing (+1)
+extern uint8_t frskyTxBuffer[19]; // Ditto for transmit buffer
+extern uint8_t FrskyRxBufferReady;  // 1 = received frsky packet (in frskyRxBuffer) is ready for parsing
+extern uint8_t frskyTxBufferCount;   // Number of remaining bytes to transmit. Check if zero before loading a new packet.
 
 // Global Fr-Sky telemetry data variables
 extern uint8_t frskyA1;
@@ -41,6 +43,7 @@ extern uint8_t frskyStreaming; // >0 (true) == data is streaming in. 0 = nodata 
 
 void processFrskyPacket(uint8_t *packet);
 void frskyWriteAlarm(uint8_t slot);
+void frskyAlarmsRefresh(void);
 
 void FRSKY_Init(void);
 void FRSKY_DisableTXD (void);
