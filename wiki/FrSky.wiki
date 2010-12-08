@@ -15,7 +15,7 @@ After pressing `[DOWN (LONG)]`, one is presented with the *FRSKY 1/2* menu page.
 
 Here, we see the page with the Fr-Sky receiver powered off and no telemetry data being heard. In this state, the last displayed values, for A1, A2, RSSI, RX Batt and the graphical voltage bar, blink on and off to further accentuate the fact that data in this state is out of date.
 
-[http://gruvin9x.googlecode.com/svn/wiki/FrSky.attach/no-data.jpg]
+[http://gruvin9x.googlecode.com/svn/wiki/FrSky.attach/no-data-ani.gif]
 
 Here is the same page with the Fr-Sky receiver powered on.
 
