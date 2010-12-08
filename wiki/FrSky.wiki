@@ -48,9 +48,9 @@ A number of things need implementing and testing before this Fr-Sky support is c
 
 It is likely that none of the above TODO's will be implemented prior to increasing onboard data storage, one way or another. 
 
-Also, at some point, we want to be able to log incoming 'User Data' telemetry to an on-board storage device. Whilst, a removable, FAT16 format MMC/SDCARD system is planned for the upcoming new PCB version -- with its larger capacity ATmega2561 -- unfortunately, there simply isn't enough program memory space to implement this on the stock hardware.
+At some stage, we want to be able to log incoming 'User Data' telemetry to an on-board storage device. Whilst, a removable, FAT16 format MMC/SDCARD system is planned for the upcoming new PCB version -- with its larger program capacity ATmega2561 -- unfortunately, there simply isn't enough program memory space to implement this on the stock hardware's ATmega64A.
 
-For greater storage capacity in general, for settings and model data, some kind of simple, non-volatile memory storage device is being considered for owners of the standard hardware, who are prepared to make just a few more hardware mods. There are for example 3-wire serial and I2C EEPROM chips available that might be sufficient. I'm not yet sure what the maximum capacities are however.
+For greater storage capacity _in general_, for settings and model data, some kind of simple, non-volatile memory storage device is being considered for owners of the standard hardware, who are prepared to make just a few more mods. There are for example 3-wire serial and I2C EEPROM chips available that might be sufficient. I'm not yet sure what the maximum capacities are. However ...
 
 Whilst the MMC/SDCARD system cannot be implemented with '9X software on the stock hardware (due to insufficient program memory space), it should still be possible to use such a card in a non-removable, proprietary manner (without DOS FAT16 directory structures, etc.) This idea is being considered as a potentially 'easy' upgrade to the existing 2KBytes EEPROM on the ATmega64A of the stock unit.
   
