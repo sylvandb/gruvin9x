@@ -444,11 +444,11 @@ void menuProcFrskyAlarms(uint8_t event)
 {
   static MState2 mstate2;
   TITLE("FRSKY ALARMS");
-  MSTATE_TAB = {1,4}; // horizontal column count for MSTAT_CHECK_VxH
+  MSTATE_TAB = {1,3}; // horizontal column count for MSTAT_CHECK_VxH
   MSTATE_CHECK_VxH(2,menuTabFrsky,5); // current page=2, 5 rows of settings including page counter top/right
 
   int8_t  sub    = mstate2.m_posVert - 1; // vertical position (1 = page counter, top/right)
-  uint8_t subSub = mstate2.m_posHorz + 1; // horizontal position
+  uint8_t subSub = mstate2.m_posHorz;     // horizontal position
 
   static uint8_t refreshAlarmsFlag = 0; // The functions is repeatedly called. So this makes our refresh request a one-shot
   if (!refreshAlarmsFlag)
@@ -488,7 +488,7 @@ void menuProcFrskyAlarms(uint8_t event)
     FrskyAlarm *ad = &frskyAlarms[i];
     for(uint8_t j=0; j<4;j++) // 4 settings each slot
     {
-      uint8_t attr = ((sub==i && subSub==j) ? (s_editMode ? BLINK : INVERS) : 0);
+      uint8_t attr = ((sub==i && (subSub+1)==j) ? (s_editMode ? BLINK : INVERS) : 0);
       switch(j)
       {
         case 0:
