@@ -1,4 +1,5 @@
 #summary Fr-Sky Telemetry Support (preliminary)
+#labels Featured
 
 = Fr-Sky Two-Way Telemetry Module Support =
 
