@@ -1,4 +1,4 @@
-# EESchema Netlist Version 1.1 created  2/12/2010 12:55:06 p.m.
+# EESchema Netlist Version 1.1 created  9/12/2010 1:37:06 p.m.
 (
  ( /4CE748AC SM1206 C1 10u
   ( 1 GND )
@@ -761,7 +761,7 @@
   ( 2 VCC )
   ( 3 /Vcc_3V3 )
  )
- ( /4CE71C6E C2 X1 16MHz
+ ( /4CE71C6E XTAL_HC49US X1 16MHz
   ( 1 N-000068 )
   ( 2 N-000067 )
  )

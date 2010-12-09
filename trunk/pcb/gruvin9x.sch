@@ -1,4 +1,4 @@
-EESchema Schematic File Version 2  date 2/12/2010 5:54:13 p.m.
+EESchema Schematic File Version 2  date 9/12/2010 1:22:50 p.m.
 LIBS:conn_5
 LIBS:atmega64
 LIBS:power
@@ -37,7 +37,7 @@ EELAYER END
 $Descr A3 16535 11700
 Sheet 1 1
 Title "Main Controller PCB (Stock)"
-Date "2 dec 2010"
+Date "9 dec 2010"
 Rev "2.11"
 Comp "gruvin9x"
 Comment1 ""
@@ -1387,7 +1387,7 @@ L R R75
 U 1 1 4CF47EE6
 P 8200 1000
 F 0 "R75" V 8280 1000 50  0000 C CNN
-F 1 "10K" V 8200 1000 50  0000 C CNN
+F 1 "1K" V 8200 1000 50  0000 C CNN
 	1    8200 1000
 	1    0    0    -1  
 $EndComp
@@ -3147,7 +3147,7 @@ L C C14
 U 1 1 4CE71CC8
 P 2700 7100
 F 0 "C14" V 2750 7200 50  0000 L CNN
-F 1 "30p" V 2500 7100 50  0000 L CNN
+F 1 "18p" V 2500 7100 50  0000 L CNN
 	1    2700 7100
 	0    1    1    0   
 $EndComp
@@ -3156,7 +3156,7 @@ L C C13
 U 1 1 4CE71CC2
 P 2700 6500
 F 0 "C13" V 2750 6600 50  0000 L CNN
-F 1 "30p" V 2850 6500 50  0000 L CNN
+F 1 "18p" V 2850 6500 50  0000 L CNN
 	1    2700 6500
 	0    1    1    0   
 $EndComp
@@ -3165,7 +3165,7 @@ L CRYSTAL X1
 U 1 1 4CE71C6E
 P 3100 6800
 F 0 "X1" V 3100 6650 60  0000 C CNN
-F 1 "16MHz" V 3100 7050 60  0000 C CNN
+F 1 "16MHz 18pf" V 3100 7200 60  0000 C CNN
 	1    3100 6800
 	0    1    1    0   
 $EndComp
