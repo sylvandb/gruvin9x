@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPCB (2010-05-05 BZR 2356)-stable date = 10/12/2010 1:00:18 p.m.
+Cmp-Mod V01 Created by CvPCB (2010-05-05 BZR 2356)-stable date = 12/12/2010 12:19:36 p.m.
 
 BeginCmp
 TimeStamp = /4CE748AC;
@@ -554,24 +554,24 @@ IdModule  = TP;
 EndCmp
 
 BeginCmp
-TimeStamp = /4CE75FF5;
+TimeStamp = /4D03FF83;
 Reference = Q1;
-ValeurCmp = 2SC9014;
-IdModule  = SOT23EBC;
+ValeurCmp = BC847C;
+IdModule  = SOT23-BCE;
 EndCmp
 
 BeginCmp
-TimeStamp = /4CEE079E;
+TimeStamp = /4D03FFF9;
 Reference = Q2;
-ValeurCmp = NPN;
-IdModule  = SOT23EBC;
+ValeurCmp = BC847C;
+IdModule  = SOT23-BCE;
 EndCmp
 
 BeginCmp
-TimeStamp = /4CF47EAA;
+TimeStamp = /4D04001D;
 Reference = Q3;
-ValeurCmp = PNP;
-IdModule  = SOT23EBC;
+ValeurCmp = BC857C;
+IdModule  = SOT23-BCE;
 EndCmp
 
 BeginCmp

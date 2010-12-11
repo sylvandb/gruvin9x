@@ -1,4 +1,4 @@
-EESchema Schematic File Version 2  date 10/12/2010 1:16:18 p.m.
+EESchema Schematic File Version 2  date 12/12/2010 12:18:23 p.m.
 LIBS:conn_5
 LIBS:atmega64
 LIBS:power
@@ -31,20 +31,51 @@ LIBS:opto
 LIBS:atmel
 LIBS:contrib
 LIBS:valves
+LIBS:trans-sot23
 LIBS:gruvin9x-cache
 EELAYER 24  0
 EELAYER END
 $Descr A3 16535 11700
 Sheet 1 1
 Title "Main Controller PCB (Stock)"
-Date "9 dec 2010"
-Rev "2.13"
+Date "11 dec 2010"
+Rev "2.14"
 Comp "gruvin9x"
 Comment1 ""
 Comment2 "for use with KiCad. This version contains significant cahnges to the original design."
 Comment3 "This is a re-work of an orgininal reverse engineered schematic by an unknown author"
 Comment4 ""
 $EndDescr
+$Comp
+L BC857C Q3
+U 1 1 4D04001D
+P 7650 1050
+F 0 "Q3" H 7850 950 50  0000 C CNN
+F 1 "BC857C" H 7950 1200 50  0000 C CNN
+F 2 "SOT23-BCE" H 7840 1050 30  0001 C CNN
+	1    7650 1050
+	1    0    0    -1  
+$EndComp
+$Comp
+L BC847C Q2
+U 1 1 4D03FFF9
+P 6550 2050
+F 0 "Q2" H 6450 1900 50  0000 C CNN
+F 1 "BC847C" H 6400 2250 50  0000 C CNN
+F 2 "SOT23-BCE" H 6740 2050 30  0001 C CNN
+	1    6550 2050
+	-1   0    0    -1  
+$EndComp
+$Comp
+L BC847C Q1
+U 1 1 4D03FF83
+P 12150 7700
+F 0 "Q1" H 12000 7600 50  0000 C CNN
+F 1 "BC847C" H 11950 7900 50  0000 C CNN
+F 2 "SOT23-BCE" H 12340 7700 30  0001 C CNN
+	1    12150 7700
+	-1   0    0    -1  
+$EndComp
 Text Label 1250 6750 0    60   ~ 0
 J2
 Text Label 1250 6550 0    60   ~ 0
@@ -1486,15 +1517,6 @@ F 1 "GND" H 7050 1480 30  0001 C CNN
 	1    7050 1550
 	1    0    0    -1  
 $EndComp
-$Comp
-L PNP Q3
-U 1 1 4CF47EAA
-P 7650 1050
-F 0 "Q3" H 7650 900 50  0000 R CNN
-F 1 "PNP" H 7650 1200 50  0000 R CNN
-	1    7650 1050
-	1    0    0    1   
-$EndComp
 Text Label 7200 3300 0    60   ~ 0
 TELEM_TX
 Text Label 1750 6300 0    60   ~ 0
@@ -1741,15 +1763,6 @@ F 0 "R69" V 6530 1400 50  0000 C CNN
 F 1 "10K" V 6450 1400 50  0000 C CNN
 	1    6450 1400
 	1    0    0    -1  
-$EndComp
-$Comp
-L NPN Q2
-U 1 1 4CEE079E
-P 6550 2050
-F 0 "Q2" H 6550 1900 50  0000 R CNN
-F 1 "NPN" H 6550 2200 50  0000 R CNN
-	1    6550 2050
-	-1   0    0    -1  
 $EndComp
 Text Label 7200 3400 0    60   ~ 0
 TELEM_RX
@@ -2226,16 +2239,6 @@ F 0 "R37" V 13280 7700 50  0000 C CNN
 F 1 "150K" V 13200 7700 50  0000 C CNN
 	1    13200 7700
 	0    1    1    0   
-$EndComp
-$Comp
-L NPN Q1
-U 1 1 4CE75FF5
-P 12150 7700
-F 0 "Q1" H 12150 7550 50  0000 R CNN
-F 1 "2SC9014" H 12150 7850 50  0000 R CNN
-F 2 "SOT23EBD" H 12100 7500 60  0001 C CNN
-	1    12150 7700
-	-1   0    0    -1  
 $EndComp
 Text Label 13600 6950 0    60   ~ 0
 Speaker

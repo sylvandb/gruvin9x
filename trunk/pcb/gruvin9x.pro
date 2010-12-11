@@ -1,4 +1,4 @@
-update=11/12/2010 5:06:53 p.m.
+update=12/12/2010 12:07:14 p.m.
 version=1
 last_client=pcbnew
 [cvpcb]
@@ -81,11 +81,12 @@ LibName29=opto
 LibName30=atmel
 LibName31=contrib
 LibName32=valves
+LibName33=Custom Components\\library\\trans-sot23
 [pcbnew]
 version=1
 PadDrlX=0
-PadDimH=886
-PadDimV=886
+PadDimH=360
+PadDimV=360
 BoardThickness=630
 SgPcb45=1
 TxtPcbV=800
