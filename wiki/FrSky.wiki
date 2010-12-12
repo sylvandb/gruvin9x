@@ -1,20 +1,20 @@
 #summary Fr-Sky Telemetry Support (preliminary)
-#labels Featured
+#labels Featured,Phase-Implementation
 
 = Fr-Sky Two-Way Telemetry Module Support =
 
-The gruvin9x project was born mostly out of a desire to add support for Fr-Sky telemetry data, including the ability to program the built-in Fr-Sky alarm settings.
+The gruvin9x project was born mostly out of a desire to add support for Fr-Sky telemetry data, including the ability to program the built-in [http://www.frsky-rc.com Fr-Sky] alarm settings.
 
 As of `branches/frsky` r211, the above goals have been completed to a beta testing stage.
 
-Bearing in mind that one would not typically be looking at the '9X LCD screen while actually flying a plane, following is how it all looks, so far. 
+Bearing in mind that one would not typically be looking at the '9X LCD screen while actually flying a plane, for example, following is how it looks, so far ... 
 
 == Screen Shots ==
 
 === The Main FRSKY Page ===
 After pressing `[DOWN (LONG)]`, one is presented with the *FRSKY 1/2* menu page. 
 
-Here, we see the page with the Fr-Sky receiver powered off and no telemetry data being heard. In this state, the last displayed values, for A1, A2, RSSI, RX Batt and the graphical voltage bar, blink on and off to further accentuate the fact that data in this state is out of date.
+Here, we see the page with the Fr-Sky receiver powered off and thus no telemetry data being received. In this state, a large "NO DATA" message is displayed and the last known values, for A1, A2, RSSI, RX Batt and the graphical voltage bar, blink on and off to further accentuate the fact that data in this state is out of date.
 
 [http://gruvin9x.googlecode.com/svn/wiki/FrSky.attach/no-data-ani.gif]
 
@@ -23,35 +23,35 @@ Here is the same page with the Fr-Sky receiver powered on.
 [http://gruvin9x.googlecode.com/svn/wiki/FrSky.attach/got-data.jpg]
 
 === FRSKY ALARMS ===
-Pressing `[RIGHT]` takes us to page 2/2, 'FRSKY ALARMS'
+Pressing `[RIGHT]` takes us to the *FRSKY ALARMS 2/2 menu page.
 
 [http://gruvin9x.googlecode.com/svn/wiki/FrSky.attach/alarms.jpg]
 
-Here we immediately see existing alarms values, as stored in the Fr-Sky transmitter module. (If for some reason you want to manually reload that data, you can press `[MENU (LONG)]`
+Here we immediately see existing alarms values, as retrieved from the Fr-Sky transmitter module. (If for some reason you want to manually reload that data, you can press `[MENU (LONG)]`)
 
 Each field is editable. Select a field using `[UP]`, `[DOWN]`, `[LEFT]` and `[RIGHT]`. Press `[MENU]` to enter edit mode and make your selection using `[LEFT]` and `[RIGHT]`.
 
 Pressing `[MENU]` again exits edit mode and it is at this point that the new alarm settings for that row are written out to the Fr-Sky transmitter module.
 
-The ordering of the alarm settings -- with A2 above A1 -- is to save memory space. For some strange reason, the Chinese designers ordered things in this way and it simply saves code and RAM space to not bother re-organising it. Even on the receiver casing, we see the input channels labelled 'backwards' -- 'A2 A1', left to right. `*shrug*`
+Incidentally, the ordering of the alarm settings -- with A2 above A1 -- is intentional. For some reason, the Chinese designers ordered things in this way, and it simply saves code and RAM space to not bother buffering and re-organising it. Even on the receiver casing, we see the input channels labelled 'backwards' (to the Western mind?) -- 'A2 A1', left to right. `*shrug*`
 
 = TO DO =
 
 A number of things need implementing and testing before this Fr-Sky support is committed to the `trunk/` version.
 
- * Configurable A1/A2 Voltage divider settings. I plan to implement these as 'Max Volts' / 'Calibration Offset'] pairs, where the later will a voltage in 0.1V increments to add or subtract from the final result to adjust for component tolerances at some chosen voltage. True linear calibration would include a multiplier factor to stretch or compress the values if needed. But this will not be implemented.
+ * Configurable A1/A2 Voltage divider settings. I plan to implement these as 'Max Volts' / 'Calibration Offset'] pairs, where the later will be a voltage in 0.1V increments to add or subtract from the final result to adjust for component tolerances, at some chosen reference voltage. That is to say, true (linear) calibration would include a multiplier factor to stretch or compress values as required to get the voltage accurate across its entire range. But this is really a bit of over-kill for our purposes and will not be implemented.
 
- * Addition of graphical bar for signal strength
+ * Addition of graphical bar for signal strength. In fact, ...
 
- * Page 1/3 to be a calibrated, pretty, graphical representation of data, while numerical and calibration data is moved to a new page, 3/3.
+ * Page 1/*3* to become more of a 'pretty', graphical representation of pre-calibrated data, while numerical and calibration data is moved to a new page, 3/3. Or perhaps inserted before the alarms page would be better.
 
-=== Increasing On-board Storage ===
+=== Increasing On-board Storage for Recording Telemetry 'User Data' ===
 
 It is likely that none of the above TODO's will be implemented prior to increasing onboard data storage, one way or another. 
 
-At some stage, we want to be able to log incoming 'User Data' telemetry to an on-board storage device. Whilst, a removable, FAT16 format MMC/SDCARD system is planned for the upcoming new PCB version -- with its larger program capacity ATmega2561 -- unfortunately, there simply isn't enough program memory space to implement this on the stock hardware's ATmega64A.
+At some stage, we want to be able to log incoming 'User Data' telemetry to an on-board storage device. Whilst, a removable, FAT16/32 formatted MMC/SDCARD system is planned for the upcoming new PCB version -- with its larger program capacity ATmega2561 -- unfortunately, there simply isn't enough flash memory space to implement this on the stock hardware's ATmega64A.
 
-For greater storage capacity _in general_, for settings and model data, some kind of simple, non-volatile memory storage device is being considered for owners of the standard hardware, who are prepared to make just a few more mods. There are for example 3-wire serial and I2C EEPROM chips available that might be sufficient. I'm not yet sure what the maximum capacities are. However ...
+For greater storage capacity _in general_, for settings and model data, some kind of simple, non-volatile memory storage device is being considered for owners of the standard hardware, who are prepared to make just a few more mods. (The RadioCloneproject already has this -- and has, from what I can tell, just barely been able to squeeze in full DOS/FAT support. Nice on Rafal!)
 
-Whilst the MMC/SDCARD system cannot be implemented with '9X software on the stock hardware (due to insufficient program memory space), it should still be possible to use such a card in a non-removable, proprietary manner (without DOS FAT16 directory structures, etc.) This idea is being considered as a potentially 'easy' upgrade to the existing 2KBytes EEPROM on the ATmega64A of the stock unit.
+Whilst the MMC/SDCARD system cannot be implemented with '9X software on the stock hardware (due to insufficient flash memory size), it is still possible to use such a card in a (probably non-removable), proprietary manner. That is, without DOS/FAT support but rather directly using the storage medium in a low-level, 'sector-by-sector' manner.  This idea is being considered as a potentially 'easy' upgrade to the paltry 2KBytes EEPROM on the ATmega64A employed in the stock unit. If done, this would allow for literally thousands of complex model programs to be stored -- but will not necessarily allow for potability of data between units and almost certainly not allow use of a PC to manage such data. Therefore, I'm thinking there's probably not going to be any real demand for it. Comments anyone?
   
