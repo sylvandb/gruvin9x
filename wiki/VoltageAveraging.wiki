@@ -1,4 +1,4 @@
-#summary Battery voltage averaging.
+#summary Battery voltage averaging. (Losing the jitters.)
 = Why =
 
 Whilst my own '9X seems fairly stable when taking ADC samples of battery voltage, I've come across several that have considerably more 'jitter'. This results in the battery voltage flickering up and down significantly -- for example, between 8.8V and 9.4V, even though it may read 9.4V most of the time. This can of course cause annoying false low-bat alarms.
