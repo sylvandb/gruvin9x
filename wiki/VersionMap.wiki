@@ -1,0 +1,11 @@
+#summary Version Map
+#labels Phase-Support
+
+= Firmware / Hardware Version Map =
+
+A map is quite useless to you if you don't know where on the map you currently are. This map is especially useless because it does not actually exist yet. Doh! :-P
+
+What this page _will_ be, some day, hopefully, is an easy to understand, 'at a glance' guide to which firmware versions offer exactly what features -- and exactly what hardware (PCB/transmitter) versions or hacks are required for compatibility with each of those.
+
+=== Meanwhile ... ===
+In the meantime, information on this topic can be found on the [FlashGuide Flash Guide] and [MakeOptions Make Options] wiki pages -- probably in that order of usefulness to most.
