@@ -7,7 +7,7 @@ Whilst my own '9X seems fairly stable when taking ADC samples of battery voltage
 
 Implemented a simple running average -- `new_value = (last_value * 9 + new_sample) / 10`. 
 
-The use of 9 'virtual' last values effectively slows down the response to rapidly changing samples.
+The use of 9 'virtual' last values vaguely simulates recording of 9 previous samples and effectively slows down the response to rapidly changing samples -- but not too slow. This eliminates 'the jitters' where unstable battery voltage samples are occurring, for whatever reason.
 
 == Make Options ==
 
