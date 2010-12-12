@@ -5,16 +5,10 @@ Whilst my own '9X seems fairly stable when taking ADC samples of battery voltage
 
 = The Fix =
 
-*SVN Revision:* 38
+Implemented a simple running average -- `new_value = (last_value * 9 + new_sample) / 10`. 
 
-The ER9X code I am currently basing my code on samples battery voltage roughly once every 320ms (at least, if the code comments are accurate.) My additions as of revision 38 now record the previous 10 samples and average these each 320ms cycle. 
-
-Whilst yet more SRAM is needed for this, I note that the final result is still well under 2KBytes out of the available 4KBytes in the ATmega64A.
-
-(Actually, there are 10 storage cells used, but I've just realised I'm only averaging the current plus the previous 9 samples, thus wasting one byte of SRAM. Oops. I may fix this later some time. It's no biggie for now.)
-
-*In hind sight*, this might have been better implemented as a simple running average -- `new_value = (last_value + new_sample) / 2`. Hmmm.
+The use of 9 'virtual' last values effectively slows down the response to rapidly changing samples.
 
 == Make Options ==
 
-The battery voltage averaging feature is now compiled by default. If you want to disable it, you can include `BATVOLTS=STD` on your '`make`' command line.
+None. The option to turn this feature off using a `Make` directive was removed some time around r200. Why? Because too many `Make` directives was getting messy and I felt this feature was of benefit to everyone.
