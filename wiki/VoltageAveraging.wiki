@@ -1,13 +1,13 @@
 #summary Battery voltage averaging. (Losing the jitters.)
 = Why =
 
-Whilst my own '9X seems fairly stable when taking ADC samples of battery voltage, I've come across several that have considerably more 'jitter'. This results in the battery voltage flickering up and down significantly -- for example, between 8.8V and 9.4V, even though it may read 9.4V most of the time. This can of course cause annoying false low-bat alarms.
+Whilst my own '9X seems fairly stable when taking ADC samples of battery voltage, I've come across several that have considerably more 'jitter'. This results in the battery voltage flickering up and down significantly -- for example, between 8.8V and 9.4V, even though it may read 9.2V, most of the time. Apart from the displeasing effect this has on the user, it can also cause annoying intermittent and false low-bat alarms. Not good.
 
 = The Fix =
 
 Implemented a simple running average -- `new_value = (last_value * 9 + new_sample) / 10`. 
 
-The use of 9 'virtual' last values vaguely simulates recording of 9 previous samples and effectively slows down the response to rapidly changing samples -- but not too slow. This eliminates 'the jitters' where unstable battery voltage samples are occurring, for whatever reason.
+The use of 9 'virtual' last values vaguely simulates recording of 9 previous samples and slows down the response to rapidly changing samples -- but is not _too_ slow. This effectively eliminates 'the jitters', where unstable battery voltage samples are occurring, for whatever reason.
 
 == Make Options ==
 
