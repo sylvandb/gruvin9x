@@ -12,7 +12,7 @@ By default, simply running 'make' from the `src/` directory will build gruvin9x.
 make EXT=FRSKY BEEPER=SPEAKER USART1=FREED
 }}}
 
-The Makefile also defaults to the 'usbtiny' AVR programmer type, since that's what Gruvin uses.
+The Makefile also defaults to the 'usbtiny' AVR programmer type, since that's what Gruvin uses. Oh and, it disables flash verification by default also -- to save time.
 
 == Hardware Modification Related Make Options ==
 
@@ -43,11 +43,11 @@ USART1 may still be used at a later date. However, this mod is not compatible wi
 </ul>
 
 
-== Standard TH/ER9X Make Commands ==
+== Standard TH/ER9X Make Directives ==
 
 All other standard ER9X make commands remain present. Examples include ...
 
-<blockquote><pre>*make wflash* [[PROGRAMMER=usbtiny]] - programs/flashes the ATmega64A using er9x.hex. (With optional programmer type override in [[brackets]] if not 'usbtiny')
+<blockquote><pre>*make wflash* [[PROGRAMMER=usbtiny]] - programs/flashes the ATmega64A using code data from gruvin9x.hex. (With optional programmer type override in [[brackets]] if your is not a 'usbtiny')
 
 *make reeprom TARGET=models* - reads the ATmega64A EEPROM (models/settings) data into models.bin
 
