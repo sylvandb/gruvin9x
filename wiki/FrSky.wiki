@@ -33,6 +33,8 @@ Each field is editable. Select a field using `[UP]`, `[DOWN]`, `[LEFT]` and `[RI
 
 Pressing `[MENU]` again exits edit mode and it is at this point that the new alarm settings for that row are written out to the Fr-Sky transmitter module.
 
+In case you're wondering, some people, for whatever reason, have difficulty remembering which '<' or '>' symbol means 'less' or 'greater than'. So I took it upon myself to add "GT" and "LT", with the idea that, '<b>G</b>reater <b>T</b>han' and, '<b>L</b>ess <b>T</b>han' might assist.
+
 Incidentally, the ordering of the alarm settings -- with A2 above A1 -- is intentional. For some reason, the Chinese designers ordered things in this way, and it simply saves code and RAM space to not bother buffering and re-organising it. Even on the receiver casing, we see the input channels labelled 'backwards' (to the Western mind?) -- 'A2 A1', left to right. `*shrug*`
 
 = TO DO =
@@ -51,7 +53,7 @@ It is likely that none of the above TODO's will be implemented prior to increasi
 
 At some stage, we want to be able to log incoming 'User Data' telemetry to an on-board storage device. Whilst, a removable, FAT16/32 formatted MMC/SDCARD system is planned for the upcoming new PCB version -- with its larger program capacity ATmega2561 -- unfortunately, there simply isn't enough flash memory space to implement this on the stock hardware's ATmega64A.
 
-For greater storage capacity _in general_, for settings and model data, some kind of simple, non-volatile memory storage device is being considered for owners of the standard hardware, who are prepared to make just a few more mods. (The RadioCloneproject already has this -- and has, from what I can tell, just barely been able to squeeze in full DOS/FAT support. Nice on Rafal!)
+For greater storage capacity _in general_, for settings and model data, some kind of simple, non-volatile memory storage device is being considered for owners of the standard hardware, who are prepared to make just a few more mods. (The [http://www.radioclone.org/ RadioClone] project already has this -- and has, from what I can tell, just barely been able to squeeze in full DOS/FAT support. Nice one Rafal!)
 
 Whilst the MMC/SDCARD system cannot be implemented with '9X software on the stock hardware (due to insufficient flash memory size), it is still possible to use such a card in a (probably non-removable), proprietary manner. That is, without DOS/FAT support but rather directly using the storage medium in a low-level, 'sector-by-sector' manner.  This idea is being considered as a potentially 'easy' upgrade to the paltry 2KBytes EEPROM on the ATmega64A employed in the stock unit. If done, this would allow for literally thousands of complex model programs to be stored -- but will not necessarily allow for potability of data between units and almost certainly not allow use of a PC to manage such data. Therefore, I'm thinking there's probably not going to be any real demand for it. Comments anyone?
   
