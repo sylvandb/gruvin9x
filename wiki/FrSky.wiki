@@ -3,7 +3,7 @@
 
 = Fr-Sky Two-Way Telemetry Module Support =
 
-The gruvin9x project was born mostly out of a desire to add support for Fr-Sky telemetry data, including the ability to program the built-in [http://www.frsky-rc.com Fr-Sky] alarm settings.
+The gruvin9x project was born mostly out of a desire to add support for [http://www.frsky-rc.com Fr-Sky] telemetry data, including the ability to program the built-in [http://www.frsky-rc.com Fr-Sky] alarm settings.
 
 As of `branches/frsky` r211, the above goals have been completed to a beta testing stage.
 
