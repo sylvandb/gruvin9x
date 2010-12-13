@@ -66,11 +66,21 @@ bool eeLoadGeneral()
 }
 
 #ifdef FRSKY
+void frskyDefault()
+{
+  memset(&g_eeFrsky, 0, sizeof(g_eeFrsky));
+  g_eeFrsky.myVers = FRSKY_MYVER;
+  g_eeFrsky.rxVoltsChannel  = 1;
+  g_eeFrsky.rxVoltsMax      = 66;   // 6.6V
+  g_eeFrsky.rxVoltsOfs      = -10;  // -0.1V
+  g_eeFrsky.rxVoltsBarMin   = 42;   // 4.2V
+  g_eeFrsky.rxVoltsBarMax   = 66;   // 6.6V
+}
 bool eeLoadFrsky()
 {
   theFile.openRd(FILE_FRSKY);
   uint8_t sz = theFile.readRlc((uint8_t*)&g_eeFrsky, sizeof(EEFrskyData));
-  return (sz == sizeof(EEFrskyData)  && g_eeFrsky.myVers==FRSKY_MYVER);
+  return(sz == sizeof(EEFrskyData)  && g_eeFrsky.myVers==FRSKY_MYVER);
 }
 #endif
 
@@ -179,12 +189,17 @@ void eeReadAll()
     //alert(PSTR("modef ok"));
     theFile.writeRlc(FILE_MODEL(0),FILE_TYP_MODEL,(uint8_t*)&g_model,sizeof(g_model),200);
     //alert(PSTR("modwrite ok"));
-
   }
-  eeLoadModel(g_eeGeneral.currModel);
+
 #ifdef FRSKY
-  eeLoadFrsky();
+  if(!eeLoadFrsky()){
+    frskyDefault();
+    alert(PSTR("FrSky Default OK"));
+    theFile.writeRlc(FILE_FRSKY, FILE_TYP_FRSKY,(uint8_t *)&g_eeFrsky,sizeof(g_eeFrsky), 100);
+    alert(PSTR("FrSky write OK"));
+  }
 #endif
+  eeLoadModel(g_eeGeneral.currModel);
 }
 
 
@@ -218,20 +233,6 @@ void eeCheck(bool immediately)
     }
     //first finish GENERAL, then MODEL !!avoid Toggle effect
   }
-  else if(msk & EE_MODEL){
-    if(theFile.writeRlc(FILE_TMP, FILE_TYP_MODEL, (uint8_t*)&g_model,
-                        sizeof(g_model),20) == sizeof(g_model))
-    {
-      EFile::swap(FILE_MODEL(g_eeGeneral.currModel),FILE_TMP);
-    }else{
-      if(theFile.errno()==ERR_TMO){
-        s_eeDirtyMsk |= EE_MODEL; //try again
-        s_eeDirtyTime10ms = g_tmr10ms - WRITE_DELAY_10MS;
-      }else{
-        alert(PSTR("EEPROM overflow"));
-      }
-    }
-  }
 #ifdef FRSKY
   else if (msk & EE_FRSKY){
 // ref: uint16_t EFile::writeRlc(uint8_t i_fileId, uint8_t typ,uint8_t*buf,uint16_t i_len, uint8_t maxTme10ms){
@@ -249,5 +250,19 @@ void eeCheck(bool immediately)
     }
   }
 #endif
+  else if(msk & EE_MODEL){
+    if(theFile.writeRlc(FILE_TMP, FILE_TYP_MODEL, (uint8_t*)&g_model,
+                        sizeof(g_model),20) == sizeof(g_model))
+    {
+      EFile::swap(FILE_MODEL(g_eeGeneral.currModel),FILE_TMP);
+    }else{
+      if(theFile.errno()==ERR_TMO){
+        s_eeDirtyMsk |= EE_MODEL; //try again
+        s_eeDirtyTime10ms = g_tmr10ms - WRITE_DELAY_10MS;
+      }else{
+        alert(PSTR("EEPROM overflow"));
+      }
+    }
+  }
   //beepWarn1();
 }
