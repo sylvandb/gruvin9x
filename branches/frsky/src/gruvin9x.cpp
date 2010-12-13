@@ -30,6 +30,9 @@ mode4 ail thr ele rud
 
 EEGeneral  g_eeGeneral;
 ModelData  g_model;
+#ifdef FRSKY
+EEFrskyData g_eeFrsky;
+#endif
 
 #ifdef BEEPSPKR
 // gruvin: Tone Generator Globals

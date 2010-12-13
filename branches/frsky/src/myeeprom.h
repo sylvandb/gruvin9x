@@ -169,23 +169,27 @@ typedef struct t_ModelData {
   SwashRingData swashR;
 } __attribute__((packed)) ModelData;
 
-
-
-#define TOTAL_EEPROM_USAGE (sizeof(ModelData)*MAX_MODELS + sizeof(EEGeneral))
-
-
 extern EEGeneral g_eeGeneral;
 extern ModelData g_model;
 
+#ifndef FRSKY
+#define TOTAL_EEPROM_USAGE (sizeof(ModelData)*MAX_MODELS + sizeof(EEGeneral))
+#else
 
+#define FRSKY_MYVER  1
+typedef struct t_FrskyData {
+  uint8_t myVers; // data version
+  uint8_t rxVoltsChannel; // 0=none, 1=A1, 2=A2
+  uint8_t rxVoltsMax; // 0.1V steps EG. 6.6 Volts = 66. 25.1V = 251, etc.
+  int8_t  rxVoltsOfs; // Calibration offset. Signed 0.1V steps. EG. -4 to substract 0.4V
+  uint8_t rxVoltsBarMin; // Minimum voltage for voltage bar display (0.1V steps)
+  uint8_t rxVoltsBarMax; // ditto for max volts. (Would usually = rxVoltsmax)
+} __attribute__((packed)) EEFrskyData;
 
+extern EEFrskyData g_eeFrsky;
+#define TOTAL_EEPROM_USAGE (sizeof(ModelData)*MAX_MODELS + sizeof(EEGeneral) + sizeof(EEFrskyData))
 
-
-
-
-
-
-
+#endif
 
 
 #endif

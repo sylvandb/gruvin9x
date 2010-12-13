@@ -26,6 +26,9 @@
 /// convert model number 0..MAX_MODELS-1  int fileId
 #define FILE_MODEL(n) (1+n)
 #define FILE_TMP      (1+16)
+#ifdef FRSKY
+#define FILE_FRSKY    (FILE_TMP+1)
+#endif
 
 bool EeFsOpen();
 int8_t EeFsck();

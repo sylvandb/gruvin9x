@@ -482,6 +482,10 @@ template<class t> inline int8_t sgn(t a){ return a>0 ? 1 : (a < 0 ? -1 : 0); }
 
 #define EE_GENERAL 1
 #define EE_MODEL   2
+#ifdef FRSKY
+#define EE_FRSKY  32
+#endif
+
 /// Markiert einen EEPROM-Bereich als dirty. der Bereich wird dann in
 /// eeCheck ins EEPROM zurueckgeschrieben.
 void eeWriteBlockCmp(const void *i_pointer_ram, void *i_pointer_eeprom, size_t size);

@@ -25,6 +25,11 @@ EFile theFile2; //sometimes we need two files
 
 #define FILE_TYP_GENERAL 1
 #define FILE_TYP_MODEL   2
+
+#ifdef FRSKY
+#define FILE_TYP_FRSKY   3
+#endif
+
 #define partCopy(sizeDst,sizeSrc)                         \
       pSrc -= (sizeSrc);                                  \
       pDst -= (sizeDst);                                  \
@@ -59,6 +64,15 @@ bool eeLoadGeneral()
   }
   return false;
 }
+
+#ifdef FRSKY
+bool eeLoadFrsky()
+{
+  theFile.openRd(FILE_FRSKY);
+  uint8_t sz = theFile.readRlc((uint8_t*)&g_eeFrsky, sizeof(EEFrskyData));
+  return (sz == sizeof(EEFrskyData)  && g_eeFrsky.myVers==FRSKY_MYVER);
+}
+#endif
 
 void modelDefault(uint8_t id)
 {
@@ -141,7 +155,7 @@ bool eeDuplicateModel(uint8_t id)
     wdt_reset();
   }
   theFile2.closeTrunc();
-  //todo error handling
+  //XXX: todo error handling
   return true;
 }
 void eeReadAll()
@@ -168,6 +182,9 @@ void eeReadAll()
 
   }
   eeLoadModel(g_eeGeneral.currModel);
+#ifdef FRSKY
+  eeLoadFrsky();
+#endif
 }
 
 
@@ -215,5 +232,22 @@ void eeCheck(bool immediately)
       }
     }
   }
+#ifdef FRSKY
+  else if (msk & EE_FRSKY){
+// ref: uint16_t EFile::writeRlc(uint8_t i_fileId, uint8_t typ,uint8_t*buf,uint16_t i_len, uint8_t maxTme10ms){
+    if(theFile.writeRlc(FILE_TMP, FILE_TYP_FRSKY, (uint8_t*)&g_eeFrsky,
+                        sizeof(g_eeFrsky),10) == sizeof(g_eeFrsky))
+    {
+      EFile::swap(FILE_FRSKY,FILE_TMP);
+    }else{
+      if(theFile.errno()==ERR_TMO){
+        s_eeDirtyMsk |= EE_MODEL; //try again
+        s_eeDirtyTime10ms = g_tmr10ms - WRITE_DELAY_10MS;
+      }else{
+        alert(PSTR("EEPROM overflow"));
+      }
+    }
+  }
+#endif
   //beepWarn1();
 }

@@ -211,24 +211,36 @@ void lcd_vline(uint8_t x,uint8_t y, int8_t h)
 void lcdSendCtl(uint8_t val)
 {
   PORTC_LCD_CTRL &= ~(1<<OUT_C_LCD_CS1);
+#ifdef LCD_MULTIPLEX
+  DDRA = 0xFF; // set LCD_DAT pins to output
+#endif
   PORTC_LCD_CTRL &= ~(1<<OUT_C_LCD_A0);
   PORTC_LCD_CTRL &= ~(1<<OUT_C_LCD_RnW);
   PORTA_LCD_DAT = val;
   PORTC_LCD_CTRL |=  (1<<OUT_C_LCD_E);
   PORTC_LCD_CTRL &= ~(1<<OUT_C_LCD_E);
   PORTC_LCD_CTRL |=  (1<<OUT_C_LCD_A0);
+#ifdef LCD_MULTIPLEX
+  DDRA = 0x00; // set LCD_DAT pins to input
+#endif
   PORTC_LCD_CTRL |=  (1<<OUT_C_LCD_CS1);
 }
 
 void lcdSendDat(uint8_t val)
 {
   PORTC_LCD_CTRL &= ~(1<<OUT_C_LCD_CS1);
+#ifdef LCD_MULTIPLEX
+  DDRA = 0xFF; // set LCD_DAT pins to output
+#endif
   PORTC_LCD_CTRL |=  (1<<OUT_C_LCD_A0);
   PORTC_LCD_CTRL &= ~(1<<OUT_C_LCD_RnW);
   PORTA_LCD_DAT = val;
   PORTC_LCD_CTRL |=  (1<<OUT_C_LCD_E);
   PORTC_LCD_CTRL &= ~(1<<OUT_C_LCD_E);
   PORTC_LCD_CTRL |=  (1<<OUT_C_LCD_A0);
+#ifdef LCD_MULTIPLEX
+  DDRA = 0x00; // set LCD_DAT pins to input
+#endif
   PORTC_LCD_CTRL |=  (1<<OUT_C_LCD_CS1);
 }
 
