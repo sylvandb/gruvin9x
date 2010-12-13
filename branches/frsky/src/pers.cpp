@@ -72,7 +72,7 @@ void frskyDefault()
   g_eeFrsky.myVers = FRSKY_MYVER;
   g_eeFrsky.rxVoltsChannel  = 1;
   g_eeFrsky.rxVoltsMax      = 66;   // 6.6V
-  g_eeFrsky.rxVoltsOfs      = -10;  // -0.1V
+  g_eeFrsky.rxVoltsOfs      = -1;   // -0.1V
   g_eeFrsky.rxVoltsBarMin   = 42;   // 4.2V
   g_eeFrsky.rxVoltsBarMax   = 66;   // 6.6V
 }
@@ -194,9 +194,9 @@ void eeReadAll()
 #ifdef FRSKY
   if(!eeLoadFrsky()){
     frskyDefault();
-    alert(PSTR("FrSky Default OK"));
+    // alert(PSTR("FrSky Default OK"));
     theFile.writeRlc(FILE_FRSKY, FILE_TYP_FRSKY,(uint8_t *)&g_eeFrsky,sizeof(g_eeFrsky), 100);
-    alert(PSTR("FrSky write OK"));
+    // alert(PSTR("FrSky write OK"));
   }
 #endif
   eeLoadModel(g_eeGeneral.currModel);
@@ -234,6 +234,7 @@ void eeCheck(bool immediately)
     //first finish GENERAL, then MODEL !!avoid Toggle effect
   }
 #ifdef FRSKY
+    // G: ... or then FRSKY. What's Toggle Effect? Hmmm. :/
   else if (msk & EE_FRSKY){
 // ref: uint16_t EFile::writeRlc(uint8_t i_fileId, uint8_t typ,uint8_t*buf,uint16_t i_len, uint8_t maxTme10ms){
     if(theFile.writeRlc(FILE_TMP, FILE_TYP_FRSKY, (uint8_t*)&g_eeFrsky,

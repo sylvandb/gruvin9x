@@ -487,7 +487,11 @@ bool checkIncDecGen2(uint8_t event, void *i_pval, int16_t i_min, int16_t i_max, 
     else
       if (i_flags & _FL_UNSIGNED8) *(uint8_t*)i_pval = newval;
       else                        *( int8_t*)i_pval = newval;
+#ifdef FRSKY
+    eeDirty(i_flags & (EE_GENERAL|EE_MODEL|EE_FRSKY));
+#else
     eeDirty(i_flags & (EE_GENERAL|EE_MODEL));
+#endif
     return checkIncDec_Ret=true;
   }
   return checkIncDec_Ret=false;

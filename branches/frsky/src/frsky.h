@@ -53,9 +53,10 @@ void FRSKY_EnableRXD (void);
 
 // Menus
 void menuProcFrsky(uint8_t event);
+void menuProcFrskySettings(uint8_t event);
 void menuProcFrskyAlarms(uint8_t event);
 
-extern MenuFuncP_PROGMEM APM menuTabFrsky[2];
+extern MenuFuncP_PROGMEM APM menuTabFrsky[3];
 
 
 

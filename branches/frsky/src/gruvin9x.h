@@ -435,10 +435,6 @@ extern uint8_t s_editMode;     //global editmode
 #define CHECK_INCDEC_H_GENVAR( event, var, min, max)     \
   checkIncDecModVar<min,max>(event,&var,(sizeof(var)==2 ? _FL_SIZE2 : 0)|EE_GENERAL) \
 
-// gruvin: need a function to handle unsigned 8-bit values
-#define CHECK_INCDEC_H_GENVAR_U( event, var, min, max)     \
-  checkIncDecModVar<min,max>(event,&var,(sizeof(var)==2 ? _FL_SIZE2 : 0)|EE_GENERAL|_FL_UNSIGNED) \
-
 #define CHECK_INCDEC_H_MODELVAR( event, var, min, max)     \
   checkIncDecModVar<min,max>(event,&var,(sizeof(var)==2 ? _FL_SIZE2 : 0)|EE_MODEL) \
 

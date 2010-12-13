@@ -651,7 +651,7 @@ void menuProcMixOne(uint8_t event)
   if(s_pgOfs<0) s_pgOfs = 0;
 
 
-#define NUM_OFS(x) (((x<0 ? 2*FW-1 : 1*FW) + ((abs(x)>=100) ? 2*FW-2 : ((abs(x)>=10) ? 1*FW-1 : 0 ))))
+// G: in menus.h #define NUM_OFS(x) (((x<0 ? 2*FW-1 : 1*FW) + ((abs(x)>=100) ? 2*FW-2 : ((abs(x)>=10) ? 1*FW-1 : 0 ))))
   for(uint8_t y=FH; y<8*FH; y+=FH)
   {
     uint8_t i=(y/FH)+s_pgOfs-1;

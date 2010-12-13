@@ -338,6 +338,7 @@ void FRSKY_EnableRXD(void)
    FRSKY MENUS BEGIN HERE
 */
 
+/*
 uint8_t hex2dec(uint16_t number, uint8_t multiplier)
 {
 	uint16_t value = 0;
@@ -367,9 +368,10 @@ uint8_t hex2dec(uint16_t number, uint8_t multiplier)
 	return value;
 	
 }
-
+*/
 MenuFuncP_PROGMEM APM menuTabFrsky[] = {
   menuProcFrsky,
+  menuProcFrskySettings,
   menuProcFrskyAlarms
 };
 
@@ -388,55 +390,134 @@ void menuProcFrsky(uint8_t event)
     lcd_putsAtt(62, 0, PSTR("DATA"), DBLSIZE);
   }
 
+  uint8_t y = 2*FH;
+
   // Data labels
-  lcd_puts_P(2*FW, 2*FH, PSTR("A1:"));
-  lcd_puts_P(11*FW, 2*FH, PSTR("A2:"));
-  lcd_puts_P(2*FW, 3*FH, PSTR("Rx RSSI:   dB"));
-  lcd_puts_P(2*FW, 4*FH, PSTR("Rx Batt:"));
-  lcd_putc(11*FW,4*FH, '.');
+  lcd_puts_P(2*FW, y, PSTR("A1:"));
+  lcd_puts_P(11*FW, y, PSTR("A2:"));
+
+  y+=FH; lcd_puts_P(2*FW, y, PSTR("Rx RSSI:   dB"));
+  y+=FH; lcd_puts_P(2*FW, y, PSTR("Rx Batt:"));
 
   // Rx batt voltage bar frame
-  lcd_puts_P(0, FH*6, PSTR("4.2V"));
+
+  // Minimum voltage
   lcd_vline(3, 58, 6);
+
+  y = 6*FH;
+  uint8_t t = 1+NUM_OFSP1(g_eeFrsky.rxVoltsBarMin);
+  lcd_outdezAtt(t, y, g_eeFrsky.rxVoltsBarMin, 0|PREC1);
+  lcd_putc(t, y, 'v');
+
+  uint8_t middleVolts = g_eeFrsky.rxVoltsBarMin+(g_eeFrsky.rxVoltsBarMax - g_eeFrsky.rxVoltsBarMin)/2;
+  t = 64+((FW+NUM_OFS(middleVolts))>>1);
+  lcd_outdezAtt(t, y, middleVolts, 0|PREC1);
+  lcd_putc(t, y, 'v');
   lcd_vline(64, 58, 6);
-  lcd_puts_P(64-(FW*2), FH*6, PSTR("5.4V"));
+
+  lcd_outdezAtt(128-FW, y, g_eeFrsky.rxVoltsBarMax, 0|PREC1);
+  lcd_putc(128-FW, y, 'v');
   lcd_vline(125, 58, 6);
-  lcd_puts_P(128-(FW*4), FH*6, PSTR("6.6V"));
 
   // blinking if no data stream
   if (frskyStreaming || ((blinkCount++ % 128) > 25)) // 50:255 off:on ratio at double speed
   {
 
     // A1 raw value, zero padded
-    lcd_putc(5*FW,2*FH,hex2dec(frskyA1, 100));
-    lcd_putc(6*FW,2*FH,hex2dec(frskyA1, 10));
-    lcd_putc(7*FW,2*FH,hex2dec(frskyA1, 1));
+    lcd_outdezAtt(8*FW, 2*FH, frskyA1, 0);
 
     // A2 raw value, zero padded
-    lcd_putc(14*FW,2*FH,hex2dec(frskyA2, 100));
-    lcd_putc(15*FW,2*FH,hex2dec(frskyA2, 10));
-    lcd_putc(16*FW,2*FH,hex2dec(frskyA2, 1));
+    lcd_outdezAtt(17*FW, 2*FH, frskyA2, 0);
 
     // RSSI value 
-    lcd_putc(10*FW,3*FH,(frskyRSSI > 99) ? hex2dec(frskyRSSI, 100) : ' ');
-    lcd_putc(11*FW,3*FH,(frskyRSSI > 9) ? hex2dec(frskyRSSI, 10) : ' ');
-    lcd_putc(12*FW,3*FH,hex2dec(frskyRSSI, 1));
+    lcd_outdezAtt(13*FW, 3*FH, frskyRSSI, 0);
 
-    // Rx Batt: volts (255 = 6.6V) -10 to calibrate XXX FIX THIS
-    uint16_t centaVolts = (frskyA1 > 0) ? (660 * (uint32_t)(frskyA1) / 255) - 10 : 0;
-    lcd_putc(10*FW,4*FH, hex2dec(centaVolts, 100));
-    lcd_putc(12*FW,4*FH, hex2dec(centaVolts, 10));
-    lcd_putc(13*FW,4*FH, hex2dec(centaVolts, 1));
-    
-    // draw the actual voltage bar
-    if (centaVolts > 419)
+    uint8_t voltsVal = 0;
+    switch (g_eeFrsky.rxVoltsChannel) {
+      case 1:
+        voltsVal = frskyA1;
+        break;
+      case 2:
+        voltsVal = frskyA2;
+    }
+
+    if (g_eeFrsky.rxVoltsChannel > 0)
     {
-      uint8_t vbarLen = (centaVolts - 420) >> 1;
-      for (uint8_t i = 59; i < 63; i++) // Bar 4 pixels thick (high)
-      lcd_hline(4, i, vbarLen);
+      // Rx Batt: volts (255 == g_eefrsky.rxVoltsMax) 
+      uint16_t centaVolts = (voltsVal > 0) ? (10 * (uint16_t)g_eeFrsky.rxVoltsMax * (uint32_t)(voltsVal) / 255) + g_eeFrsky.rxVoltsOfs : 0;
+      lcd_outdezAtt(13*FW, 4*FH, centaVolts, 0|PREC2);
+      lcd_putc(13*FW, 4*FH, 'v');
+      
+      // draw the actual voltage bar
+      uint16_t centaVoltsMin = 10 * g_eeFrsky.rxVoltsBarMin;
+      if (centaVolts >= centaVoltsMin)
+      {
+        uint8_t vbarLen = (centaVolts - (10 * (uint16_t)g_eeFrsky.rxVoltsBarMin))  * 12 
+                            / (g_eeFrsky.rxVoltsBarMax - g_eeFrsky.rxVoltsBarMin);
+        for (uint8_t i = 59; i < 63; i++) // Bar 4 pixels thick (high)
+          lcd_hline(4, i, vbarLen);
+      }
     }
   } // if data streaming / blink choice
     
+}
+
+// FRSKY Settings menu
+void menuProcFrskySettings(uint8_t event)
+{
+#define COUNT_ITEMS 5
+#define PARAM_OFS   17*FW
+
+  static MState2 mstate2;
+  TITLE("FRSKY SETTINGS");
+  MSTATE_CHECK_V(2,menuTabFrsky,6); // current page=2, 6 rows of settings including page counter top/right
+
+  int8_t  sub    = mstate2.m_posVert; // 0 = page/pages at top right
+  
+  EEFrskyData *fs = &g_eeFrsky;
+  switch(event)
+  {
+    case EVT_ENTRY:
+      s_editMode = false;
+      break;
+    case EVT_KEY_FIRST(KEY_MENU):
+      if(sub>=0) s_editMode = !s_editMode;
+      break;
+  }
+
+  uint8_t y = 2*FH;
+  lcd_puts_P(0, y,PSTR("Rx Volts Channel"));
+  lcd_putsnAtt(PARAM_OFS, y, PSTR("---""A1 ""A2 ")+3*fs->rxVoltsChannel,3,(sub==1 ? INVERS:0));
+  if(sub==1) checkIncDecGen2( event, &fs->rxVoltsChannel, 0, 2, EE_FRSKY); 
+
+  y+=FH;
+  lcd_puts_P(0, y, PSTR("Rx Max Volts"));
+  uint8_t t = PARAM_OFS + NUM_OFSP1(fs->rxVoltsMax);
+  lcd_outdezAtt(t, y, fs->rxVoltsMax,(sub==2 ? INVERS:0)|PREC1);
+  lcd_putcAtt(  t, y, 'v', 0);
+  if(sub==2) checkIncDecGen2( event, &fs->rxVoltsMax, 0, 255, _FL_UNSIGNED8 | EE_FRSKY); 
+
+  y+=FH;
+  lcd_puts_P(0, y, PSTR("Volts Calibrate"));
+  t = PARAM_OFS + NUM_OFSP1(fs->rxVoltsOfs);
+  lcd_outdezAtt(t, y, fs->rxVoltsOfs,(sub==3 ? INVERS:0)|PREC1);
+  lcd_putcAtt(  t, y, 'v', 0);
+  if(sub==3) checkIncDecGen2( event, &fs->rxVoltsOfs, -127, 127, EE_FRSKY); 
+
+  y+=FH;
+  lcd_puts_P(0, y, PSTR("VBar Min Volts"));
+  t = PARAM_OFS + NUM_OFSP1(fs->rxVoltsBarMin);
+  lcd_outdezAtt(t, y, fs->rxVoltsBarMin,(sub==4 ? INVERS:0)|PREC1);
+  lcd_putcAtt(  t, y, 'v', 0);
+  if(sub==4) checkIncDecGen2( event, &fs->rxVoltsBarMin, 0, 255, _FL_UNSIGNED8 | EE_FRSKY); 
+
+  y+=FH;
+  lcd_puts_P(0, y, PSTR("VBar Max Volts"));
+  t = PARAM_OFS + NUM_OFSP1(fs->rxVoltsBarMax);
+  lcd_outdezAtt(t, y, fs->rxVoltsBarMax,(sub==5 ? INVERS:0)|PREC1);
+  lcd_putcAtt(  t, y, 'v', 0);
+  if(sub==5) checkIncDecGen2( event, &fs->rxVoltsBarMax, 0, 255, _FL_UNSIGNED8 | EE_FRSKY); 
+
 }
 
 // FRSKY Alarms menu
@@ -444,8 +525,8 @@ void menuProcFrskyAlarms(uint8_t event)
 {
   static MState2 mstate2;
   TITLE("FRSKY ALARMS");
-  MSTATE_TAB = {1,3}; // horizontal column count for MSTAT_CHECK_VxH
-  MSTATE_CHECK_VxH(2,menuTabFrsky,5); // current page=2, 5 rows of settings including page counter top/right
+  MSTATE_TAB = {1,3}; // horizontal column counts for MSTAT_CHECK_VxH (1 is the page/pages field I think.)
+  MSTATE_CHECK_VxH(3,menuTabFrsky,5); // current page=3, 5 rows of settings including page counter top/right
 
   int8_t  sub    = mstate2.m_posVert - 1; // vertical position (1 = page counter, top/right)
   uint8_t subSub = mstate2.m_posHorz;     // horizontal position

@@ -145,11 +145,7 @@ void lcd_outdezNAtt(uint8_t x,uint8_t y,int16_t val,uint8_t mode,uint8_t len)
     if( prec && prec==i){
       x-=1;
       lcd_putcAtt(x,y,(val % 10)+'0',mode);
-      lcd_plot( x+5, y+7);//komma
-      //lcd_plot( x+5, y+6);//komma
-      //lcd_plot( x+6, y+7);//komma
-      lcd_plot( x+6, y+6);//komma
-      //lcd_plot( x+5, y+7);//komma
+      lcd_plot( x+5, y+6); // period
       prec=0;
     }else{
       lcd_putcAtt(x,y,(val % 10)+'0',mode);
