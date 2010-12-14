@@ -2519,6 +2519,7 @@ void menuProc0(uint8_t event)
     putsVBat(x-1*FW,2*FH,true, att);
     lcd_putcAtt(x+4*FW, 3*FH, 'V',0);
 
+    // plot a nice big decimal point (TH original code)
     uint8_t ln = 2;
     uint8_t xn = x;
     uint8_t tn = (g_vbat100mV/10) % 10;
