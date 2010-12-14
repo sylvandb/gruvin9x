@@ -184,6 +184,7 @@ typedef struct t_FrskyData {
   int8_t  rxVoltsOfs; // Calibration offset. Signed 0.1V steps. EG. -4 to substract 0.4V
   uint8_t rxVoltsBarMin; // Minimum voltage for voltage bar display (0.1V steps)
   uint8_t rxVoltsBarMax; // ditto for max volts. (Would usually = rxVoltsmax)
+  uint8_t noDataAlarm;   // 0=no, 1=yes (Sound alarm when there's no telem. data coming in)
 } __attribute__((packed)) EEFrskyData;
 
 extern EEFrskyData g_eeFrsky;

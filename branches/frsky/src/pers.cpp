@@ -73,8 +73,9 @@ void frskyDefault()
   g_eeFrsky.rxVoltsChannel  = 1;
   g_eeFrsky.rxVoltsMax      = 66;   // 6.6V
   g_eeFrsky.rxVoltsOfs      = -1;   // -0.1V
-  g_eeFrsky.rxVoltsBarMin   = 42;   // 4.2V
+  g_eeFrsky.rxVoltsBarMin   = 40;   // 4.0V
   g_eeFrsky.rxVoltsBarMax   = 66;   // 6.6V
+  g_eeFrsky.noDataAlarm = 0; // no
 }
 bool eeLoadFrsky()
 {

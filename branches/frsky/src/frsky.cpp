@@ -384,11 +384,13 @@ void menuProcFrsky(uint8_t event)
   MSTATE_CHECK_V(1,menuTabFrsky,1); // curr,menuTab,numRows(including the page counter [1/2] etc)
   // int8_t  sub    = mstate2.m_posVert; // alias sub to m_posvert. Clever Mr. TH :-D
 
-  if (frskyStreaming == 0)
+  if (!frskyStreaming)
   {
     lcd_putsAtt(30, 0, PSTR("NO"), DBLSIZE);
     lcd_putsAtt(62, 0, PSTR("DATA"), DBLSIZE);
+
   }
+
 
   uint8_t y = 2*FH;
 
@@ -397,27 +399,31 @@ void menuProcFrsky(uint8_t event)
   lcd_puts_P(11*FW, y, PSTR("A2:"));
 
   y+=FH; lcd_puts_P(2*FW, y, PSTR("Rx RSSI:   dB"));
-  y+=FH; lcd_puts_P(2*FW, y, PSTR("Rx Batt:"));
 
-  // Rx batt voltage bar frame
+  // Display RX Batt Volts only if a valid channel (A1/A2) has been selected
+  if (g_eeFrsky.rxVoltsChannel >0)
+  {
+    y+=FH; lcd_puts_P(2*FW, y, PSTR("Rx Batt:"));
+    // Rx batt voltage bar frame
 
-  // Minimum voltage
-  lcd_vline(3, 58, 6);
+    // Minimum voltage
+    lcd_vline(3, 58, 6);  // marker
 
-  y = 6*FH;
-  uint8_t t = 1+NUM_OFSP1(g_eeFrsky.rxVoltsBarMin);
-  lcd_outdezAtt(t, y, g_eeFrsky.rxVoltsBarMin, 0|PREC1);
-  lcd_putc(t, y, 'v');
+    y = 6*FH;
+    uint8_t t = 1+NUM_OFSP1(g_eeFrsky.rxVoltsBarMin);
+    lcd_outdezAtt(t, y, g_eeFrsky.rxVoltsBarMin, 0|PREC1);
+    lcd_putc(t, y, 'v');
 
-  uint8_t middleVolts = g_eeFrsky.rxVoltsBarMin+(g_eeFrsky.rxVoltsBarMax - g_eeFrsky.rxVoltsBarMin)/2;
-  t = 64+((FW+NUM_OFS(middleVolts))>>1);
-  lcd_outdezAtt(t, y, middleVolts, 0|PREC1);
-  lcd_putc(t, y, 'v');
-  lcd_vline(64, 58, 6);
+    uint8_t middleVolts = g_eeFrsky.rxVoltsBarMin+(g_eeFrsky.rxVoltsBarMax - g_eeFrsky.rxVoltsBarMin)/2;
+    t = 64+((FW+NUM_OFS(middleVolts))>>1);
+    lcd_outdezAtt(t, y, middleVolts, 0|PREC1);
+    lcd_putc(t, y, 'v');
+    lcd_vline(64, 58, 6);  // marker
 
-  lcd_outdezAtt(128-FW, y, g_eeFrsky.rxVoltsBarMax, 0|PREC1);
-  lcd_putc(128-FW, y, 'v');
-  lcd_vline(125, 58, 6);
+    lcd_outdezAtt(128-FW, y, g_eeFrsky.rxVoltsBarMax, 0|PREC1);
+    lcd_putc(128-FW, y, 'v');
+    lcd_vline(125, 58, 6); // marker
+  }
 
   // blinking if no data stream
   if (frskyStreaming || ((blinkCount++ % 128) > 25)) // 50:255 off:on ratio at double speed
@@ -470,7 +476,7 @@ void menuProcFrskySettings(uint8_t event)
 
   static MState2 mstate2;
   TITLE("FRSKY SETTINGS");
-  MSTATE_CHECK_V(2,menuTabFrsky,6); // current page=2, 6 rows of settings including page counter top/right
+  MSTATE_CHECK_V(2,menuTabFrsky,7); // current page=2, 7 rows of settings including page counter top/right
 
   int8_t  sub    = mstate2.m_posVert; // 0 = page/pages at top right
   
@@ -486,37 +492,43 @@ void menuProcFrskySettings(uint8_t event)
   }
 
   uint8_t y = 2*FH;
+  uint8_t subN = 1;
   lcd_puts_P(0, y,PSTR("Rx Volts Channel"));
-  lcd_putsnAtt(PARAM_OFS, y, PSTR("---""A1 ""A2 ")+3*fs->rxVoltsChannel,3,(sub==1 ? INVERS:0));
-  if(sub==1) checkIncDecGen2( event, &fs->rxVoltsChannel, 0, 2, EE_FRSKY); 
+  lcd_putsnAtt(PARAM_OFS, y, PSTR("--""A1""A2")+2*fs->rxVoltsChannel,2,(sub==subN ? INVERS:0));
+  if(sub==subN) checkIncDecGen2( event, &fs->rxVoltsChannel, 0, 2, EE_FRSKY); 
 
-  y+=FH;
+  y+=FH; subN++;
   lcd_puts_P(0, y, PSTR("Rx Max Volts"));
   uint8_t t = PARAM_OFS + NUM_OFSP1(fs->rxVoltsMax);
-  lcd_outdezAtt(t, y, fs->rxVoltsMax,(sub==2 ? INVERS:0)|PREC1);
+  lcd_outdezAtt(t, y, fs->rxVoltsMax,(sub==subN ? INVERS:0)|PREC1);
   lcd_putcAtt(  t, y, 'v', 0);
-  if(sub==2) checkIncDecGen2( event, &fs->rxVoltsMax, 0, 255, _FL_UNSIGNED8 | EE_FRSKY); 
+  if(sub==subN) checkIncDecGen2( event, &fs->rxVoltsMax, 0, 255, _FL_UNSIGNED8 | EE_FRSKY); 
 
-  y+=FH;
+  y+=FH; subN++;
   lcd_puts_P(0, y, PSTR("Volts Calibrate"));
   t = PARAM_OFS + NUM_OFSP1(fs->rxVoltsOfs);
-  lcd_outdezAtt(t, y, fs->rxVoltsOfs,(sub==3 ? INVERS:0)|PREC1);
+  lcd_outdezAtt(t, y, fs->rxVoltsOfs,(sub==subN ? INVERS:0)|PREC1);
   lcd_putcAtt(  t, y, 'v', 0);
-  if(sub==3) checkIncDecGen2( event, &fs->rxVoltsOfs, -127, 127, EE_FRSKY); 
+  if(sub==subN) checkIncDecGen2( event, &fs->rxVoltsOfs, -127, 127, EE_FRSKY); 
 
-  y+=FH;
+  y+=FH; subN++;
   lcd_puts_P(0, y, PSTR("VBar Min Volts"));
   t = PARAM_OFS + NUM_OFSP1(fs->rxVoltsBarMin);
-  lcd_outdezAtt(t, y, fs->rxVoltsBarMin,(sub==4 ? INVERS:0)|PREC1);
+  lcd_outdezAtt(t, y, fs->rxVoltsBarMin,(sub==subN ? INVERS:0)|PREC1);
   lcd_putcAtt(  t, y, 'v', 0);
-  if(sub==4) checkIncDecGen2( event, &fs->rxVoltsBarMin, 0, 255, _FL_UNSIGNED8 | EE_FRSKY); 
+  if(sub==subN) checkIncDecGen2( event, &fs->rxVoltsBarMin, 0, 255, _FL_UNSIGNED8 | EE_FRSKY); 
 
-  y+=FH;
+  y+=FH; subN++;
   lcd_puts_P(0, y, PSTR("VBar Max Volts"));
   t = PARAM_OFS + NUM_OFSP1(fs->rxVoltsBarMax);
-  lcd_outdezAtt(t, y, fs->rxVoltsBarMax,(sub==5 ? INVERS:0)|PREC1);
+  lcd_outdezAtt(t, y, fs->rxVoltsBarMax,(sub==subN ? INVERS:0)|PREC1);
   lcd_putcAtt(  t, y, 'v', 0);
-  if(sub==5) checkIncDecGen2( event, &fs->rxVoltsBarMax, 0, 255, _FL_UNSIGNED8 | EE_FRSKY); 
+  if(sub==subN) checkIncDecGen2( event, &fs->rxVoltsBarMax, 0, 255, _FL_UNSIGNED8 | EE_FRSKY); 
+
+  y+=FH; subN++;
+  lcd_puts_P(0, y, PSTR("No Data Alarm"));
+  lcd_putsnAtt(PARAM_OFS, y, PSTR("No ""Yes")+3*(fs->noDataAlarm&1),3,(sub==subN ? INVERS:0));
+  if(sub==subN) checkIncDecGen2( event, &fs->noDataAlarm, 0, 1, EE_FRSKY); 
 
 }
 
@@ -567,6 +579,7 @@ void menuProcFrskyAlarms(uint8_t event)
   {
     uint8_t y=(i+3)*FH;
     FrskyAlarm *ad = &frskyAlarms[i];
+
     for(uint8_t j=0; j<4;j++) // 4 settings each slot
     {
       uint8_t attr = ((sub==i && (subSub+1)==j) ? (s_editMode ? BLINK : INVERS) : 0);
@@ -586,7 +599,13 @@ void menuProcFrskyAlarms(uint8_t event)
             checkIncDecGen2( event, &ad->greater, 0, 1, _FL_UNSIGNED8);
           break;
         case 3:
-          lcd_outdezAtt(19*FW,y, ad->value, attr);
+          if ((g_eeFrsky.rxVoltsChannel-1) == ((i>>1)^1)) {
+            uint16_t centaVolts = (ad->value > 0) ? 
+                (10 * (uint16_t)g_eeFrsky.rxVoltsMax * (uint32_t)(ad->value) / 255) + g_eeFrsky.rxVoltsOfs : 0;
+            lcd_outdezAtt(19*FW, y, centaVolts, attr|PREC2);
+            lcd_putc(     19*FW, y, 'v');
+          } else
+            lcd_outdezAtt(19*FW,y, ad->value, attr);
           if(attr && (s_editMode || p1valdiff))
             checkIncDecGen2( event, &ad->value, 0, 255, _FL_UNSIGNED8);
           break;
