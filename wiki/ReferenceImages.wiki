@@ -53,7 +53,7 @@ I removed the LCD screen's foam packer on my original unit to reveal all the tra
 
 PhotoShop is one of, if not _the_ most expensive pieces of software I've ever bought. But it's been worth every penny. 
 
-Here are the layered originals of the top and bottom images above -- at double the resolution, too.
+Here are the layered originals of the top and bottom images above -- at double the resolution, too. (Approx. 22MB each.)
 
 
 [http://gruvin9x.googlecode.com/svn/wiki/ReferenceImages.attach/pcb-ref-top.psd pcb-ref-top.psd]
