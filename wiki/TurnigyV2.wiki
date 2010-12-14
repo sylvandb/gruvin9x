@@ -1,4 +1,5 @@
 #summary Turnigy V2 Firmware Backup
+#labels Phase-Support
 
 = Turnigy V2 Firmware Backup =
 
@@ -6,3 +7,4 @@ Having originally managed to lose my factory Turnigy 9X V2 firmware, I eventuall
 
 [http://gruvin9x.googlecode.com/svn/wiki/TurnigyV2.attach/Turnigy9X_V2.zip Turnigy9X_2.zip] contains all the `.bin` files.
 
+Or you can browse the individual files at [http://code.google.com/p/gruvin9x/source/browse/#svn/wiki/TurnigyV2.attach]
