@@ -1,4 +1,4 @@
-EESchema Schematic File Version 2  date 12/12/2010 12:18:23 p.m.
+EESchema Schematic File Version 2  date 14/12/2010 1:53:32 p.m.
 LIBS:conn_5
 LIBS:atmega64
 LIBS:power
@@ -38,7 +38,7 @@ EELAYER END
 $Descr A3 16535 11700
 Sheet 1 1
 Title "Main Controller PCB (Stock)"
-Date "11 dec 2010"
+Date "14 dec 2010"
 Rev "2.14"
 Comp "gruvin9x"
 Comment1 ""
@@ -2797,7 +2797,7 @@ L R R1
 U 1 1 4CE749EC
 P 1750 1250
 F 0 "R1" H 1830 1250 50  0000 C CNN
-F 1 "10K" V 1750 1250 50  0000 C CNN
+F 1 "5K1" V 1750 1250 50  0000 C CNN
 	1    1750 1250
 	1    0    0    -1  
 $EndComp

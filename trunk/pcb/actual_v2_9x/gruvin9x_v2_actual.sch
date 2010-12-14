@@ -1,4 +1,4 @@
-EESchema Schematic File Version 2  date 1/12/2010 4:57:59 p.m.
+EESchema Schematic File Version 2  date 14/12/2010 1:54:23 p.m.
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -35,7 +35,7 @@ EELAYER END
 $Descr A3 16535 11700
 Sheet 1 1
 Title "Main Controller PCB (Stock)"
-Date "1 dec 2010"
+Date "14 dec 2010"
 Rev "1.1"
 Comp "gruvin9x"
 Comment1 "(Layout designed to suit easy conversion to 2xA4 if required.)"
@@ -1966,7 +1966,7 @@ L R R1
 U 1 1 4CE749EC
 P 1750 1250
 F 0 "R1" H 1830 1250 50  0000 C CNN
-F 1 "10K" V 1750 1250 50  0000 C CNN
+F 1 "5K1" V 1750 1250 50  0000 C CNN
 	1    1750 1250
 	1    0    0    -1  
 $EndComp

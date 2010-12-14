@@ -1,4 +1,4 @@
-EESchema Schematic File Version 2  date 26/11/2010 9:52:37 a.m.
+EESchema Schematic File Version 2  date 14/12/2010 1:53:56 p.m.
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -29,12 +29,13 @@ LIBS:opto
 LIBS:atmel
 LIBS:contrib
 LIBS:valves
+LIBS:gruvin9x-hacked-cache
 EELAYER 24  0
 EELAYER END
 $Descr A3 16535 11700
 Sheet 1 1
 Title "Main Controller PCB (Stock)"
-Date "25 nov 2010"
+Date "14 dec 2010"
 Rev "1.1"
 Comp "gruvin9x"
 Comment1 "(Layout designed to suit easy conversion to 2xA4 if required.)"
@@ -2248,7 +2249,7 @@ L R R1
 U 1 1 4CE749EC
 P 1750 1250
 F 0 "R1" H 1830 1250 50  0000 C CNN
-F 1 "10K" V 1750 1250 50  0000 C CNN
+F 1 "5K1" V 1750 1250 50  0000 C CNN
 	1    1750 1250
 	1    0    0    -1  
 $EndComp
