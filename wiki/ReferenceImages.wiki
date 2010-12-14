@@ -15,7 +15,7 @@ I've not personally owned a V1 '9X, but apparently the V2 changed from a 5V LCD 
 [http://gruvin9x.googlecode.com/svn/wiki/ReferenceImages.attach/lcd-ref.jpg]
 
 == Connectors ==
-See the PCB reference images for dimensions
+See the PCB reference images for approx. dimensions. (Ignore the strange looking coil of wire to the middle-left. It's not part of the stock hardware.)
 
 <img src="http://gruvin9x.googlecode.com/svn/wiki/ReferenceImages.attach/connector-ref1.jpg" width="600">
 
@@ -31,18 +31,31 @@ Inside the front section of the cabinet (main PCB removed).
 
 == Main PCB ==
 
-My '9X is a Turnigy 9X from HobbyKing.com. This is the "V2" version. Note the additional 3.3V regulator and bunch of resistors above the ATmega64A MCU for driving the new 3.3V LCD screen.
+My '9X is a Turnigy 9X from HobbyKing.com. This is the "V2" version. Note the additional 3.3V regulator (left of the 5V one) and bunch of resistors above the ATmega64A MCU for driving the 3.3V LCD screen.
 
 === Top ===
-This is after a number of mods I've made to free up both ATmega64A USART ports. 
 
-NOTE: These images are fairly high resolution -- Right-Click, View Image (or save) to see full size.
-
-(The strange looking coil of wire on a white former (lower left) is simply wire storage for later when I have something to connect them to.)
+NOTE: These images are fairly high resolution -- Right-Click, View Image (or Save as...) to see full size. WARNING: Perspective errors in the camera lens mean the reference lines are approximate only.
 
 <img src="http://gruvin9x.googlecode.com/svn/wiki/ReferenceImages.attach/pcb-ref-top.jpg" width="600">
 
 === Bottom ===
-I removed the LCD screen's foam packer to reveal all the traces. (Hi-res.)
+
+This is the bottom of my second unit (to match image above).
 
 <img src="http://gruvin9x.googlecode.com/svn/wiki/ReferenceImages.attach/pcb-ref-bottom.jpg" width="600">
+
+I removed the LCD screen's foam packer on my original unit to reveal all the traces. (Hi-res.)
+
+<img src="http://gruvin9x.googlecode.com/svn/wiki/ReferenceImages.attach/pcb-ref-bottom-clean.jpg" width="600">
+
+=== PhotoShop Layered Originals ===
+
+PhotoShop is one of, if not _the_ most expensive pieces of software I've ever bought. But it's been worth every penny. 
+
+Here are the layered originals of the top and bottom images above -- at double the resolution, too.
+
+
+[http://gruvin9x.googlecode.com/svn/wiki/ReferenceImages.attach/pcb-ref-top.psd pcb-ref-top.psd]
+
+[http://gruvin9x.googlecode.com/svn/wiki/ReferenceImages.attach/pcb-ref-bottom.psd pcb-ref-bottom.psd]
