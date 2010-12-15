@@ -1,9 +1,11 @@
 #summary Turnigy 9X V2
 #labels Phase-Support
 
+<img src="http://gruvin9x.googlecode.com/svn/wiki/TurnigyV2.attach/turnigy9x.jpg" align="right">
 = The Turnigy 9X =
 _Also marketed under brand names: Eurgle, iMax, FlySky and others_
 
+The author purchased hi '9X radio set from HobbyKing.com, where they sell it under the brand name 'Turnigy'.
 
 == Reference Images == 
 Some [ReferenceImages reference images] of the internals of the '9X hardware are posted [ReferenceImages here] for convenient reference. (It saves opening up the case every time we need to check some minor detail.)
