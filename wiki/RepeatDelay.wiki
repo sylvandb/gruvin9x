@@ -34,7 +34,7 @@ At about line 125 of drivers.cpp, here is the business end of the resulting code
     case 16:
 }}}
 
-You can tell which is my additions and what was the original from the `#ifdef ... #endif` compiler pragmas.
+NOTE: This code has since been replaced with a permanently enable version. (The `#ifdef RPTDELAY` ... `#endif` tags are gone.)
 
 In essence, I've implemented a new `'m_state'` named KSTATE_RPTDELAY, which is defined earlier in the code as ...
 
@@ -44,9 +44,9 @@ In essence, I've implemented a new `'m_state'` named KSTATE_RPTDELAY, which is d
 #endif
 }}}
 
-== But Wait! (Pun intended) ==
+== But Wait! (Pun intended :-D) ==
 
-A day or two later, I found that TH9X differs from ER9X in the way this is handled. I thought both versions were identical here, but I guess I either missed it,or MR. TH has made changes just recently.
+A day or two later, I found that TH9X differs from ER9X in the way this is handled. I thought both versions were identical here, but I guess I either missed it, or perhaps TH made changes just recently.
 
 TH9X includes an `m_state=32` on top of the 16, 8, 4, 2 and 1 that the code used for incrementally increasing the auto-repeat rate, the longer a key is held down. He's also got a higher initial 'between repeats' delay of 640ms, vs. 480ms.
 
@@ -54,8 +54,6 @@ I actually nearly did my fix in the way. But there's no way to get the first del
 
 == Summary ==
 
-I wanted to show my solution and code for anyone else who might be 'taking the plunge' and attempting to make code changes. It strikes me that using `#ifdef ... #endif` with Makefile directives in order to control which version of the code is built is quite important for completely new features. 
+I wanted to show my solution and code for anyone else who might be 'taking the plunge' and attempting to make code changes. Though this particular example has become permanent, without option to disable the feature, it will be generally important to use `#ifdef ... #endif` and Makefile/Compiler directives to control feature implementation choices. This will be especially important for features required physical hardware changes.
 
 In this case, my `Makefile` is set up such that `make KEYRPT=DELAY` results in passing a `-DRPTDELAY` argument to the compiler, thus enabling my new code and allowing for my stuff to be left out entirely if not appreciated.
-
-Well, maybe the TH9X version is better in the end.
