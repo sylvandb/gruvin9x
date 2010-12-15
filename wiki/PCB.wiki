@@ -5,33 +5,26 @@ A PCB design has been worked up from scratch in KiCAD to replicate the wiring an
 
 == Why? ==
 
-The intention is to start from a near copy of the stock circuit (completed), then make changes to facilitate the freeing up of more I/O ports on the ATmega64 (nearly all of Port B in fact!), with a view to using them for telemetry data acquisition and SD/MMC card mass storage (MISO/MOSI/SCK in SPI mode) -- and possibly to interface to a coffee machine. (OK -- joking on that last bit! :-P)
-
-(This design is nearly complete. See 'Progress', below.)
-
-Oh and, I also intend installing an ATmega128A to double the Flash program code and EEPROM memory space. (Double the model memory capacity and enough program space to allow for the SD/MMC card FAT file system code library and all the telemetry 'dashboard' plans.) There has been some thought of going even further, to one of the 100 pin ATmega chips with even more EEPROM and SRAM etc. But I'm not sure about the PCB design requirements for that. I don't think it will be needed anyway... but I agree it would be good, IF I can manage it. (I'm only just barely clever enough to do what I've managed so far! :-P) 
-
+The intention is to (at least) free up more I/O ports on the ATmega64 (nearly all of Port B in fact!). The main reason for this is to provide easy access to USART0 for telemetry data and dedicated access to MISO/MOSI/SCK for MMC/SDCARD interfacing.
 
 == Progress ==
 
-As of this writing, a design covering the stock circuitry, plus just one extra component -- a 10 pin AVR programmer header in the lower right of the board -- has been completed.
+2010-12-15: A first batch of prototype PCB's ([http://gruvin9x.googlecode.com/svn/trunk/pcb/rev2.14 rev2.14]) has been ordered for manufacturing.
 
 == PostScript and PDF Files ==
 
 === Schematics ===
 
- * New gruvin9x custom Main PCB rev2.11 - [http://gruvin9x.googlecode.com/svn/trunk/pcb/rev2.1/gruvin9x_rev21.pdf PDF] | [http://gruvin9x.googlecode.com/svn/trunk/pcb/rev2.1/gruvin9x_rev21.ps PS] (Archived version. Will not change in future.)
+ * New gruvin9x custom Main PCB rev2.14 (production frozen) - [http://gruvin9x.googlecode.com/svn/trunk/pcb/rev2.14-frozen/gruvin9x.pdf PDF] | [http://gruvin9x.googlecode.com/svn/trunk/pcb/rev2.14-frozen/gruvin9x.ps PS]
  * Stock V2 Main PCB - [http://gruvin9x.googlecode.com/svn/trunk/pcb/actual_v2_9x/gruvin9x_v2_actual.pdf PDF] | [http://gruvin9x.googlecode.com/svn/trunk/pcb/actual_v2_9x/gruvin9x_v2_actual.ps PS]
  * Hacked V2 Main PCB - [http://gruvin9x.googlecode.com/svn/trunk/pcb/hacked/gruvin9x-hacked.pdf PDF] | [http://gruvin9x.googlecode.com/svn/trunk/pcb/hacked/gruvin9x-hacked.ps PS] (Speaker, Fr-Sky telemetry RXD and USART1 freed - hacked unit IE. not a new PCB.)
-
- * Ongoing work (snapshots as and when uploaded) reside at [http://code.google.com/p/gruvin9x/source/browse/#svn/trunk/pcb/original /trunk/pcb/]. 
 
 
 == KiCAD Circuit Schematic and PCB Files ==
 
-Sporadic updates of the _all new_ main PCB schematic and board design in KiCAD are committed to the source repository from time to time. These exist in the `/trunk/pcb/` folder. 
+Ongoing circuit/PCB work (snapshots as and when uploaded) reside at [http://code.google.com/p/gruvin9x/source/browse/#svn/trunk/pcb/original /trunk/pcb/]
 
-To download all the PCB design related file _without the full source and docs_ coming too ...
+To download all the PCB design related files only (without project source, docs, etc) ...
 
 {{{
 svn checkout http://gruvin9x.googlecode.com/svn/trunk/pcb gruvin9x-pcb
@@ -45,11 +38,11 @@ svn checkout http://gruvin9x.googlecode.com/svn/trunk/pcb gruvin9x-pcb
 
 2010-12-02: A final draft of the PCB based on [http://gruvin9x.googlecode.com/svn/trunk/pcb/rev2.1/gruvin9x_rev21.pdf schematic rev2.1] has been completed. (All files updated in `/trunk/pcb` as at r159). I'm waiting on some peer review and comments before committing this to a manufacturer. Time frame unknown.
 
-The board includes the total re-wire of all trim and button switches into a 4x4 scanned matrix to free up most of Port B. This gives us I/O ports for the MMC/SDCARD and a couple spares as well. The connector for the SDCARD interface can be seen at lower/middle of the image below. The two connectors to the lower right are the TTL and RS-232 level telemetry TX/RX ports. A 2-pin connector on the upper edge is for the LH and RH trim switch common connections. These replace their respective connections to ground, for the 4x4 matrix mentioned above.
+The board includes the total re-wire of all trim and button switches into a 4x4 scanned matrix to free up most of Port B. This gives us dedicated I/O ports for the MMC/SDCARD and a couple spares as well -- with theoretically only very minor CPU load for scanning the inputs. 
 
-Space will be tight for the SDCARD connector, due to the '9X battery compartment. It should just fit -- plug section and wires included. But if it doesn't, a ribbon cable can be soldered there in place of the connector socket.
+The connector for the MMC/SDCARD interface can be seen at lower/middle of the image below. The two connectors to the lower right are the TTL and RS-232 level telemetry TX/RX ports. A 2-pin connector on the upper edge is for the left-hand and right-hand trim switch 'common' connections. These replace their respective connections to ground, in order to work with the new 4x4 input matrix.
 
-This new main board will receive an ATmega2561 (256K Flash, 4K EEPROM, 8K SRAM). I have thus far decided to keep ATmega running at 5V, though it's certainly tempting to move down to 3.3V, since the LCD screen and SDCARD currently need a total of 31 resistors just to down-convert the voltage! However, I'm concerned about possible noise increase on the ADC inputs, should the operating voltage be lowered, and a couple of other minor issues too.
+This new main board will receive an *ATmega2561* (256K Flash, 4K EEPROM, 8K SRAM). I have thus far decided to keep ATmega running at 5V, though it's certainly tempting to move down to 3.3V, since the LCD screen and SDCARD currently need a total of 31 resistors just to down-convert the voltage! However, I'm concerned about possible noise increase on the ADC inputs, should the operating voltage be lowered, and a couple of other minor issues too. So at 5 Volts we stay.
 
 *The 3D image from KiCAD* as at r155 ...
 
