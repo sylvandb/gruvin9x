@@ -1,10 +1,14 @@
 #summary Table Of Contents
 
  * [About About gruvin9x]
+ * [ReProgram Re-progamming Your Radio]
+  * [FlashGuide Flashing Binary Versions]
+  * [CompilingFromSource Compiling from Source]
  * [TurnigyV2 9X Hardware Reference]
   * [ReferenceImages Reference Images]
   * [Circuitry]
   * [PCB Custom PCB]
+ * [Telemetry]
  * [RandomNotes Random Notes]
   * [RepeatDelay Repeat Delay]
   * [SpeakerReplacement Speaker Upgrade]
