@@ -2,7 +2,7 @@
 
 # eeprom.rb
 # 
-# Author (gruvin9x r205+)    : Bryan J.Rentoul (Gruvin) <gruvin@gmail.com>
+# Author (gruvin9x r250+)    : Bryan J.Rentoul (Gruvin) <gruvin@gmail.com>
 # Original Author (TH9X r167): Thomas Husterer (see TH9X Project)
 # Thomas! Again ... we really can't thank you enough for sharing your excellent work. THANKS!
 
@@ -58,7 +58,7 @@ CStruct.defStruct "EEGeneral_r0",<<-"END_TYP"
   END_TYP
 
 
-CStruct.defStruct "EEGeneral_r205",<<-"END_TYP"
+CStruct.defStruct "EEGeneral_r250",<<-"END_TYP"
   uint8_t   myVers;
   int16_t   calibMid[7];
   int16_t   calibSpanNeg[7];
@@ -101,7 +101,7 @@ CStruct.defStruct "EEGeneral_r205",<<-"END_TYP"
 CStruct.defStruct "EEFrsky_helper",<<-"END_TYP"
   uint8_t myVers;
   END_TYP
-CStruct.defStruct "EEFrsky_r205",<<-"END_TYP"
+CStruct.defStruct "EEFrsky_r250",<<-"END_TYP"
   uint8_t myVers;
   uint8_t rxVoltsChannel;
   uint8_t rxVoltsMax;
@@ -127,7 +127,7 @@ CStruct.defStruct "ExpoData_r84",<<-"END_TYP"
   int8_t  expNormWeight;
   int8_t  expSwWeight;
   END_TYP
-CStruct.defStruct "ExpoData_r205",<<-"END_TYP"
+CStruct.defStruct "ExpoData_r250",<<-"END_TYP"
   int8_t  expo[12]; // [3][2][2];
   int8_t  drSw1;
   int8_t  drSw2;
@@ -151,7 +151,7 @@ CStruct.defStruct "LimitData_r84",<<-"END_TYP"
   int8_t  max; 
   int8_t  rev_offset;
   END_TYP
-CStruct.defStruct "LimitData_r205",<<-"END_TYP"
+CStruct.defStruct "LimitData_r250",<<-"END_TYP"
   int8_t  min;
   int8_t  max;
   bool    revert;
@@ -165,7 +165,7 @@ CStruct.defStruct "MixData_r0",<<-"END_TYP"
   uint8_t  speedUp4_speedDwn4;
   END_TYP
 
-CStruct.defStruct "MixData_r205",<<-"END_TYP"
+CStruct.defStruct "MixData_r250",<<-"END_TYP"
   uint8_t destCh;            //        1..NUM_CHNOUT
   uint8_t srcRaw;            //
   int8_t  weight;
@@ -259,7 +259,7 @@ CStruct.defStruct "ModelData_r143",<<-"END_TYP"
   
 # MDVERS 3 to 5 must have been in ER9X only?
 MDVERS205 = 6
-CStruct.defStruct "ModelData_r205",<<-"END_TYP"
+CStruct.defStruct "ModelData_r250",<<-"END_TYP"
   char      name[10];             // 10 must be first for eeLoadModelName
   uint8_t   mdVers;
   int8_t    tmrMode;   //timer trigger source -> off, abs, stk, stk%, sw/!sw, !m_sw/!m_sw
@@ -275,9 +275,9 @@ CStruct.defStruct "ModelData_r205",<<-"END_TYP"
   uint8_t   beepANACenter;        //1<<0->A1.. 1<<6->A7
   uint8_t   pulsePol;
   char      res[3];
-  MixData_r205 mixData[32];
-  LimitData_r205 limitData[8];
-  ExpoData_r205  expoData[4];
+  MixData_r250 mixData[32];
+  LimitData_r250 limitData[8];
+  ExpoData_r250  expoData[4];
   TrimData_r143 trimData[4];
   Crv5_V4   curves5[8];
   Crv5_V4   curves9[8];
@@ -437,7 +437,7 @@ class Reader_V4
     puts
     puts "name sz typ sz2 Comments                   blocks"
     puts "-------------------------------------------------"
-    #     a    24  1   40 ModelData_r205'GROOVY    ' 127, 126,
+    #     a    24  1   40 ModelData_r250'GROOVY    ' 127, 126,
     MAXFILES_V4.times{|i|infoFile(i)}
     MAXFILES_V4.times{|i|infoFileFull(i)} if $opt_v>=1
   end
@@ -513,8 +513,8 @@ class Reader_V4
       hlp.fromBin(buf)
       case v=hlp.myVers
       when 1  ;   return "EEGeneral_r0              ",CStruct::EEGeneral_r0
-      when 2  ;   return "EEGeneral_r? (pre Gruvin) ",CStruct::EEGeneral_r205
-      when 3  ;   return "EEGeneral_r205            ",CStruct::EEGeneral_r205
+      when 2  ;   return "EEGeneral_r? (pre Gruvin) ",CStruct::EEGeneral_r250
+      when 3  ;   return "EEGeneral_r250            ",CStruct::EEGeneral_r250
       else;
       end
 
@@ -528,7 +528,7 @@ class Reader_V4
         case hlp.mdVers
         when MDVERS84; 	return 	"ModelData_r84 '#{hlp.name}'",CStruct::ModelData_r84
         when MDVERS143; return 	"ModelData_r143'#{hlp.name}'",CStruct::ModelData_r143
-        when MDVERS205; return 	"ModelData_r205'#{hlp.name}'",CStruct::ModelData_r205
+        when MDVERS205; return 	"ModelData_r250'#{hlp.name}'",CStruct::ModelData_r250
         else;     	return 	"ModelData??   '#{hlp.name}'",nil
         end
       end
@@ -537,8 +537,8 @@ class Reader_V4
         hlp=CStruct::EEFrsky_helper.new();
         hlp.fromBin(buf);
         case hlp.myVers
-        when 1; return          "Freesky_r205              ",CStruct::EEFrsky_r205
-        else  ; return          "Freesky??                 ",CStruct::EEFrsky_r205
+        when 1; return          "Freesky_r250              ",CStruct::EEFrsky_r250
+        else  ; return          "Freesky??                 ",CStruct::EEFrsky_r250
         end
     end
   end
