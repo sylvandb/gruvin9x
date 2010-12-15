@@ -12,6 +12,8 @@ Initial intentions were to get to know the ER9X crew, maybe becoming a contribut
 
 The main intention for gruvin9x is to provide a growing range of features and functions to support Fr-Sky telemetry natively on the '9X -- as well as mass storage using MMC and/or SD Flash cards. (The latter eventually having been relegated to a whole new, custom main board upgrade!)
 
+*HOWEVER* -- compatibility with the stock V2 '9X transmitter will be retained as far as possible. So fear not. There will always be a gruvin9x version available to run on the stock unit. There will also be versions that support manual circuit hacks for telemetry (and other things) that do _not_ require the new PCB. (See 'Bigger Plans', below.)
+
 The project started off with a few relatively minor tweaks to ER9X, as it was at the time.
 
 Way back at revision 46 (r46), better key-repeat delays and a hack to get variable frequency tones through a speaker, instead of the single-pitch 'beeper' of the stock unit, were implemented.
