@@ -8,7 +8,7 @@ This project started out as a kind of 'place holder' for the author's personal u
 
 Initial intentions were to get to know the ER9X crew, maybe becoming a contributor at some point. However, gruvin9x began to fork off in its own life quite quickly and, well, I just kept going. Eventually, a few of the other project owners and contributors got in contact to say hello, which has been very nice. I still keep a pretty low profile on the other project as I don't wish to create a stir. Besides, they're all doing just fine. It's all good stuff! :-D
 
-= (Some) Project Details =
+= Project Detail =
 
 The main intention for gruvin9x is to provide a growing range of features and functions to support Fr-Sky telemetry natively on the '9X -- as well as mass storage using MMC and/or SD Flash cards. (The latter eventually having been relegated to a whole new, custom main board upgrade!)
 
