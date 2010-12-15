@@ -628,70 +628,7 @@ Gruvin:
   '9X, plus just a tiny bit of calibration applied, were causing an overflow in the 16-bit math,
   causing a wrap-around to a very small voltage.
 
-  I originally fixed this with 32-bit type casts -- but that is resource hungry. So, I futzed
-  about working through how I might write the formulae my own way. In the end, my solution
-  is almost identical to TH's, except for the way the calibration is applied. I don't quite
-  understand his method, but it seems we are both arriving at simple linear correction for
-  a single, nominal voltage. *shrug*
-
-  READ NO FURTHER, unless you want to waste some time ...
-
-  So here's all my notes as I worked through this ...
-
-  TH (or was it ER?) has used resistor values in his code comments of 5.07K and 2.65K, which 
-  I presume he must have measured. My Fluke meter tells me 5.08K and 2.70K for my unit -- and 
-  I think, since the resistors are marked 5K1 and 2K7 (502 and 272), we should be using those 
-  intended values, using calibration to account for any variances. No biggie though.
-
-  So here's me working it out in my slow, half dead brain today in the hot, muggy weature ...
-
-  (2.7+5.1)/2.7*5/1024*1000 -> 14.105V maximum possible reading (assuming perfect resistors 
-  and a perfect 5.00V reference.)
-  -- therefore, vbatVolts = 78 * sampleVolts / 27 (tested with sample - 4.27 to yield 12.33V. CORRECT)
-  -- therefore, vbat100mV = 780 * sampleVolts / 27
-  -- where sampleVolts = sampleValue * 5 / 2048 (because are samples are x2 normalised)
-  -- thus vbat100mV = 780 * sampleValue * 5 / 2048  / 27 
-  (Checked with 1744 sample val. to yield 123. CORRECT)
-
-  Simplifying that, we come down to...
-
-  vbat100mV = sampleValue * 3900 / 2048 / 27 (checked)
-  , therefore vbat100mV = sampleValue * 190 / 2700 (accuracy approx. +/-50mV)
-
-  To make the final divide faster, I'll normalise to an even power of 2.
-
-  Thus finally, g_vbat100mV = ((uint32_t)ab + 4 * g_eeGeneral.vBatCalib) * 144 / 2048;
-
-  Phew!
-
-  Unfortunately, I just can't get my head around how the TH calibration formula worked. That
-  would have been OK, except his formula overflows beyond 16-bit for voltages over about 
-  11.0V and when vBatCalib > about 5(?). Just estimating -- but it was causing weird results on 
-  a fresh 8=pack of alkaline cell in a new stock unit. And if you do the math, even with 
-  vBatColib = 1, 13.8V overflows by some 16,365 in the original TH formula! So, working out 
-  my own system then ...
-
-  vBatCalib is a signed 8-bit (int8_t) => -127 to +127, which if added to the initial 
-  sample gives +-0.89V (final) A reasonable calibration range might be +/-3.56V, 
-  or in this case +/-(127*4)
-
-  Thus, we arrive at vbat100mV = (sampleValue + 4 x vBatCalib) * 144 / 2048.
-
-  But this will still require 24-bit math for higher voltages, whereas we want to keep 
-  within 16-bit. Hmmm!
-
-  g_vbat100mV = ((uint32_t)ab + 4 * g_eeGeneral.vBatCalib) * 36 / 512
-
-  , which should be good to about 13.8V (including calibration offset), without 
-  overflowing. Input voltages above 13.8V WILL surely still be a problem!
-
-  In the end, it's clear that all I really changed is how the calibration figure
-  affects the final result -- or at least. at what point in the formulae it appears --
-  which just happens to fix the original overflow issue I was experiencing. 
-
-  Therefore, for people who prefer the original system, and who have 7.4V batteries 
-          (I guess!), TH's (ER's?) original formula is reserved and can be used in preference 
-            by supplying a -DTHBATVOLTS command line directive to the compiler.
+  See the wiki (VoltageAveraging) if you're interested in my long-winded analysis.
 */
 
         // G: Running average (virtual 7 stored plus current sample) for batt volts to stablise display
