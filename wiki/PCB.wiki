@@ -1,5 +1,5 @@
 #summary Custom PCB
-= Custom Main Main Design =
+= Custom Main Board Design =
 
 A PCB design has been worked up from scratch in KiCAD to replicate the wiring and function of the V2 '9X hardware. It's closely based on the layout of the original PCB -- especially in terms of component placement. See [http://code.google.com/p/gruvin9x/source/browse/#svn/trunk/pcb/original /trunk/pcb/original/] (as of r155).
 
