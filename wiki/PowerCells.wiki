@@ -2,7 +2,7 @@
 
 = Ni-Mh vs. Other Power Sources  =
 
-*In brief:* Carbon-Dry-Cell < Alkaline < Ni-MH < Ni-Cd (!)
+*In brief:* Dry-Cell < Alkaline < Ni-MH < Ni-Cd (!) < Li-Fe-PO4 < BEC
 
 It is surprising to see how various types of power cells allow an RC model receiver's operating voltage to dip when moving three servos about. This dip can be _significant_ and even _dangerous_. 
 
