@@ -1,0 +1,17 @@
+#summary Re-programming your 9X radio
+
+= Re-programming Your 9X Radio =
+
+== Two options ==
+
+Two principal options exist for getting gruvin9x into your '9X radio.
+
+=== Using Pre-compiled Binary Distributions ===
+
+If you just want to load in the latest firmware version and run, this option is for you. 
+
+Please see [FlashGuide Flash Guide] for details
+
+=== Compiling from source ===
+
+If you'd like to get a look at the source code, maybe make a few changes, have a tinker and/or ultimately commit working improvements or even start you own project based on gruvin9x, then please take a look at [ProgrammingFromSource Programming From Source].
