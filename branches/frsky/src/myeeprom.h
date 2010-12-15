@@ -21,20 +21,6 @@
 
 //eeprom data
 //#define EE_VERSION 2
-#define MAX_MODELS 16
-#define MAX_MIXERS 32
-#define MAX_CURVE5 8
-#define MAX_CURVE9 8
-#define MDVERS_r9  1
-#define MDVERS_r14 2
-#define MDVERS_r22 3
-#define MDVERS_r77 4
-#define MDVERS_r85 5
-#define MDVERS     6
-
-
-#define GENERAL_MYVER 3
-
 
 // eeprom ver <9 => mdvers == 1
 // eeprom ver >9 => mdvers ==2
@@ -51,7 +37,7 @@
 #define WARN_MEM     (!(g_eeGeneral.warnOpts & WARN_MEM_BIT))
 #define BEEP_VAL     ( (g_eeGeneral.warnOpts & WARN_BVAL_BIT) >>3 )
 
-
+#define GENERAL_MYVER 3
 typedef struct t_EEGeneral {
   uint8_t   myVers;
   int16_t   calibMid[7];
@@ -143,6 +129,17 @@ typedef struct t_SwashRingData { // Swash Ring data
   uint8_t chY; // 2 channels to limit
 } __attribute__((packed)) SwashRingData;
 
+#define MAX_MODELS 16
+#define MAX_MIXERS 32
+#define MAX_CURVE5 8
+#define MAX_CURVE9 8
+#define MDVERS_r9  1
+#define MDVERS_r14 2
+#define MDVERS_r22 3
+#define MDVERS_r77 4
+#define MDVERS_r85 5
+#define MDVERS_205 6
+#define MDVERS     6
 typedef struct t_ModelData {
   char      name[10];             // 10 must be first for eeLoadModelName
   uint8_t   mdVers;
