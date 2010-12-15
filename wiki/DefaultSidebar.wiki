@@ -12,3 +12,4 @@
  * [RandomNotes Random Notes]
   * [RepeatDelay Repeat Delay]
   * [SpeakerReplacement Speaker Upgrade]
+  * [PowerCells Ni-Mh packs! Or not?]
