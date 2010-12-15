@@ -8,7 +8,7 @@ There are a number of "all-in-one" transmitter/telemetry solutions on the market
 
 == So why [http://www.frsky-rc.com/Products.asp?BigClassID=17 Fr-Sky]? ==
 
-Well, local tests have shown the brand to be very reliable, robust and functional to date. Additionally, this kit is very economically priced AND the working protocols are freely published by the manufacturer. All in all, this makes the system an ideal partner match for the gruvin9x open source project. 
+Well, local tests have shown the brand to be very reliable, robust and functional to date. Additionally, this kit is very economically priced AND the working protocols are freely published by the manufacturer. This all makes for an ideal match with the gruvin9x open source project. 
 
 (The author has not personally experienced the JETI product, though it seem quite popular also.)
 
