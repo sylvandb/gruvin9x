@@ -39,7 +39,7 @@ There are a number of somewhat challenging '9X hardware wiring modifications req
 
 These and other requirements led to a state of temporary insanity and the commencing of a complete re-work of the entire main board PCB! A near duplicate of the stock PCB was first worked up, then changes and additions were added. Find details on the [PCB] wiki page.
 
-<img src="http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/kicad-pcb-3d-top.jpg" width="480">
+[http://gruvin9x.googlecode.com/svn/wiki/TurnigyV2.attach/custompcb3d_thm.jpg]
 
 = Contacting Gruvin =
 
