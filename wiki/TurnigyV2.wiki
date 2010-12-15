@@ -8,11 +8,17 @@ _Also marketed under brand names: Eurgle, iMax, FlySky and others_
 
 Some [ReferenceImages reference images] of the internals of the '9X hardware are posted [ReferenceImages here] for convenient reference. (It saves opening up the case every time we need to check some minor detail.)
 
+== Circuitry Schematics ==
+
+Previous project contributors have provided PDF circuit schematics of the V1 radio (??) in the [http://gruvin9x.googlecode.com/svn/trunk/doc/9X_Schematic.pdf doc/9X_Schematic.pdf] 
+
+The V2 circuitry is almost identical except it has a new 3.3V LCD display and supporting components. More information, including a new [http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/gruvin9x_v2_actual.pdf schematic] for the V2 hardware is [Circuitry here].
+
 == Custom Main Board ==
 
-Hacking the '9X circuit board with hair fine wires and hot glue is fun, but can be tedious and risks damage. What if we had a whole new replacement PCB with features for telemetry and SDCards etc designed right in? Once again crossing that fine line between hobby and insanity,such a design and subsequent production is under way. 
+Hacking the '9X circuit board with hair fine wires and hot glue is fun, but can be tedious and risks damage. What if we had a whole new replacement PCB with features for telemetry and SDCards etc designed right in? Once again crossing that fine line between hobby and insanity,such a design and subsequent production is under way.
 
-See [PCB here] for details.
+See [PCB here] for details, including related, new circuit schematics.
 
 = Turnigy V2 Firmware Backup =
 
