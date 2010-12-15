@@ -1,5 +1,18 @@
-#summary Turnigy V2 Firmware Backup
+#summary Turnigy 9X V2
 #labels Phase-Support
+
+= The Turnigy 9X =
+_Also marketed under brand names: Eurgle, iMax, FlySky and others_
+
+== Reference Images ==
+
+Some [ReferenceImages reference images] of the internals of the '9X hardware are posted [ReferenceImages here] for convenient reference. (It saves opening up the case every time we need to check some minor detail.)
+
+== Custom Main Board ==
+
+Hacking the '9X circuit board with hair fine wires and hot glue is fun, but can be tedious and risks damage. What if we had a whole new replacement PCB with features for telemetry and SDCards etc designed right in? Once again crossing that fine line between hobby and insanity,such a design and subsequent production is under way. 
+
+See [PCB here] for details.
 
 = Turnigy V2 Firmware Backup =
 
