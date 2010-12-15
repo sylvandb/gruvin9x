@@ -4,39 +4,27 @@
 <img src="http://gruvin9x.googlecode.com/svn/wiki/About.attach/turnigy9x.jpg" align="right">
 = Introduction =
 
-This project started out as a kind of 'place holder' for the author's personal upgrades, hacks and mods to his [http://code.google.com/p/er9x/ ER9X]-powered Turnigy 9X V2 RC transmitter. 
+This project started out as a kind of 'place holder' for the author's personal upgrades, hacks and mods to his [http://code.google.com/p/er9x/ ER9X]-powered Turnigy 9X V2 RC transmitter. As tie went on, more and more supporting documentation and other data was added, so as to keep it all in one place. Trying to keep all this information in order and up to date is, of course, an ongoing challenge. The project's name came simply from the author's long-time online nickname. 
 
-The project's name come simply from the author's long-time online nickname. Initial intentions were to get to know the ER9X crew, maybe becoming a contributor at some point. However, gruvin9x began to fork off in its own life quite quickly.
+Initial intentions were to get to know the ER9X crew, maybe becoming a contributor at some point. However, gruvin9x began to fork off in its own life quite quickly and, well, I just kept going. Eventually, a few of the other project owners and contributors got in contact to say hello, which has been very nice. I still keep a pretty low profile on the other project as I don't wish to create a stir. Besides, they're all doing just fine. It's all good stuff! :-D
 
-At the same time, the author was becoming more aware of the overall power of the Google Code concept. Now, since comparing the differences between all flavours of this code is made so open and easy, it allows us to glean ideas from each other, picking and choosing what we want in our custom versions -- as well as allowing end users to comment and influence those choices. 
+= (Some) Project Details =
 
-Whilst all this may well forge the proverbial two-edged sword — by producing 'too many' versions — the simple delight of working directly on such a project as, when and how the author feels like it is just to much temptation to pass up.
+The main intention for gruvin9x is to provide a growing range of features and functions to support Fr-Sky telemetry natively on the '9X -- as well as mass storage using MMC and/or SD Flash cards. (The latter eventually having been relegated to a whole new, custom main board upgrade!)
 
-= Details =
+The project started off with a few relatively minor tweaks to ER9X, as it was at the time.
 
-The main intention for gruvin9x is to provide a growing range of features and functions to support Fr-Sky telemetry natively on the '9X.
+Way back at revision 46 (r46), better key-repeat delays and a hack to get variable frequency tones through a speaker, instead of the single-pitch 'beeper' of the stock unit, were implemented.
 
-As of revision 46 (r46), the following three features have been added ...
+The latter resulted in low/mid/higher pitch key and trim button beeps. But its long term intention was to provide a greater range of unique sounds for eyes-off telemetry data. See [SpeakerReplacement Why I replaced the stock beeper with a speaker] for details.
 
-*Feature 1 -- Key-repeat delay* (optional)
-
-The stock ER9X/TH9X code does not implement a delay between a menu button press and when that button starts auto-repeating. This can result in skipping desired desired settings. 
-
-*Feature 2 -- Buzzer replaced with Speaker for variable pitch tones etc* (optional)
-
-Apart from the fact that the stock '9X 'beeper' (in some batches especially) is incredibly upsetting to the ear ... useful telemetry feedback while actually flying a model aircraft necessitates the use of something other than visual readout on an LCD display. An intuitive array of various sounds, including short melodies, rising and falling pitch and what not seems the obvious, simple choice. 
-
-Low/mid/higher pitch key and trim button beeps (values <0, 0 and >0 respectively) have already been implemented. Work on telemetry tones will commence once the hardware is available — very soon in theory.
-
-See [SpeakerReplacement Why I replaced the stock beeper with a speaker] for more detail.
-
-*Feature 3 -- More stable battery voltage display/alarms]* (optional)
-Some models/batches of the '9X, especially when using batteries with higher internal resistance than the likes of Li-Ion cells (dry cells for example) tend to exhibit significantly erratic battery voltage sampling. An 'averaged over time' enhancement fixes this problem. See [VoltageAveraging Battery voltage averaging. Why, how and turning it off] for further details.
+When I flashed a local RC modeller's stock radio with gruvin9x the first time, there were problems with the stock 8-pack-of-alkaline cells causing a lot of jitter in the battery voltage display. Since then, gruvin9x has had a running0-average stabiliser to fix that.
 
 == Fr-Sky Telemetry Support ==
 
 <img src="http://gruvin9x.googlecode.com/svn/wiki/Progress.attach/FrSky%20RX%20Voltage.jpg" align="right" width="320">
-Following on from the beginnings of Fr-Sky/JETI support already included in ER9X, a little more progress is being made towards the goal of extensive support for Fr-Sky telemetry. So far (2010-11-30) this work (and other stuff too) is being done in an experimental code branch -- `.../svn/branches/usart2`
+
+After a while, TH's original coding and method started to become familiar. (Thomas is something of a genus C++ programmer IMHO too by the way!) So I started delving more into menus, custom settings and the like in support of Fr-Sky two-way telemetry. See [FrSky here] for details of progress on that score.
 
 == RCModelReviews.com Telemetry Hub Support ==
 
@@ -45,18 +33,16 @@ Plans exist to support the [http://www.rcmodelreviews.com/frsky_telemetry_projec
 
 = Bigger Plans - A Whole New Main Board =
 
-There are a number of somewhat challenging '9X hardware wiring modifications required just to get access to telemetry data. That alone is not too bad -- but we also want access to more of the IO pins currently (lazily) spread out over nearly all the higher function ports of the host ATmega64A chip. For example, access to MOSI/MISO/SCK (on Port B) for SPI mode data transfer to/from an MMC/SDCARD is desired for mass storage of telemetry and model data. 
+There are a number of somewhat challenging '9X hardware wiring modifications required just to get access to telemetry data. That alone is not too bad -- but we also want access to more of the IO pins currently (lazily) spread out over nearly all the higher function ports of the host ATmega64A chip. Most notably for the purposes of gruvin9x goals, dedicated access to MOSI/MISO/SCK (on Port B) for SPI mode data transfer to/from an MMC/SDCARD is needed.
 
-These and other requirements led to a state of temporary insanity and the starting of a complete re-design of the entire main board PCB! 
-
-Plans include a more powerful Atmel CPU to replace the ATmega64A, as well as break-outs for any and all I/O port pins that might be useful for future development -- including the CLK line for the event one ends up with a 'fuse bricked' controller. The heralded PB7 LCD back light interface will not be forgotten either. 
-
-*Progress* towards this goal is being documented on the [Circuitry] wiki page. As of this writing, a PCB design closely replicating the stock design has been completed as a reference point. That design already includes an AVR ICP programming connector. The next step is to carry on from there, making more of the planned changes and additions.
+These and other requirements led to a state of temporary insanity and the commencing of a complete re-work of the entire main board PCB! A near duplicate of the stock PCB was first worked up, then changes and additions were added. Find details on the [PCB] wiki page.
 
 <img src="http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/kicad-pcb-3d-top.jpg" width="480">
 
 = Contacting Gruvin =
 
-Oh dear -- as of this writing, the Google Code system for obtaining owner email addresses is broken. Hopefully, Google will fix this very soon. Normally, you would visit my Google Projects user profile, then click the '...' in gru...@gmail.com to reveal the full address. On the other hand, if you're very clever, you might just be able to work that out for yourself. Hint: My user alias is `gruvin`, not `gru...` ;-)
+Oops! As of this writing, I've discovered that the Google Code system for obtaining project owner email addresses is broken. Hopefully, Google will fix this very soon. Meanwhile, fear not ...
 
-*HOWEVER*, I'd really like you to please consider joining the [http://groups.google.com/group/gruvin9x-discuss gruvin9x discussion group] and communicating with us all there. Thanks :-D
+Normally, you would visit my Google Projects user profile, then click the '...' in gru...@gmail.com to reveal the full address, after [http://en.wikipedia.org/wiki/CAPTCHA captcha] verification. On the other hand, if you're _very_ clever, you might just be able to work that out for yourself. Hint: My user alias is `gruvin`, not `gru...` ;-)
+
+*HOWEVER*, I'd really like you to please consider joining the [http://groups.google.com/group/gruvin9x-discuss gruvin9x discussion group] and communicating with the group there -- unless it's a personal matter, of course. Thanks :-D
