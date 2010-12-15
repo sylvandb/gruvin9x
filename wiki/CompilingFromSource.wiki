@@ -1,5 +1,5 @@
 #summary Compiling gruvin9x from source
-#labels Phase-Implementation,Featured
+#labels Phase-Implementation
 
 = Compiling gruvin9x from Source =
 *NOTE:* Intended for Mac OS X audiences. Details for Windows (and mention of Linux) can be found in the original TH/ER9X project document [http://gruvin9x.googlecode.com/svn/trunk/doc/Flashing%20the%209x.pdf Flashing the 9x.pdf].
