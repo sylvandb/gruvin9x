@@ -71,20 +71,26 @@ CStruct.defStruct "EEGeneral_r205",<<-"END_TYP"
   int8_t    lightSw;
   int16_t   ppmInCalib[8];
   uint8_t   view;     //index of subview in main scrren
-  uint8_t   disableThrottleWarning;
-  uint8_t   disableSwitchWarning;
-  uint8_t   disableMemoryWarning;
-  uint8_t   beeperVal;
-  uint8_t   reserveWarning;
-  uint8_t   disableAlarmWarning;
+
+  uint8_t   opt8bits1; // bit fileds for following 8 bits
+  // uint8_t   disableThrottleWarning:1;
+  // uint8_t   disableSwitchWarning:1;
+  // uint8_t   disableMemoryWarning:1;
+  // uint8_t   beeperVal:3;
+  // uint8_t   reserveWarning:1;
+  // uint8_t   disableAlarmWarning:1;
+
   uint8_t   stickMode;
   uint8_t   inactivityTimer;
-  uint8_t   throttleReversed;
-  uint8_t   minuteBeep;
-  uint8_t   preBeep;
-  uint8_t   flashBeep;
-  uint8_t   disableSplashScreen;
-  uint8_t   res1;
+
+  uint8_t   opt8bits2; // bit fields for following 8 bits
+  // uint8_t   throttleReversed:1;
+  // uint8_t   minuteBeep:1;
+  // uint8_t   preBeep:1;
+  // uint8_t   flashBeep:1;
+  // uint8_t   disableSplashScreen:1;
+  // uint8_t   res1:3;
+
   uint8_t   filterInput;
   uint8_t   lightAutoOff;
   uint8_t   templateSetup;  //RETA order according to chout_ar array 
@@ -556,7 +562,7 @@ class Reader_V4
     if (typ==3) # Display Frsky Settings, becasue we can! :-D
       frsky = cls.new(); # dynamically use the right class version. (This is what make ruby so cool!)
       frsky.fromBin(@fbufdec[fi]);
-      printf("\n                [Ver:%d Ch:%s Vmax:%2.1f Vofs:%1.2f BMin:%2.1f BMax:%2.1f]", 
+      printf("[Ver:%d Ch:%s Vmax:%2.1f Vofs:%1.2f BMin:%2.1f BMax:%2.1f]", 
           frsky.myVers, 
           (frsky.rxVoltsChannel == 0 ? '--' : 'A'+frsky.rxVoltsChannel.to_s),
           frsky.rxVoltsMax.to_f/10,
