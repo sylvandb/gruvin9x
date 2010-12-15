@@ -48,9 +48,7 @@ In essence, I've implemented a new `'m_state'` named KSTATE_RPTDELAY, which is d
 
 A day or two later, I found that TH9X differs from ER9X in the way this is handled. I thought both versions were identical here, but I guess I either missed it, or perhaps TH made changes just recently.
 
-TH9X includes an `m_state=32` on top of the 16, 8, 4, 2 and 1 that the code used for incrementally increasing the auto-repeat rate, the longer a key is held down. He's also got a higher initial 'between repeats' delay of 640ms, vs. 480ms.
-
- _Coincidentally, I actually nearly did my fix in this exact same way. But in this manner, there's no way to get the first delay anything but double that of the next increment, which for me, simply didn't yield quite the feel I was after. I also quite like the modified timing that (I presume) ER introduced, except for the lack of initial delay of course._
+TH9X includes an `m_state=32` on top of the 16, 8, 4, 2 and 1, which the code uses for incrementally increasing the auto-repeat rate -- the longer a key is held down. But there's also a longer initial delay of 640ms, vs. 480ms. For me, this is a little too long. (Pedantic, I know! :-P) I also quite like the modified timing that (I presume) ER introduced -- except that it caused(?) this lack of initial delay issue.
 
 == Summary ==
 
