@@ -6,3 +6,5 @@
   * [Circuitry]
   * [PCB Custom PCB]
  * [RandomNotes Random Notes]
+  * [RepeatDelay Repeat Delay]
+  * [SpeakerReplacement Speaker Upgrade]
