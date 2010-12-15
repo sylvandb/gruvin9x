@@ -50,7 +50,7 @@ A day or two later, I found that TH9X differs from ER9X in the way this is handl
 
 TH9X includes an `m_state=32` on top of the 16, 8, 4, 2 and 1 that the code used for incrementally increasing the auto-repeat rate, the longer a key is held down. He's also got a higher initial 'between repeats' delay of 640ms, vs. 480ms.
 
-I actually nearly did my fix in the way. But there's no way to get the first delay anything but double that of the next speed -- which just wouldn't yield anything quite like I wanted. So I opted for the above solution instead. [[shrug]]
+ _Coincidentally, I actually nearly did my fix in this exact same way. But in this manner, there's no way to get the first delay anything but double that of the next increment, which for me, simply didn't yield quite the feel I was after. I also quite like the modified timing that (I presume) ER introduced, except for the lack of initial delay of course._
 
 == Summary ==
 
