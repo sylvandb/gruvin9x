@@ -1,6 +1,6 @@
-#summary Alkaline vs. power sources -- especially for your RC model receiver
+#summary Ni-Mh vs. power sources -- especially for your RC model receiver
 
-= Alkaline vs. Other Power Sources  =
+= Ni-Mh vs. Other Power Sources  =
 
 *In brief:* Carbon-Dry-Cell < Alkaline < Ni-MH < Ni-Cd (!)
 
