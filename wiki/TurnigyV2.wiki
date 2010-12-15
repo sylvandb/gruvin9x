@@ -12,7 +12,7 @@ Some [ReferenceImages reference images] of the internals of the '9X hardware are
 
 Previous project contributors have provided PDF circuit schematics of the V1 radio (??) in the [http://gruvin9x.googlecode.com/svn/trunk/doc/9X_Schematic.pdf doc/9X_Schematic.pdf] 
 
-The V2 circuitry is almost identical except it has a new 3.3V LCD display and supporting components. More information, including a [http://gruvin9x.googlecode.com/svn/trunk/pcb/actual_v2_9x/gruvin9x_v2_actual.pdf new schematic] for the V2 hardware is [Circuitry here].
+The V2 circuitry is almost identical except it has a new 3.3V LCD display and supporting components. More information, including a [http://gruvin9x.googlecode.com/svn/trunk/pcb/actual_v2_9x/gruvin9x_v2_actual.pdf new V2 schematic] for the V2 hardware is [Circuitry here].
 
 == Custom Main Board ==
 
