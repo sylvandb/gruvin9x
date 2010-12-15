@@ -1,4 +1,7 @@
 #summary Table Of Contents
 
- * [About About G9X (gruvin9x)]
- * [TurnigyV2 Turnigy 9X V2 Reference]
+ * [About About gruvin9x]
+ * [TurnigyV2 9X Hardware Reference]
+  * [ReferenceImages Reference Images]
+  * [Circuitry]
+  * [PCB Custom PCB]
