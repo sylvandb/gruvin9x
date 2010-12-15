@@ -8,7 +8,7 @@ _Also marketed under brand names: Eurgle, iMax, FlySky and others_
 == Reference Images == 
 Some [ReferenceImages reference images] of the internals of the '9X hardware are posted [ReferenceImages here] for convenient reference. (It saves opening up the case every time we need to check some minor detail.)
 
-[ReferenceImages http://gruvin9x.googlecode.com/svn/wiki/TurnigyV2.attach/refimages_thm.jpg]
+[http://code.google.com/p/gruvin9x/wiki/ReferenceImages http://gruvin9x.googlecode.com/svn/wiki/TurnigyV2.attach/refimages_thm.jpg]
 ----
 
 <img src="http://gruvin9x.googlecode.com/svn/wiki/TurnigyV2.attach/schematic_thm.png" align="right">
@@ -18,6 +18,7 @@ A TH/ER9X project contributor(?) provided PDF circuit schematics of the V1(?) st
 
 The V2 circuitry is almost identical, except it has a new 3.3V LCD display plus supporting components. [Circuitry More information], including a [http://gruvin9x.googlecode.com/svn/trunk/pcb/actual_v2_9x/gruvin9x_v2_actual.pdf new V2 schematic] for the V2 hardware is [Circuitry here].
 
+.
 ----
 
 == Custom Main Board ==
@@ -30,11 +31,11 @@ What if we had a whole new replacement PCB with connectors for two-way telemetry
 
 (The first prototype PCB batch was ordered from the manufacturer 2010-12-15)
 
-See [PCB here] for details, including related, new circuit schematics.
+See [PCB here] for details, including where to find the latest custom PCB circuit schematics.
 
 = Turnigy V2 Firmware Backup =
 
-Having originally managed to lose my factory Turnigy 9X V2 firmware, I eventually purchased another unit and this time took a full backup and copied it up to the wiki
+Having originally managed to lose my factory Turnigy 9X V2 firmware, I eventually purchased another unit and this time took a full backup and copied it up to the wiki, lest I lose it again!
 
 [http://gruvin9x.googlecode.com/svn/wiki/TurnigyV2.attach/Turnigy9X_V2.zip Turnigy9X_2.zip] contains all the `.bin` files from said backup.
 
