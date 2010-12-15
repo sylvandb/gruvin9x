@@ -60,7 +60,7 @@ Ah ... the `(ad*35 + ad / 4 * vBatCalib)` in the original code is overflowing on
 
 I originally fixed this by simply type-casting to 32-bit math. But that chews up more RAM than I hoped would be necessary. So I'll keep playing around.
 
-[Hint: By total fluke, changing the calibration scheme (as below) fixed the problem on its own -- for voltages up to about 13.8V.]
+`[Hint: By total fluke, changing the calibration scheme (as below) fixed the problem on its own -- for voltages up to about 13.8V.]`
 
 Moving on then ...
 
