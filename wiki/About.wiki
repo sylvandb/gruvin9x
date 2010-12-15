@@ -43,6 +43,26 @@ These and other requirements led to a state of temporary insanity and the commen
 
 [http://gruvin9x.googlecode.com/svn/wiki/TurnigyV2.attach/custompcb3d_thm.jpg]
 
+= Intended Features =
+(*Telemetry* support was the primary inspiration for this project fork)
+ * Ongoing Fr-Sky telemetry support extensions. ([http://code.google.com/p/gruvin9x/wiki/FrSky Now under well under way].)
+
+ * On-board audible aircraft AoA (Angle of Attack) instrument support using Fr-Sky telemetry. (See [SpeakerReplacement Why I replaced the stock beeper with a speaker] for more detail.)
+
+ * On-board audible [http://en.wikipedia.org/wiki/Variometer variometer] support, also using Fr-Sky telemetry.
+
+ * Native 9X LCD/Sound emulation of [http://rcmodelreviews.com/ RCModelReviews] Telemetry Dashboard, to a lesser or greater extent depending on ... stuff ... (He hasn't released a final working version yet.)
+
+ * Addition of _MMC/SDCARD_ socket to facilitate bulk storage of system settings, model programming and telemetry data -- in addition to or separate from existing EEPROM storage. (This will likely now only be supported on the upgrade PCB, due to limited program space for implementing convenient DOS/FAT32 file system abilities.)
+
+ * Some kind of audio file playback for alarms, telemetry "voice" and so forth. (Many options to choose from, including MP3 playback from MMC card for example. R&D continues.)
+
+ * Ongoing development of a complete replacement PCB for '9X radio to give more program pace, MMC/SDCARD interface and more. See the [Circuitry] wiki page.
+
+ * Support for other telemetry systems (ex. JETI)
+
+ * ... more
+
 = Contacting Gruvin =
 
 Oops! As of this writing, I've discovered that the Google Code system for obtaining project owner email addresses is broken. Hopefully, Google will fix this very soon. Meanwhile, fear not ...
