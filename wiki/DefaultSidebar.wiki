@@ -9,6 +9,8 @@
   * [Circuitry]
   * [PCB Custom PCB]
  * [Telemetry]
+  * [FrSky Fr-Sky Support]
+  * [FrSkyTerminalOSX Fr-Sky telemetry on your Mac]
  * [RandomNotes Random Notes]
   * [RepeatDelay Repeat Delay]
   * [SpeakerReplacement Speaker Upgrade]
