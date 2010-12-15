@@ -4,6 +4,7 @@
 = The Turnigy 9X =
 _Also marketed under brand names: Eurgle, iMax, FlySky and others_
 
+<img src="http://gruvin9x.googlecode.com/svn/wiki/TurnigyV2.attach/refimages_thm.jpg" align="right">
 == Reference Images ==
 
 Some [ReferenceImages reference images] of the internals of the '9X hardware are posted [ReferenceImages here] for convenient reference. (It saves opening up the case every time we need to check some minor detail.)
