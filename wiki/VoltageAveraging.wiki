@@ -31,47 +31,49 @@ The original code comments mention voltage divider resistor values of 5.07K and 
 
 So here's me working it out in my slow, half dead brain in the hot, muggy weather of the time ...
 
-  `(2.7+5.1)/2.7*5/1024*1000` -> 14.105V maximum possible reading (assuming perfect resistors and a perfect 5.00V reference.)
-  -- therefore, `vbatVolts = 78 * sampleVolts / 27` (tested with sample - 4.27 to yield 12.33V. CORRECT)
-  -- therefore, `vbat100mV = 780 * sampleVolts / 27`
-  -- where `sampleVolts = sampleValue * 5 / 2048` (because are samples are x2 normalised)
-  -- thus `vbat100mV = 780 * sampleValue * 5 / 2048  / 27` 
-  (Checked with 1744 sample val. to yield 123. CORRECT)
+ `(2.7+5.1)/2.7*5/1024*1000` -> 14.105V maximum possible reading (assuming perfect resistors and a perfect 5.00V reference.)
+ -- therefore, `vbatVolts = 78 * sampleVolts / 27` (tested with sample - 4.27 to yield 12.33V. CORRECT)
+ -- therefore, `vbat100mV = 780 * sampleVolts / 27`
+ -- where `sampleVolts = sampleValue * 5 / 2048` (because are samples are x2 normalised)
+ -- thus `vbat100mV = 780 * sampleValue * 5 / 2048  / 27` 
+ (Checked with 1744 sample val. to yield 123. CORRECT)
 
-  Simplifying that, we come down to...
+Simplifying that, we come down to...
 
-  vbat100mV = `sampleValue * 3900 / 2048 / 27` (checked)
-  , therefore `vbat100mV = sampleValue * 190 / 2700` (accuracy approx. +/-50mV)
+ `vbat100mV = sampleValue * 3900 / 2048 / 27` (checked)
 
-  To make the final divide faster, I'll normalise to an even power of 2.
+, therefore 
 
-  Thus finally, `g_vbat100mV = ((uint32_t)ab + 4 * g_eeGeneral.vBatCalib) * 144 / 2048`
+ `vbat100mV = sampleValue * 190 / 2700` (accuracy approx. +/-50mV)
 
-  Phew!
+To make the final divide less resource hungry, we'll normalise to an even power of 2. Thus we get, 
 
-The original calibration code for batt. volts allows adding entire 0.1V steps at each click -- plus or minus a whopping 12.V. I don't really like that, so will likely change it. But first to figure out this overload issue ...
+ `g_vbat100mV = ((uint32_t)ab + 4 * g_eeGeneral.vBatCalib) * 144 / 2048`
 
-Ah ... the `(ad*35 + ad / 4 * vBatCalib)` in the original code is overflowing on higher voltages if even just one click of calibration is in effect. 
+Phew! Now onto calibration.
+
+The original code allows adding entire 0.1V steps at each click -- so plus or minus a whopping 12.7V. I don't really need (or like) that, so will likely change it. But first to figure out this overload issue ...
+
+Ah ... the `(ad*35 + ad / 4 * vBatCalib)` in the original code is overflowing on higher voltages if even just one (positive) click of calibration is in effect. 
 
   Example: An input voltage of 12.30V was seen to provide a sample of 1744 (decimal). Thus, `1744*35 + 1744 / 4 * 1 = 76,300` -- more than the 65,535 maximum. Oops. 
 
 I originally fixed this by simply type-casting to 32-bit math. But that chews up more RAM than I hoped would be necessary. So I'll keep playing around.
 
-[By total fluke, changing the calibration scheme (as below) fixed the problem on its own -- for voltages up to about 13.8V.]
+[Hint: By total fluke, changing the calibration scheme (as below) fixed the problem on its own -- for voltages up to about 13.8V.]
 
 Moving on then ...
 
-  `vBatCalib` is a signed 8-bit (int8_t) => -127 to +127, which if added to the initial sample gives +-0.89V (after calculations to arrive at a voltage.) A reasonable calibration range might be +/-3.56V, or in this case +/-(127*4)
+Turns out `vBatCalib` is a signed 8-bit (int8_t), allowing for values in the range -127 to +127, which if added to the initial sample gives +/-0.89V (after the above math has been applied.) A reasonable calibration range might be +/-3.56V, or in this case +/-(127x4)
 
-  Thus, we arrive at `vbat100mV = (sampleValue + 4 x vBatCalib) * 144 / 2048`.
+Thus, we arrive at `vbat100mV = (sampleValue + 4 x vBatCalib) * 144 / 2048`.
 
-  But this still requires 24-bit math for higher voltages, whereas we want to keep 
-  within 16-bit. OK then ...
+But this still requires 24-bit math for higher voltages, whereas we want to keep within 16-bit. OK then ...
 
-  `g_vbat100mV = ((uint32_t)ab + 4 * g_eeGeneral.vBatCalib) * 36 / 512`
+ `g_vbat100mV = ((uint32_t)ab + 4 x g_eeGeneral.vBatCalib) x 36 / 512`
 
-  , which should be good to about 13.8V without overflowing (including calibration offset to get to that figure). Input voltages above 13.8V WILL surely still be a problem. But I think I can live with that!
+..., which should be good to about 13.8V without overflowing -- including +127 calibration offset to get to that figure. Input voltages above 13.8V _will_ surely still be a problem. But I think I can live with that, in all practicality!
 
-  Wow. So, in the end, all I really changed is how the calibration figure affects the final result -- which just happens to have fixed the original overflow issue. 
+Wow. So, in the end, all I really changed is how the calibration figure affects the final result -- which just happens to have fixed the original overflow issue. 
 
-  For people who prefer the original system, and who have 7.4V batteries (I guess!), TH's original formula has been reserved and can be used instead by supplying a -DTHBATVOLTS command line directive to the compiler.
+For people who prefer the original system, and who have 7.4V batteries (I guess!), TH's original formula has been reserved and can be used instead by supplying a `-DTHBATVOLTS` command line directive to the compiler.
