@@ -67,10 +67,6 @@ avrdude -c usbtiny -p atmega64 -B 1 -U eeprom:w:models.bin
 
 Oh by the way; unless you happen to have a battery connected to the '9X, leave the tiny little switch on the programmer PCB set to “Power Target”. That will power up the 9X in a fashion it isn’t used to -- IE. switches and keypad disconnected, which it will complain bitterly about with annoying beeps. But just block your ears and ignore all the commotion. The new gruvin9x firmware will soon put a quietening end to that! 
 
-== Compiling From Source ==
-
-Please see the [CompilingFromSource Compiling From Source] wiki page for details on this subject, including changes to the original Makefile defaults employed by gruvin9x.
-
 = What to Expect =
 
 After re-flashing for the first time, you can expect to feel a little bit anxious! Do not fret! The feeling is completely normal. :-D
@@ -84,3 +80,7 @@ Once you clear those messages away (by pressing [EXIT] for each or satisfying th
 The first thing you’ll want to do is set the ‘mode’ to ‘Mode 1′, for your throttle on the right, right? — since no one in their right mind would _ever_ use Mode 2 now, would they? :-P OK, maybe a few might. Mode 2 is in fact the default, and I haven't changed that at this stage. All these settings get backed up along with model programming data (as described above), so it's really no biggie.
 
 Oh! To access that menu, press and hold [LEFT] (original '+') button. And on that note, now would be a really good time to give the [http://er9x.googlecode.com/svn/trunk/doc/ER9x%20Users%20Guide.pdf ER9X Users Guide] a thorough once-over. If you haven't already, I think you'll be impressed with how powerful this firmware is. It truly does completely transform an otherwise rather average "Chinese '9X" radio into something quite fun to use and own.
+
+= Compiling from Source =
+
+Please see the [CompilingFromSource Compiling From Source] wiki page for details on this subject, including changes to the original Makefile defaults employed by gruvin9x.
