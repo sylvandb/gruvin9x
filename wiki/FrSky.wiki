@@ -41,21 +41,11 @@ Incidentally, the ordering of the alarm settings -- with A2 above A1 -- is inten
 
 A number of things need implementing and testing before this Fr-Sky support is committed to the `trunk/` version.
 
- * Configurable A1/A2 Voltage divider settings. I plan to implement these as 'Max Volts' / 'Calibration Offset'] pairs, where the later will be a voltage in 0.1V increments to add or subtract from the final result to adjust for component tolerances, at some chosen reference voltage. That is to say, true (linear) calibration would include a multiplier factor to stretch or compress values as required to get the voltage accurate across its entire range. But this is really a bit of over-kill for our purposes and will not be implemented.
+ * Configurable A1/A2 Voltage divider settings. I plan to implement these as 'Max Volts' / 'Calibration Offset'] pairs, where the later will be a voltage in 0.1V increments to add or subtract from the final result to adjust for component tolerances, at some chosen reference voltage. That is to say, true (linear) calibration would include a multiplier factor to stretch or compress values as required to get the voltage accurate across its entire range. But this is really a bit of over-kill for our purposes and will not be implemented. _(Completed/Testing)_
 
- * Addition of graphical bar for signal strength. In fact, ...
+ * Fr-Sky module alarm status display and programming. _(Completed/Testing)_
 
- * Page 1/*3* to become more of a 'pretty', graphical representation of pre-calibrated data, while numerical and calibration data is moved to a new page, 3/3. Or perhaps inserted before the alarms page would be better.
+ * Addition of graphical bar for signal strength
+ 
 
-=== Increasing On-board Storage for Recording Telemetry 'User Data' ===
-
-It is likely that none of the above TODO's will be implemented prior to increasing onboard data storage, one way or another. 
-
-At some stage, we want to be able to log incoming 'User Data' telemetry to an on-board storage device. Whilst, a removable, FAT16/32 formatted MMC/SDCARD system is planned for the upcoming new PCB version -- with its larger program capacity ATmega2561 -- unfortunately, there simply isn't enough flash memory space to implement this on the stock hardware's ATmega64A.
-
-For greater storage capacity _in general_, for settings and model data, some kind of simple, non-volatile memory storage device is being considered for owners of the standard hardware, who are prepared to make just a few more mods. (The [http://www.radioclone.org/ RadioClone] project already has this -- and has, from what I can tell, just barely been able to squeeze in full DOS/FAT support. Nice one Rafal!)
-
-Whilst the MMC/SDCARD system cannot be implemented with '9X software on the stock hardware (due to insufficient flash memory size), it is still possible to use such a card in a (probably non-removable), proprietary manner. That is, without DOS/FAT support but rather directly using the storage medium in a low-level, 'sector-by-sector' manner, which requires massively less program code.  
-
-That idea is being considered as a potentially 'easy' upgrade to the paltry 2KBytes EEPROM available in the stock '9X transmitter. If done, this would allow for literally thousands of complex model programs to be stored on a cheap 1GB or 2GB MMC card. But it will not necessarily allow for potability of data between units and almost certainly not allow use of a PC to manage such data. Therefore, I'm thinking there's probably not going to be any real demand for it. Comments anyone?
   
