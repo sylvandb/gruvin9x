@@ -16,16 +16,18 @@ Go to the eePe project home and donate the man all of this Friday night's beer m
 
 Mac users can install the Qt Developer stuff from here: [http://get.qt.nokia.com/qt/source/qt-mac-cocoa-opensource-4.6.2.dmg] 
 
-Then svn checkout eePe from the eePe project site. There's no Makefile as of this writing (ER must have accidentally not added it to the repository) -- BUT there _is_ a `src/eepe.xcodeproj/` :-D. Open that in Xcode, click _Build/Run_ and you'll be all set!
+Then svn checkout eePe from the eePe project site. 
 
-I'm gonna so enjoy hacking this one (to add the Fr-Sky 'file-type 3' support that is.)
+On the Mac, when you run qmake, is does not write out a Makefile. Even better, is creates an entire eepe `eepe.xcodeproj/` Xcode project folder. Very cool. Open that in Xcode, click _Build/Run_ and you'll be all set!
+
+I'm gonna so enjoy hacking this one (to add the Fr-Sky 'file-type 3' support that is.) No forks this time of course!
 
  _By the way -- have you taken a fresh look at Qt v4 in the last couple years? It's come a LONG way and is now fully OS X Cocoa integrated. I didn't know! (Head-in-the-sand syndrome strikes again.)
 
-After you install the Qt4 Developer package, be sure to read the REAME and run the demo ...
+ After you install the Qt4 Developer package (as above), be sure to read the README and run the demo ...
 
-{{{
+ {{{
  > open /Developer/Applications/Qt/qtdemo.app
-}}}
+ }}}
 
  And to think I was considering using xWidgets to get cross-platform coding done. Pfft!_
