@@ -20,3 +20,4 @@
   * [RepeatDelay Repeat Delay]
   * [SpeakerReplacement Speaker Upgrade]
   * [VoltageAveraging Voltage Averaging]
+  * [BackLight Backlight Information]
