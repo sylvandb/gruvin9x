@@ -4,7 +4,7 @@
 <img src="http://gruvin9x.googlecode.com/svn/wiki/About.attach/turnigy9x.jpg" align="right">
 = Introduction =
 
-This project started out as a kind of 'place holder' for the author's personal upgrades, hacks and mods to his [http://code.google.com/p/er9x/ ER9X]-powered Turnigy 9X V2 RC transmitter. As tie went on, more and more supporting documentation and other data was added, so as to keep it all in one place. Trying to keep all this information in order and up to date is, of course, an ongoing challenge. The project's name came simply from the author's long-time online nickname. 
+This project started out as a kind of 'place holder' for the author's personal upgrades, hacks and mods to his [http://code.google.com/p/er9x/ ER9X]-powered Turnigy 9X V2 RC transmitter. It hasn't really got much past that, still. But, as time wears on, more and more supporting documentation and other data gets added, so as to keep it all in one place. That tend to start making the project look like a "serious deal". Hmmm. It really isn't, is it? :/ I don't have time in my life for a "serious deal"! :p
 
 Initial intentions were to get to know the ER9X crew, maybe becoming a contributor at some point. However, gruvin9x began to fork off in its own life quite quickly and, well, I just kept going. Eventually, a few of the other project owners and contributors got in contact to say hello, which has been very nice. I still keep a pretty low profile on the other project as I don't wish to create a stir. Besides, they're all doing just fine. It's all good stuff! :-D
 
