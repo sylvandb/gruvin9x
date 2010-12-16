@@ -25,7 +25,7 @@ Off the top of my head, that list includes `menus.cpp`, `menus.h` (see below), `
 
 The other thing then, is the splitting of `menus.cpp` into `menus.cpp` and `menus.h`. Essentially, you just have to copy my `menus.h` file, delete all the duplicate lines in `menus.cpp` and stick an `#include "menus.h"` at the top of `menus.cpp`.
 
-Then you just need to add `frsky.h` and `frsky.cpp` from the gruvin9x tree. (2010-12016: Currently in `branches/frsky` -- _not_ in `trunk/`.)
+Then you just need to add `frsky.h` and `frsky.cpp` from the gruvin9x tree. (2010-12-16: Currently in `branches/frsky` -- _not_ in `trunk/`.)
 
 Easy peasy! (not?)
 
