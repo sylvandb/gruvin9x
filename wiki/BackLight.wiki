@@ -1,0 +1,20 @@
+#summary Backlight Information
+= Backlight Information =
+
+*BRIEF NOTES ONLY*
+
+== 9x Add-on Board with built-in Programmer and EL Backlight ==
+
+SmartieParts.com (Steven) sells a really cool solder-less PCB that include EL backlight driver, USB programmer interface and makes all it's connections to your '9X PCB withot a drop of solder. (Professionally too. Nothing dodgy involved!) See [http://www.rcgroups.com/forums/showthread.php?t=1338412#post16549680 here] for full details.
+
+
+== Standalone EL Driver and EL Panel ==
+
+If you just want an inverter and EL panel to add to your already custom '9X, SmartieParts.com can sort you out there too. See [http://www.rcgroups.com/forums/showpost.php?p=16713596&postcount=3265 here] for information and [http://www.smartieparts.com/shop/index.php?main_page=product_info&cPath=3&products_id=333 here] to order.
+
+= Details =
+
+Add your content here.  Format your content with:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
