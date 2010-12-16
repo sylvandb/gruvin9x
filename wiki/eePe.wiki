@@ -1,0 +1,31 @@
+#summary Erazz's eePe EEPROM File Manager
+
+= Erazz's Amazing (Windows/Linux/mac) eePe EEPROM File Manager =
+
+Wow. All I can say is, "Wow". 
+
+This Qt program (meaning it runs on Linux, Windows _and_ my beloved Mac) allows you to not only interrogate, but also re-program, read/write from/to an EEPROM image (.bin) file and even simulate model data using virtual mouse driven yokes, switches, knobs, etc. WOW. Did I say, "WOW?" :D
+
+It doesn't support gruvin9x Fr-Sky extensions (yet) -- so beware that saving an EEPROM file will lose that data.
+
+*AMAZING* (I mean -- it must have taken some serious effort and time to put this together!)
+
+Go to the eePe project home and donate the man all of this Friday night's beer money NOW -- That's an order! :-P Then -- only then :p -- download the program, install it and see what you think! (P.S: I'm exempt 'cause I don't buy beer on Fridays :p -- But I'll scratch something up from somewhere, some time. Promise!)
+
+== Mac Users ==
+
+Mac users can install the Qt Developer stuff from here: [http://get.qt.nokia.com/qt/source/qt-mac-cocoa-opensource-4.6.2.dmg] 
+
+Then svn checkout eePe from the eePe project site. There's no Makefile as of this writing (ER must have accidentally not added it to the repository) -- BUT there _is_ a `src/eepe.xcodeproj/` :-D. Open that in Xcode, click _Build/Run_ and you'll be all set!
+
+I'm gonna so enjoy hacking this one (to add the Fr-Sky 'file-type 3' support that is.)
+
+ _By the way -- have you taken a fresh look at Qt v4 in the last couple years? It's come a LONG way and is now fully OS X Cocoa integrated. I didn't know! (Head-in-the-sand syndrome strikes again.)
+
+After you install the Qt4 Developer package, be sure to read the REAME and run the demo ...
+
+{{{
+ > open /Developer/Applications/Qt/qtdemo.app
+}}}
+
+ And to think I was considering using xWidgets to get cross-platform coding done. Pfft!_
