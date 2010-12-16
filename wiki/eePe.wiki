@@ -1,6 +1,6 @@
 #summary Erazz's eePe EEPROM File Manager
 
-= Erazz's Amazing (Windows/Linux/mac) eePe EEPROM File Manager =
+= Erazz's Amazing (Windows/Linux/Mac) eePe EEPROM File Manager =
 
 Wow. All I can say is, "Wow". 
 
