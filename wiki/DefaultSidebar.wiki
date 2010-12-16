@@ -13,6 +13,7 @@
  * [Telemetry]
   * [FrSky Fr-Sky Support]
   * [FrSkyTerminalOSX Fr-Sky on your Mac]
+  * [FrskyToER9X Porting to ER9X]
  * [RandomNotes Random Notes]
   * [AoA AoA / LRI Notes/Ideas]
   * [PowerCells Ni-Mh packs! Or not?]
