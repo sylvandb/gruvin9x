@@ -4,7 +4,7 @@
 
 Wow. All I can say is, "Wow". 
 
-This Qt program (meaning it runs on Linux, Windows _and_ my beloved Mac) allows you to not only interrogate, but also re-program, read/write from/to an EEPROM image (.bin) file and even simulate model data using virtual mouse driven yokes, switches, knobs, etc. WOW. Did I say, "WOW?" :D
+This Qt program (meaning it runs on Linux, Windows _and_ my beloved Mac) allows you to not only interrogate, but also re-program (ALL model settings), read/write from/to an EEPROM image (.bin) file. You can duplicate, move, shuffle model configurations with simple mouse movements -- create a whole new model map and setting from scratch, then save it toa new .bin/.hex file for uploading tot he 9X -- and even simulate model data using virtual mouse driven yokes, switches, knobs, etc. WOW. Did I say, "WOW?" Very cool :D
 
 It doesn't support gruvin9x Fr-Sky extensions (yet) -- so beware that saving an EEPROM file will lose that data.
 
