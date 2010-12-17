@@ -8,7 +8,7 @@ This Qt program (meaning it runs on Linux, Windows _and_ my beloved Mac) allows 
 
 It doesn't support gruvin9x Fr-Sky extensions (yet) -- so beware that saving an EEPROM file will lose that data.
 
-*AMAZING* (I mean -- it must have taken some serious effort and time to put this together!)
+*AMAZING* (I mean -- it must have taken some real time and effort and time to put this together. So much potential with this software for the future too.)
 
 Go to the eePe project home and donate the man all of this Friday night's beer money NOW -- That's an order! :-P Then -- only then :p -- download the program, install it and see what you think! (P.S: I'm exempt 'cause I don't buy beer on Fridays :p -- But I'll scratch something up from somewhere, some time. Promise!)
 
