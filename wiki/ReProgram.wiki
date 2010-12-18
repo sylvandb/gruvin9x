@@ -17,6 +17,6 @@ Please see [FlashGuide Flash Guide] for details
 
 === Compiling from source ===
 
-If you'd like to get a look at the source code, maybe make a few changes of your own or otherwise have a tinker, then please take a look at [ProgrammingFromSource Programming From Source]. 
+If you'd like to get a look at the source code, maybe make a few changes of your own or otherwise have a tinker, then please take a look at [CompilingFromSource Compiling From Source]. 
 
 The focus for gruvin9x is on Mac based platforms, since that's what Gruvin happen to use and enjoy. However, Windows and Linux are also fully supported by `avr-dude` (the programmer software) and `GCC`, the optimising compiler of choice.
