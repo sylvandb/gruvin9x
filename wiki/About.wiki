@@ -23,10 +23,10 @@ The latter resulted in low/mid/higher pitch key and trim button beeps. But its l
 
 When I flashed a local RC modeller's stock radio with gruvin9x the first time, there were problems with the stock 8-pack-of-alkaline cells causing a lot of jitter in the battery voltage display. Since then, gruvin9x has had a running0-average stabiliser to fix that.
 
-<img src="http://gruvin9x.googlecode.com/svn/wiki/Progress.attach/FrSky%20RX%20Voltage.jpg" align="right" width="320">
+<img src="http://gruvin9x.googlecode.com/svn/wiki/Frsky.attach/got-data.jpg" align="right">
 == Fr-Sky Telemetry Support ==
 
-After a while, TH's original coding and method started to become familiar. (Thomas is something of a genus C++ programmer IMHO too by the way!) So I started delving more into menus, custom settings and the like in support of Fr-Sky two-way telemetry. See [FrSky here] for details of progress on that score.
+After a while, TH's original coding and methods started to become more clear and familiar. (Thomas is something of a genus C programmer IMHO too, by the way!) So I started delving more into menus, custom settings and the like, with support of Fr-Sky two-way telemetry in mind. See [FrSky here] for details of progress to date.
 
  _A cool idea I got from Bruce over at RCModelReviews.com (see below) is to utilise his onboard telemetry hub to give each equipped model a unique ID. When this ID is detected by a Fr-Sky enabled '9X, it could automatically load the correct model programming -- or warn if it's wrong -- or whatever. I'm even considering the idea of storing the programming data in the mode itself, as a radical departure from the way things have been all these years. In this way, any compatible '9X system would 'just know' how to control a given, suitably equipped model. You'd never have to worry about the number of model memories again, because each model stores its own data! Who knows? One day, this sort of thing might become standardised and used by all reputable RC radio brands._
 
