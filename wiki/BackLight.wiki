@@ -16,3 +16,7 @@ I don't know how he keeps the price so low -- but I aim to find out! :-D
 If you just want an inverter and EL panel to add to your already custom '9X, [http://SmartieParts.com SmartieParts.com] can sort you out there too. This is revision 2 of Steven's design and is, by all accounts, excellent. The board included the low-level drive input, so you can connect that directly to PB7 to control the back-light using ER/gruvin9x firmware.
 
 See [http://www.rcgroups.com/forums/showpost.php?p=16713596&postcount=3265 here] for information or [http://www.smartieparts.com/shop/index.php?main_page=product_info&cPath=3&products_id=333 here] to order.
+
+== trunk/doc/Backlight Installation.pdf ==
+
+There's also a back-light installation how-to written by Earl in the project documentation folder. See [http://gruvin9x.googlecode.com/svn/trunk/doc/Backlight%20Installation.pdf /doc/Backlight Installation.pdf].
