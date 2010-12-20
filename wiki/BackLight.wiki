@@ -11,7 +11,7 @@ See [http://www.rcgroups.com/forums/showthread.php?t=1338412#post16549680 here] 
 
 I don't know how SmartieParts gets the price so low -- but I aim to find out! :-D
 
-== Standalone EL Driver and EL Panel ==
+== Stand-alone EL Driver and EL Panel ==
 
 If you just want an inverter and EL panel to add to your already custom '9X, [http://SmartieParts.com SmartieParts.com] can sort you out there too. This is revision 2 of Steven's design and is, by all accounts, excellent. The board includes a low-level drive control input, which you can connect directly to PB7 to control the back-light using ER/gruvin9x (and now TH9X, I think) firmware.
 
