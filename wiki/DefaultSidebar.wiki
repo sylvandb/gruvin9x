@@ -21,4 +21,4 @@
   * [SpeakerReplacement Speaker Upgrade]
   * [VoltageAveraging Voltage Averaging]
   * [BackLight Backlight Information]
-  * [eePe eePe!! AMAZING and useful too!]
+  * [eePe eePe EEPROM file manager]
