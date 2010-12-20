@@ -14,6 +14,8 @@ The main intention for gruvin9x is to provide a growing range of features and fu
 
 *HOWEVER* -- compatibility with the stock V2 '9X transmitter will be retained as far as possible. So fear not. There will always be a gruvin9x version available to run on the stock unit. There will also be versions that support manual circuit hacks for telemetry (and other things) that do _not_ require the new PCB. (See 'Bigger Plans', below.)
 
+Efforts will be made to keep up with new features of ER9X on a request-by-request basis. Please use the [http://code.google.com/p/gruvin9x/issues/list Issue tracker] (link on menu above) to make such requests.
+
 == Beginnings ===
 The project started off with a few relatively minor tweaks to ER9X, as it was at the time.
 
