@@ -633,6 +633,7 @@ inline void _beepSpkr(uint8_t d, uint8_t f)
 
 #define beepKeySpkr(freq) _beepSpkr(g_beepVal[0],freq)
 #define beepTrimSpkr(freq) _beepSpkr(g_beepVal[0],freq)
+#define beepWarn1Spkr(freq) _beepSpkr(g_beepVal[1],freq)
 #define beepWarn2Spkr(freq) _beepSpkr(g_beepVal[2],freq)
 #define beepKey() _beepSpkr(g_beepVal[0],BEEP_DEFAULT_FREQ)
 #define beepWarn() _beepSpkr(g_beepVal[3],BEEP_DEFAULT_FREQ)
