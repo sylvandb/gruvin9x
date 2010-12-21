@@ -283,7 +283,7 @@ AVRDUDE_READ_EEPROM = -U eeprom:r:$(TARGET).bin:r
 
 # Uncomment the following if you do /not/ wish a verification to be
 # performed after programming the device.
-#AVRDUDE_NO_VERIFY = -V
+AVRDUDE_NO_VERIFY = -V
 
 # Increase verbosity level.  Please use this when submitting bug
 # reports about avrdude. See <http://savannah.nongnu.org/projects/avrdude>
@@ -291,7 +291,7 @@ AVRDUDE_READ_EEPROM = -U eeprom:r:$(TARGET).bin:r
 #AVRDUDE_VERBOSE = -v -v
 
 #AVRDUDE_FLAGS = -p $(MCU) -P $(AVRDUDE_PORT) -c $(AVRDUDE_PROGRAMMER)
-AVRDUDE_FLAGS = -V -B 1 -p $(MCU)  -c $(AVRDUDE_PROGRAMMER)
+AVRDUDE_FLAGS = -B 1 -p $(MCU)  -c $(AVRDUDE_PROGRAMMER)
 AVRDUDE_FLAGS += $(AVRDUDE_NO_VERIFY)
 AVRDUDE_FLAGS += $(AVRDUDE_VERBOSE)
 AVRDUDE_FLAGS += $(AVRDUDE_ERASE_COUNTER)

@@ -280,7 +280,15 @@ void per10ms()
 #endif
 
   // These moved here from perOut() [gruvin9x.cpp] to improve beep trigger reliability.
+#ifdef BEEPSPKR
+  if(mixWarning & 1) if(((g_tmr10ms&0xFF)==  0)) beepWarn1Spkr(BEEP_DEFAULT_FREQ+7);
+  if(mixWarning & 2) if(((g_tmr10ms&0xFF)== 64) 
+      || ((g_tmr10ms&0xFF)== 72)) beepWarn1Spkr(BEEP_DEFAULT_FREQ+7);
+  if(mixWarning & 4) if(((g_tmr10ms&0xFF)==128) || ((g_tmr10ms&0xFF)==136) 
+      || ((g_tmr10ms&0xFF)==144)) beepWarn1Spkr(BEEP_DEFAULT_FREQ+7);
+#else
   if(mixWarning & 1) if(((g_tmr10ms&0xFF)==  0)) beepWarn1();
   if(mixWarning & 2) if(((g_tmr10ms&0xFF)== 64) || ((g_tmr10ms&0xFF)== 72)) beepWarn1();
   if(mixWarning & 4) if(((g_tmr10ms&0xFF)==128) || ((g_tmr10ms&0xFF)==136) || ((g_tmr10ms&0xFF)==144)) beepWarn1();
+#endif
 }

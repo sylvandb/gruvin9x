@@ -2475,16 +2475,16 @@ int16_t intpol(int16_t x, uint8_t idx) // -100, -75, -50, -25, 0 ,25 ,50, 75, 10
 
 // static variables used in perOut - moved here so they don't interfere with the stack
 // It's also easier to initialize them here.
-uint16_t pulses2MHz[120] = {0};
-int16_t  anas [NUM_XCHNRAW] = {0};
-int32_t  chans[NUM_CHNOUT] = {0};
-uint32_t inacCounter = 0;
-uint16_t inacSum = 0;
-uint8_t  bpanaCenter = 0;
-int16_t  sDelay[MAX_MIXERS] = {0};
-int32_t  act   [MAX_MIXERS] = {0};
-uint8_t  swOn  [MAX_MIXERS] = {0};
-uint8_t mixWarning;
+uint16_t  pulses2MHz[120] = {0};
+int16_t   anas [NUM_XCHNRAW] = {0};
+int32_t   chans[NUM_CHNOUT] = {0};
+uint32_t  inacCounter = 0;
+uint16_t  inacSum = 0;
+uint8_t   bpanaCenter = 0;
+int16_t   sDelay[MAX_MIXERS] = {0};
+int32_t   act   [MAX_MIXERS] = {0};
+uint8_t   swOn  [MAX_MIXERS] = {0};
+uint8_t   mixWarning;
 
 void perOut(int16_t *chanOut, uint8_t zeroInput)
 {
@@ -2604,7 +2604,7 @@ void perOut(int16_t *chanOut, uint8_t zeroInput)
   */
 
     //========== MIXER LOOP ===============
-    mixWarning = 0;
+    uint8_t tmixWarning = 0;
     for(uint8_t i=0;i<MAX_MIXERS;i++){
       MixData &md = g_model.mixData[i];
 
@@ -2626,8 +2626,9 @@ void perOut(int16_t *chanOut, uint8_t zeroInput)
         swTog = !swOn[i];
         swOn[i] = true;
         v = anas[md.srcRaw-1]; //Switch is on. MAX=FULL=512 or value.
-        if(md.mixWarn) mixWarning |= 1<<(md.mixWarn-1); // Mix warning
+        if(md.mixWarn) tmixWarning |= 1<<(md.mixWarn-1); // Mix warning
       }
+      mixWarning = tmixWarning;
 
       //========== INPUT OFFSET ===============
       if(md.sOffset) v += calc100toRESX(md.sOffset);
