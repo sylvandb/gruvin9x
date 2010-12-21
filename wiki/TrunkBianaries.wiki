@@ -1,0 +1,25 @@
+#summary Binaries for download from the trunk/stable repository
+#labels Phase-Deploy
+
+= Stable Pre-Compiled Binaries =
+
+There are four versions if pre-compiled binary .hex files you can download for flashing your '9X without needing to compile from source.
+
+These version all carry the latest stable bug-fixes and newest stable features, but each pertains to the various combinations of hardware mods that may or may not have been performed on the target radio.
+
+== Binary .hex Download Links ==
+
+ * *[http://gruvin9x.googlecode.com/svn/trunk/gruvin9x-stock.hex gruvin9x-stock.hex]* -- For stock hardware (no internal re-wiring) -- includes the keypad auto-repeat and bat. voltage averaging patches.
+
+ * *[http://gruvin9x.googlecode.com/svn/trunk/gruvin9x-std-speaker.hex gruvin9x-std-speaker.hex]* -- For [SpeakerReplacement speaker upgrade] only. No Fr-Sky wiring mods.
+
+ * *[http://gruvin9x.googlecode.com/svn/trunk/gruvin9x-frsky-nospeaker.hex gruvin9x-frsky-nospeaker.hex]* -- [FrskyInterfacing Fr-Sky telemetry] mod, but no speaker upgrade.
+
+ * *[http://gruvin9x.googlecode.com/svn/trunk/gruvin9x-frsky-speaker.hex gruvin9x-frsky-speaker.hex]* -- [FrskyInterfacing Fr-Sky telemetry] and [SpeakerReplacement speaker upgrade] mods in place.
+
+ * [http://gruvin9x.googlecode.com/svn/trunk/gruvin9x.hex gruvin9x.hex] -- Fully 'Gruvinvized' with [FrskyInterfacing Fr-Sky], [SpeakerReplacement speaker upgrade] and other and other 'random' gruvin9x features, such as moving LH_Trim_Up/Dwn away from USART1 to free same for secondary serial communications. (The latter mod is still experimental and little to no documentation exists for it.) *You probably _DON'T_ want this version!*
+
+
+== Change Log ==
+
+A log of the most recent as well as previous changes (since r377) for the above binary versions can be found at [http://gruvin9x.googlecode.com/svn/trunk/src/CHANGELOG].
