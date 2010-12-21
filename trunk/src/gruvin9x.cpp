@@ -638,7 +638,6 @@ Gruvin:
 #else
         g_vbat100mV = (ab + 4 * g_eeGeneral.vBatCalib) * 36 / 512; // G: Similar still, but no overflow now.
 #endif
-
         // initialize to first sample if on first averaging cycle
         if (vbatRunningAvg==0) vbatRunningAvg = g_vbat100mV;
         vbatRunningAvg = ( (uint16_t)((uint16_t)vbatRunningAvg * 7) + g_vbat100mV) / 8;
@@ -654,6 +653,7 @@ Gruvin:
       break;
     case 3:
       {
+        // The various "beep" tone lengths
         static prog_uint8_t APM beepTab[]= {
        // 0   1   2   3    4
           0,  0,  0,  0,   0, //quiet
@@ -747,7 +747,7 @@ uint16_t anaIn(uint8_t chan)
 {
   //                     ana-in:   3 1 2 0 4 5 6 7
   //static prog_char APM crossAna[]={4,2,3,1,5,6,7,0}; // wenn schon Tabelle, dann muss sich auch lohnen
-  static prog_char APM crossAna[]={3,1,2,0,4,5,6,7}; // Translate: "table though, it must be worth even"
+  static prog_char APM crossAna[]={3,1,2,0,4,5,6,7};
   volatile uint16_t *p = &s_anaFilt[pgm_read_byte(crossAna+chan)];
   AutoLock autoLock;
   return *p;
@@ -781,7 +781,7 @@ void getADC_filt()
   s_ana[chan] = (ADC + s_ana[chan]) >> 1;
   */
 
-void getADC_osmp() // G: get 'over sample' - 4 samples added, then the sum divided by 2. Result = 2x average sample.
+void getADC_osmp()
 {
   uint16_t temp_ana[8] = {0};
   for (uint8_t adc_input=0;adc_input<8;adc_input++){
@@ -795,7 +795,7 @@ void getADC_osmp() // G: get 'over sample' - 4 samples added, then the sum divid
       temp_ana[adc_input] += ADCW;
     }
     s_anaFilt[adc_input] = temp_ana[adc_input] / 2; // divide by 2^n to normalize result.
-  }                                                 // G: Leaving final result at x2, still.
+  }
 }
 
 

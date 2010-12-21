@@ -2330,7 +2330,6 @@ void menuProc0(uint8_t event)
     putsVBat(x-1*FW,2*FH,true, att);
     lcd_putcAtt(x+4*FW, 3*FH, 'V',0);
 
-    // plot a nice big decimal point (TH original code)
     uint8_t ln = 2;
     uint8_t xn = x;
     uint8_t tn = (g_vbat100mV/10) % 10;
@@ -2485,6 +2484,7 @@ uint8_t  bpanaCenter = 0;
 int16_t  sDelay[MAX_MIXERS] = {0};
 int32_t  act   [MAX_MIXERS] = {0};
 uint8_t  swOn  [MAX_MIXERS] = {0};
+uint8_t mixWarning;
 
 void perOut(int16_t *chanOut, uint8_t zeroInput)
 {
@@ -2603,8 +2603,8 @@ void perOut(int16_t *chanOut, uint8_t zeroInput)
   }
   */
 
-   uint8_t mixWarning = 0;
     //========== MIXER LOOP ===============
+    mixWarning = 0;
     for(uint8_t i=0;i<MAX_MIXERS;i++){
       MixData &md = g_model.mixData[i];
 
@@ -2738,12 +2738,17 @@ void perOut(int16_t *chanOut, uint8_t zeroInput)
     }
 
   //========== MIXER WARNING ===============
+  // 1,2 or 3 "bips" (short beeps)
   //1= 00,08
   //2= 24,32,40
   //3= 56,64,72,80
-  if(mixWarning & 1) if(((g_tmr10ms&0xFF)==  0)) beepWarn1();
-  if(mixWarning & 2) if(((g_tmr10ms&0xFF)== 64) || ((g_tmr10ms&0xFF)== 72)) beepWarn1();
-  if(mixWarning & 4) if(((g_tmr10ms&0xFF)==128) || ((g_tmr10ms&0xFF)==136) || ((g_tmr10ms&0xFF)==144)) beepWarn1();
+  // Gruvin:  Sometimes, one or more of these beeps do not fire. That will be because the tmr10ms counter
+  //          may not necessarily be exactly (==) the below figures when queried from inside perOut().
+  //          But we only ever want a beep to fire once, so we have to use anexact counter match (not a range).
+  //          My solution was to make mixWarning global and have the counter checks done inside per10ms();
+//  if(mixWarning & 1) if(((g_tmr10ms&0xFF)==  0)) beepWarn1();
+//  if(mixWarning & 2) if(((g_tmr10ms&0xFF)== 64) || ((g_tmr10ms&0xFF)== 72)) beepWarn1();
+//  if(mixWarning & 4) if(((g_tmr10ms&0xFF)==128) || ((g_tmr10ms&0xFF)==136) || ((g_tmr10ms&0xFF)==144)) beepWarn1();
 
 
   //========== LIMITS ===============
