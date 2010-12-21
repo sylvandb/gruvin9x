@@ -4,17 +4,21 @@
 
 <img src="http://gruvin9x.googlecode.com/svn/wiki/FlashGuide.attach/usbpktprog.jpg" align="left">The first thing you will need is one of the many available AVR programmer kits. Perhaps you already have an AVR programmer? I purchased a [http://www.sparkfun.com/commerce/product_info.php?products_id=9825 USB Pocket Programmer] from Spark Fun. It works really well and is not at all expensive. ([http://sparkfun.com SparkFun] have a some really cool stuff by the way. Stop by for a while and check them out!)
 
-You'll need to connect your programmer's ICP (In-Circuit Programming) cable to your '9X. Some people have made 'pogo boards', which are fabricated as templates around existing PCB screw mounting holes to enable solder-less, temporary connection to the ATmega64A ICP programming pads on the '9X main PCB. This is done using clever spring-loaded connector pins called [http://www.sparkfun.com/commerce/product_info.php?products_id=8870 pogo pins]. The idea is especially good for bulk re-flashing of multiple units without soiling the brand new PCB with a soldering iron. I'll only be discussing direct soldering here.
+You'll need to connect your programmer's ICP (In-Circuit Programming) cable to your '9X. There are a few options available.
 
-There is an excellent PDF guide for Windows users [http://gruvin9x.googlecode.com/svn/trunk/doc/Flashing%20the%209x.pdf], which also shows how to connect an AVR programmer ribbon cable to the '9X. That guide though seems to rely on the colour coded cable to figure out which wire goes where. So I've included a photo below of my 'classic grey' ribbon cable installation, with numbered wires for your convenience.
+An excellent "solder-less" example, using [http://www.sparkfun.com/commerce/product_info.php?products_id=8870 pogo pins], can be found in the offering from [http://SmartieParts.com SmartieParts.com] (Steven / s_mack on [http://www.rcgroups.com/forums/ RCGroups forum]). With this option, all you need is a screw-driver! The board includes a USB programming interface and an EL back-light driver for your LCD screen. I believe it even comes with an EL back-light sheet. See [http://www.rcgroups.com/forums/showthread.php?t=1338412#post16549680 here] for detailed information with images, in the form of a mini-review, by Erazz (of ER9X).
 
-When I ordered my SparkFun Pocket Programmer, I had them add a spare programming cable. I cut the two 'remote' connectors off the end of that and used it to wire up my radio. Long story short — here's a photo of my installation, using a stock SparkFun cable ...
+Here, I will discuss the, "soldering wires straight to PCB" method.
+
+There is an excellent PDF guide for Windows users [http://gruvin9x.googlecode.com/svn/trunk/doc/Flashing%20the%209x.pdf], which also shows how to connect an AVR programmer ribbon cable to the '9X. That guide though seems to rely on a colour coded cable to determine what wire goes where. So I've included a photo below of my 'classic all-grey' ribbon cable installation, with numbered wires, for your convenience.
+
+When I ordered my SparkFun Pocket Programmer, I had them add a spare programming cable. I cut the two 'remote' connectors off the end of that and used what remained to wire up my radio. Here's a photo of my installation, using a stock SparkFun cable as described ...
 
   <b>IMPORTANT:</b> The picture below shows a typical ‘V2′ transmitter, as has been shipping for a few months as at time of this writing. The V1 unit  had an error on the PCB where the ‘SCK’ programming pad (wire 7 below) was connected one pin too far left on the ATmega64 chip. So watch out for that! If you have a V1 unit, you can still get things going. You just have to careful to get a wire soldered to the right place.
 
  [http://gruvin9x.googlecode.com/svn/wiki/FlashGuide.attach/progwiring.jpg]
 
-*NOTE:* The two hot-glued little resistors and fine wires to the left are the re-wiring necessary to free up the ATmega64A serial comms port for telemetry data, which is otherwise connected to the Throttle-Hold and Aileron-DR switches. The switches get moved to two spare port pins. *This mod is only necessary* if you intend using the EXT=JETI or EXT=FRSKY (the default for _gruvin9x_) `make` attributes when building the source. The code will then automatically re-assign the THH and AIL switches appropriately. See [FrskyInterfacing here] for further detail.
+*NOTE:* The two hot-glued little resistors and fine wires to the left are the re-wiring necessary to free up the ATmega64A serial comms port for telemetry data, which is otherwise connected to the Throttle-Hold and Aileron-DR switches. The switches get moved to two spare port pins. *This mod is only necessary* if you intend using the EXT=JETI or EXT=FRSKY (the default for _gruvin9x_) `make` attributes when building the source. The code will then automatically re-assign the THH and AIL switches appropriately. *See [FrskyInterfacing here] for further detail*.
 
 
 = Flashing the Firmware =
@@ -22,7 +26,7 @@ When I ordered my SparkFun Pocket Programmer, I had them add a spare programming
 == Software ==
 <img src="http://gruvin9x.googlecode.com/svn/wiki/FlashGuide.attach/avrdude.jpg" align="right"><img src="http://gruvin9x.googlecode.com/svn/wiki/FlashGuide.attach/crosspack.jpg" align="right">Whilst I'm no stranger to Windows, I strongly prefer using my Mac for all development work. Fortunately, so do many others who work with Atmel AVR chips, so there’s a nice packaged installer named [http://www.obdev.at/products/crosspack/ CrossPack] that has everything you need for cross-compiling C/C++ AVR code on your Mac. 
 
-CrossPack also comes bundled with [http://savannah.nongnu.org/projects/avrdude/ AVRDUDE], which is used to operate the programmer hardware. Even more conveniently, the 'usbtiny' programmer protocol driver that the SparkFun USB Pocket Programmer I randomly chose is also included and installed, ready-to-run as part of the CrossPack bundle. Very cool!
+CrossPack also comes bundled with [http://savannah.nongnu.org/projects/avrdude/ AVRDUDE], which is used to operate the programmer hardware. Even more conveniently, the 'usbtiny' programmer protocol driver that the SparkFun USB Pocket Programmer I randomly chose is also included and installed, ready-to-run as part of the CrossPack bundle. Very cool! Best of all, you don't have to do any configuring of this software. Just install it and then move on to the steps below.
 
 And yes, the above software is all free! Aint it great? Be sure to say thanks or drop a donation!
 
@@ -30,7 +34,7 @@ And yes, the above software is all free! Aint it great? Be sure to say thanks or
 
 There are (at the time of this writing) four pre-compiled hex file versions of gruvin9x available and kept up to date. The versions apply to the various different hardware mods/re-wiring you may or may not have chosen to do. You can download the version that is right for you from the [TrunkBinaries] page, using same to flash your '9X without having to compile from source. 
 
- Click [TrunkBinaries here] to go to the binaries download page.
+ See [TrunkBinaries here] to for the binaries download page.
 
 == Flashing Ready-to-Run Firmware == 
 You can now burn your `gruvin9x[-version].hex` file using AVRDUDE as follows ...
@@ -39,37 +43,39 @@ You can now burn your `gruvin9x[-version].hex` file using AVRDUDE as follows ...
 avrdude -c usbtiny -p atmega64 -B 1 -U flash:w:gruin9x[-version].hex
 }}}
 
-AVRDUDE should find the USB programmer, whatever port it's connected to. If not, try unplugging the programmer and plugging it back in. (You need to do this at least once after installing CrossPack. No reboots are required. This is NOT Windows! :-P )
+AVRDUDE should find the USB programmer, whatever port it's connected to. If not, try unplugging the programmer and plugging it back in. (You'll probably need to do this at least once after installing CrossPack. No reboots are required! This is NOT Windows :p )
 
-The flash procedure will completely erase your ATmega64 chip, write in the new firmware and then read back the code to verify it all went OK. After using gruvin9x for a while, you can take a backup of your model programming data using the following AVRDUDE command ...
+The flash procedure will completely erase your ATmega64A chip's Flash program memory, write in the new firmware and then read back the code to verify it all went OK. After using gruvin9x for a while, you can take a backup of your model programming data using the following AVRDUDE command ...
 
 {{{
 avrdude -c usbtiny -p atmega64 -B 1 -U eeprom:r:models.bin:r
 }}}
 
-... and restore that model data after a re-flash using ...
+... and you can restore that model data after any given re-flash using ...
 
 {{{
 avrdude -c usbtiny -p atmega64 -B 1 -U eeprom:w:models.bin
 }}}
 
-Oh by the way; unless you happen to have a battery connected to the '9X, leave the tiny little switch on the programmer PCB set to “Power Target”. That will power up the 9X in a fashion it isn’t used to -- IE. some switches disconnected -- which it will complain bitterly about with annoying beeps. Block your ears and ignore those though. The new gruvin9x firmware flashing process will soon put a quietening end to all the racket! 
+Oh by the way; unless you happen to have a battery connected to the '9X, leave the tiny little switch on the programmer PCB set to “Power Target”. That will power up the 9X in a fashion it isn’t used to -- ie. some switches disconnected -- which it will complain bitterly about with annoying beeps. Block your ears and ignore those, because the new gruvin9x firmware flashing process will very soon put an end to all the racket! 
 
 = What to Expect =
 
-After re-flashing for the first time, you can expect to feel a little bit anxious! Do not fret! The feeling is completely normal. :-D
+After re-flashing for the first time, you can expect to feel a little bit anxious! Do not fret! The feeling is completely normal. :D
 
-Tuck your programming cable away, for now, in such a way that allows you to put the rear cover back on the transmitter. You can tidy things up more once you know its working.
+Disconnect and tuck your programming cable away, for now, in such a way that allows you to put the rear cover back on the transmitter. You can tidy things up more once you know its all working.
 
  _REMEMBER to reconnect the rear-cabinet cable connector! The first time I flicked the power switch after flashing I got absolutely nothing. Not even a beep or a flicker. “Uhoh!” ... then I realised that things would probably go better with the power and other things actually connected! :-P_
 
-During boot-up, the new firmware checks a few things. You’ll get one or more “alerts” on screen, like “Throttle not set idle” and a message about there being no alarms — meaning the beeper is turned off, as it is by default. Also, all switches have to be in the “off” state — that is, all front switches ‘up’ and top switches ‘back’. Oh and don’t worry — all these power-up warnings can be disabled through settings in the new '9X menus if you don’t want them.
+During boot-up, the new firmware checks a few things. You’ll get one or more “alerts” on screen, like “Throttle not set idle” and a message like "Alert! Alarms disabled" — meaning the beeper is turned off, as it will be by default. Also, all switches have to be in the “off” state — that is, all front switches ‘up’ and top switches ‘back’. Oh and don’t worry — all these power-up warnings can be disabled through settings in the new '9X menus if you don’t want them. (I don't!)
 
-Once you clear those messages away (by pressing [EXIT] for each or satisfying the switch requests), you should see the (also optional) 'ER9X splash/title screen'. (I may get even more cheeky and design my own 'gruvin9x' logo some day. :-P) And from this point, it just gets better and better.
+Once you clear the alerts away (by pressing [EXIT] for each or satisfying the switch positions), you should see the (also optional) 'gruvin9x' splash screen'. From this point, things just get better and better ...
 
-The first thing you’ll want to do is set the ‘mode’ to ‘Mode 1′, for your throttle on the right, right? — since no one in their right mind would _ever_ use Mode 2 now, would they? :-P OK, maybe a few might. Mode 2 is in fact the default, and I haven't changed that at this stage. All these settings get backed up along with model programming data (as described above), so it's really no biggie.
+The first thing you’ll want to do is set the ‘mode’ to ‘Mode 1′, for your throttle on the right, right? — since no one in their right mind would _ever_ use Mode 2 now, would they? :P OK, maybe just a few folk might -- maybe even you. Mode 2 is in fact the default, and I have no plans to change that, actually.
 
-Oh! To access that menu, press and hold [LEFT] (original '+') button. And on that note, now would be a really good time to give the [http://er9x.googlecode.com/svn/trunk/doc/ER9x%20Users%20Guide.pdf ER9X Users Guide] a thorough once-over. If you haven't already, I think you'll be impressed with how powerful this firmware is. It truly does completely transform an otherwise rather average "Chinese '9X" radio into something quite fun to use and own.
+Oh! To access that system settings menu, press and hold [LEFT] (original '+') button. 
+
+On that note, now would be a really good time to give the [http://gruvin9x.googlecode.com/svn/trunk/doc/ER9x%20Users%20Guide.pdf ER9X Users Guide] a thorough once-over. If you haven't already realised, I think you'll be impressed with how powerful this firmware is. It truly does completely transform an otherwise rather average "Chinese '9X" radio into something a lot of fun to own and use.
 
 = Compiling from Source =
 
