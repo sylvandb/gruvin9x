@@ -10,13 +10,12 @@ There is an excellent PDF guide for Windows users [http://gruvin9x.googlecode.co
 
 When I ordered my SparkFun Pocket Programmer, I had them add a spare programming cable. I cut the two 'remote' connectors off the end of that and used it to wire up my radio. Long story short — here's a photo of my installation, using a stock SparkFun cable ...
 
-  <b>IMPORTANT:</b> The picture below shows a typical ‘V2′ transmitter, as has been shipping for a few months as at time of this writing. The V1 unit  had an error on the PCB where the ‘SCK’ programming pad (wire 7 below) connected one pin too far left on the ATmega64 chip. So watch out for that! If you have a V1 unit, you can still get things going. But you’re going to have to be more careful to get a wire soldered to the right place. (Notes about this also in the linked ‘online version’ instructions below.)
+  <b>IMPORTANT:</b> The picture below shows a typical ‘V2′ transmitter, as has been shipping for a few months as at time of this writing. The V1 unit  had an error on the PCB where the ‘SCK’ programming pad (wire 7 below) was connected one pin too far left on the ATmega64 chip. So watch out for that! If you have a V1 unit, you can still get things going. You just have to careful to get a wire soldered to the right place.
 
  [http://gruvin9x.googlecode.com/svn/wiki/FlashGuide.attach/progwiring.jpg]
 
-*NOTE:* The two hot-glued little resistors and fine wires to the left are the re-wiring necessary to free up the ATmega64A serial comms port for telemetry data, which is otherwise connected to the Throttle-Hold and Aileron-DR switches. The switches get moved to two spare port pins. *This mod is only necessary* if you intend using the EXT=JETI or EXT=FRSKY (the default for _gruvin9x_) `make` attributes when building the source. The code will then automatically re-assign the THH and AIL switches appropriately. See [http://code.google.com/p/er9x/wiki/JETI here] for more details.
+*NOTE:* The two hot-glued little resistors and fine wires to the left are the re-wiring necessary to free up the ATmega64A serial comms port for telemetry data, which is otherwise connected to the Throttle-Hold and Aileron-DR switches. The switches get moved to two spare port pins. *This mod is only necessary* if you intend using the EXT=JETI or EXT=FRSKY (the default for _gruvin9x_) `make` attributes when building the source. The code will then automatically re-assign the THH and AIL switches appropriately. See [FrskyInterfacing here] for further detail.
 
-There are in fact (gruvin9x) plans to re-assign ATmega64A comms port (UART interface) for interfacing to a bulk storage SDCARD or USB Flash device in the semi-near future. The telemetry data input would then be handled by a software defined serial comms receiver, implemented on yet another spare port pin. Fortunately, there is such a pin still available, without using the pin already reserved for LCD back-light control :-D. Such a mod would no longer support outbound serial data for duplex telemtry however, so some more thought will be engaged in before proceeding down this track.
 
 = Flashing the Firmware =
 
@@ -54,7 +53,7 @@ avrdude -c usbtiny -p atmega64 -B 1 -U eeprom:r:models.bin:r
 avrdude -c usbtiny -p atmega64 -B 1 -U eeprom:w:models.bin
 }}}
 
-Oh by the way; unless you happen to have a battery connected to the '9X, leave the tiny little switch on the programmer PCB set to “Power Target”. That will power up the 9X in a fashion it isn’t used to -- IE. switches and keypad disconnected, which it will complain bitterly about with annoying beeps. But just block your ears and ignore all the commotion. The new gruvin9x firmware will soon put a quietening end to that! 
+Oh by the way; unless you happen to have a battery connected to the '9X, leave the tiny little switch on the programmer PCB set to “Power Target”. That will power up the 9X in a fashion it isn’t used to -- IE. some switches disconnected -- which it will complain bitterly about with annoying beeps. Block your ears and ignore those though. The new gruvin9x firmware flashing process will soon put a quietening end to all the racket! 
 
 = What to Expect =
 
