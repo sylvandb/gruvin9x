@@ -5,7 +5,7 @@
 
 The gruvin9x project was born mostly out of a desire to add support for [http://www.frsky-rc.com Fr-Sky] telemetry data, including the ability to program the built-in [http://www.frsky-rc.com Fr-Sky] alarm settings and utilise 'User Data' sent through the system for some purpose.
 
-As of `branches/frsky` r250, the above goals have been completed (excluding User Data) to a beta testing stage. So far, everything appears in good working order, with no glitches.
+As of `trunk/` r377, the above goals have been completed (excluding User Data). 
 
 Bearing in mind that one would not typically be looking at the '9X LCD screen while actually flying a plane, for example, following is how it looks, so far ... 
 
@@ -56,12 +56,11 @@ Incidentally, the ordering of the alarm settings -- with A2 above A1 -- is inten
 
 A number of things need implementing and testing before this Fr-Sky support is committed to the `trunk/` version.
 
- * Configurable A1/A2 Voltage divider settings. I plan to implement these as 'Max Volts' / 'Calibration Offset'] pairs, where the later will be a voltage in 0.1V increments to add or subtract from the final result to adjust for component tolerances, at some chosen reference voltage. That is to say, true (linear) calibration would include a multiplier factor to stretch or compress values as required to get the voltage accurate across its entire range. But this is really a bit of over-kill for our purposes and will not be implemented. _(Completed/Testing)_
-
- * Fr-Sky module alarm status display and programming. _(Completed/Testing)_
-
  * Addition of graphical bar for signal strength
- 
+
+ * Allowance for two voltage bars (like receiver batt. and main batt.) 
+
+As at r377, these TODOs have been postponed, pending user interest. (EEPROM Fr-Sky Settings file format "3" has now been finalised. Changed to the format will include incrementing the 'myvers' field from 1 to 2.)
 
 == Miscellaneous ==
 
