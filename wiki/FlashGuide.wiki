@@ -33,15 +33,15 @@ There are (at the time of this writing) four pre-compiled hex file versions of g
 
 *PLEASE NOTE* _These are snapshots of 'thought to be OK' latest builds. You should always take a backup of the last known good code you installed and keep it handy in case you need to revert_. Earlier versions can also be found in the project's `trunk/` directory using the project [http://code.google.com/p/gruvin9x/source/browse/ source browser]. (Revision navigation links are to the upper right of the browser page.)
 
- * [http://gruvin9x.googlecode.com/svn/trunk/gruvin9x-stock.hex gruvin9x-stock.hex] -- For stock hardware (no internal re-wiring) -- includes the keypad auto-repeat and bat. voltage averaging patches.
+ * *[http://gruvin9x.googlecode.com/svn/trunk/gruvin9x-stock.hex gruvin9x-stock.hex]* -- For stock hardware (no internal re-wiring) -- includes the keypad auto-repeat and bat. voltage averaging patches.
 
- * [http://gruvin9x.googlecode.com/svn/trunk/gruvin9x-std-speaker.hex gruvin9x-std-speaker.hex] -- For speaker upgrade only. No Fr-Sky wiring mods.
+ * *[http://gruvin9x.googlecode.com/svn/trunk/gruvin9x-std-speaker.hex gruvin9x-std-speaker.hex]* -- For speaker upgrade only. No Fr-Sky wiring mods.
 
- * [http://gruvin9x.googlecode.com/svn/trunk/gruvin9x-frsky-nospeaker.hex gruvin9x-frsky-nospeaker.hex] -- Fr-Sky telemetry mods but no speaker upgrade.
+ * *[http://gruvin9x.googlecode.com/svn/trunk/gruvin9x-frsky-nospeaker.hex gruvin9x-frsky-nospeaker.hex]* -- Fr-Sky telemetry mods but no speaker upgrade.
 
- * [http://gruvin9x.googlecode.com/svn/trunk/gruvin9x-frsky-speaker.hex gruvin9x-frsky-speaker.hex] -- [FrskyInterfacing Fr-Sky telemetry] and Speaker mods in place.
+ * *[http://gruvin9x.googlecode.com/svn/trunk/gruvin9x-frsky-speaker.hex gruvin9x-frsky-speaker.hex]* -- [FrskyInterfacing Fr-Sky telemetry] and Speaker mods in place.
 
- * [http://gruvin9x.googlecode.com/svn/trunk/gruvin9x.hex gruvin9x.hex] -- Fully 'Gruvinvized' with Fr-Sky, speaker and other 'random' gruvin9x features, such as moving LH_Trim_Up/Dwn away from USART1 to free same for secondary serial communications. (The latter mod is still experimental and little to no documentation exists for it.)
+ * *[http://gruvin9x.googlecode.com/svn/trunk/gruvin9x.hex gruvin9x.hex]* -- Fully 'Gruvinvized' with Fr-Sky, speaker and other 'random' gruvin9x features, such as moving LH_Trim_Up/Dwn away from USART1 to free same for secondary serial communications. (The latter mod is still experimental and little to no documentation exists for it.)
 
 
 == Flashing Ready-to-Run Firmware == 
