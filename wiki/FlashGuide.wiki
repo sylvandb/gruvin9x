@@ -34,7 +34,7 @@ There are (at the time of this writing) four pre-compiled hex file versions of g
  Click [TrunkBinaries here] to go to the binaries download page.
 
 == Flashing Ready-to-Run Firmware == 
-You can now burn your gruvin9x[[-version]].hex file using AVRDUDE like this ...
+You can now burn your `gruvin9x[-version].hex` file using AVRDUDE as follows ...
 
 {{{
 avrdude -c usbtiny -p atmega64 -B 1 -U flash:w:gruin9x[-version].hex
