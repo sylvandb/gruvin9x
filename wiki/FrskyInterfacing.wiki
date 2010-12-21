@@ -26,6 +26,8 @@ Referring to the image below ...
  [http://gruvin9x.googlecode.com/svn/wiki/FrskyInterfacing.attach/frsky-wiring.jpg]
 
 
+*NOTE:* It pays to use small dabs of hot-glue near the ATmega pins and in a couple of places along the wires to hold them in place. The last thing you want is for something to get hooked under them and rip them off, possibly damaging the ATmega pins in the process!
+
 == The Interface ==
 
 Fr-Sky, in their wisdom, decided to use RS-232 voltage levels for their interface, rather than provide a more modern 5V TTL-to-serial USB interface. We tried to talk them out of it, but they stuck to their guns. Oh well.
