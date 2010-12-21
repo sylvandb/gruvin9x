@@ -653,6 +653,7 @@ Gruvin:
       break;
     case 3:
       {
+        // The various "beep" tone lengths
         static prog_uint8_t APM beepTab[]= {
        // 0   1   2   3    4
           0,  0,  0,  0,   0, //quiet

@@ -1,5 +1,9 @@
 Changes in v1.2
 
++ Issue 8 - intermittent mixer warning beeps fixed
+
+Comitted r377
+
 + CHANGELOG introduced
 + Fr-Sky support v1.0 merged into trunk
 + ER's better fonts introduced (with slashes removed from zeroes)

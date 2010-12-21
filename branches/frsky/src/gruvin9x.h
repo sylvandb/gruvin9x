@@ -613,6 +613,7 @@ extern const char stamp5[];
 
 extern uint8_t  beepAgain;
 extern uint16_t g_LightOffCounter;
+extern uint8_t mixWarning;
 
 /// Erzeugt einen beep der laenge b
 inline void _beep(uint8_t b) {
