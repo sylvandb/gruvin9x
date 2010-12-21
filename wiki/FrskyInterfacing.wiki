@@ -40,7 +40,7 @@ Here is the circuit ...
 
 Any general purpose NPN and PNP transistors should work for the components marked Q2 and Q3, respectively. The BC847/857 devices are in fact SMD surface mount versions, as used in the new PCB design we're working on.
 
-For the prototype, Gruvin actually used a dremel too to carve up the mostly unused, legacy PCB mounted inside the '9X rear casing to build the above circuit 'dead bug' style.
+For the prototype, Gruvin actually used a dremel too to carve up the mostly unused, legacy PCB mounted inside the '9X rear casing to build the above circuit 'dead bug' style. (A photo is not presently available.)
 
 == Ground Loops ==
 
