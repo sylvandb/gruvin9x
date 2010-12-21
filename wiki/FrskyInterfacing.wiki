@@ -1,0 +1,25 @@
+#summary Fr-Sky Interfacing
+= Fr-Sky Interfacing =
+
+I (more or less) followed the original TH/ER9X 'JETI' wiring instructions to get RS-232 (TTL level) TX and RX signal for my Fr-Sky two-way transmitter module. Thos instructions can be found [http://code.google.com/p/er9x/wiki/JETI here].
+
+Below, you'll find similar and extra detail of exactly how I hooked up my Fr-Sky unit.
+
+== Accessing TXD and RXD on the ATmega ==
+
+The ATmega RXD and TXD special-purpose pins are used for simple switch inputs in the factory '9X -- namely, Throttle-Cut and Aileron-D/R, respectively. 
+
+To free these pins of for serial data, we need to move those two switches elsewhere. The two pins chosen for their new home were pins 41 and 42, or PC6 and PC7 respectively.
+
+The modification requires the use of FINE wire. I used 0.2mm enabled copper wire. You can also use insulated wires salvaged from the newer (but old now) high-density IDE cables used for (ancient) computer hard drives. This is a single-core, insulated wire. You do NOT want to try and use any kind of multi-strand wire -- no matter how fine it it is.
+
+=== Procedure ===
+
+Referring to the image below ...
+
+ * Remove the two left-hand-most resistors as indicated in yellow
+ * Hot glue a couple of 220ohm resistors (1/8th or 1/4watt are OK) to a nearby, clearish area of the PCB
+ * Solder your 'super fine' wires to pins 41 and 42 of the ATmega and connect to the top end of the resistors as shown. Use alcohol if required -- to steady your hands! (Just joking -- but if it works for you -- go right ahead. :p)
+ _HINT: Pre-solder the wire end and the ATmega pins. Use a solder sucker or de-soldering wick to clear away excess solder from the two pins and to remove any solder bridge. Then lay the first wire end over the pin and apply the soldering iron directly down on top of it for half a second, then directly straight up -- then let go the wire. Give the wire a gentle tug in the direction directly away from the chip (in line with the pin).If it holds -- you're done. Don't futz with it. If you're right handed, solder the left hand wire first, so the the soldering iron does not lay over the first wire when trying to solder the second._
+ * Solder wires from the bottom ends of the hot-glued resistors to the little vias (holes) near where the two removed resistors were, as shown in the image.
+
