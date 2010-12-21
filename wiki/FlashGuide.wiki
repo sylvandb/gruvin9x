@@ -12,7 +12,7 @@ When I ordered my SparkFun Pocket Programmer, I had them add a spare programming
 
   <b>IMPORTANT:</b> The picture below shows a typical ‘V2′ transmitter, as has been shipping for a few months as at time of this writing. The V1 unit  had an error on the PCB where the ‘SCK’ programming pad (wire 7 below) connected one pin too far left on the ATmega64 chip. So watch out for that! If you have a V1 unit, you can still get things going. But you’re going to have to be more careful to get a wire soldered to the right place. (Notes about this also in the linked ‘online version’ instructions below.)
 
-[http://gruvin9x.googlecode.com/svn/wiki/FlashGuide.attach/progwiring.jpg]
+ [http://gruvin9x.googlecode.com/svn/wiki/FlashGuide.attach/progwiring.jpg]
 
 *NOTE:* The two hot-glued little resistors and fine wires to the left are the re-wiring necessary to free up the ATmega64A serial comms port for telemetry data, which is otherwise connected to the Throttle-Hold and Aileron-DR switches. The switches get moved to two spare port pins. *This mod is only necessary* if you intend using the EXT=JETI or EXT=FRSKY (the default for _gruvin9x_) `make` attributes when building the source. The code will then automatically re-assign the THH and AIL switches appropriately. See [http://code.google.com/p/er9x/wiki/JETI here] for more details.
 
