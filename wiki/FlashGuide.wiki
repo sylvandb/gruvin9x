@@ -60,7 +60,9 @@ Oh by the way; unless you happen to have a battery connected to the '9X, leave t
 
 After re-flashing for the first time, you can expect to feel a little bit anxious! Do not fret! The feeling is completely normal. :-D
 
-Tuck your programming cable away for now in such a way that allows you to put the rear cover back on the transmitter. *REMEMBER* to reconnect the rear-cabinet cable connector! The first time I flicked the power switch after flashing I got absolutely nothing. Not even a beep or a flicker. “Uhoh!” ... then I realised the thing just wasn't going to go so well without the power being connected! :-P
+Tuck your programming cable away, for now, in such a way that allows you to put the rear cover back on the transmitter. You can tidy things up more once you know its working.
+
+ _REMEMBER to reconnect the rear-cabinet cable connector! The first time I flicked the power switch after flashing I got absolutely nothing. Not even a beep or a flicker. “Uhoh!” ... then I realised the thing just wasn't going to go so well without the power being connected! :-P_
 
 During boot-up, the new firmware checks a few things. You’ll get one or more “alerts” on screen, like “Throttle not set idle” and a message about there being no alarms — meaning the beeper is turned off, as it is by default. Also, all switches have to be in the “off” state — that is, all front switches ‘up’ and top switches ‘back’. Oh and don’t worry — all these power-up warnings can be disabled through settings in the new '9X menus if you don’t want them.
 
