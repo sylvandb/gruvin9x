@@ -12,6 +12,7 @@
   * [PCB Custom PCB]
  * [Telemetry]
   * [FrSky Fr-Sky Support]
+  * [FrskyInterfacing Fr-Sky Interfacing]
   * [FrSkyTerminalOSX Fr-Sky on your Mac]
   * [FrskyToER9X Porting to ER9X]
  * [RandomNotes Random Notes]
