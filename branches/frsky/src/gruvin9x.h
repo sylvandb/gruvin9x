@@ -19,6 +19,7 @@
 #define gruvin9x_h
 
 #define VERS 1
+#define SUB_VERS 2
 
 #include <inttypes.h>
 #include <string.h>
@@ -605,6 +606,7 @@ extern const char stamp1[];
 extern const char stamp2[];
 extern const char stamp3[];
 extern const char stamp4[];
+extern const char stamp5[];
 #include "myeeprom.h"
 
 #define FLASH_DURATION 50

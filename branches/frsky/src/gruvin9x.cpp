@@ -54,12 +54,12 @@ void putsTime(uint8_t x,uint8_t y,int16_t tme,uint8_t att,uint8_t att2)
   //uint8_t fw=FWNUM; //FW-1;
   //if(att&DBLSIZE) fw+=fw;
 
-  lcd_putcAtt(   x,    y, tme<0 ?'-':' ',att);
+  lcd_putcAtt(   x,   y, tme<0 ?'-':' ',att);
   x += (att&DBLSIZE) ? FWNUM*5 : FWNUM*3+2;
-  lcd_putcAtt(   x, y, ':',att);
-  lcd_outdezNAtt(x, y, abs(tme)/60,LEADING0+att,2);
+  lcd_putcAtt(   x+3, y, ':',att & ~INVERS);
+  lcd_outdezNAtt(x,   y, abs(tme)/60,LEADING0|att,2);
   x += (att&DBLSIZE) ? FWNUM*5-1 : FWNUM*4-2;
-  lcd_outdezNAtt(x, y, abs(tme)%60,LEADING0+att2,2);
+  lcd_outdezNAtt(x,   y, abs(tme)%60,LEADING0|att2,2);
 }
 void putsVBat(uint8_t x,uint8_t y,uint8_t hideV,uint8_t att)
 {
@@ -949,18 +949,27 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
 
 
 
+// Timer3 used for PPM_IN pulse width capture. Counter running at 16MHz / 8 = 2MHz
+// equating to one count every half millisecond. (2 counts = 1ms). Control channel
+// count delta values thus can range from about 1600 to 4400 counts (800us to 2200us),
+// corresponding to a PPM signal in the range 0.8ms to 2.2ms (1.5ms at center).
+// (The timer is free-running and is thus not rest to zero at each capture interval.)
+// Capture delta values are stored in a ring-array (captureRing) and processed later 
+// at low priority in the Main loop.
+//
+// volatile uint16_t captureRing[16];
 ISR(TIMER3_CAPT_vect, ISR_NOBLOCK) //capture ppm in 16MHz / 8 = 2MHz
 {
   uint16_t capture=ICR3;
   cli();
-  ETIMSK &= ~(1<<TICIE3); //stop reentrance
+  ETIMSK &= ~(1<<TICIE3); // prevent re-entrance
   sei();
 
   static uint16_t lastCapt;
   uint8_t nWr = (captureWr+1) % DIM(captureRing);
-  if(nWr == captureRd) //overflow
+  if(nWr == captureRd) // ring buffer overflow
   {
-    captureRing[(captureWr+DIM(captureRing)-1) % DIM(captureRing)] = 0; //distroy last value
+    captureRing[(captureWr+DIM(captureRing)-1) % DIM(captureRing)] = 0; // destroy last value
     beepErr();
   }else{
     captureRing[captureWr] = capture - lastCapt;
@@ -973,22 +982,23 @@ ISR(TIMER3_CAPT_vect, ISR_NOBLOCK) //capture ppm in 16MHz / 8 = 2MHz
   sei();
 }
 
+// process as many PPM captures as are available in captureRing since we last did so
 void evalCaptures()
 {
   while(captureRd != captureWr)
   {
-    uint16_t val = captureRing[captureRd] / 2; // us
-    captureRd = (captureRd + 1)  % DIM(captureRing); //next read
+    uint16_t val = captureRing[captureRd] / 2; // result in micro-seconds
+    captureRd = (captureRd + 1)  % DIM(captureRing); // next read
     if(ppmInState && ppmInState<=8){
-      if(val>800 && val <2200){
-        g_ppmIns[ppmInState++ - 1] = (val - 1500)*(g_eeGeneral.PPM_Multiplier+10)/10; //+-500 != 512, Fehler ignoriert
+      if(val>800 && val<2200){
+        g_ppmIns[ppmInState++ - 1] = (int16_t)(val - 1500)*(g_eeGeneral.PPM_Multiplier+10)/10; //+-500 != 512, but close enough.
       }else{
-        ppmInState=0; //not triggered
+        ppmInState=0; // not triggered
       }
     }else{
       if(val>4000 && val < 16000)
       {
-        ppmInState=1; //triggered
+        ppmInState=1; // triggered
       }
     }
   }
@@ -1035,9 +1045,10 @@ int main(void)
   TCCR1B = (1 << WGM12) | (2<<CS10); // CTC OCR1A, 16MHz / 8
   //TIMSK |= (1<<OCIE1A); enable immediately before mainloop
 
+  // Timer 3 used for PPM_IN pulse width capture
   TCCR3A  = 0;
-  TCCR3B  = (1<<ICNC3) | (2<<CS30);      //ICNC3 16MHz / 8
-  ETIMSK |= (1<<TICIE3);
+  TCCR3B  = (1<<ICNC3) | 2;      // Noise Canceller enabled, clock at 16MHz / 8 (2MHz)
+  ETIMSK |= (1<<TICIE3);         // Enable capture event interrupt
 
   sei(); //damit alert in eeReadGeneral() nicht haengt
   g_menuStack[0] =  menuProc0;

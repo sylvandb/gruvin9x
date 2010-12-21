@@ -1330,7 +1330,8 @@ void menuProcModel(uint8_t event)
     lcd_putsnAtt(10*FW,   y, g_model.name ,sizeof(g_model.name),BSS_NO_INV | (sub==subN ? (s_editMode ? 0 : INVERS) : 0));
     if(sub==subN && s_editMode){
         char v = char2idx(g_model.name[subSub-1]);
-        if(p1valdiff || event==EVT_KEY_FIRST(KEY_DOWN) || event==EVT_KEY_FIRST(KEY_UP) || event==EVT_KEY_REPT(KEY_DOWN) || event==EVT_KEY_REPT(KEY_UP))
+        if(p1valdiff || event==EVT_KEY_FIRST(KEY_DOWN) || event==EVT_KEY_FIRST(KEY_UP) 
+            || event==EVT_KEY_REPT(KEY_DOWN) || event==EVT_KEY_REPT(KEY_UP))
            CHECK_INCDEC_H_MODELVAR_BF( event,v ,0,NUMCHARS-1);
         v = idx2char(v);
         g_model.name[subSub-1]=v;
@@ -1341,7 +1342,8 @@ void menuProcModel(uint8_t event)
 
   if(s_pgOfs<subN) {
     lcd_putsAtt(    0,    y, PSTR("Timer"),0);
-    putsTime(       9*FW, y, g_model.tmrVal,(sub==subN && subSub==1 ? (s_editMode ? BLINK : INVERS):0),(sub==subN && subSub==2 ? (s_editMode ? BLINK : INVERS):0) );
+    putsTime(       9*FW, y, g_model.tmrVal,(sub==subN && subSub==1 ? (s_editMode ? BLINK : INVERS):0),
+        (sub==subN && subSub==2 ? (s_editMode ? BLINK : INVERS):0) );
 
     if(sub==subN && (s_editMode || p1valdiff))
       switch (subSub) {
@@ -1723,8 +1725,9 @@ void menuProcDiagVers(uint8_t event)
   MSTATE_CHECK_V(3,menuTabDiag,1);
   lcd_puts_P(0, 2*FH,stamp4 );
   lcd_puts_P(0, 3*FH,stamp1 );
-  lcd_puts_P(0, 4*FH,stamp2 );
-  lcd_puts_P(0, 5*FH,stamp3 );
+  lcd_puts_P(0, 4*FH,stamp5 );
+  lcd_puts_P(0, 5*FH,stamp2 );
+  lcd_puts_P(0, 6*FH,stamp3 );
 }
 
 void menuProcPPMIn(uint8_t event)
@@ -1750,7 +1753,7 @@ void menuProcPPMIn(uint8_t event)
   for(uint8_t i=0; i<8; i++)
   {
     uint8_t x = i<4 ? (i*8+16)*FW/2 : ((i-4)*8+16)*FW/2;
-    lcd_outdezAtt( x, i<4 ? y : y+FH, (g_ppmIns[i]-g_eeGeneral.ppmInCalib[i])*2,PREC1 );
+    lcd_outdezAtt( x, i<4 ? y : y+FH, (g_ppmIns[i]-g_eeGeneral.ppmInCalib[i])/5, 0);
   }
   if(sub==1) {
     if(event==EVT_KEY_FIRST(KEY_MENU)){
