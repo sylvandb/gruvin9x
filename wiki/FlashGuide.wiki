@@ -57,7 +57,7 @@ avrdude -c usbtiny -p atmega64 -B 1 -U eeprom:r:models.bin:r
 avrdude -c usbtiny -p atmega64 -B 1 -U eeprom:w:models.bin
 }}}
 
-Oh by the way; unless you happen to have a battery connected to the '9X (requires the 12-way back cover connector be installed) then leave the tiny little switch on the programmer PCB set to “Power Target”. The programmer will then power up the 9X -- albeit in a fashion it isn’t used to (some switches disconnected etc), which it will complain about bitterly through lots of beeping. Block your ears and ignore those, because the new gruvin9x firmware flashing process will very soon put silence all the racket! 
+Oh by the way; unless you happen to have a battery connected to the '9X (requires the 12-way back cover connector be installed) then leave the tiny little switch on the programmer PCB set to “Power Target”. The programmer will then power up the 9X -- albeit in a fashion it isn’t used to (some switches disconnected etc) and it will complain bitterly with lots of beeping. Block your ears and ignore those, because the new gruvin9x firmware flashing process will very soon put silence all the racket! 
 
 = What to Expect =
 
