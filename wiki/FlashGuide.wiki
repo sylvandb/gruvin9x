@@ -61,7 +61,7 @@ Oh by the way; unless you happen to have a battery connected to the '9X (require
 
 = What to Expect =
 
-After re-flashing for the first time, you can expect to feel a little bit anxious! Do not fret! The feeling is completely normal. :D
+After re-flashing for the first time, you can expect to feel a little anxious! Do not fret! The feeling is completely normal. :D
 
 Disconnect and tuck your programming cable away, for now, in such a way that allows you to put the rear cover back on the transmitter. You can tidy things up more once you know its all working.
 
