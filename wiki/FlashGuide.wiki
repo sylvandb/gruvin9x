@@ -29,20 +29,9 @@ And yes, the above software is all free! Aint it great? Be sure to say thanks or
 
 == Ready-to-Run "binary" firmware ==
 
-There are (at the time of this writing) four pre-compiled hex file versions of gruvin9X available and kept up to date that you can download and use to flash your '9X without having to compile the source. Here are the links ...
+There are (at the time of this writing) four pre-compiled hex file versions of gruvin9x available and kept up to date. The versions apply to the various different hardware mods/re-wiring you may or may not have chosen to do. You can download the version that is right for you from the [TrunkBinaries] page, using same to flash your '9X without having to compile from source. 
 
-*PLEASE NOTE* _These are snapshots of 'thought to be OK' latest builds. You should always take a backup of the last known good code you installed and keep it handy in case you need to revert_. Earlier versions can also be found in the project's `trunk/` directory using the project [http://code.google.com/p/gruvin9x/source/browse/ source browser]. (Revision navigation links are to the upper right of the browser page.)
-
- * *[http://gruvin9x.googlecode.com/svn/trunk/gruvin9x-stock.hex gruvin9x-stock.hex]* -- For stock hardware (no internal re-wiring) -- includes the keypad auto-repeat and bat. voltage averaging patches.
-
- * *[http://gruvin9x.googlecode.com/svn/trunk/gruvin9x-std-speaker.hex gruvin9x-std-speaker.hex]* -- For [SpeakerReplacement speaker upgrade] only. No Fr-Sky wiring mods.
-
- * *[http://gruvin9x.googlecode.com/svn/trunk/gruvin9x-frsky-nospeaker.hex gruvin9x-frsky-nospeaker.hex]* -- [FrskyInterfacing Fr-Sky telemetry] mod, but no speaker upgrade.
-
- * *[http://gruvin9x.googlecode.com/svn/trunk/gruvin9x-frsky-speaker.hex gruvin9x-frsky-speaker.hex]* -- [FrskyInterfacing Fr-Sky telemetry] and [SpeakerReplacement speaker upgrade] mods in place.
-
- * [http://gruvin9x.googlecode.com/svn/trunk/gruvin9x.hex gruvin9x.hex] -- Fully 'Gruvinvized' with [FrskyInterfacing Fr-Sky], [SpeakerReplacement speaker upgrade] and other and other 'random' gruvin9x features, such as moving LH_Trim_Up/Dwn away from USART1 to free same for secondary serial communications. (The latter mod is still experimental and little to no documentation exists for it.) *You probably _DON'T_ want this version!*
-
+ Click [TrunkBinaries here] to go to the binaries download page.
 
 == Flashing Ready-to-Run Firmware == 
 You can now burn your gruvin9x[[-version]].hex file using AVRDUDE like this ...
