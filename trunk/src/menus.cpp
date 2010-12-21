@@ -18,42 +18,8 @@
 
 #include "gruvin9x.h"
 #include "templates.h"
-
-#define IS_THROTTLE(x)  (((2-(g_eeGeneral.stickMode&1)) == x) && (x<4))
-#define GET_DR_STATE(x) (!getSwitch(g_model.expoData[x].drSw1,0) ?   \
-                          DR_HIGH :                                  \
-                          !getSwitch(g_model.expoData[x].drSw2,0)?   \
-                          DR_MID : DR_LOW);
-
-#define DO_SQUARE(xx,yy,ww)         \
-    lcd_vline(xx-ww/2,yy-ww/2,ww);  \
-    lcd_hline(xx-ww/2,yy+ww/2,ww);  \
-    lcd_vline(xx+ww/2,yy-ww/2,ww);  \
-    lcd_hline(xx-ww/2,yy-ww/2,ww);
-
-#define DO_CROSS(xx,yy,ww)          \
-    lcd_vline(xx,yy-ww/2,ww);  \
-    lcd_hline(xx-ww/2,yy,ww);  \
-
-#define V_BAR(xx,yy,ll)       \
-    lcd_vline(xx-1,yy-ll,ll); \
-    lcd_vline(xx  ,yy-ll,ll); \
-    lcd_vline(xx+1,yy-ll,ll); \
-
-#define NO_HI_LEN 25
-
-#define WCHART 32
-#define X0     (128-WCHART-2)
-#define Y0     32
-#define WCHARTl 32l
-#define X0l     (128l-WCHARTl-2)
-#define Y0l     32l
-#define RESX    1024
-#define RESXu   1024u
-#define RESXul  1024ul
-#define RESXl   1024l
-#define RESKul  100ul
-#define RESX_PLUS_TRIM (RESX+128)
+#include "frsky.h"
+#include "menus.h"
 
 int16_t calibratedStick[7];
 int16_t ex_chans[NUM_CHNOUT];          // Outputs + intermidiates
@@ -63,11 +29,7 @@ uint8_t s_noHi;
 
 int16_t g_chans512[NUM_CHNOUT];
 
-extern bool warble;
-extern int16_t p1valdiff;
-
 #include "sticks.lbm"
-typedef PROGMEM void (*MenuFuncP_PROGMEM)(uint8_t event);
 
 MenuFuncP_PROGMEM APM menuTabModel[] = {
   menuProcModelSelect,
@@ -88,24 +50,6 @@ MenuFuncP_PROGMEM APM menuTabDiag[] = {
   menuProcDiagAna,
   menuProcDiagCalib
 };
-
-
-//#define PARR8(args...) (__extension__({static prog_uint8_t APM __c[] = args;&__c[0];}))
-struct MState2
-{
-  uint8_t m_posVert;
-  uint8_t m_posHorz;
-  void init(){m_posVert=m_posHorz=0;};
-  prog_uint8_t *m_tab;
-  static uint8_t event;
-  void check_v(uint8_t event,  uint8_t curr,MenuFuncP *menuTab, uint8_t menuTabSize, uint8_t maxrow);
-  void check(uint8_t event,  uint8_t curr,MenuFuncP *menuTab, uint8_t menuTabSize, prog_uint8_t*subTab,uint8_t subTabMax,uint8_t maxrow);
-};
-#define MSTATE_TAB  static prog_uint8_t APM mstate_tab[]
-#define MSTATE_CHECK0_VxH(numRows) mstate2.check(event,0,0,0,mstate_tab,DIM(mstate_tab)-1,numRows-1)
-#define MSTATE_CHECK0_V(numRows) mstate2.check_v(event,0,0,0,numRows-1)
-#define MSTATE_CHECK_VxH(curr,menuTab,numRows) mstate2.check(event,curr,menuTab,DIM(menuTab),mstate_tab,DIM(mstate_tab)-1,numRows-1)
-#define MSTATE_CHECK_V(curr,menuTab,numRows) mstate2.check_v(event,curr,menuTab,DIM(menuTab),numRows-1)
 
 
 void MState2::check_v(uint8_t event,  uint8_t curr,MenuFuncP *menuTab, uint8_t menuTabSize, uint8_t maxrow)
@@ -203,9 +147,6 @@ void MState2::check(uint8_t event,  uint8_t curr,MenuFuncP *menuTab, uint8_t men
   }
 }
 
-
-#define TITLEP(pstr) lcd_putsAtt(0,0,pstr,INVERS)
-#define TITLE(str)   TITLEP(PSTR(str))
 
 static uint8_t s_curveChan;
 
@@ -710,7 +651,7 @@ void menuProcMixOne(uint8_t event)
   if(s_pgOfs<0) s_pgOfs = 0;
 
 
-#define NUM_OFS(x) (((x<0 ? 2*FW-1 : 1*FW) + ((abs(x)>=100) ? 2*FW-2 : ((abs(x)>=10) ? 1*FW-1 : 0 ))))
+// G: in menus.h #define NUM_OFS(x) (((x<0 ? 2*FW-1 : 1*FW) + ((abs(x)>=100) ? 2*FW-2 : ((abs(x)>=10) ? 1*FW-1 : 0 ))))
   for(uint8_t y=FH; y<8*FH; y+=FH)
   {
     uint8_t i=(y/FH)+s_pgOfs-1;
@@ -960,6 +901,7 @@ void menuProcMix(uint8_t event)
       s_currMixInsMode = true;
       markedIdx        = i;
     }
+
     if(s_mixTab[k].hasDat){ //show data
       MixData *md2=&md[s_mixTab[k].editIdx];
       uint8_t attr = sub==s_mixTab[k].selDat ? INVERS : 0;
@@ -1388,7 +1330,8 @@ void menuProcModel(uint8_t event)
     lcd_putsnAtt(10*FW,   y, g_model.name ,sizeof(g_model.name),BSS_NO_INV | (sub==subN ? (s_editMode ? 0 : INVERS) : 0));
     if(sub==subN && s_editMode){
         char v = char2idx(g_model.name[subSub-1]);
-        if(p1valdiff || event==EVT_KEY_FIRST(KEY_DOWN) || event==EVT_KEY_FIRST(KEY_UP) || event==EVT_KEY_REPT(KEY_DOWN) || event==EVT_KEY_REPT(KEY_UP))
+        if(p1valdiff || event==EVT_KEY_FIRST(KEY_DOWN) || event==EVT_KEY_FIRST(KEY_UP) 
+            || event==EVT_KEY_REPT(KEY_DOWN) || event==EVT_KEY_REPT(KEY_UP))
            CHECK_INCDEC_H_MODELVAR_BF( event,v ,0,NUMCHARS-1);
         v = idx2char(v);
         g_model.name[subSub-1]=v;
@@ -1399,7 +1342,8 @@ void menuProcModel(uint8_t event)
 
   if(s_pgOfs<subN) {
     lcd_putsAtt(    0,    y, PSTR("Timer"),0);
-    putsTime(       9*FW, y, g_model.tmrVal,(sub==subN && subSub==1 ? (s_editMode ? BLINK : INVERS):0),(sub==subN && subSub==2 ? (s_editMode ? BLINK : INVERS):0) );
+    putsTime(       9*FW, y, g_model.tmrVal,(sub==subN && subSub==1 ? (s_editMode ? BLINK : INVERS):0),
+        (sub==subN && subSub==2 ? (s_editMode ? BLINK : INVERS):0) );
 
     if(sub==subN && (s_editMode || p1valdiff))
       switch (subSub) {
@@ -1781,8 +1725,9 @@ void menuProcDiagVers(uint8_t event)
   MSTATE_CHECK_V(3,menuTabDiag,1);
   lcd_puts_P(0, 2*FH,stamp4 );
   lcd_puts_P(0, 3*FH,stamp1 );
-  lcd_puts_P(0, 4*FH,stamp2 );
-  lcd_puts_P(0, 5*FH,stamp3 );
+  lcd_puts_P(0, 4*FH,stamp5 );
+  lcd_puts_P(0, 5*FH,stamp2 );
+  lcd_puts_P(0, 6*FH,stamp3 );
 }
 
 void menuProcPPMIn(uint8_t event)
@@ -1808,7 +1753,7 @@ void menuProcPPMIn(uint8_t event)
   for(uint8_t i=0; i<8; i++)
   {
     uint8_t x = i<4 ? (i*8+16)*FW/2 : ((i-4)*8+16)*FW/2;
-    lcd_outdezAtt( x, i<4 ? y : y+FH, (g_ppmIns[i]-g_eeGeneral.ppmInCalib[i])*2,PREC1 );
+    lcd_outdezAtt( x, i<4 ? y : y+FH, (g_ppmIns[i]-g_eeGeneral.ppmInCalib[i])/5, 0);
   }
   if(sub==1) {
     if(event==EVT_KEY_FIRST(KEY_MENU)){
@@ -2225,140 +2170,6 @@ void menuProcJeti(uint8_t event)
 }
 #endif
 
-#ifdef FRSKY
-
-// gruvin: changed to unit16_t to accomodate number higher than 255.
-uint8_t hex2dec(uint16_t number, uint8_t multiplier)
-{
-	uint16_t value = 0;
-	
-	switch (multiplier)
-	{
-		case 1:
-			value = number%100;
-			value = value%10;
-			break;
-			
-		case 10:
-			value = number%100;
-			value = value /10;
-			break;
-			
-		case 100:
-			value = number/100;
-			break;
-			
-		default:
-			
-			break;
-	}
-	
-	value += 48; // convert to ASCII digit
-	return value;
-	
-}
-
-// FRSKY version
-void menuProcFrSky(uint8_t event)
-{
-	TITLE("FrSky");
-	
-	switch(event)
-	{
-			//case EVT_KEY_FIRST(KEY_MENU):0.0v
-			//  break;
-		case EVT_KEY_FIRST(KEY_EXIT):
-			FRSKY_DisableRXD();
-			chainMenu(menuProc0);
-			break;
-	}
-    
-	static uint8_t timeOutCount = 0;
-	static uint16_t centaVolts = 0;
-	
-	if (FrskyBufferReady)
-	{
-		uint8_t i=0;
-		if (linkBuffer[i] == 0x7D)
-		{
-			i++;
-			linkBuffer[i] ^= 0x20;
-		}
-		
-		uint8_t telemA1 = linkBuffer[i];
-		
-		TelemBuffer[3] = hex2dec(linkBuffer[i], 100);
-		TelemBuffer[4] = hex2dec(linkBuffer[i], 10);
-		TelemBuffer[5] = hex2dec(linkBuffer[i], 1);
-		i++;
-		if (linkBuffer[i] == 0x7D)
-		{
-			i++;
-			linkBuffer[i] ^= 0x20;
-		}
-		
-		TelemBuffer[11] = hex2dec(linkBuffer[i], 100);
-		TelemBuffer[12] = hex2dec(linkBuffer[i], 10);
-		TelemBuffer[13] = hex2dec(linkBuffer[i], 1);
-		i++;
-		if (linkBuffer[i] == 0x7D)
-		{
-			i++;
-			linkBuffer[i] ^= 0x20;
-		}
-		TelemBuffer[24] = hex2dec(linkBuffer[i], 100);
-		TelemBuffer[25] = hex2dec(linkBuffer[i], 10);
-		TelemBuffer[26] = hex2dec(linkBuffer[i], 1);
-		
-		// 255 = 6.6V
-		centaVolts = (660 * (uint32_t)(telemA1) / 255) - 10;
-		TelemBuffer[41] = hex2dec(centaVolts, 100);
-		TelemBuffer[43] = hex2dec(centaVolts, 10);
-		TelemBuffer[44] = hex2dec(centaVolts, 1);
-		
-		FrskyBufferReady = 0;
-		timeOutCount = 0;
-	} else
-	{
-		if (timeOutCount > 200)
-			lcd_puts_P(128-(FW*7), 0, PSTR("NO DATA"));
-		else
-			timeOutCount++;
-	}
-	
-	for (uint8_t i = 0; i < 16; i++)
-	{
-		lcd_putcAtt((i+2)*FW,   2*FH, TelemBuffer[i], BSS_NO_INV);
-		lcd_putcAtt((i+2)*FW,   3*FH, TelemBuffer[i+16], BSS_NO_INV);
-		lcd_putcAtt((i+2)*FW,   4*FH, TelemBuffer[i+32], BSS_NO_INV);
-	}
-	
-	// Temporary -- display RX voltage bar - 4.2V to 6.6V over 120 pixels
-	
-	lcd_puts_P(0, FH*6, PSTR("4.2V"));
-	lcd_vline(3, 58, 6);
-	if (centaVolts > 419)
-	{
-		uint8_t vbarLen = (centaVolts - 420) >> 1;
-		for (uint8_t i = 59; i < 63; i++) // Bar 4 pixels thick (high)
-			lcd_hline(4, i, vbarLen);
-	}
-	lcd_vline(64, 58, 6);
-	lcd_puts_P(64-(FW*2), FH*6, PSTR("5.4V"));
-	
-	lcd_vline(125, 58, 6);
-	lcd_puts_P(128-(FW*4), FH*6, PSTR("6.6V"));
-	
-	// DEBUG display toneFreq
-	// lcd_outdezAtt( 6*FW, 2*FH,toneFreq,0);
-	
-	// DEBUG PC0 and PG2display toneFreq
-	// lcd_outhex4( 6*FW, 2*FH, ~PINC);
-	// lcd_outhex4( 12*FW, 2*FH, ~PING);
-	
-}
-#endif
-
 void menuProcStatistic(uint8_t event)
 {
 	TITLE("STAT");
@@ -2479,8 +2290,8 @@ void menuProc0(uint8_t event)
       chainMenu(menuProcJeti);
 #endif
 #ifdef FRSKY
-      FRSKY_EnableRXD(); // enable FrSky-Telemetry reception
-      chainMenu(menuProcFrSky);
+      // gruvin: RX/TX already enabled at system start-up
+      pushMenu(menuProcFrsky);
 #endif
       killEvents(event);
       break;

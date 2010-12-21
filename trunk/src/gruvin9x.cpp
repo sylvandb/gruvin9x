@@ -30,6 +30,9 @@ mode4 ail thr ele rud
 
 EEGeneral  g_eeGeneral;
 ModelData  g_model;
+#ifdef FRSKY
+EEFrskyData g_eeFrsky;
+#endif
 
 #ifdef BEEPSPKR
 // gruvin: Tone Generator Globals
@@ -51,12 +54,12 @@ void putsTime(uint8_t x,uint8_t y,int16_t tme,uint8_t att,uint8_t att2)
   //uint8_t fw=FWNUM; //FW-1;
   //if(att&DBLSIZE) fw+=fw;
 
-  lcd_putcAtt(   x,    y, tme<0 ?'-':' ',att);
+  lcd_putcAtt(   x,   y, tme<0 ?'-':' ',att);
   x += (att&DBLSIZE) ? FWNUM*5 : FWNUM*3+2;
-  lcd_putcAtt(   x, y, ':',att);
-  lcd_outdezNAtt(x, y, abs(tme)/60,LEADING0+att,2);
+  lcd_putcAtt(   x+3, y, ':',att & ~INVERS);
+  lcd_outdezNAtt(x,   y, abs(tme)/60,LEADING0|att,2);
   x += (att&DBLSIZE) ? FWNUM*5-1 : FWNUM*4-2;
-  lcd_outdezNAtt(x, y, abs(tme)%60,LEADING0+att2,2);
+  lcd_outdezNAtt(x,   y, abs(tme)%60,LEADING0|att2,2);
 }
 void putsVBat(uint8_t x,uint8_t y,uint8_t hideV,uint8_t att)
 {
@@ -400,7 +403,13 @@ int16_t p1valdiff;
 
 bool checkIncDecGen2(uint8_t event, void *i_pval, int16_t i_min, int16_t i_max, uint8_t i_flags)
 {
-  int16_t val = i_flags & _FL_SIZE2 ? *(int16_t*)i_pval : *(int8_t*)i_pval ;
+  int16_t val;
+  
+  if (i_flags & _FL_UNSIGNED8)
+    val = i_flags & _FL_SIZE2 ? *(uint16_t*)i_pval : *(uint8_t*)i_pval ;
+  else
+    val = i_flags & _FL_SIZE2 ? *(int16_t*)i_pval : *(int8_t*)i_pval ;
+
   int16_t newval = val;
   uint8_t kpl=KEY_RIGHT, kmi=KEY_LEFT, kother = -1;
 
@@ -461,7 +470,7 @@ bool checkIncDecGen2(uint8_t event, void *i_pval, int16_t i_min, int16_t i_max, 
   }
   if(newval != val){
     if(newval==0) {
-      pauseEvents(event);
+      pauseEvents(event); // delay before auto-repeat continues
 #ifdef BEEPSPKR
       if (newval>val)
         beepWarn2Spkr(BEEP_KEY_UP_FREQ);
@@ -471,9 +480,18 @@ bool checkIncDecGen2(uint8_t event, void *i_pval, int16_t i_min, int16_t i_max, 
       beepWarn2();
 #endif
     }
-    if(i_flags & _FL_SIZE2 ) *(int16_t*)i_pval = newval;
-    else                     *( int8_t*)i_pval = newval;
+    // gruvin: added support for unsigned values to be returned
+    if(i_flags & _FL_SIZE2)
+      if (i_flags & _FL_UNSIGNED8) *(uint16_t*)i_pval = newval;
+      else                        *( int16_t*)i_pval = newval;
+    else
+      if (i_flags & _FL_UNSIGNED8) *(uint8_t*)i_pval = newval;
+      else                        *( int8_t*)i_pval = newval;
+#ifdef FRSKY
+    eeDirty(i_flags & (EE_GENERAL|EE_MODEL|EE_FRSKY));
+#else
     eeDirty(i_flags & (EE_GENERAL|EE_MODEL));
+#endif
     return checkIncDec_Ret=true;
   }
   return checkIncDec_Ret=false;
@@ -499,7 +517,6 @@ int8_t checkIncDec_vg(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max)
   checkIncDecGen2(event,&i_val,i_min,i_max,_FL_VERT|EE_GENERAL);
   return i_val;
 }
-
 MenuFuncP lastPopMenu()
 {
   return  g_menuStack[g_menuStackPtr+1];
@@ -611,70 +628,7 @@ Gruvin:
   '9X, plus just a tiny bit of calibration applied, were causing an overflow in the 16-bit math,
   causing a wrap-around to a very small voltage.
 
-  I originally fixed this with 32-bit type casts -- but that is resource hungry. So, I futzed
-  about working through how I might write the formulae my own way. In the end, my solution
-  is almost identical to TH's, except for the way the calibration is applied. I don't quite
-  understand his method, but it seems we are both arriving at simple linear correction for
-  a single, nominal voltage. *shrug*
-
-  READ NO FURTHER, unless you want to waste some time ...
-
-  So here's all my notes as I worked through this ...
-
-  TH (or was it ER?) has used resistor values in his code comments of 5.07K and 2.65K, which 
-  I presume he must have measured. My Fluke meter tells me 5.08K and 2.70K for my unit -- and 
-  I think, since the resistors are marked 5K1 and 2K7 (502 and 272), we should be using those 
-  intended values, using calibration to account for any variances. No biggie though.
-
-  So here's me working it out in my slow, half dead brain today in the hot, muggy weature ...
-
-  (2.7+5.1)/2.7*5/1024*1000 -> 14.105V maximum possible reading (assuming perfect resistors 
-  and a perfect 5.00V reference.)
-  -- therefore, vbatVolts = 78 * sampleVolts / 27 (tested with sample - 4.27 to yield 12.33V. CORRECT)
-  -- therefore, vbat100mV = 780 * sampleVolts / 27
-  -- where sampleVolts = sampleValue * 5 / 2048 (because are samples are x2 normalised)
-  -- thus vbat100mV = 780 * sampleValue * 5 / 2048  / 27 
-  (Checked with 1744 sample val. to yield 123. CORRECT)
-
-  Simplifying that, we come down to...
-
-  vbat100mV = sampleValue * 3900 / 2048 / 27 (checked)
-  , therefore vbat100mV = sampleValue * 190 / 2700 (accuracy approx. +/-50mV)
-
-  To make the final divide faster, I'll normalise to an even power of 2.
-
-  Thus finally, g_vbat100mV = ((uint32_t)ab + 4 * g_eeGeneral.vBatCalib) * 144 / 2048;
-
-  Phew!
-
-  Unfortunately, I just can't get my head around how the TH calibration formula worked. That
-  would have been OK, except his formula overflows beyond 16-bit for voltages over about 
-  11.0V and when vBatCalib > about 5(?). Just estimating -- but it was causing weird results on 
-  a fresh 8=pack of alkaline cell in a new stock unit. And if you do the math, even with 
-  vBatColib = 1, 13.8V overflows by some 16,365 in the original TH formula! So, working out 
-  my own system then ...
-
-  vBatCalib is a signed 8-bit (int8_t) => -127 to +127, which if added to the initial 
-  sample gives +-0.89V (final) A reasonable calibration range might be +/-3.56V, 
-  or in this case +/-(127*4)
-
-  Thus, we arrive at vbat100mV = (sampleValue + 4 x vBatCalib) * 144 / 2048.
-
-  But this will still require 24-bit math for higher voltages, whereas we want to keep 
-  within 16-bit. Hmmm!
-
-  g_vbat100mV = ((uint32_t)ab + 4 * g_eeGeneral.vBatCalib) * 36 / 512
-
-  , which should be good to about 13.8V (including calibration offset), without 
-  overflowing. Input voltages above 13.8V WILL surely still be a problem!
-
-  In the end, it's clear that all I really changed is how the calibration figure
-  affects the final result -- or at least. at what point in the formulae it appears --
-  which just happens to fix the original overflow issue I was experiencing. 
-
-  Therefore, for people who prefer the original system, and who have 7.4V batteries 
-          (I guess!), TH's (ER's?) original formula is reserved and can be used in preference 
-            by supplying a -DTHBATVOLTS command line directive to the compiler.
+  See the wiki (VoltageAveraging) if you're interested in my long-winded analysis.
 */
 
         // G: Running average (virtual 7 stored plus current sample) for batt volts to stablise display
@@ -684,6 +638,7 @@ Gruvin:
 #else
         g_vbat100mV = (ab + 4 * g_eeGeneral.vBatCalib) * 36 / 512; // G: Similar still, but no overflow now.
 #endif
+
         // initialize to first sample if on first averaging cycle
         if (vbatRunningAvg==0) vbatRunningAvg = g_vbat100mV;
         vbatRunningAvg = ( (uint16_t)((uint16_t)vbatRunningAvg * 7) + g_vbat100mV) / 8;
@@ -713,6 +668,10 @@ Gruvin:
       break;
   }
 
+#ifdef FRSKY
+//  if (FrskyRxBufferReady)
+//    processFrskyPacket(frskyRxBuffer);
+#endif
 }
 volatile uint16_t captureRing[16];
 volatile uint8_t  captureWr;
@@ -948,9 +907,6 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
             beepAgainOrig = 0;
             beepOn = false;
             warble = false;
-#ifdef BEEPSPKR
-            // toneFreq=BEEP_DEFAULT_FREQ;
-#endif
         }
     }
 
@@ -969,6 +925,7 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
     }
 
 #else
+    // gruvin: use original external buzzer for beeps
     if(beepOn){
     static bool warbleC;
     warbleC = warble && !warbleC;
@@ -993,18 +950,27 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
 
 
 
+// Timer3 used for PPM_IN pulse width capture. Counter running at 16MHz / 8 = 2MHz
+// equating to one count every half millisecond. (2 counts = 1ms). Control channel
+// count delta values thus can range from about 1600 to 4400 counts (800us to 2200us),
+// corresponding to a PPM signal in the range 0.8ms to 2.2ms (1.5ms at center).
+// (The timer is free-running and is thus not rest to zero at each capture interval.)
+// Capture delta values are stored in a ring-array (captureRing) and processed later 
+// at low priority in the Main loop.
+//
+// volatile uint16_t captureRing[16];
 ISR(TIMER3_CAPT_vect, ISR_NOBLOCK) //capture ppm in 16MHz / 8 = 2MHz
 {
   uint16_t capture=ICR3;
   cli();
-  ETIMSK &= ~(1<<TICIE3); //stop reentrance
+  ETIMSK &= ~(1<<TICIE3); // prevent re-entrance
   sei();
 
   static uint16_t lastCapt;
   uint8_t nWr = (captureWr+1) % DIM(captureRing);
-  if(nWr == captureRd) //overflow
+  if(nWr == captureRd) // ring buffer overflow
   {
-    captureRing[(captureWr+DIM(captureRing)-1) % DIM(captureRing)] = 0; //distroy last value
+    captureRing[(captureWr+DIM(captureRing)-1) % DIM(captureRing)] = 0; // destroy last value
     beepErr();
   }else{
     captureRing[captureWr] = capture - lastCapt;
@@ -1017,22 +983,23 @@ ISR(TIMER3_CAPT_vect, ISR_NOBLOCK) //capture ppm in 16MHz / 8 = 2MHz
   sei();
 }
 
+// process as many PPM captures as are available in captureRing since we last did so
 void evalCaptures()
 {
   while(captureRd != captureWr)
   {
-    uint16_t val = captureRing[captureRd] / 2; // us
-    captureRd = (captureRd + 1)  % DIM(captureRing); //next read
+    uint16_t val = captureRing[captureRd] / 2; // result in micro-seconds
+    captureRd = (captureRd + 1)  % DIM(captureRing); // next read
     if(ppmInState && ppmInState<=8){
-      if(val>800 && val <2200){
-        g_ppmIns[ppmInState++ - 1] = (val - 1500)*(g_eeGeneral.PPM_Multiplier+10)/10; //+-500 != 512, Fehler ignoriert
+      if(val>800 && val<2200){
+        g_ppmIns[ppmInState++ - 1] = (int16_t)(val - 1500)*(g_eeGeneral.PPM_Multiplier+10)/10; //+-500 != 512, but close enough.
       }else{
-        ppmInState=0; //not triggered
+        ppmInState=0; // not triggered
       }
     }else{
       if(val>4000 && val < 16000)
       {
-        ppmInState=1; //triggered
+        ppmInState=1; // triggered
       }
     }
   }
@@ -1068,7 +1035,7 @@ int main(void)
   //TCCR0  = (1<<WGM01)|(7 << CS00);//  CTC mode, clk/1024
   TCCR0  = (7 << CS00);//  Norm mode, clk/1024
 #ifdef BEEPSPKR
-  OCR0   = 1;   // 7812.5 interrupts / second for tone generator
+  OCR0   = 1;   // gruvin: 7812.5 interrupts / second for tone generator
 #else
   OCR0   = 156; // 10ms
 #endif
@@ -1079,9 +1046,10 @@ int main(void)
   TCCR1B = (1 << WGM12) | (2<<CS10); // CTC OCR1A, 16MHz / 8
   //TIMSK |= (1<<OCIE1A); enable immediately before mainloop
 
+  // Timer 3 used for PPM_IN pulse width capture
   TCCR3A  = 0;
-  TCCR3B  = (1<<ICNC3) | (2<<CS30);      //ICNC3 16MHz / 8
-  ETIMSK |= (1<<TICIE3);
+  TCCR3B  = (1<<ICNC3) | 2;      // Noise Canceller enabled, clock at 16MHz / 8 (2MHz)
+  ETIMSK |= (1<<TICIE3);         // Enable capture event interrupt
 
   sei(); //damit alert in eeReadGeneral() nicht haengt
   g_menuStack[0] =  menuProc0;

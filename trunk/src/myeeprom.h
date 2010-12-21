@@ -21,20 +21,6 @@
 
 //eeprom data
 //#define EE_VERSION 2
-#define MAX_MODELS 16
-#define MAX_MIXERS 32
-#define MAX_CURVE5 8
-#define MAX_CURVE9 8
-#define MDVERS_r9  1
-#define MDVERS_r14 2
-#define MDVERS_r22 3
-#define MDVERS_r77 4
-#define MDVERS_r85 5
-#define MDVERS     6
-
-
-#define GENERAL_MYVER 3
-
 
 // eeprom ver <9 => mdvers == 1
 // eeprom ver >9 => mdvers ==2
@@ -51,7 +37,7 @@
 #define WARN_MEM     (!(g_eeGeneral.warnOpts & WARN_MEM_BIT))
 #define BEEP_VAL     ( (g_eeGeneral.warnOpts & WARN_BVAL_BIT) >>3 )
 
-
+#define GENERAL_MYVER 3
 typedef struct t_EEGeneral {
   uint8_t   myVers;
   int16_t   calibMid[7];
@@ -143,6 +129,17 @@ typedef struct t_SwashRingData { // Swash Ring data
   uint8_t chY; // 2 channels to limit
 } __attribute__((packed)) SwashRingData;
 
+#define MAX_MODELS 16
+#define MAX_MIXERS 32
+#define MAX_CURVE5 8
+#define MAX_CURVE9 8
+#define MDVERS_r9  1
+#define MDVERS_r14 2
+#define MDVERS_r22 3
+#define MDVERS_r77 4
+#define MDVERS_r85 5
+#define MDVERS_205 6
+#define MDVERS     6
 typedef struct t_ModelData {
   char      name[10];             // 10 must be first for eeLoadModelName
   uint8_t   mdVers;
@@ -169,23 +166,28 @@ typedef struct t_ModelData {
   SwashRingData swashR;
 } __attribute__((packed)) ModelData;
 
-
-
-#define TOTAL_EEPROM_USAGE (sizeof(ModelData)*MAX_MODELS + sizeof(EEGeneral))
-
-
 extern EEGeneral g_eeGeneral;
 extern ModelData g_model;
 
+#ifndef FRSKY
+#define TOTAL_EEPROM_USAGE (sizeof(ModelData)*MAX_MODELS + sizeof(EEGeneral))
+#else
 
+#define FRSKY_MYVER  1
+typedef struct t_FrskyData {
+  uint8_t myVers; // data version
+  uint8_t rxVoltsChannel; // 0=none, 1=A1, 2=A2
+  uint8_t rxVoltsMax; // 0.1V steps EG. 6.6 Volts = 66. 25.1V = 251, etc.
+  int8_t  rxVoltsOfs; // Calibration offset. Signed 0.1V steps. EG. -4 to substract 0.4V
+  uint8_t rxVoltsBarMin; // Minimum voltage for voltage bar display (0.1V steps)
+  uint8_t rxVoltsBarMax; // ditto for max volts. (Would usually = rxVoltsmax)
+  uint8_t noDataAlarm;   // 0=no, 1=yes (Sound alarm when there's no telem. data coming in)
+} __attribute__((packed)) EEFrskyData;
 
+extern EEFrskyData g_eeFrsky;
+#define TOTAL_EEPROM_USAGE (sizeof(ModelData)*MAX_MODELS + sizeof(EEGeneral) + sizeof(EEFrskyData))
 
-
-
-
-
-
-
+#endif
 
 
 #endif

@@ -215,6 +215,7 @@ uint16_t EFile::size(){
 }
 
 
+// G: Open file ID for reading. Return the file's type
 uint8_t EFile::openRd(uint8_t i_fileId){
   m_fileId = i_fileId;
   m_pos      = 0;
@@ -241,6 +242,7 @@ uint8_t EFile::read(uint8_t*buf,uint16_t i_len){
   m_pos += i_len - len;
   return i_len - len;
 }
+// G: Read runlength (RLE) compressed bytes into buf.
 uint16_t EFile::readRlc(uint8_t*buf,uint16_t i_len){
   uint16_t i;
   for( i=0; i<i_len; ){
@@ -304,6 +306,7 @@ void EFile::create(uint8_t i_fileId, uint8_t typ, uint16_t maxTme10ms){
   eeFs.files[i_fileId].size     = 0;
   m_stopTime10ms = g_tmr10ms + maxTme10ms;
 }
+// G: Close file and truncate at this blk. Add any remaining blocks to freeList chain
 void EFile::closeTrunc()
 {
   uint8_t fri=0;
@@ -314,6 +317,7 @@ void EFile::closeTrunc()
   if(fri) EeFsFree( fri );  //chain in
 }
 
+// G: Write runlength (RLE) compressed bytes 
 uint16_t EFile::writeRlc(uint8_t i_fileId, uint8_t typ,uint8_t*buf,uint16_t i_len, uint8_t maxTme10ms){
   create(i_fileId,typ,maxTme10ms);
   bool    state0 = true;

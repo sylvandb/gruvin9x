@@ -389,16 +389,20 @@ ALL_CFLAGS = -mmcu=$(MCU) -I. $(CFLAGS) $(GENDEPFLAGS)
 ALL_CPPFLAGS = -mmcu=$(MCU) -I. -x c++ $(CPPFLAGS) $(GENDEPFLAGS)
 ALL_ASFLAGS = -mmcu=$(MCU) -I. -x assembler-with-cpp $(ASFLAGS)
 
-AVER = ${shell sh -c "grep \"SUB_VERS\" stamp-gruvin9x.h | egrep -o \"[[:digit:]]*\""}
-VER = $(shell echo $$(( $(AVER) + 1 )))
-
-
+SUB_VER = ${shell sh -c "grep \"SUB_VERS\" gruvin9x.h | cut -d\  -f3 | egrep -o \"[[:digit:]]\""}
+ABUILD_NUM = ${shell sh -c "grep \"BUILD_NUM\" stamp-gruvin9x.h | egrep -o \"[[:digit:]]+\""}
+BUILD_NUM = $(shell echo $$(( $(ABUILD_NUM) + 1 )))
+ifeq "$(USER)" "bryan"
+  THEUSER=gruvin
+else 
+  THEUSER=$(USER)
+endif
 
 # Default target.
 all: begin gccversion sizebefore build sizeafter end
 
 # Change the build target to build a HEX file or a library.
-build: stamp font.lbm sticks.lbm s9xsplash.lbm elf hex eep lss sym
+build: stamp font.lbm font_dblsize.lbm sticks.lbm s9xsplash.lbm elf hex eep lss sym
 #build: lib
 
 
@@ -420,11 +424,17 @@ stamp:
 	@echo "//Automatically generated file - do not edit" > stamp-gruvin9x.h
 	@echo "#define DATE_STR \"`date +%d.%m.%Y`\"" >> stamp-gruvin9x.h
 	@echo "#define TIME_STR \"`date +%H:%I:%S`\"" >> stamp-gruvin9x.h
-	@echo "#define SUB_VERS $(VER)-gruvin" >> stamp-gruvin9x.h
+	@echo "#define SUB_VERS $(SUB_VER)-$(THEUSER)" >> stamp-gruvin9x.h
 	@echo "#define SVN_VERS \"trunk-r$(REV)\"" >> stamp-gruvin9x.h
+	@echo "#define BUILD_NUM $(BUILD_NUM)" >> stamp-gruvin9x.h
 	@cat stamp-gruvin9x.h
 
 font.lbm: font_6x1.xbm
+	@echo
+	@echo "Convert font from xbm to lbm:"
+	$(XBM2LBM) $<
+
+font_dblsize.lbm: font_dblsize.xbm
 	@echo
 	@echo "Convert font from xbm to lbm:"
 	$(XBM2LBM) $<
@@ -481,6 +491,11 @@ wflash: $(TARGET).hex
 weeprom: $(TARGET).bin
 	$(AVRDUDE) $(AVRDUDE_FLAGS) $(AVRDUDE_WRITE_EEPROM)
 
+# Write flash and eeprom
+wfe: $(TARGET).hex
+	$(AVRDUDE) $(AVRDUDE_FLAGS) $(AVRDUDE_WRITE_FLASH)
+	$(AVRDUDE) $(AVRDUDE_FLAGS) $(AVRDUDE_WRITE_EEPROM)
+
 rflash: $(TARGET).hex
 	$(AVRDUDE) $(AVRDUDE_FLAGS) $(AVRDUDE_READ_FLASH)
 
@@ -520,12 +535,11 @@ $(TARGET).elf $(DEBUG_HOST):$(DEBUG_PORT)
 
 
 # Convert ELF to COFF for use in debugging / simulating in AVR Studio or VMLAB.
-	COFFCONVERT = $(OBJCOPY) --debugging
-	COFFCONVERT += --change-section-address .data-0x800000
-	COFFCONVERT += --change-section-address .bss-0x800000
-	COFFCONVERT += --change-section-address .noinit-0x800000
-	COFFCONVERT += --change-section-address .eeprom-0x810000
-
+        COFFCONVERT = $(OBJCOPY) --debugging
+        COFFCONVERT += --change-section-address .data-0x800000
+        COFFCONVERT += --change-section-address .bss-0x800000
+        COFFCONVERT += --change-section-address .noinit-0x800000
+        COFFCONVERT += --change-section-address .eeprom-0x810000
 
 
 coff: $(TARGET).elf

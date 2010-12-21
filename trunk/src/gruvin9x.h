@@ -19,6 +19,7 @@
 #define gruvin9x_h
 
 #define VERS 1
+#define SUB_VERS 2
 
 #include <inttypes.h>
 #include <string.h>
@@ -376,7 +377,7 @@ bool    getSwitch(int8_t swtch, bool nc, uint8_t level=0);
 void putsDrSwitches(uint8_t x,uint8_t y,int8_t swtch,uint8_t att);
 void putsTmrMode(uint8_t x, uint8_t y, uint8_t attr);
 
-
+uint16_t getTmr16KHz();
 
 
 void checkMem();
@@ -420,11 +421,17 @@ int8_t checkIncDec_hg(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max);
 ///Hilfs-funktion zum Aufruf von checkIncDecGen2 fuer bitfield Variablen
 int8_t checkIncDec_vg(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max);
 
+#ifdef FRSKY
+// Gruvin: This uses a new _FL_UNSIGNED flag to allow for unsigned values, so 0-255 works in an 8bit var. 
+int8_t checkIncDec_Frsky(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max);
+#endif
+
 extern bool    checkIncDec_Ret;//global helper vars
 extern uint8_t s_editMode;     //global editmode
 
-#define _FL_SIZE2     4
-#define _FL_VERT      8
+#define _FL_SIZE2      4
+#define _FL_VERT       8
+#define _FL_UNSIGNED8 16
 
 #define CHECK_INCDEC_H_GENVAR( event, var, min, max)     \
   checkIncDecModVar<min,max>(event,&var,(sizeof(var)==2 ? _FL_SIZE2 : 0)|EE_GENERAL) \
@@ -472,6 +479,10 @@ template<class t> inline int8_t sgn(t a){ return a>0 ? 1 : (a < 0 ? -1 : 0); }
 
 #define EE_GENERAL 1
 #define EE_MODEL   2
+#ifdef FRSKY
+#define EE_FRSKY  32
+#endif
+
 /// Markiert einen EEPROM-Bereich als dirty. der Bereich wird dann in
 /// eeCheck ins EEPROM zurueckgeschrieben.
 void eeWriteBlockCmp(const void *i_pointer_ram, void *i_pointer_eeprom, size_t size);
@@ -542,7 +553,10 @@ void menuProcModelSelect(uint8_t event);
 void menuProcTemplates(uint8_t event);
 void menuProcSwitches(uint8_t event);
 
-
+#ifdef FRSKY
+void menuProcFrsky(uint8_t event);
+void menuProcFrskyAlarms(uint8_t event);
+#endif
 
 void menuProcStatistic2(uint8_t event);
 void menuProcStatistic(uint8_t event);
@@ -592,6 +606,7 @@ extern const char stamp1[];
 extern const char stamp2[];
 extern const char stamp3[];
 extern const char stamp4[];
+extern const char stamp5[];
 #include "myeeprom.h"
 
 #define FLASH_DURATION 50

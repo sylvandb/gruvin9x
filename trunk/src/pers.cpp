@@ -25,6 +25,11 @@ EFile theFile2; //sometimes we need two files
 
 #define FILE_TYP_GENERAL 1
 #define FILE_TYP_MODEL   2
+
+#ifdef FRSKY
+#define FILE_TYP_FRSKY   3
+#endif
+
 #define partCopy(sizeDst,sizeSrc)                         \
       pSrc -= (sizeSrc);                                  \
       pDst -= (sizeDst);                                  \
@@ -63,6 +68,26 @@ bool eeLoadGeneral()
   }
   return false;
 }
+
+#ifdef FRSKY
+void frskyDefault()
+{
+  memset(&g_eeFrsky, 0, sizeof(g_eeFrsky));
+  g_eeFrsky.myVers = FRSKY_MYVER;
+  g_eeFrsky.rxVoltsChannel  = 1;
+  g_eeFrsky.rxVoltsMax      = 66;   // 6.6V
+  g_eeFrsky.rxVoltsOfs      = -1;   // -0.1V
+  g_eeFrsky.rxVoltsBarMin   = 40;   // 4.0V
+  g_eeFrsky.rxVoltsBarMax   = 66;   // 6.6V
+  g_eeFrsky.noDataAlarm = 0; // no
+}
+bool eeLoadFrsky()
+{
+  theFile.openRd(FILE_FRSKY);
+  uint8_t sz = theFile.readRlc((uint8_t*)&g_eeFrsky, sizeof(EEFrskyData));
+  return(sz == sizeof(EEFrskyData)  && g_eeFrsky.myVers==FRSKY_MYVER);
+}
+#endif
 
 void modelDefault(uint8_t id)
 {
@@ -145,7 +170,7 @@ bool eeDuplicateModel(uint8_t id)
     wdt_reset();
   }
   theFile2.closeTrunc();
-  //todo error handling
+  //XXX: todo error handling
   return true;
 }
 void eeReadAll()
@@ -169,8 +194,16 @@ void eeReadAll()
     //alert(PSTR("modef ok"));
     theFile.writeRlc(FILE_MODEL(0),FILE_TYP_MODEL,(uint8_t*)&g_model,sizeof(g_model),200);
     //alert(PSTR("modwrite ok"));
-
   }
+
+#ifdef FRSKY
+  if(!eeLoadFrsky()){
+    frskyDefault();
+    // alert(PSTR("FrSky Default OK"));
+    theFile.writeRlc(FILE_FRSKY, FILE_TYP_FRSKY,(uint8_t *)&g_eeFrsky,sizeof(g_eeFrsky), 100);
+    // alert(PSTR("FrSky write OK"));
+  }
+#endif
   eeLoadModel(g_eeGeneral.currModel);
 }
 
@@ -205,6 +238,24 @@ void eeCheck(bool immediately)
     }
     //first finish GENERAL, then MODEL !!avoid Toggle effect
   }
+#ifdef FRSKY
+    // G: ... or then FRSKY. What's Toggle Effect? Hmmm. :/
+  else if (msk & EE_FRSKY){
+// ref: uint16_t EFile::writeRlc(uint8_t i_fileId, uint8_t typ,uint8_t*buf,uint16_t i_len, uint8_t maxTme10ms){
+    if(theFile.writeRlc(FILE_TMP, FILE_TYP_FRSKY, (uint8_t*)&g_eeFrsky,
+                        sizeof(g_eeFrsky),10) == sizeof(g_eeFrsky))
+    {
+      EFile::swap(FILE_FRSKY,FILE_TMP);
+    }else{
+      if(theFile.errno()==ERR_TMO){
+        s_eeDirtyMsk |= EE_MODEL; //try again
+        s_eeDirtyTime10ms = g_tmr10ms - WRITE_DELAY_10MS;
+      }else{
+        alert(PSTR("EEPROM overflow"));
+      }
+    }
+  }
+#endif
   else if(msk & EE_MODEL){
     if(theFile.writeRlc(FILE_TMP, FILE_TYP_MODEL, (uint8_t*)&g_model,
                         sizeof(g_model),20) == sizeof(g_model))

@@ -24,6 +24,9 @@ uint8_t displayBuf[DISPLAY_W*DISPLAY_H/8];
 #include "font.lbm"
 #define font_5x8_x20_x7f (font+3)
 
+#include "font_dblsize.lbm"
+#define font_10x16_x20_x7f (font_dblsize+3)
+
 #define BITMASK(bit) (1<<(bit))
 void lcd_clear()
 {
@@ -59,17 +62,47 @@ void lcd_putcAtt(uint8_t x,uint8_t y,const char c,uint8_t mode)
   bool         inv = (mode & INVERS) ? true : (mode & BLINK ? BLINK_ON_PHASE : false);
   if(mode&DBLSIZE)
   {
+    /* each letter consists of ten top bytes followed by
+     * five bottom by ten bottom bytes (20 bytes per 
+     * char) */
+    q = &font_10x16_x20_x7f[(c-0x20)*10 + ((c-0x20)/16)*160];
     for(char i=5; i>=0; i--){
-      uint8_t b = i ? pgm_read_byte(q++) : 0;
-      if(inv) b=~b;
-      static uint8_t dbl[]={0x00,0x03,0x0c,0x0f, 0x30,0x33,0x3c,0x3f,
-                            0xc0,0xc3,0xcc,0xcf, 0xf0,0xf3,0xfc,0xff};
+      /*top byte*/
+      uint8_t b1 = i>0 ? pgm_read_byte(q) : 0;
+      /*bottom byte*/
+      uint8_t b3 = i>0 ? pgm_read_byte(160+q) : 0;
+      /*top byte*/
+      uint8_t b2 = i>0 ? pgm_read_byte(++q) : 0;
+      /*bottom byte*/
+      uint8_t b4 = i>0 ? pgm_read_byte(160+q) : 0;
+      q++;
+      if(inv) {
+        b1=~b1;
+        b2=~b2;
+        b3=~b3;
+        b4=~b4;
+      }   
+
       if(&p[DISPLAY_W+1] < DISPLAY_END){
-        p[0] = p[1] = dbl[b&0xf];
-        p[DISPLAY_W]=p[DISPLAY_W+1] = dbl[b>>4];
+        p[0]=b1;
+        p[1]=b2;
+        p[DISPLAY_W] = b3; 
+        p[DISPLAY_W+1] = b4; 
         p+=2;
-      }
-    }
+      }   
+    }   
+
+//    for(char i=5; i>=0; i--){
+//      uint8_t b = i ? pgm_read_byte(q++) : 0;
+//      if(inv) b=~b;
+//      static uint8_t dbl[]={0x00,0x03,0x0c,0x0f, 0x30,0x33,0x3c,0x3f,
+//                            0xc0,0xc3,0xcc,0xcf, 0xf0,0xf3,0xfc,0xff};
+//      if(&p[DISPLAY_W+1] < DISPLAY_END){
+//        p[0] = p[1] = dbl[b&0xf];
+//        p[DISPLAY_W]=p[DISPLAY_W+1] = dbl[b>>4];
+//        p+=2;
+//      }
+//    }
   }else{
     for(char i=5; i!=0; i--){
       uint8_t b = pgm_read_byte(q++);
@@ -127,11 +160,6 @@ void lcd_outdez(uint8_t x,uint8_t y,int16_t val)
 {
   lcd_outdezAtt(x,y,val,0);
 }
-// void lcd_outdezAtt(uint8_t x,uint8_t y,int16_t val,uint8_t mode)
-// {
-//   lcd_outdezAtt(x,y,val,mode);
-// }
-//void lcd_outdezAtt(uint8_t x,uint8_t y,int16_t val,uint8_t len,uint8_t mode)
 void lcd_outdezAtt(uint8_t x,uint8_t y,int16_t val,uint8_t mode)
 {
   lcd_outdezNAtt( x,y,val,mode,5);
@@ -150,11 +178,7 @@ void lcd_outdezNAtt(uint8_t x,uint8_t y,int16_t val,uint8_t mode,uint8_t len)
     if( prec && prec==i){
       x-=1;
       lcd_putcAtt(x,y,(val % 10)+'0',mode);
-      lcd_plot( x+5, y+7);//komma
-      //lcd_plot( x+5, y+6);//komma
-      //lcd_plot( x+6, y+7);//komma
-      lcd_plot( x+6, y+6);//komma
-      //lcd_plot( x+5, y+7);//komma
+      lcd_plot( x+5, y+6); // period
       prec=0;
     }else{
       lcd_putcAtt(x,y,(val % 10)+'0',mode);
@@ -216,24 +240,36 @@ void lcd_vline(uint8_t x,uint8_t y, int8_t h)
 void lcdSendCtl(uint8_t val)
 {
   PORTC_LCD_CTRL &= ~(1<<OUT_C_LCD_CS1);
+#ifdef LCD_MULTIPLEX
+  DDRA = 0xFF; // set LCD_DAT pins to output
+#endif
   PORTC_LCD_CTRL &= ~(1<<OUT_C_LCD_A0);
   PORTC_LCD_CTRL &= ~(1<<OUT_C_LCD_RnW);
   PORTA_LCD_DAT = val;
   PORTC_LCD_CTRL |=  (1<<OUT_C_LCD_E);
   PORTC_LCD_CTRL &= ~(1<<OUT_C_LCD_E);
   PORTC_LCD_CTRL |=  (1<<OUT_C_LCD_A0);
+#ifdef LCD_MULTIPLEX
+  DDRA = 0x00; // set LCD_DAT pins to input
+#endif
   PORTC_LCD_CTRL |=  (1<<OUT_C_LCD_CS1);
 }
 
 void lcdSendDat(uint8_t val)
 {
   PORTC_LCD_CTRL &= ~(1<<OUT_C_LCD_CS1);
+#ifdef LCD_MULTIPLEX
+  DDRA = 0xFF; // set LCD_DAT pins to output
+#endif
   PORTC_LCD_CTRL |=  (1<<OUT_C_LCD_A0);
   PORTC_LCD_CTRL &= ~(1<<OUT_C_LCD_RnW);
   PORTA_LCD_DAT = val;
   PORTC_LCD_CTRL |=  (1<<OUT_C_LCD_E);
   PORTC_LCD_CTRL &= ~(1<<OUT_C_LCD_E);
   PORTC_LCD_CTRL |=  (1<<OUT_C_LCD_A0);
+#ifdef LCD_MULTIPLEX
+  DDRA = 0x00; // set LCD_DAT pins to input
+#endif
   PORTC_LCD_CTRL |=  (1<<OUT_C_LCD_CS1);
 }
 

@@ -264,11 +264,18 @@ void per10ms()
     keys[enuk].input(in & pgm_read_byte(crossTrim+i),(EnumKeys)enuk);
     ++enuk;
   }
-  //  for(int i=0; i<8; i++)
-  //  {
-  //    g_anaIns[i] = anaIn(i);
-  //  }
 
-  //  STARTADCONV;            // Analogkanäle lesen
-
+#ifdef FRSKY
+  // Used to detect presence of valid FrSky telemetry packets inside the 
+  // last FRSKY_TIMEOUT10ms 10ms intervals
+  if (frskyStreaming > 0) frskyStreaming--;
+  else if (g_eeFrsky.noDataAlarm)
+  {
+#ifdef BEEPSPKR
+    if (!(g_tmr10ms % 30)) beepWarn2Spkr(!(g_tmr10ms % 60) ? 25 : 19);
+#else
+    if (!(g_tmr10ms % 30)) if (g_tmr10ms % 60) { warble=false; beepWarn2() } else  { warble=true; beepErr() };
+#endif
+  }
+#endif
 }
