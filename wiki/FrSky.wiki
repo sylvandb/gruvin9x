@@ -35,36 +35,36 @@ Here we can set ...
  * the minimum and maximum voltages for the graphical voltage bar on page 1/3
  * whether or not we want an audible alarm when no telemetry data is being received
 
-(I suppose that support for a second voltage display on the other available channel should be added. And so it will then, some day.)
+(I suppose that support for a second voltage display on the other available channel should be added. I'll wait to see how much interest there is, since the entire layout of this screen is bound to change anyway.)
 
 === FRSKY ALARMS ===
 Pressing `[RIGHT]` again takes us to the *FRSKY ALARMS 3/3 menu page.
 
  [http://gruvin9x.googlecode.com/svn/wiki/FrSky.attach/alarms.jpg]
 
-Here we immediately see existing alarms values, as retrieved from the Fr-Sky transmitter module. (If for some reason you want to manually reload that data, you can press `[MENU (LONG)]`)
+Here we immediately see existing alarms values, as retrieved from the Fr-Sky transmitter module. (If for some reason you want to manually reload that data, you can press `[MENU (LONG)]`, while at the page/pages position, top right.)
 
-Each field is editable. Select a field using `[UP]`, `[DOWN]`, `[LEFT]` and `[RIGHT]`. Press `[MENU]` to enter edit mode and make your selection using `[LEFT]` and `[RIGHT]`.
+Each of the four alarms as supported by the Fr-Sky transmitter module can be configured with a "Level" (of urgency), a mode -- greater than or less than -- and the value to which that mode applies. Each of the corresponding fields on this screen is editable. Select a field using `[UP]`, `[DOWN]`, `[LEFT]` and `[RIGHT]`. Press `[MENU]` to enter edit mode and make your selection using `[LEFT]` and `[RIGHT]`.
 
 Pressing `[MENU]` again exits edit mode and it is at this point that the new alarm settings for that row are written out to the Fr-Sky transmitter module.
 
-In case you're wondering, the 'GT' and 'LT' letters are memory aids for those who might need it. *GT* is for '<b>G</b>reater <b>T</b>han' and *LT* is for '<b>L</b>ess <b>T</b>han'.
+In case you're wondering, the 'GT' and 'LT' letters are '>' and '<' symbol memory aids, for those who may need same. *GT* stands for '<b>G</b>reater <b>T</b>han' and *LT* is for '<b>L</b>ess <b>T</b>han'.
 
 Incidentally, the ordering of the alarm settings -- with A2 above A1 -- is intentional. For some reason, the Chinese designers ordered things in this way numerically, and it simply saves code and RAM space to not bother buffering and re-organising that fact for display. Even on the receiver casing, we see the input channels labelled 'backwards' (to the Western mind?) -- 'A2 A1', left to right. `*shrug*`
 
 = TO DO =
 
-A number of things need implementing and testing before this Fr-Sky support is committed to the `trunk/` version.
-
  * Addition of graphical bar for signal strength
 
- * Allowance for two voltage bars (like receiver batt. and main batt.) 
+ * Allowance for two voltage bars, example: receiver batt. and main batt. 
 
-As at r377, these TODOs have been postponed, pending user interest. (EEPROM Fr-Sky Settings file format "3" has now been finalised. Changed to the format will include incrementing the 'myvers' field from 1 to 2.)
+As at r377, these TODOs have been postponed, pending user interest. 
 
 == Miscellaneous ==
 
 The Fr-Sky Settings (page 2/3)are stored in local EEPROM. When I started developing this, there were two file types in use by the dynamic file storage system created by TH. These are, 'Type 1' -- for General Settings and 'Type 2' -- for Model data. I've now added a 'Type 3' -- for Fr-Sky settings.
+
+ (As at r377, EEPROM Fr-Sky Settings file format "3" has now been finalised. Changes to the format will include incrementing the the file's `myvers` field. So it should be safe to to write code for or record backups of EEPROM files including Fr-Sky settings as of r377,as future code will try to be backward compatible and perform auto-format-upgrades where needed.)
 
 Since my last update, I've also discovered TH's Ruby script, 'eeprom.rb'. The script analyses a binary dump file of the '9X EEPROM data and shows us the contents. (It's also for debugging data issues and converting data versions, I think.)
 
@@ -111,5 +111,6 @@ s     8  3    7 Freesky_r250               34,[Ver:1 Ch:A1 Vmax:6.6 Vofs:-0.10 B
 t     0  0    0 
 }}}
 
+*Even more impressive* is Erazz's `eePe` software, which I have not yet had time to teach about the new 'file type 3' for Fr-Sky settings. See [eePe here] for more details.
 
   
