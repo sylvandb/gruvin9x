@@ -9,7 +9,9 @@ The intention is to (at least) free up more I/O ports on the ATmega64 (nearly al
 
 == Progress ==
 
-2010-12-15: A first batch of prototype PCB's ([http://gruvin9x.googlecode.com/svn/trunk/pcb/rev2.14 rev2.14]) has been ordered for manufacturing.
+2010-12-22: [http://gruvin9x.googlecode.com/svn/trunk/pcb/rev2.14-frozen/production/gruvin9x-bom.xls  Components] to build three prototypes order from Digikey.com
+
+2010-12-15: A first batch of prototype PCB's ([http://gruvin9x.googlecode.com/svn/trunk/pcb/rev2.14-frozen rev2.14]) has been ordered for manufacturing.
 
 == PostScript and PDF Files ==
 
