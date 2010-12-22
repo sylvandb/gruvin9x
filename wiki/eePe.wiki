@@ -20,7 +20,7 @@ Then svn checkout eePe from the eePe project site.
 svn checkout http://eepe.googlecode.com/svn/trunk/ eepe
 }}}
 
-On wIndows and Linux, you build the eePe application like so ..
+Under Windows and Linux, you build the eePe application like so ..
 
 {{{
 cd eePe/src
@@ -28,9 +28,9 @@ qmake
 make
 }}}
 
-But on the the Mac, when you run `qmake`, which would 'normally' create a `Makefile` for the build process done by `make`, a Makefile is not created. Instead and arguably even better, `qmake` creates an entire Xcode structure, as a directory named `eepe.xcodeproj/`. To build the program, open the project in Xcode, click _Build/Run_ and you'll be all set!
+But on the the Mac, when you run `qmake`, which would 'normally' create a `Makefile` for the build process, a Makefile is _not_ created. Instead, and arguably even better, `qmake` creates an entire Xcode project structure in a directory named `eepe.xcodeproj/`. To build the program, open the project in Xcode, click _Build and Run_ and you'll be all set!
 
-I'm gonna so enjoy hacking this one (to add the Fr-Sky 'file-type 3' support that is.) No forks this time of course!
+I'm going so enjoy hacking this one -- to add the Fr-Sky 'file-type 3' support that is. No forks this time of course! It's been years since I last wrote anything that used Qt and ...
 
  _By the way -- have you taken a fresh look at Qt v4 in the last couple years? It's come a LONG way and is now fully OS X Cocoa integrated. I didn't know! (Head-in-the-sand syndrome strikes again.)
 
