@@ -1,11 +1,9 @@
 Changes in v1.2
 
-+ Issue 11: Introduced experimental 'tmain avg' report on STAT2
-+ Changed mix warning beep tone frequencies (BEEPSPKR version) to differentiate 
-  from other beeps
++ Issue 11 (invalidated): Added text "[MENU] to refresh" to STAT2 page
 + Fixed issue 8: faulty mix warning beeps
 
-Comitted trunk/r377
+Comitted r377
 
 + CHANGELOG introduced
 + Fr-Sky support v1.0 merged into trunk
@@ -14,4 +12,3 @@ Comitted trunk/r377
 + Some minor tweaks in display format of times
 + Resurrected the old sub-version auto-counter in the form of a "build number"
 
-Version 1.1 did not include this CHANGELOG file
