@@ -2100,6 +2100,7 @@ void trace()   // called in perOut - once envery 0.01sec
 uint16_t g_tmr1Latency_max;
 uint16_t g_tmr1Latency_min = 0x7ff;
 uint16_t g_timeMain;
+uint16_t g_avgTimeMain;
 void menuProcStatistic2(uint8_t event)
 {
   TITLE("STAT2");
@@ -2125,8 +2126,10 @@ void menuProcStatistic2(uint8_t event)
   lcd_outdez(14*FW , 2*FH, g_tmr1Latency_min/2 );
   lcd_puts_P( 0*FW,  3*FH, PSTR("tmr1 Jitter    us"));
   lcd_outdez(14*FW , 3*FH, (g_tmr1Latency_max - g_tmr1Latency_min) /2 );
-  lcd_puts_P( 0*FW,  4*FH, PSTR("tmain          ms"));
+  lcd_puts_P( 0*FW,  4*FH, PSTR("tmain max      ms"));
   lcd_outdezAtt(14*FW , 4*FH, (g_timeMain*100)/16 ,PREC2);
+  lcd_puts_P( 0*FW,  5*FH, PSTR("tmain avg      ms"));
+  lcd_outdezAtt(14*FW , 5*FH, (g_avgTimeMain*100)/16 ,PREC2);
 }
 
 #ifdef JETI

@@ -1007,6 +1007,7 @@ void evalCaptures()
 
 
 extern uint16_t g_timeMain;
+extern uint16_t g_avgTimeMain;
 //void main(void) __attribute__((noreturn));
 
 int main(void)
@@ -1074,6 +1075,8 @@ int main(void)
   lcdSetRefVolt(g_eeGeneral.contrast);
   g_LightOffCounter = g_eeGeneral.lightAutoOff*500; //turn on light for x seconds - no need to press key Issue 152
   TIMSK |= (1<<OCIE1A); // Pulse generator enable immediately before mainloop
+
+  static uint16_t lastTimeMain = 0;
   while(1){
     //uint16_t old10ms=g_tmr10ms;
     uint16_t t0 = getTmr16KHz();
@@ -1086,6 +1089,8 @@ int main(void)
       heartbeat = 0;
     }
     t0 = getTmr16KHz() - t0;
+    if (lastTimeMain == 0) lastTimeMain = t0;
+    g_avgTimeMain = (lastTimeMain = ((lastTimeMain * 63) + t0)/64);
     g_timeMain = max(g_timeMain,t0);
   }
 }
