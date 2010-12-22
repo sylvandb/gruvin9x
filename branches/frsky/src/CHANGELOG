@@ -1,5 +1,7 @@
 Changes in v1.2
 
++ Introduced different beep/tone frequencies (BEEPSPKR version only) for mix warning 
+  beeps (1, 2 and 3)
 + Issue 11 (invalidated): Added text "[MENU] to refresh" to STAT2 page
 + Fixed issue 8: faulty mix warning beeps
 
