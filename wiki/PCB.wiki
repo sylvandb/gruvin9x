@@ -1,4 +1,5 @@
 #summary Custom PCB
+#labels Phase-Implementation,Phase-Design
 = Custom Main Board Design =
 
 A PCB design has been worked up from scratch in KiCAD to replicate the wiring and function of the V2 '9X hardware. It's closely based on the layout of the original PCB -- especially in terms of component placement. See [http://code.google.com/p/gruvin9x/source/browse/#svn/trunk/pcb/original /trunk/pcb/original/] (as of r155).
@@ -13,9 +14,9 @@ The intention is to (at least) free up more I/O ports on the ATmega64 (nearly al
 
 2010-12-15: A first batch of prototype PCB's ([http://gruvin9x.googlecode.com/svn/trunk/pcb/rev2.14-frozen rev2.14]) has been ordered for manufacturing.
 
-== PostScript and PDF Files ==
+== Schematics ==
 
-=== Schematics ===
+=== PostScript and PDF Files ===
 
  * New gruvin9x custom Main PCB rev2.14 (production frozen) - [http://gruvin9x.googlecode.com/svn/trunk/pcb/rev2.14-frozen/gruvin9x.pdf PDF] | [http://gruvin9x.googlecode.com/svn/trunk/pcb/rev2.14-frozen/gruvin9x.ps PS]
  * Stock V2 Main PCB - [http://gruvin9x.googlecode.com/svn/trunk/pcb/actual_v2_9x/gruvin9x_v2_actual.pdf PDF] | [http://gruvin9x.googlecode.com/svn/trunk/pcb/actual_v2_9x/gruvin9x_v2_actual.ps PS]
