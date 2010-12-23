@@ -1,5 +1,9 @@
 Changes in v1.2
 
++ ER's nice new fonts include a change where the @ symbol has been changed
+  to a º (degrees symbol). I moved the little circle in both font files
+  left, to sit on the left hand edge of the character cell, rather than the
+  right. (I think it looks better is all.)
 + Issue 10: Moved PPM-in pulse processing to pulse capture ISR function to fix
   buffer overflows and, more importantly, make servo motion considerably smoother
   when under trainee control.
