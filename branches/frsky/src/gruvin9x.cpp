@@ -117,7 +117,7 @@ inline int16_t getValue(uint8_t i)
 {
     if(i<MIX_MAX) return calibratedStick[i];//-512..512
     else if(i<=MIX_FULL) return 1024; //FULL/MAX
-    else if(i<MIX_FULL+NUM_PPM) return g_ppmIns[i-MIX_FULL] - g_eeGeneral.ppmInCalib[i-MIX_FULL];
+    else if(i<MIX_FULL+NUM_PPM) return (g_ppmIns[i-MIX_FULL] - g_eeGeneral.ppmInCalib[i-MIX_FULL])*2;
     else return ex_chans[i-MIX_FULL-NUM_PPM];
     return 0;
 }
@@ -592,11 +592,13 @@ void perMain()
 
   g_menuStack[g_menuStackPtr](evt);
   refreshDiplay();
+
+  // PPM signal on phono-jack. In or out? ...
   if(PING & (1<<INP_G_RF_POW)) { //no power -> only phone jack = slave mode
     PORTG &= ~(1<<OUT_G_SIM_CTL); // 0=ppm out
   }else{
     PORTG |=  (1<<OUT_G_SIM_CTL); // 1=ppm-in
-    evalCaptures();
+//    evalCaptures();
   }
 
   switch( g_tmr10ms & 0x1f ) { //alle 10ms*32
@@ -673,11 +675,8 @@ Gruvin:
 //    processFrskyPacket(frskyRxBuffer);
 #endif
 }
-volatile uint16_t captureRing[16];
-volatile uint8_t  captureWr;
-volatile uint8_t  captureRd;
 int16_t g_ppmIns[8];
-uint8_t ppmInState; //0=unsync 1..8= wait for value i-1
+uint8_t ppmInState = 0; //0=unsync 1..8= wait for value i-1
 
 #include <avr/interrupt.h>
 //#include <avr/wdt.h>
@@ -839,6 +838,7 @@ uint16_t getTmr16KHz()
 uint8_t beepAgain = 0;
 uint8_t beepAgainOrig = 0;
 uint8_t beepOn = false;
+extern uint16_t g_time_per10; // instantiated in menus.cpp
 
 ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
 {
@@ -868,12 +868,11 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
   // gruvin: END Tone Generator
 
   static uint8_t cnt10ms = 156; // execute 10ms code once every 156 cycles
-  if (cnt10ms-- == 0)
+  if (cnt10ms-- == 0) // BEGIN { ... every 10ms ... }
   {
     // Begin 10ms event
     cnt10ms = 156; 
     
-#endif
 /*
     // DEBUG: gruvin: crude test to time if I have in fact still got 10ms
     // Test confirms 1 second bips, at about 1/60th a second slow, just as original code.
@@ -885,6 +884,11 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
       beepOn = true; // beep each second (beepOn function turns beep off)
     }
 */
+
+#endif
+    
+    // Record start time from TCNT1 to record excution time
+    uint16_t dt=TCNT1;// TCNT1 (used for PPM out pulse generation) is running at 2MHz
 
     //cnt >/=0
     //beepon/off
@@ -911,7 +915,7 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
     }
 
 #ifdef BEEPSPKR
-    // gruvin: use new tone generator for beeps
+    // G: use new tone generator for beeps
     if(beepOn)
     {
       static bool warbleC;
@@ -925,7 +929,7 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
     }
 
 #else
-    // gruvin: use original external buzzer for beeps
+    // G: use original external buzzer for beeps
     if(beepOn){
     static bool warbleC;
     warbleC = warble && !warbleC;
@@ -937,8 +941,14 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
       PORTE &= ~(1<<OUT_E_BUZZER);
     }
 #endif
+
     per10ms();
     heartbeat |= HEART_TIMER10ms;
+
+    // Record per10ms code execution time, in us(x2) for STAT2 page
+    uint16_t dt2 = TCNT1; // capture end time
+    g_time_per10 = dt2 - dt; 
+
 #ifdef BEEPSPKR
   } // end 10ms event
 #endif
@@ -954,57 +964,39 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
 // equating to one count every half millisecond. (2 counts = 1ms). Control channel
 // count delta values thus can range from about 1600 to 4400 counts (800us to 2200us),
 // corresponding to a PPM signal in the range 0.8ms to 2.2ms (1.5ms at center).
-// (The timer is free-running and is thus not rest to zero at each capture interval.)
-// Capture delta values are stored in a ring-array (captureRing) and processed later 
-// at low priority in the Main loop.
-//
-// volatile uint16_t captureRing[16];
+// (The timer is free-running and is thus not reset to zero at each capture interval.)
 ISR(TIMER3_CAPT_vect, ISR_NOBLOCK) //capture ppm in 16MHz / 8 = 2MHz
 {
-  uint16_t capture=ICR3;
+  uint16_t capture=ICR3; 
   cli();
   ETIMSK &= ~(1<<TICIE3); // prevent re-entrance
   sei();
 
   static uint16_t lastCapt;
-  uint8_t nWr = (captureWr+1) % DIM(captureRing);
-  if(nWr == captureRd) // ring buffer overflow
-  {
-    captureRing[(captureWr+DIM(captureRing)-1) % DIM(captureRing)] = 0; // destroy last value
-    beepErr();
-  }else{
-    captureRing[captureWr] = capture - lastCapt;
-    captureWr              = nWr;
-  }
+
+  uint16_t val = (capture - lastCapt) / 2;
   lastCapt = capture;
+
+  // G: We prcoess g_ppmInsright here to make servo movement as smooth as possible
+  //    while under trainee control
+  if(ppmInState && ppmInState<=8){
+    if(val>800 && val<2200){
+      g_ppmIns[ppmInState++ - 1] = 
+        (int16_t)(val - 1500)*(g_eeGeneral.PPM_Multiplier+10)/10; //+-500 != 512, but close enough.
+    }else{
+      ppmInState=0; // not triggered
+    }
+  }else{
+    if(val>4000 && val < 16000)
+    {
+      ppmInState=1; // triggered
+    }
+  }
 
   cli();
   ETIMSK |= (1<<TICIE3);
   sei();
 }
-
-// process as many PPM captures as are available in captureRing since we last did so
-void evalCaptures()
-{
-  while(captureRd != captureWr)
-  {
-    uint16_t val = captureRing[captureRd] / 2; // result in micro-seconds
-    captureRd = (captureRd + 1)  % DIM(captureRing); // next read
-    if(ppmInState && ppmInState<=8){
-      if(val>800 && val<2200){
-        g_ppmIns[ppmInState++ - 1] = (int16_t)(val - 1500)*(g_eeGeneral.PPM_Multiplier+10)/10; //+-500 != 512, but close enough.
-      }else{
-        ppmInState=0; // not triggered
-      }
-    }else{
-      if(val>4000 && val < 16000)
-      {
-        ppmInState=1; // triggered
-      }
-    }
-  }
-}
-
 
 extern uint16_t g_timeMain;
 //void main(void) __attribute__((noreturn));

@@ -2100,6 +2100,7 @@ void trace()   // called in perOut - once envery 0.01sec
 uint16_t g_tmr1Latency_max;
 uint16_t g_tmr1Latency_min = 0x7ff;
 uint16_t g_timeMain;
+uint16_t g_time_per10;
 void menuProcStatistic2(uint8_t event)
 {
   TITLE("STAT2");
@@ -2127,7 +2128,9 @@ void menuProcStatistic2(uint8_t event)
   lcd_outdez(14*FW , 3*FH, (g_tmr1Latency_max - g_tmr1Latency_min) /2 );
   lcd_puts_P( 0*FW,  4*FH, PSTR("tmain max      ms"));
   lcd_outdezAtt(14*FW , 4*FH, (g_timeMain*100)/16 ,PREC2);
-  lcd_puts_P( 2*FW,  6*FH, PSTR("[MENU] to refresh"));
+  lcd_puts_P( 0*FW,  5*FH, PSTR("t10ms          us"));
+  lcd_outdez(14*FW , 5*FH, g_time_per10/2 );
+  lcd_puts_P( 3*FW,  7*FH, PSTR("[MENU] to reset"));
 }
 
 #ifdef JETI
@@ -2556,7 +2559,8 @@ void perOut(int16_t *chanOut, uint8_t zeroInput)
 
   anas[MIX_MAX-1]  = RESX;     // MAX
   anas[MIX_FULL-1] = RESX;     // FULL
-  for(uint8_t i=PPM_BASE;i<CHOUT_BASE;i++)    anas[i] = g_ppmIns[i-PPM_BASE] - g_eeGeneral.ppmInCalib[i-PPM_BASE]; //add ppm channels
+  for(uint8_t i=PPM_BASE;i<CHOUT_BASE;i++)
+    anas[i] = (g_ppmIns[i-PPM_BASE] - g_eeGeneral.ppmInCalib[i-PPM_BASE])*2; //add ppm channels
   for(uint8_t i=CHOUT_BASE;i<NUM_XCHNRAW;i++) anas[i] = chans[i-CHOUT_BASE]; //other mixes previous outputs
 
 
