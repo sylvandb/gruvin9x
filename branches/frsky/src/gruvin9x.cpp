@@ -979,17 +979,15 @@ ISR(TIMER3_CAPT_vect, ISR_NOBLOCK) //capture ppm in 16MHz / 8 = 2MHz
 
   // G: We prcoess g_ppmInsright here to make servo movement as smooth as possible
   //    while under trainee control
-  if(ppmInState && ppmInState<=8){
-    if(val>800 && val<2200){
-      g_ppmIns[ppmInState++ - 1] = 
-        (int16_t)(val - 1500)*(g_eeGeneral.PPM_Multiplier+10)/10; //+-500 != 512, but close enough.
-    }else{
-      ppmInState=0; // not triggered
-    }
-  }else{
-    if(val>4000 && val < 16000)
-    {
-      ppmInState=1; // triggered
+  if (val>4000 && val < 16000) { // G: Priorotise reset pulse. (Needed when less than 8 incoming pulses)
+    ppmInState = 1; // triggered
+  } else {
+    if (ppmInState && ppmInState<=8) {
+      if (val>800 && val<2200){
+        g_ppmIns[ppmInState++ - 1] = 
+          (int16_t)(val - 1500)*(g_eeGeneral.PPM_Multiplier+10)/10; //+-500 != 512, but close enough.
+      } else 
+        ppmInState = 0; // not triggered
     }
   }
 
