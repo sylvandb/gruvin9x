@@ -1,13 +1,21 @@
-#summary One-sentence summary of this page.
+#summary PPM-in Compatibility (Hack)
 
-= Introduction =
+= PPM-in Compatibility (Hack) =
 
-Add your content here.
+While working on various problems with PPM-in (aka. trainer/trainee) system, I discovered that Spektrum branded radios did not supply signal capable of being used byt he stock '9X electronics.
 
+Spektrum (and I presume JR? And Futaba?) output their PPM signal (via the phono jack on the back) as an approx. 1.5V peak-to-peak signal, which is also capacitively decoupled.
 
-= Details =
+This scheme actually make a lot of sense to me because it a) prevents damage if the lead is somehow shorted out and b) is far less likely to 'accidentally' load the host or slave device with signal that could potentially crash the CPU.
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+I have no idea what the Futaba/JR/Hi-tech scheme for this is, but I do have two Spektrum radios and I wanted them to be usable as trainer/trainee slaves with my Turnigy '9X. So, out came the soldering iron once again.
+
+I broke the track leading from the 4066 quad-switch chip and into PE7 on the ATmega and inserted an NPN buffer transistor -- essentially to 'amplify' the 1.5V signal back up to 5V-TTL for the ATmega. A side-effect is that the signal gets inverted. But this was easily fixed by changing a single binary bit in the program code. (See PPMIN= in [MakeOptions Make Options].)
+
+Here is the additional circuitry, which has been tested to work well with two Spektrum and one '9X radio by the way.
+
+[http://gruvin9x.googlecode.com/svn/wiki/PpmIn.attach/mod1.png]
+
+= The Future (Custom PCB V3+) =
+
+I will definitely include at least this exact mod in the V3 PCB (after the V2 prototype has had its potential bugs ironed out). I may go further to include a capacitive decoupling arrangement, probably modelled after the Spektrum scheme, unless I come acros information suggesting I do otherwise.
