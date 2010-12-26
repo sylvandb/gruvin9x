@@ -1038,7 +1038,11 @@ int main(void)
 
   // Timer 3 used for PPM_IN pulse width capture
   TCCR3A  = 0;
-  TCCR3B  = (1<<ICNC3) | 2;      // Noise Canceller enabled, clock at 16MHz / 8 (2MHz)
+#ifdef PPMIN_MOD1
+  TCCR3B  = (1<<ICNC3) | (1<<ICES3) | 2;      // Noise Canceller enabled, pos. edge, clock at 16MHz / 8 (2MHz)
+#else
+  TCCR3B  = (1<<ICNC3) | 2;      // Noise Canceller enabled, neg. edge, clock at 16MHz / 8 (2MHz)
+#endif
   ETIMSK |= (1<<TICIE3);         // Enable capture event interrupt
 
   sei(); //damit alert in eeReadGeneral() nicht haengt

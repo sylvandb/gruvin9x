@@ -55,6 +55,10 @@ BEEPER = SPEAKER
 # OPTIONS STD or FREED
 USART1 = FREED
 
+# gruvin: PCM-in circuit mod for JR/Spektrum (and others) compatability
+# Values = STD, MOD1
+PPMIN = MOD1
+
 # List C++ source files here. (C dependencies are automatically generated.)
 CPPSRC = $(TARGET).cpp stamp.cpp menus.cpp pers.cpp file.cpp lcd.cpp drivers.cpp templates.cpp
 
@@ -131,6 +135,11 @@ endif
 # gruvin: Legacy support for hardware mod freeing USART1 [DEPRECATED]
 ifeq ($(USART1), FREED)
   CPPDEFS += -DUSART1FREED
+endif
+
+# gruvin: PCM-in circuit mod for JR/Spektrum (and others) compatability
+ifeq ($(PPMIN), MOD1)
+  CPPDEFS += -DPPMIN_MOD1
 endif
 
 #---------------- Compiler Options C ----------------

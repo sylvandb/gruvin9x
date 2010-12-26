@@ -1,5 +1,11 @@
 Changes in v1.2
 
+Comitted 426 (branches/frsky)
+
++ Issue 15: Added make directive 'PPMIN=MOD1' (as default -- use PPMIN=STD
+  to disable) to align with hardware hack to make the '9X compatible with
+  Spektrum (and no doubt others) radio PPM signals (of lower voltage etc).
+  See http://code.google.com/p/gruvin9x/wiki/PpmIn for details.
 + Removed decimal portion of output values in proc0 main page view (they
   just make things look messy and in fact, less precise, due to rouding
   errors etc.) 
