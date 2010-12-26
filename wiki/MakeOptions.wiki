@@ -31,6 +31,13 @@ Values: BUZZER, SPEAKER (default)
 This is for when the stock "on/off" electronic beeper/buzzer has been replaced with a small speaker. This enables varying frequency tones for keypad beeps, alarms, etc.
 
 </li>
+<li>PPMIN=
+
+Values: STD, MOD1 (default)
+
+The MOD1 option is needed if the PPM-in compatibility hardware mod has been made on the '9X in question. See [PpmIn PPM-in Compatability (hack)]
+
+</li>
 <li>USART1=
 
 Values: STD, FREED (default)
