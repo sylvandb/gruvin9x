@@ -1,4 +1,4 @@
-EESchema Schematic File Version 2  date 14/12/2010 1:53:32 p.m.
+EESchema Schematic File Version 2  date 26/12/2010 5:08:21 p.m.
 LIBS:conn_5
 LIBS:atmega64
 LIBS:power
@@ -38,7 +38,7 @@ EELAYER END
 $Descr A3 16535 11700
 Sheet 1 1
 Title "Main Controller PCB (Stock)"
-Date "14 dec 2010"
+Date "26 dec 2010"
 Rev "2.14"
 Comp "gruvin9x"
 Comment1 ""
