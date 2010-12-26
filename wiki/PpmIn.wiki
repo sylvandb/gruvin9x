@@ -3,13 +3,13 @@
 = PPM-in Compatibility (Hack) =
 *Relates to Issue 15*
 
-While working on various problems with PPM-in (aka. trainer/trainee) system, I discovered that Spektrum branded radios did not supply signal capable of being used byt he stock '9X electronics.
+While working on various problems with PPM-in (aka. trainer/trainee) system, I discovered that Spektrum branded radios do not supply a signal capable of being used by the stock '9X radio's electronics.
 
 Spektrum (and I presume JR? And Futaba?) output their PPM signal (via the phono jack on the back) as an approx. 1.5V peak-to-peak signal, which is also capacitively decoupled.
 
-This scheme actually makes sense to me because it, a) prevents potential damage if the lead is somehow shorted out and, b) is much less likely to in any way inadvertently load or 'spike' the host or slave device with signal that could crash the CPU.
+This scheme actually makes sense to me because it, a) prevents potential damage if the lead is somehow shorted out and, b) is much less likely to in any way inadvertently load or 'spike' the host or slave device in a way that could crash the CPU.
 
-I have no idea what the Futaba/JR/Hi-tech scheme for this is, but I do have two Spektrum radios and I wanted them to be usable as trainer/trainee slaves with my Turnigy '9X. So, out came the soldering iron once again.
+I have no idea what the Futaba/JR/Hi-tech scheme for this is, but I do have two Spektrum radios and I wanted them to be usable as trainer/trainee slaves with my Turnigy '9X. So, out came the soldering iron, once again.
 
 I broke the track leading from the 4066 quad-switch chip (pin 8) and into PE7 on the ATmega, then inserted an NPN buffer transistor -- essentially to 'amplify' the 1.5V signal back up to 5V-TTL for the ATmega. A side-effect of this that the signal gets inverted. I could have used a PNP transistor to prevent the inversion, but that would have created other issues. The inversion was easily fixed by changing a single binary bit in the program code. This is optional of course. Please see the notes for PPMIN= at [MakeOptions Make Options].
 
@@ -18,6 +18,8 @@ NOTE: AS of this writing, this code change is only available in the `branches/fr
 Here is the additional circuitry, which has been tested to work well with two Spektrum and one '9X radio by the way.
 
 [http://gruvin9x.googlecode.com/svn/wiki/PpmIn.attach/mod1.png]
+
+*NOTE* That circuit above is incomplete. There's also a 330 ohm resistor in series with the collector output as it heads into the ATmega. This proved important as, without it, the relatively high current sinks against the internal pull-up seemed able to spike the ATmega's power supply sufficiently to cause the odd crash. (I should have known. It's standard practice to help supply rail decoupling through use of low value resistors like this -- as are in fact used throughout the rest of the circuitry for that same reason.) 
 
 = The Future (Custom PCB V3+) =
 
