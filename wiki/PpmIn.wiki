@@ -1,6 +1,7 @@
 #summary PPM-in Compatibility (Hack)
 
 = PPM-in Compatibility (Hack) =
+*Relates to Issue 15*
 
 While working on various problems with PPM-in (aka. trainer/trainee) system, I discovered that Spektrum branded radios did not supply signal capable of being used byt he stock '9X electronics.
 
