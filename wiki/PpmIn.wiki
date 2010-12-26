@@ -19,7 +19,7 @@ Here is the additional circuitry, which has been tested to work well with two Sp
 
 [http://gruvin9x.googlecode.com/svn/wiki/PpmIn.attach/mod1.png]
 
-*NOTE* That circuit above is incomplete. There's also a 330 ohm resistor in series with the collector output as it heads into the ATmega. This proved important as, without it, the relatively high current sinks against the internal pull-up seemed able to spike the ATmega's power supply sufficiently to cause the odd crash. (I should have known. It's standard practice to help supply rail decoupling through use of low value resistors like this -- as are in fact used throughout the rest of the circuitry for that same reason.) 
+*NOTE*: *The circuit above is incomplete*. There's also a 330 ohm resistor in series with the collector output as it heads into the ATmega. This proved important as, without it, the relatively high current sinks against the internal pull-up seemed able to spike the ATmega's power supply sufficiently to cause the odd crash. (I should have known. It's standard practice to help supply rail decoupling through use of low value resistors like this on sink inputs -- as are in fact used throughout the rest of the circuitry for that very same reason.) 
 
 = The Future (Custom PCB V3+) =
 
