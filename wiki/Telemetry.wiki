@@ -20,8 +20,8 @@ Details of progress to date can be found on the [FrSky] wiki page.
 
 A cool idea I got from Bruce over at RCModelReviews.com (see below) is to utilise his onboard telemetry hub to give each equipped model a unique ID. When this ID is detected by a Fr-Sky enabled '9X, it could automatically load the correct model programming -- or warn if it's wrong -- or whatever. 
 
- _I'm even considering the idea of storing the programming data in the mode itself, as a radical departure from the way things have been all these years to date. In this way, any compatible '9X system would, 'just know' how to control any given, suitably equipped model._
+ _I'm seriously considering the idea of (optionally) storing model programming data in the model itself. In this way, any compatible '9X system would, 'just know' how to control any given, suitably equipped model._
  
-You'd never have to worry about the number of model memories again, because each model stores its own data! Who knows? One day, this sort of thing might become standardised and used by all reputable RC radio brands. 
+You'd never have to worry about the number of model memories again -- or even which radio to grab of the shelf (in the perfect world) -- because each model stores its own data! Who knows? One day, this sort of thing might become standardised and used by all reputable RC radio brands. 
 
-Well, it has to start somewhere and, HOPEFULLY, having this out in the public domain now will prevent some greedy/stupid-old-school organisation stunting the idea's widespread use with patents etc. We can hope.
+Well, it has to start somewhere and, HOPEFULLY, having this out in the public domain now will prevent some greedy/stupid-old-school organisation stunting the idea's widespread use with patents etc. We can hope. :-D
