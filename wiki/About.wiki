@@ -68,7 +68,7 @@ These and other requirements led to a state of temporary insanity and the commen
 
 = Contacting Gruvin =
 
-Oops! As of this writing, I've discovered that the Google Code system for obtaining project owner email addresses is broken. Hopefully, Google will fix this very soon. Meanwhile, fear not ...
+Oops! As of this writing, I've discovered that the Google Code system for obtaining project owner email addresses is broken. Hopefully, Google will fix this very soon. Meanwhile, fret not ...
 
 Normally, you would visit my Google Projects user profile, then click the '...' in `gru...@gmail.com` to reveal the full address, after [http://en.wikipedia.org/wiki/CAPTCHA captcha] verification. On the other hand, if you're _very_ clever, you might just be able to work that out for yourself. *Hint* - my user alias is `gruvin`, not `gru...` ;-)
 
