@@ -4,33 +4,34 @@
 <img src="http://gruvin9x.googlecode.com/svn/wiki/About.attach/turnigy9x.jpg" align="right">
 = Introduction =
 
-This project started out as a kind of 'place holder' for the author's personal upgrades, hacks and mods to his [http://code.google.com/p/er9x/ ER9X]-powered Turnigy 9X V2 RC transmitter. It hasn't really got much past that, still. But, as time wears on, more and more supporting documentation and other data gets added, so as to keep it all in one place. That tend to start making the project look like a "serious deal". Hmmm. It really isn't, is it? :/ I don't have time in my life for a "serious deal"! :p
-
-Initial intentions were to get to know the ER9X crew, maybe becoming a contributor at some point. However, gruvin9x began to fork off in its own life quite quickly and, well, I just kept going. Eventually, a few of the other project owners and contributors got in contact to say hello, which has been very nice. I still keep a pretty low profile on the other project as I don't wish to create a stir. Besides, they're all doing just fine. It's all good stuff! :-D
+This project started out as a kind of 'place holder' for the author's personal circuitry upgrades, hacks and mods to his [http://code.google.com/p/er9x/ ER9X]-powered Turnigy 9X V2 RC transmitter. As time wears on, more and more supporting documentation and other data got added, mostly just to keep it all in one place for Gruvin. 
 
 = Project Detail =
 
-The main intention for gruvin9x is to provide a growing range of features and functions to support Fr-Sky telemetry natively on the '9X -- as well as mass storage using MMC and/or SD Flash cards. (The latter eventually having been relegated to a whole new, custom main board upgrade!)
+The main focus to date has been around Fr-Sky support and the development of an [PCB upgraded main logic board] -- for [Telemetry telemetry] support in general, as well as a better ATmega chip and MMC/SDCARD support for model data and general mass storage in FAT16/32 format.
 
-*HOWEVER* -- compatibility with the stock V2 '9X transmitter will be retained as far as possible. So fear not. There will always be a gruvin9x version available to run on the stock unit. There will also be versions that support manual circuit hacks for telemetry (and other things) that do _not_ require the new PCB. (See 'Bigger Plans', below.)
+Compatibility with the stock V2 '9X transmitter will be retained as far as possible. So fear not. There will "always" be a gruvin9x version available to run on the stock unit. There will also be different binary versions available to support the most common manual circuit hacks for telemetry (and other things) that do _not_ require the [PCB new PCB].
 
-Efforts will be made to keep up with new features of ER9X on a request-by-request basis. Please use the [http://code.google.com/p/gruvin9x/issues/list Issue tracker] (link on menu above) to make such requests.
+Efforts will be made to keep up with new features and bug fixes from the ER9X project. Please see or use the [http://code.google.com/p/gruvin9x/issues/list Issue tracker] (link on menu above) to request features or bug-fixes not their yet but of interest to you.
+
+On the other hand, if you intend sticking only with the stock hardware indefinitely -- leaving the screws in the case and not altering circuitry -- then you may be best advised to follow either the TH9X or ER9X projects, since those respective crews continue working hard to bring all kinds of neat features and improvements to their code.
 
 == Beginnings ===
-The project started off with a few relatively minor tweaks to ER9X, as it was at the time.
+The project started off with a few relatively minor tweaks to ER9X, as it was back at ER9X revision 262.
 
-Way back at revision 46 (r46), better key-repeat delays and a hack to get variable frequency tones through a speaker, instead of the single-pitch 'beeper' of the stock unit, were implemented.
+Way back at gruvin9x revision 46 (r46), better key-repeat delays and the first circuit hack to get variable frequency tones through a speaker, instead of the single-pitch 'beeper' of the stock unit, were implemented.
 
-The latter resulted in low/mid/higher pitch key and trim button beeps. But its long term intention was to provide a greater range of unique sounds for eyes-off telemetry data. See [SpeakerReplacement Why I replaced the stock beeper with a speaker] for details.
+The latter resulted in low/mid/higher pitch key and trim button beeps. But the long term intention for variable tone sounds was to provide a greater range of unique sounds for eyes-off telemetry communication. See [SpeakerReplacement Why I replaced the stock beeper with a speaker] for more on that.
 
-When I flashed a local RC modeller's stock radio with gruvin9x the first time, there were problems with the stock 8-pack-of-alkaline cells causing a lot of jitter in the battery voltage display. Since then, gruvin9x has had a running0-average stabiliser to fix that.
+Then, when I flashed the first local RC modeller's stock radio with gruvin9x, there were problems with the standard 8-pack of alkaline cells causing a _lot_ of jitter in the battery voltage display. Since then, gruvin9x has had a running-average stabiliser to fix that.
 
 <img src="http://gruvin9x.googlecode.com/svn/wiki/Frsky.attach/got-data.jpg" align="right">
 == Fr-Sky Telemetry Support ==
 
-After a while, TH's original coding and methods started to become more clear and familiar. (Thomas is something of a genus C programmer IMHO too, by the way!) So I started delving more into menus, custom settings and the like, with support of Fr-Sky two-way telemetry in mind. See [FrSky here] for details of progress to date.
+After a while, TH's original code started to becoming more and more clear. (Thomas is something of a genus C programmer IMHO too, by the way!) So I started delving more into menus, custom settings and the like, with support of Fr-Sky two-way telemetry in mind. See [FrSky here] for details of progress to date. Many changes have happened since then.
 
- _A cool idea I got from Bruce over at RCModelReviews.com (see below) is to utilise his onboard telemetry hub to give each equipped model a unique ID. When this ID is detected by a Fr-Sky enabled '9X, it could automatically load the correct model programming -- or warn if it's wrong -- or whatever. I'm even considering the idea of storing the programming data in the mode itself, as a radical departure from the way things have been all these years. In this way, any compatible '9X system would 'just know' how to control a given, suitably equipped model. You'd never have to worry about the number of model memories again, because each model stores its own data! Who knows? One day, this sort of thing might become standardised and used by all reputable RC radio brands._
+Things soon crossed that mysterious fine line between hobby and insanity, and designs for a whole new [PCB replacement/upgrade PCB] were started. Gruvin was hooked! :-D
+
 
 == RCModelReviews.com Telemetry Hub Support ==
 
