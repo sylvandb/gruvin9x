@@ -386,7 +386,7 @@ void menuProcFrsky(uint8_t event)
 
   if (!frskyStreaming)
   {
-    lcd_putsAtt(30, 0, PSTR("NO"), DBLSIZE);
+    lcd_putsAtt(32, 0, PSTR("NO"), DBLSIZE);
     lcd_putsAtt(62, 0, PSTR("DATA"), DBLSIZE);
 
   }

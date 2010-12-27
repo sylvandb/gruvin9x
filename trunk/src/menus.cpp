@@ -1425,37 +1425,6 @@ void menuProcModel(uint8_t event)
     if((y+=FH)>7*FH) return;
   }subN++;
 
-/*
-  if(s_pgOfs<subN) {
-    //12345678901234567890
-    //Sw-Ring val ch1 ch2
-    lcd_putsAtt(   0,     y, PSTR("Sw-Ring"),0);
-    if(g_model.swashR.lim) {
-      lcd_outdezAtt( 13*FW, y, g_model.swashR.lim,  (sub==subN && subSub==1 ? (s_editMode ? BLINK : INVERS):0));
-      putsChnRaw(    14*FW, y, g_model.swashR.chX+1,(sub==subN && subSub==2 ? (s_editMode ? BLINK : INVERS):0));
-      putsChnRaw(    18*FW, y, g_model.swashR.chY+1,(sub==subN && subSub==3 ? (s_editMode ? BLINK : INVERS):0));
-    }
-    else {
-      lcd_putsAtt(   10*FW,  y, PSTR("---"),(sub==subN && subSub==1 ? (s_editMode ? BLINK : INVERS):0));
-      lcd_putsAtt(   14*FW,  y, PSTR("---"),(sub==subN && subSub==2 ? (s_editMode ? BLINK : INVERS):0));
-      lcd_putsAtt(   18*FW,  y, PSTR("---"),(sub==subN && subSub==3 ? (s_editMode ? BLINK : INVERS):0));
-    }
-    if(sub==subN && s_editMode)
-      switch (subSub){
-        case 1:
-            CHECK_INCDEC_H_MODELVAR(event,g_model.swashR.lim,0,100);
-            break;
-        case 2:
-            CHECK_INCDEC_H_MODELVAR(event,g_model.swashR.chX,0,3);
-            break;
-        case 3:
-            CHECK_INCDEC_H_MODELVAR(event,g_model.swashR.chY,0,3);
-            break;
-      }
-    if((y+=FH)>7*FH) return;
-  }subN++;
-*/
-
   if(s_pgOfs<subN) {
     lcd_putsAtt(    0,    y, PSTR("Proto"),0);//sub==2 ? INVERS:0);
     lcd_putsnAtt(  6*FW, y, PSTR(PROT_STR)+PROT_STR_LEN*g_model.protocol,PROT_STR_LEN,
@@ -1494,22 +1463,6 @@ void menuProcModel(uint8_t event)
         s_noHi = NO_HI_LEN;
         killEvents(event);
         pushMenu(menuDeleteModel);
-
-          //EFile::rm(FILE_MODEL(g_eeGeneral.currModel)); //delete file
-
-          //uint8_t i = g_eeGeneral.currModel;//loop to find next available model
-          //while (!EFile::exists(FILE_MODEL(i))) {
-              //i--;
-              //if(i>MAX_MODELS) i=MAX_MODELS-1;
-              //if(i==g_eeGeneral.currModel) {
-                  //i=0;
-                  //break;
-              //}
-          //}
-          //g_eeGeneral.currModel = i;
-
-          //eeLoadModel(g_eeGeneral.currModel); //load default values
-          //chainMenu(menuProcModelSelect);
     }
     if((y+=FH)>7*FH) return;
   }subN++;
@@ -1594,8 +1547,6 @@ void menuProcModelSelect(uint8_t event)
   }
 
 }
-
-
 
 void menuProcDiagCalib(uint8_t event)
 {
@@ -2100,6 +2051,7 @@ void trace()   // called in perOut - once envery 0.01sec
 uint16_t g_tmr1Latency_max;
 uint16_t g_tmr1Latency_min = 0x7ff;
 uint16_t g_timeMain;
+uint16_t g_time_per10;
 void menuProcStatistic2(uint8_t event)
 {
   TITLE("STAT2");
@@ -2125,8 +2077,11 @@ void menuProcStatistic2(uint8_t event)
   lcd_outdez(14*FW , 2*FH, g_tmr1Latency_min/2 );
   lcd_puts_P( 0*FW,  3*FH, PSTR("tmr1 Jitter    us"));
   lcd_outdez(14*FW , 3*FH, (g_tmr1Latency_max - g_tmr1Latency_min) /2 );
-  lcd_puts_P( 0*FW,  4*FH, PSTR("tmain          ms"));
+  lcd_puts_P( 0*FW,  4*FH, PSTR("tmain max      ms"));
   lcd_outdezAtt(14*FW , 4*FH, (g_timeMain*100)/16 ,PREC2);
+  lcd_puts_P( 0*FW,  5*FH, PSTR("t10ms          us"));
+  lcd_outdez(14*FW , 5*FH, g_time_per10/2 );
+  lcd_puts_P( 3*FW,  7*FH, PSTR("[MENU] to reset"));
 }
 
 #ifdef JETI
@@ -2218,9 +2173,6 @@ void menuProcStatistic(uint8_t event)
 }
 
 
-//extern volatile uint16_t captureRing[16];
-
-
 void menuProc0(uint8_t event)
 {
   static uint8_t   sub;
@@ -2290,7 +2242,8 @@ void menuProc0(uint8_t event)
       chainMenu(menuProcJeti);
 #endif
 #ifdef FRSKY
-      // gruvin: RX/TX already enabled at system start-up
+      // G: RX/TX already enabled at system start-up
+      // G: FRSKY Menus are in frsky.cpp now
       pushMenu(menuProcFrsky);
 #endif
       killEvents(event);
@@ -2323,23 +2276,23 @@ void menuProc0(uint8_t event)
   trimSwLock = getSwitch(g_model.trimSw,0);
 
   uint8_t x=FW*2;
-    uint8_t att = (g_vbat100mV < g_eeGeneral.vBatWarn ? BLINK : 0) | DBLSIZE;
-    for(uint8_t i=0;i<sizeof(g_model.name);i++)
-      lcd_putcAtt(x+i*2*FW-i-2, 0*FH, g_model.name[i],DBLSIZE);
+  uint8_t att = (g_vbat100mV < g_eeGeneral.vBatWarn ? BLINK : 0) | DBLSIZE;
+  for(uint8_t i=0;i<sizeof(g_model.name);i++)
+    lcd_putcAtt(x+i*2*FW-i-2, 0*FH, g_model.name[i],DBLSIZE);
 
-    putsVBat(x-1*FW,2*FH,true, att);
-    lcd_putcAtt(x+4*FW, 3*FH, 'V',0);
+  putsVBat(x-1*FW,2*FH,true, att);
+  lcd_putcAtt(x+4*FW, 3*FH, 'V',0);
 
-    uint8_t ln = 2;
-    uint8_t xn = x;
-    uint8_t tn = (g_vbat100mV/10) % 10;
-    uint8_t sn = g_vbat100mV % 10;
+  uint8_t ln = 2;
+  uint8_t xn = x;
+  uint8_t tn = (g_vbat100mV/10) % 10;
+  uint8_t sn = g_vbat100mV % 10;
 
-    if(sn==2 || sn==3) ln++;
-    if(tn==1 || tn==2) {xn--;ln++;}
+  if(sn==2 || sn==3) ln++;
+  if(tn==1 || tn==2) {xn--;ln++;}
 
-    lcd_hline(xn+2*FW,4*FH-4,ln);
-    lcd_hline(xn+2*FW,4*FH-3,ln);
+  lcd_hline(xn+2*FW,4*FH-4,ln);
+  lcd_hline(xn+2*FW,4*FH-3,ln);
 
 
   if(s_timerState != TMR_OFF){
@@ -2382,40 +2335,41 @@ void menuProc0(uint8_t event)
   }
 
   if(g_eeGeneral.view!=2) {
-   for(uint8_t i=0; i<8; i++)
-   {
-    uint8_t x0,y0;
-    int16_t val = g_chans512[i];
-    //val += g_model.limitData[i].revert ? g_model.limitData[i].offset : -g_model.limitData[i].offset;
-    switch(g_eeGeneral.view)
+    for(uint8_t i=0; i<8; i++)
     {
-      case 0:
-        x0 = (i%4*9+3)*FW/2;
-        y0 = i/4*FH+40;
-        // *1000/1024 = x - x/8 + x/32
+      uint8_t x0,y0;
+      int16_t val = g_chans512[i];
+      //val += g_model.limitData[i].revert ? g_model.limitData[i].offset : -g_model.limitData[i].offset;
+      switch(g_eeGeneral.view)
+      {
+        case 0:
+          x0 = (i%4*9+3)*FW/2;
+          y0 = i/4*FH+40;
+// *1000/1024 = x - x/32 + x/128
 #define GPERC(x)  (x - x/32 + x/128)
-        lcd_outdezAtt( x0+4*FW , y0, GPERC(val),PREC1 );
-        break;
-      case 1:
+          // lcd_outdezAtt( x0+4*FW , y0, GPERC(val), PREC1);
+          lcd_outdezAtt( x0+4*FW , y0, GPERC(val)/10, 0); // G: Don't like the decimal part
+          break;
+        case 1:
 #define WBAR2 (50/2)
 #define GPERC2(x) GPERC(x/2)
-        x0       = i<4 ? 128/4+4 : 128*3/4-4;
-        y0       = 38+(i%4)*5;
-        int8_t l = (abs(GPERC2(val))+WBAR2/2) * WBAR2 / 512;
-        if(l>WBAR2)  l =  WBAR2;  // prevent bars from going over the end - comment for debugging
+          x0       = i<4 ? 128/4+4 : 128*3/4-4;
+          y0       = 38+(i%4)*5;
+          int8_t l = (abs(GPERC2(val))+WBAR2/2) * WBAR2 / 512;
+          if(l>WBAR2)  l =  WBAR2;  // prevent bars from going over the end - comment for debugging
 
-        lcd_hlineStip(x0-WBAR2,y0,WBAR2*2+1,0x55);
-        lcd_vline(x0,y0-2,5);
-        if(g_chans512[i]>0){
-          x0+=1;
-        }else{
-          x0-=l;
-        }
-        lcd_hline(x0,y0+1,l);
-        lcd_hline(x0,y0-1,l);
-        break;
+          lcd_hlineStip(x0-WBAR2,y0,WBAR2*2+1,0x55);
+          lcd_vline(x0,y0-2,5);
+          if(g_chans512[i]>0){
+            x0+=1;
+          }else{
+            x0-=l;
+          }
+          lcd_hline(x0,y0+1,l);
+          lcd_hline(x0,y0-1,l);
+          break;
+      }
     }
-   }
   }
   else {
     #define BOX_WIDTH     23
@@ -2475,16 +2429,16 @@ int16_t intpol(int16_t x, uint8_t idx) // -100, -75, -50, -25, 0 ,25 ,50, 75, 10
 
 // static variables used in perOut - moved here so they don't interfere with the stack
 // It's also easier to initialize them here.
-uint16_t  pulses2MHz[120] = {0};
-int16_t   anas [NUM_XCHNRAW] = {0};
-int32_t   chans[NUM_CHNOUT] = {0};
-uint32_t  inacCounter = 0;
-uint16_t  inacSum = 0;
-uint8_t   bpanaCenter = 0;
-int16_t   sDelay[MAX_MIXERS] = {0};
-int32_t   act   [MAX_MIXERS] = {0};
-uint8_t   swOn  [MAX_MIXERS] = {0};
-uint8_t   mixWarning;
+uint16_t pulses2MHz[120] = {0};
+int16_t  anas [NUM_XCHNRAW] = {0};
+int32_t  chans[NUM_CHNOUT] = {0};
+uint32_t inacCounter = 0;
+uint16_t inacSum = 0;
+uint8_t  bpanaCenter = 0;
+int16_t  sDelay[MAX_MIXERS] = {0};
+int32_t  act   [MAX_MIXERS] = {0};
+uint8_t  swOn  [MAX_MIXERS] = {0};
+uint8_t mixWarning;
 
 void perOut(int16_t *chanOut, uint8_t zeroInput)
 {
@@ -2555,7 +2509,8 @@ void perOut(int16_t *chanOut, uint8_t zeroInput)
 
   anas[MIX_MAX-1]  = RESX;     // MAX
   anas[MIX_FULL-1] = RESX;     // FULL
-  for(uint8_t i=PPM_BASE;i<CHOUT_BASE;i++)    anas[i] = g_ppmIns[i-PPM_BASE] - g_eeGeneral.ppmInCalib[i-PPM_BASE]; //add ppm channels
+  for(uint8_t i=PPM_BASE;i<CHOUT_BASE;i++)
+    anas[i] = (g_ppmIns[i-PPM_BASE] - g_eeGeneral.ppmInCalib[i-PPM_BASE])*2; //add ppm channels
   for(uint8_t i=CHOUT_BASE;i<NUM_XCHNRAW;i++) anas[i] = chans[i-CHOUT_BASE]; //other mixes previous outputs
 
 
@@ -2604,7 +2559,7 @@ void perOut(int16_t *chanOut, uint8_t zeroInput)
   */
 
     //========== MIXER LOOP ===============
-    uint8_t tmixWarning = 0;
+    mixWarning = 0;
     for(uint8_t i=0;i<MAX_MIXERS;i++){
       MixData &md = g_model.mixData[i];
 
@@ -2626,9 +2581,8 @@ void perOut(int16_t *chanOut, uint8_t zeroInput)
         swTog = !swOn[i];
         swOn[i] = true;
         v = anas[md.srcRaw-1]; //Switch is on. MAX=FULL=512 or value.
-        if(md.mixWarn) tmixWarning |= 1<<(md.mixWarn-1); // Mix warning
+        if(md.mixWarn) mixWarning |= 1<<(md.mixWarn-1); // Mix warning
       }
-      mixWarning = tmixWarning;
 
       //========== INPUT OFFSET ===============
       if(md.sOffset) v += calc100toRESX(md.sOffset);

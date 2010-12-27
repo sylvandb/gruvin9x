@@ -1,4 +1,4 @@
-EESchema Schematic File Version 2  date 26/12/2010 9:52:41 p.m.
+EESchema Schematic File Version 2  date 28/12/2010 12:05:06 p.m.
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -36,8 +36,8 @@ EELAYER END
 $Descr A3 16535 11700
 Sheet 1 1
 Title "Main Controller PCB (Stock)"
-Date "26 dec 2010"
-Rev "1.1"
+Date "27 dec 2010"
+Rev "1.2"
 Comp "gruvin9x"
 Comment1 "(Layout designed to suit easy conversion to 2xA4 if required.)"
 Comment2 "for use with KiCad. Some corrections and notation improvements have been made."
@@ -1888,7 +1888,7 @@ Text Label 13600 9650 0    60   ~ 0
 Train_SW
 Text Label 13600 9550 0    60   ~ 0
 Hov_Thr
-Text Label 12050 9250 0    60   ~ 0
+Text Label 12050 9150 0    60   ~ 0
 Jack_PPM
 $Comp
 L VCC #PWR51
