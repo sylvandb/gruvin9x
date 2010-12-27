@@ -23,4 +23,4 @@ Here is the additional circuitry, which has been tested to work well with two Sp
 
 = The Future (Custom PCB V3+) =
 
-I will definitely include at least this exact mod in the V3 PCB (after the V2 prototype has had its potential bugs ironed out). I may go further to include a capacitive decoupling arrangement, probably modelled after the Spektrum scheme, unless I come acros information suggesting I do otherwise.
+I will definitely include at least this mod in the V3 PCB (after the V2 prototype has had its potential bugs ironed out). I may go further to include a capacitive decoupling arrangement, and hopefully remove the need for the 4066 altogether.
