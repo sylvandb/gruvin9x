@@ -13,7 +13,7 @@ I have no idea what the Futaba/JR/Hi-tech scheme for this is, but I do have two 
 
 I broke the track leading from the 4066 quad-switch chip (pin 8) and into PE7 on the ATmega, then inserted an NPN buffer transistor -- essentially to 'amplify' the 1.5V signal back up to 5V-TTL for the ATmega. A side-effect of this that the signal gets inverted. (I could have used a PNP transistor to prevent the inversion, but that would have created other issues.) The inversion was easily fixed by changing a single binary bit in the program code. This is optional of course -- please see the notes for `PPMIN=` on the [MakeOptions Make Options] wiki page.
 
- *NOTE*: As of this writing, this code change is only available in the `branches/frsky` development repository. But I'm sure it will make its way into the `trunk/` area quite soon.
+ _As of this writing, this code change is only available in the `branches/frsky` development repository. But I'm sure it will make its way into the `trunk/` area quite soon._
 
 Here is the additional circuitry, which has been tested to work well with two Spektrum and one '9X radio, thus far.
 
