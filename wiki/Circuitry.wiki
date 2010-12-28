@@ -1,12 +1,14 @@
-#summary Notes and links to information about the internals of the '9X hardware
+#summary Custom PCB Circuit Scematics
 #labels Phase-Design,Featured
-
-See also: The [ReferenceImages Reference Images] wiki page
 
 <img src="http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/schematic_thm.jpg" align="right">
 
-= Turnigy/iMax/Eurgle/etc 9X RC Transmitter Version 2 (V2) Schematic =
+= Custom '9X Logic Board PCB Schematics =
 
-There exists (in trunk/doc) a PDF circuit schematic, which appears to be from the version 1 radio. Here is link to a V2 schematic, which includes a couple of changes, most notable being the addition of a regulator and voltage-splitter resistor network to drive a 3.3V LCD display.
+The custom circuitry for Gruvin's '9X has gone through a number of evolutions, and continues to evolved. The following links show the path taken to date
 
-Here is a link to the [http://gruvin9x.googlecode.com/svn/trunk/pcb/actual_v2_9x/gruvin9x_v2_actual.pdf new V2 schematic]
+Ongoing custom circuit and PCB design takes place at [http://gruvin9x.googlecode.com/svn/trunk/pcb/]. There you'll find a KiCAD project file named gruvin9x.pro, with internal references to gruvin9x.sch and gruvin9x.pcb. (Work on the V3 board has already started.)
+
+Gruvin's original '9X radio has been the test bed for much of the work to date, and has been chopped up and re-wired in several ways. A (generally) up to date reference schematic for that can be found at [http://gruvin9x.googlecode.com/svn/trunk/pcb/hacked].
+
+The first prototype 'V2' PCB design, schematic and production files as sent for PCB fabrication in December, 2010 can be found at [http://gruvin9x.googlecode.com/svn/trunk/pcb/rev2.14-frozen]
