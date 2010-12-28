@@ -10,7 +10,7 @@
  * [PCB Custom PCB]
   * [TurnigyV2 9X Hardware Reference]
    * [ReferenceImages Reference Images]
-  * [Circuitry Circuit Schematics etc]
+  * [Circuitry Circuit Schematics]
  * [Telemetry]
   * [FrSky Fr-Sky Support]
   * [FrskyInterfacing Fr-Sky Interfacing]
