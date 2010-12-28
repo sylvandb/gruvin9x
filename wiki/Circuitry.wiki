@@ -7,8 +7,11 @@
 
 The custom circuitry for Gruvin's '9X has gone through a number of evolutions, and continues to evolved. The following links show the path taken to date
 
+== Ongoing Design ==
 Ongoing custom circuit and PCB design takes place at [http://gruvin9x.googlecode.com/svn/trunk/pcb/]. There you'll find a KiCAD project file named `gruvin9x.pro`, with internal references to `gruvin9x.sch` and `gruvin9x.pcb`. (Work on the V3 board has already started.)
 
-Gruvin's original '9X radio has been the test bed for much of the work to date, and has been chopped up and re-wired in several ways. A (generally) up to date reference schematic for that can be found at [http://gruvin9x.googlecode.com/svn/trunk/pcb/hacked]. For your convenience, there's a PDF version of the schematic, [http://gruvin9x.googlecode.com/svn/trunk/pcb/hacked/gruvin9x-hacked.pdf here].
-
+== First Prototype ==
 The first prototype 'V2' PCB design, schematic and production files as sent for PCB fabrication in December, 2010 can be found at [http://gruvin9x.googlecode.com/svn/trunk/pcb/rev2.14-frozen]. For your convenience, there's a PDF version of the schematic, [http://gruvin9x.googlecode.com/svn/trunk/pcb/rev2.14-frozen/gruvin9x.pdf here].
+
+== Original 'Hacked' Radio ==
+Gruvin's original '9X radio has been the test bed for much of the work to date, and has been chopped up and re-wired in several ways. A (generally) up to date reference schematic for that can be found at [http://gruvin9x.googlecode.com/svn/trunk/pcb/hacked]. For your convenience, there's a PDF version of the schematic, [http://gruvin9x.googlecode.com/svn/trunk/pcb/hacked/gruvin9x-hacked.pdf here].
