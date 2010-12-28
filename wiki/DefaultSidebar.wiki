@@ -9,7 +9,7 @@
   * [MakeOptions Make Options]
  * [PCB Custom PCB]
   * [TurnigyV2 9X Hardware Reference]
-  * [ReferenceImages Reference Images]
+   * [ReferenceImages Reference Images]
   * [Circuitry Circuit Schematics etc]
  * [Telemetry]
   * [FrSky Fr-Sky Support]
