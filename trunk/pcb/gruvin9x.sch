@@ -1,4 +1,4 @@
-EESchema Schematic File Version 2  date 28/12/2010 12:28:49 p.m.
+EESchema Schematic File Version 2  date 4/01/2011 4:30:43 p.m.
 LIBS:conn_5
 LIBS:atmega64
 LIBS:power
@@ -40,11 +40,11 @@ Sheet 1 1
 Title "Main Controller PCB (Stock)"
 Date "27 dec 2010"
 Rev "3.0"
-Comp "gruvin9x"
+Comp ""
 Comment1 ""
-Comment2 "author. This version intended for PCB prototype V3."
-Comment3 "This schematic is based on an orgininal reverse-engineered version by an unknown"
-Comment4 ""
+Comment2 "Copyright 2011 Bryan J. Rentoul (gruvin@gmail.com)"
+Comment3 ""
+Comment4 "Licensed under the TAPR Open Hardware License (see file,  LICENSE)"
 $EndDescr
 Wire Wire Line
 	8550 9650 8550 9550
