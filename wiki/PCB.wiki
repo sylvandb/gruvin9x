@@ -2,13 +2,27 @@
 #labels Phase-Implementation,Phase-Design
 = Custom Main Board Design =
 
-A PCB design has been worked up from scratch in KiCAD to replicate the wiring and function of the V2 '9X hardware. It's closely based on the layout of the original PCB -- especially in terms of component placement. See [http://code.google.com/p/gruvin9x/source/browse/#svn/trunk/pcb/original /trunk/pcb/original/] (as of r155).
-
 == Why? ==
 
-The intention is to (at least) free up more I/O ports on the ATmega64 (nearly all of Port B in fact!). The main reason for this is to provide easy access to USART0 for telemetry data and dedicated access to MISO/MOSI/SCK for MMC/SDCARD interfacing.
+The primary intention is provide a more powerful and flexible hardware platform for the TH/ER/gruvin9x open source firmware to run on -- because we can :p. The design is "open", so you can follow its progress as well as make requests and suggestions for additions and improvements -- or, of course, get involved more directly and do those for yourself.
+
+Initial intentions are to ...
+
+ * provide a programming header capable of supporting an onboard USB programming board (later). 
+ * add RS-232 and TTL level telemetry serial data ports
+ * free up most of PORTB for use with an MM/SD card interface
+
+Many more ideas are swimming around in the author's mind and several suggestions have already come in from others. Just how far this design will go is of course a mystery at this time.
+
+== License ==
+
+This logic board PCB design is licensed under the [http://www.tapr.org/TAPR_Open_Hardware_License_v1.0.txt TAPR Open Hardware License v1.0]. The license is very similar to the GPL of this project's related firmware source code, but includes additional protection against the likes of what this author might term, 'hostile patent acts'. In other words, like the GPL license for software source code, the TAPR Open Hardware License seeks to ensure that the openness of this particular design shall endure. The license is NOT a non-commercial license. This design _is_ able to be used by licensees for commercial purposes, under the terms of the OHL license.
 
 == Progress ==
+
+As a starting point, a PCB design was worked up from scratch in [http://www.kicad.org/ KiCAD] to closely replicate the wiring and functions of Turnigy V2 '9X logic board. See [http://code.google.com/p/gruvin9x/source/browse/#svn/trunk/pcb/original /trunk/pcb/original/] (as of r155). From there, numerous changes and additions were made -- and continue to be made, as version progress.
+
+*Past Milestones in descending date order ...*
 
 2010-12-30: Components and PCBs have arrived (ahead of schedule). Have ordered components to make up the 'plug' end of the 2-way, 3-way and 8-way JST sockets, which I had thought were included with same. I'm elated to report that the PCB mounting holes and push-button-switch physical locations are within spec and fit well into the actual radio '9X cabinet. (That had been one of my greater concerns during the design process.)
 
