@@ -20,7 +20,7 @@ This logic board PCB design is licensed under the [http://www.tapr.org/TAPR_Open
 
 == Progress ==
 
-As a starting point, a PCB design was worked up from scratch in [http://www.kicad.org/ KiCAD] to closely replicate the wiring and functions of Turnigy V2 '9X logic board. See [http://code.google.com/p/gruvin9x/source/browse/#svn/trunk/pcb/original /trunk/pcb/original/] (as of r155). From there, numerous changes and additions were made -- and continue to be made, as version progress.
+As a starting point, a PCB design was worked up from scratch in [http://kicad.sourceforge.net/ KiCAD] to closely replicate the wiring and functions of Turnigy V2 '9X logic board. See [http://code.google.com/p/gruvin9x/source/browse/#svn/trunk/pcb/original /trunk/pcb/original/] (as of r155). From there, numerous changes and additions were made -- and continue to be made, as version progress.
 
 *Past Milestones in descending date order ...*
 
