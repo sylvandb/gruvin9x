@@ -30,11 +30,11 @@ mode4 ail thr ele rud
 
 EEGeneral  g_eeGeneral;
 ModelData  g_model;
-#ifdef FRSKY
+#if defined (FRSKY) || defined (PCBV2)
 EEFrskyData g_eeFrsky;
 #endif
 
-#ifdef BEEPSPKR
+#if defined (BEEPSPKR) || defined (PCBV2)
 // gruvin: Tone Generator Globals
 uint8_t toneFreq = BEEP_DEFAULT_FREQ;
 uint8_t toneOn = false;
@@ -362,7 +362,7 @@ uint8_t checkTrim(uint8_t event)
       g_model.trim[idx]=0;
       killEvents(event);
       warble = false;
-#ifdef BEEPSPKR
+#if defined (BEEPSPKR) || defined (PCBV2)
       beepWarn2Spkr(60);
 #else
       beepWarn2();
@@ -372,7 +372,7 @@ uint8_t checkTrim(uint8_t event)
       g_model.trim[idx] = (int8_t)x;
       STORE_MODELVARS;
       if(event & _MSK_KEY_REPT) warble = true;
-#ifdef BEEPSPKR
+#if defined (BEEPSPKR) || defined (PCBV2)
       // toneFreq higher/lower according to trim position
       beepTrimSpkr((x/3)+60);  // range -125 to 125 = toneFreq: 19 to 101
 #else
@@ -384,7 +384,7 @@ uint8_t checkTrim(uint8_t event)
       g_model.trim[idx] = (x>0) ? 125 : -125;
       STORE_MODELVARS;
       warble = false;
-#ifdef BEEPSPKR
+#if defined (BEEPSPKR) || defined (PCBV2)
       beepWarn2Spkr((x/3)+60);
 #else
       beepWarn2();
@@ -424,7 +424,7 @@ bool checkIncDecGen2(uint8_t event, void *i_pval, int16_t i_min, int16_t i_max, 
   }
   if(event==EVT_KEY_FIRST(kpl) || event== EVT_KEY_REPT(kpl) || (s_editMode && (event==EVT_KEY_FIRST(KEY_UP) || event== EVT_KEY_REPT(KEY_UP))) ) {
     newval++;
-#ifdef BEEPSPKR
+#if defined (BEEPSPKR) || defined (PCBV2)
     beepKeySpkr(BEEP_KEY_UP_FREQ);
 #else
     beepKey();
@@ -432,7 +432,7 @@ bool checkIncDecGen2(uint8_t event, void *i_pval, int16_t i_min, int16_t i_max, 
     kother=kmi;
   }else if(event==EVT_KEY_FIRST(kmi) || event== EVT_KEY_REPT(kmi) || (s_editMode && (event==EVT_KEY_FIRST(KEY_DOWN) || event== EVT_KEY_REPT(KEY_DOWN))) ) {
     newval--;
-#ifdef BEEPSPKR
+#if defined (BEEPSPKR) || defined (PCBV2)
     beepKeySpkr(BEEP_KEY_DOWN_FREQ);
 #else
     beepKey();
@@ -452,7 +452,7 @@ bool checkIncDecGen2(uint8_t event, void *i_pval, int16_t i_min, int16_t i_max, 
   {
     newval = i_max;
     killEvents(event);
-#ifdef BEEPSPKR
+#if defined (BEEPSPKR) || defined (PCBV2)
     beepWarn2Spkr(BEEP_KEY_UP_FREQ);
 #else
     beepWarn2();
@@ -462,7 +462,7 @@ bool checkIncDecGen2(uint8_t event, void *i_pval, int16_t i_min, int16_t i_max, 
   {
     newval = i_min;
     killEvents(event);
-#ifdef BEEPSPKR
+#if defined (BEEPSPKR) || defined (PCBV2)
     beepWarn2Spkr(BEEP_KEY_DOWN_FREQ);
 #else
     beepWarn2();
@@ -471,7 +471,7 @@ bool checkIncDecGen2(uint8_t event, void *i_pval, int16_t i_min, int16_t i_max, 
   if(newval != val){
     if(newval==0) {
       pauseEvents(event); // delay before auto-repeat continues
-#ifdef BEEPSPKR
+#if defined (BEEPSPKR) || defined (PCBV2)
       if (newval>val)
         beepWarn2Spkr(BEEP_KEY_UP_FREQ);
       else
@@ -487,7 +487,7 @@ bool checkIncDecGen2(uint8_t event, void *i_pval, int16_t i_min, int16_t i_max, 
     else
       if (i_flags & _FL_UNSIGNED8) *(uint8_t*)i_pval = newval;
       else                        *( int8_t*)i_pval = newval;
-#ifdef FRSKY
+#if defined (FRSKY) || defined (PCBV2)
     eeDirty(i_flags & (EE_GENERAL|EE_MODEL|EE_FRSKY));
 #else
     eeDirty(i_flags & (EE_GENERAL|EE_MODEL));
@@ -554,6 +554,95 @@ void pushMenu(MenuFuncP newMenu)
   (*newMenu)(EVT_ENTRY);
 }
 
+
+class AutoLock
+{
+  uint8_t m_saveFlags;
+public:
+  AutoLock(){
+    m_saveFlags = SREG;
+    cli();
+  };
+  ~AutoLock(){
+    if(m_saveFlags & (1<<SREG_I)) sei();
+    //SREG = m_saveFlags;// & (1<<SREG_I)) sei();
+  };
+};
+
+#define STARTADCONV (ADCSRA  = (1<<ADEN) | (1<<ADPS0) | (1<<ADPS1) | (1<<ADPS2) | (1<<ADSC) | (1 << ADIE))
+static uint16_t s_anaFilt[8];
+uint16_t anaIn(uint8_t chan)
+{
+  //                     ana-in:   3 1 2 0 4 5 6 7
+  //static prog_char APM crossAna[]={4,2,3,1,5,6,7,0}; // wenn schon Tabelle, dann muss sich auch lohnen
+  static prog_char APM crossAna[]={3,1,2,0,4,5,6,7};
+  volatile uint16_t *p = &s_anaFilt[pgm_read_byte(crossAna+chan)];
+  AutoLock autoLock;
+  return *p;
+}
+
+#define ADC_VREF_TYPE 0x40
+void getADC_filt()
+{
+  static uint16_t t_ana[3][8];
+  for (uint8_t adc_input=0;adc_input<8;adc_input++)
+  {
+      ADMUX=adc_input|ADC_VREF_TYPE;
+      // Start the AD conversion
+      ADCSRA|=0x40;
+      // Wait for the AD conversion to complete
+      while ((ADCSRA & 0x10)==0);
+      ADCSRA|=0x10;
+
+      s_anaFilt[adc_input] = (s_anaFilt[adc_input]/2 + t_ana[1][adc_input]) & 0xFFFE; //gain of 2 on last conversion - clear last bit
+      //t_ana[2][adc_input]  =  (t_ana[2][adc_input]  + t_ana[1][adc_input]) >> 1;
+      t_ana[1][adc_input]  = (t_ana[1][adc_input]  + t_ana[0][adc_input]) >> 1;
+      t_ana[0][adc_input]  = (t_ana[0][adc_input]  + ADCW               ) >> 1;
+  }
+}
+/*
+  s_anaFilt[chan] = (s_anaFilt[chan] + sss_ana[chan]) >> 1;
+  sss_ana[chan] = (sss_ana[chan] + ss_ana[chan]) >> 1;
+  ss_ana[chan] = (ss_ana[chan] + s_ana[chan]) >> 1;
+  s_ana[chan] = (ADC + s_ana[chan]) >> 1;
+  */
+
+void getADC_osmp()
+{
+  uint16_t temp_ana[8] = {0};
+  for (uint8_t adc_input=0;adc_input<8;adc_input++){
+    for (uint8_t i=0; i<4;i++) {  // Going from 10bits to 11 bits.  Addition = n.  Loop 4^n times
+      ADMUX=adc_input|ADC_VREF_TYPE;
+      // Start the AD conversion
+      ADCSRA|=0x40;
+      // Wait for the AD conversion to complete
+      while ((ADCSRA & 0x10)==0);
+      ADCSRA|=0x10;
+      temp_ana[adc_input] += ADCW;
+    }
+    s_anaFilt[adc_input] = temp_ana[adc_input] / 2; // divide by 2^n to normalize result.
+  }
+}
+
+void getADC_single()
+{
+    for (uint8_t adc_input=0;adc_input<8;adc_input++){
+      ADMUX=adc_input|ADC_VREF_TYPE;
+      // Start the AD conversion
+      ADCSRA|=0x40;
+      // Wait for the AD conversion to complete
+      while ((ADCSRA & 0x10)==0);
+      ADCSRA|=0x10;
+      s_anaFilt[adc_input]= ADCW * 2; // use 11 bit numbers
+    }
+}
+
+getADCp getADC[3] = {
+  getADC_single,
+  getADC_osmp,
+  getADC_filt
+};
+
 uint8_t  g_vbat100mV;
 volatile uint8_t tick10ms = 0;
 uint16_t g_LightOffCounter;
@@ -564,6 +653,7 @@ void perMain()
   static uint16_t lastTMR;
   tick10ms = (g_tmr10ms != lastTMR);
   lastTMR = g_tmr10ms;
+
 
   perOut(g_chans512, false);
   if(!tick10ms) return; //make sure the rest happen only every 10ms.
@@ -670,10 +760,6 @@ Gruvin:
       break;
   }
 
-#ifdef FRSKY
-//  if (FrskyRxBufferReady)
-//    processFrskyPacket(frskyRxBuffer);
-#endif
 }
 int16_t g_ppmIns[8];
 uint8_t ppmInState = 0; //0=unsync 1..8= wait for value i-1
@@ -717,106 +803,23 @@ ISR(TIMER1_COMPA_vect) //2MHz pulse generation
     pulsePtr = pulses2MHz;
     pulsePol = g_model.pulsePol;//0;
 
+#ifdef PCBV2
+    TIMSK1 &= ~(1<<OCIE1A); //stop reentrance
+#else
     TIMSK &= ~(1<<OCIE1A); //stop reentrance
+#endif
+    
     sei();
     setupPulses();
     cli();
+#ifdef PCBV2
+    TIMSK1 |= (1<<OCIE1A);
+#else
     TIMSK |= (1<<OCIE1A);
+#endif
   }
   heartbeat |= HEART_TIMER2Mhz;
 }
-
-class AutoLock
-{
-  uint8_t m_saveFlags;
-public:
-  AutoLock(){
-    m_saveFlags = SREG;
-    cli();
-  };
-  ~AutoLock(){
-    if(m_saveFlags & (1<<SREG_I)) sei();
-    //SREG = m_saveFlags;// & (1<<SREG_I)) sei();
-  };
-};
-
-#define STARTADCONV (ADCSRA  = (1<<ADEN) | (1<<ADPS0) | (1<<ADPS1) | (1<<ADPS2) | (1<<ADSC) | (1 << ADIE))
-static uint16_t s_anaFilt[8];
-uint16_t anaIn(uint8_t chan)
-{
-  //                     ana-in:   3 1 2 0 4 5 6 7
-  //static prog_char APM crossAna[]={4,2,3,1,5,6,7,0}; // wenn schon Tabelle, dann muss sich auch lohnen
-  static prog_char APM crossAna[]={3,1,2,0,4,5,6,7};
-  volatile uint16_t *p = &s_anaFilt[pgm_read_byte(crossAna+chan)];
-  AutoLock autoLock;
-  return *p;
-}
-
-
-
-
-#define ADC_VREF_TYPE 0x40
-void getADC_filt()
-{
-  static uint16_t t_ana[3][8];
-  for (uint8_t adc_input=0;adc_input<8;adc_input++){
-      ADMUX=adc_input|ADC_VREF_TYPE;
-      // Start the AD conversion
-      ADCSRA|=0x40;
-      // Wait for the AD conversion to complete
-      while ((ADCSRA & 0x10)==0);
-      ADCSRA|=0x10;
-
-      s_anaFilt[adc_input] = (s_anaFilt[adc_input]/2 + t_ana[1][adc_input]) & 0xFFFE; //gain of 2 on last conversion - clear last bit
-      //t_ana[2][adc_input]  =  (t_ana[2][adc_input]  + t_ana[1][adc_input]) >> 1;
-      t_ana[1][adc_input]  = (t_ana[1][adc_input]  + t_ana[0][adc_input]) >> 1;
-      t_ana[0][adc_input]  = (t_ana[0][adc_input]  + ADCW               ) >> 1;
-    }
-}
-/*
-  s_anaFilt[chan] = (s_anaFilt[chan] + sss_ana[chan]) >> 1;
-  sss_ana[chan] = (sss_ana[chan] + ss_ana[chan]) >> 1;
-  ss_ana[chan] = (ss_ana[chan] + s_ana[chan]) >> 1;
-  s_ana[chan] = (ADC + s_ana[chan]) >> 1;
-  */
-
-void getADC_osmp()
-{
-  uint16_t temp_ana[8] = {0};
-  for (uint8_t adc_input=0;adc_input<8;adc_input++){
-    for (uint8_t i=0; i<4;i++) {  // Going from 10bits to 11 bits.  Addition = n.  Loop 4^n times
-      ADMUX=adc_input|ADC_VREF_TYPE;
-      // Start the AD conversion
-      ADCSRA|=0x40;
-      // Wait for the AD conversion to complete
-      while ((ADCSRA & 0x10)==0);
-      ADCSRA|=0x10;
-      temp_ana[adc_input] += ADCW;
-    }
-    s_anaFilt[adc_input] = temp_ana[adc_input] / 2; // divide by 2^n to normalize result.
-  }
-}
-
-
-
-void getADC_single()
-{
-    for (uint8_t adc_input=0;adc_input<8;adc_input++){
-      ADMUX=adc_input|ADC_VREF_TYPE;
-      // Start the AD conversion
-      ADCSRA|=0x40;
-      // Wait for the AD conversion to complete
-      while ((ADCSRA & 0x10)==0);
-      ADCSRA|=0x10;
-      s_anaFilt[adc_input]= ADCW * 2; // use 11 bit numbers
-    }
-}
-
-getADCp getADC[3] = {
-  getADC_single,
-  getADC_osmp,
-  getADC_filt
-  };
 
 volatile uint8_t g_tmr16KHz;
 ISR(TIMER0_OVF_vect) //continuous timer 16ms (16MHz/1024/256) -- 8-bit counter overflow
@@ -840,18 +843,28 @@ uint8_t beepAgainOrig = 0;
 uint8_t beepOn = false;
 extern uint16_t g_time_per10; // instantiated in menus.cpp
 
+#if defined (FRSKY) || defined (PCBV2)
+ISR(TIMER0_COMPA_vect, ISR_NOBLOCK) //10ms timer
+#else
 ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
+#endif
 {
   cli();
-  TIMSK &= ~(1<<OCIE0); //stop reentrance
-  sei();
-#ifdef BEEPSPKR
-  OCR0 += 1;
-#else  
-  OCR0 = OCR0 + 156;
+#ifdef PCBV2
+  TIMSK0 &= ~(1<<OCIE0A); //stop reentrance
+  OCR0A += 1;
+#else
+    TIMSK &= ~(1<<OCIE0); // stop reentrance
+  #ifdef BEEPSPKR
+    OCR0 += 1;
+  #else  
+    OCR0 = OCR0 + 156;
+  #endif
 #endif
+  sei();
 
-#ifdef BEEPSPKR
+
+#if defined (BEEPSPKR) || defined (PCBV2)
   // gruvin: Begin Tone Generator
   static uint16_t toneCounter;
 
@@ -914,8 +927,8 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
         }
     }
 
-#ifdef BEEPSPKR
-    // G: use new tone generator for beeps
+#if defined (BEEPSPKR) || defined (PCBV2)
+    // G: use speaker tone generator for beeps
     if(beepOn)
     {
       static bool warbleC;
@@ -945,16 +958,20 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
     per10ms();
     heartbeat |= HEART_TIMER10ms;
 
-    // Record per10ms code execution time, in us(x2) for STAT2 page
+    // Record per10ms ISR execution time, in us(x2) for STAT2 page
     uint16_t dt2 = TCNT1; // capture end time
     g_time_per10 = dt2 - dt; 
 
-#ifdef BEEPSPKR
+#if defined (BEEPSPKR) || defined (PCBV2)
   } // end 10ms event
 #endif
 
   cli();
+#ifdef PCBV2
+  TIMSK0 |= (1<<OCIE0A);
+#else
   TIMSK |= (1<<OCIE0);
+#endif
   sei();
 }
 
@@ -969,7 +986,11 @@ ISR(TIMER3_CAPT_vect, ISR_NOBLOCK) //capture ppm in 16MHz / 8 = 2MHz
 {
   uint16_t capture=ICR3; 
   cli();
-  ETIMSK &= ~(1<<TICIE3); // prevent re-entrance
+#ifdef PCBV2
+  TIMSK3 &= ~(1<<ICIE3);
+#else
+  ETIMSK &= ~(1<<TICIE3);
+#endif
   sei();
 
   static uint16_t lastCapt;
@@ -992,73 +1013,128 @@ ISR(TIMER3_CAPT_vect, ISR_NOBLOCK) //capture ppm in 16MHz / 8 = 2MHz
   }
 
   cli();
+#ifdef PCBV2
+  TIMSK3 |= (1<<ICIE3);
+#else
   ETIMSK |= (1<<TICIE3);
+#endif
   sei();
 }
 
 extern uint16_t g_timeMain;
 //void main(void) __attribute__((noreturn));
 
+/* FUSES doean't work with AVRDUDE fro some reason (Address out of range when programming)
+#include <avr/io.h>
+
+FUSES = 
+{
+  0xEE, // LFUSE_DEFAULT, // .low
+  0x99, // (FUSE_BOOTSZ0 & FUSE_BOOTSZ1 & FUSE_EESAVE & FUSE_SPIEN & FUSE_JTAGEN), // .high
+  0xFF  // EFUSE_DEFAULT, // .extended
+};
+*/
+
+uint8_t DEBUG1 = 0;
+uint8_t DEBUG2 = 0;
+
 int main(void)
 {
+#if defined (FRSKY) || defined (PCBV2)
+  /////////////////////////////////////////////
+  // Shut the WDT off. None of the fuse settings 
+  // seem to accomplish this. Strange.
+  // XXX: Take another look some time. *shrug*
+  wdt_reset();
+  MCUSR &= ~(1<<WDRF);
+  WDTCSR |= (1<<WDCE) | (1<<WDE);
+  WDTCSR = 0x00;
+  /////////////////////////////////////////////
+#endif
+
   DDRA = 0xff;  PORTA = 0x00;
   DDRB = 0x81;  PORTB = 0x7e; //pullups keys+nc
   DDRC = 0x3e;  PORTC = 0xc1; //pullups nc
-  DDRD = 0x00;  PORTD = 0xff; //pullups keys
+  //ZZZ DDRD = 0x00;  PORTD = 0xff; //pullups keys
+  DDRD = 0x0F;  PORTD = 0xff; // 7:4=inputs (keys/trims, pull-ups on), 3:0=outputs (keyscan row select)
   DDRE = 0x08;  PORTE = 0xff-(1<<OUT_E_BUZZER); //pullups + buzzer 0
   DDRF = 0x00;  PORTF = 0xff; //anain
   DDRG = 0x10;  PORTG = 0xff; //pullups + SIM_CTL=1 = phonejack = ppm_in
+
   lcd_init();
 
 #ifdef JETI
   JETI_Init();
 #endif
 
-#ifdef FRSKY
+#if defined (FRSKY) || defined (PCBV2)
   FRSKY_Init();
 #endif
 
   ADMUX=ADC_VREF_TYPE;
-  ADCSRA=0x85;
+  ADCSRA=0x85; // ADC enabled, pre-scaler division=32 (no interrupt, no auto-triggering)
 
+  /**** Set up timer/counter 0 ****/
   // TCNT0         10ms = 16MHz/160000  periodic timer
-  //TCCR0  = (1<<WGM01)|(7 << CS00);//  CTC mode, clk/1024
-  TCCR0  = (7 << CS00);//  Norm mode, clk/1024
-#ifdef BEEPSPKR
-  OCR0   = 1;   // gruvin: 7812.5 interrupts / second for tone generator
+#ifdef PCBV2  
+  TCCR0B  = (5 << CS00); //ZZZ 5 was 7 (for 64A chip!) //  Norm mode, clk/1024
+  OCR0A   = 1; // G: 7812.5 interrupts / second for tone generator
+  TIMSK0 |= (1<<OCIE0A) |  (1<<TOIE0); // Enable Output-Compare and Overflow interrrupts
 #else
-  OCR0   = 156; // 10ms
+  #ifdef BEEPSPKR
+    OCR0   = 1;
+  #else
+    OCR0   = 156;
+  #endif
+  TIMSK |= (1<<OCIE0) |  (1<<TOIE0); // Enable Output-Compare and Overflow interrrupts
+  /********************************/
 #endif
-  TIMSK |= (1<<OCIE0) |  (1<<TOIE0);
 
   // TCNT1 2MHz Pulse generator
-  TCCR1A = (0<<WGM10);
   TCCR1B = (1 << WGM12) | (2<<CS10); // CTC OCR1A, 16MHz / 8
-  //TIMSK |= (1<<OCIE1A); enable immediately before mainloop
+  // not here ... TIMSK1 |= (1<<OCIE1A); ... enable immediately before mainloop
 
   // Timer 3 used for PPM_IN pulse width capture
-  TCCR3A  = 0;
 #ifdef PPMIN_MOD1
-  TCCR3B  = (1<<ICNC3) | (1<<ICES3) | 2;      // Noise Canceller enabled, pos. edge, clock at 16MHz / 8 (2MHz)
+  TCCR3B  = (1<<ICNC3) | (1<<ICES3) | (0b010 << CS30);      // Noise Canceller enabled, pos. edge, clock at 16MHz / 8 (2MHz)
 #else
-  TCCR3B  = (1<<ICNC3) | 2;      // Noise Canceller enabled, neg. edge, clock at 16MHz / 8 (2MHz)
+  TCCR3B  = (1<<ICNC3) | (0b010 << CS30);      // Noise Canceller enabled, neg. edge, clock at 16MHz / 8 (2MHz)
 #endif
-  ETIMSK |= (1<<TICIE3);         // Enable capture event interrupt
+#if defined (FRSKY) || defined (PCBV2)
+  TIMSK3 |= (1<<ICIE3);         // Enable capture event interrupt
+#else
+  TIMSK |= (1<<TICIE3);         // Enable capture event interrupt
+#endif
 
-  sei(); //damit alert in eeReadGeneral() nicht haengt
+  sei(); // interrupts needed for eeRead functions
+
   g_menuStack[0] =  menuProc0;
 
   lcdSetRefVolt(25);
   eeReadAll();
   doSplash();
   checkMem();
-  //setupAdc(); //before checkTHR
+
   getADC_single();
   checkTHR();
+  
   checkSwitches();
   checkAlarm();
   setupPulses();
+
+#ifdef PCBV2
+  // wdt_enable(WDTO_500MS); // This doesn't seem to set the right time on the 2561 :/
+  // Try it manually ...
+  cli();
+  wdt_reset();
+  WDTCSR |= (1<<WDCE) | (1<<WDE);
+  WDTCSR = (1<<WDE) | (1<<WDP2) | (1<<WDP0);
+  sei();
+  // Yup. That works. *shrug*
+#else
   wdt_enable(WDTO_500MS);
+#endif
+
   perOut(g_chans512, false);
 
   pushMenu(menuProcModelSelect);
@@ -1067,13 +1143,20 @@ int main(void)
 
   lcdSetRefVolt(g_eeGeneral.contrast);
   g_LightOffCounter = g_eeGeneral.lightAutoOff*500; //turn on light for x seconds - no need to press key Issue 152
+
+#ifdef PCBV2
+  TIMSK1 |= (1<<OCIE1A); // Pulse generator enable immediately before mainloop
+#else
   TIMSK |= (1<<OCIE1A); // Pulse generator enable immediately before mainloop
+#endif
+
   while(1){
-    //uint16_t old10ms=g_tmr10ms;
     uint16_t t0 = getTmr16KHz();
+
     getADC[g_eeGeneral.filterInput]();
+
     perMain();
-    //while(g_tmr10ms==old10ms) sleep_mode();
+
     if(heartbeat == 0x3)
     {
       wdt_reset();

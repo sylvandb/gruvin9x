@@ -141,14 +141,14 @@
 #define INP_E_AileDR  1
 #define INP_E_ThrCt   0
 
-#if (defined(JETI) || defined(FRSKY))
+#if defined(JETI) || defined(FRSKY) || defined(PCBV2)
   #undef INP_E_ThrCt
   #undef INP_E_AileDR
   #define INP_C_ThrCt   6
   #define INP_C_AileDR  7
 #endif
 
-#ifdef BEEPSPKR
+#if defined (BEEPSPKR) || defined (PCBV2)
 #define BEEP_KEY_TIME 5
 #define BEEP_DEFAULT_FREQ 50
 #define BEEP_KEY_UP_FREQ 55
@@ -421,7 +421,7 @@ int8_t checkIncDec_hg(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max);
 ///Hilfs-funktion zum Aufruf von checkIncDecGen2 fuer bitfield Variablen
 int8_t checkIncDec_vg(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max);
 
-#ifdef FRSKY
+#if defined (FRSKY) || defined (PCBV2)
 // Gruvin: This uses a new _FL_UNSIGNED flag to allow for unsigned values, so 0-255 works in an 8bit var. 
 int8_t checkIncDec_Frsky(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max);
 #endif
@@ -479,7 +479,7 @@ template<class t> inline int8_t sgn(t a){ return a>0 ? 1 : (a < 0 ? -1 : 0); }
 
 #define EE_GENERAL 1
 #define EE_MODEL   2
-#ifdef FRSKY
+#if defined (FRSKY) || defined (PCBV2)
 #define EE_FRSKY  32
 #endif
 
@@ -553,7 +553,7 @@ void menuProcModelSelect(uint8_t event);
 void menuProcTemplates(uint8_t event);
 void menuProcSwitches(uint8_t event);
 
-#ifdef FRSKY
+#if defined (FRSKY) || defined (PCBV2)
 void menuProcFrsky(uint8_t event);
 void menuProcFrskyAlarms(uint8_t event);
 #endif
@@ -582,7 +582,7 @@ extern uint16_t jeti_keys;
 #include "jeti.h"
 #endif
 
-#ifdef FRSKY
+#if defined (FRSKY) || defined (PCBV2)
 // FrSky Telemetry
 #include "frsky.h"
 #endif
@@ -620,7 +620,7 @@ inline void _beep(uint8_t b) {
   g_beepCnt=b;
 }
 
-#ifdef BEEPSPKR
+#if defined (BEEPSPKR) || defined (PCBV2)
 extern uint8_t toneFreq;
 inline void _beepSpkr(uint8_t d, uint8_t f)
 {
@@ -629,7 +629,7 @@ inline void _beepSpkr(uint8_t d, uint8_t f)
 }
 #endif
 
-#ifdef BEEPSPKR
+#if defined (BEEPSPKR) || defined (PCBV2)
 
 #define beepKeySpkr(freq) _beepSpkr(g_beepVal[0],freq)
 #define beepTrimSpkr(freq) _beepSpkr(g_beepVal[0],freq)
@@ -651,6 +651,11 @@ inline void _beepSpkr(uint8_t d, uint8_t f)
 #define beepErr()  _beep(g_beepVal[4])
 
 #endif
+
+
+//DEBUG
+extern uint8_t DEBUG1;  
+extern uint8_t DEBUG2;  
 
 #endif // gruvin9x_h
 /*eof*/

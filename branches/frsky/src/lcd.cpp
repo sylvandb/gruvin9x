@@ -276,7 +276,7 @@ void lcdSendDat(uint8_t val)
 #define delay_1us() _delay_us(1)
 void delay_1_5us(int ms)
 {
-  for(int i=0; i<ms; i++) delay_1us();
+  for(int i=0; i<ms; i++) delay_1us(); 
 }
 
 

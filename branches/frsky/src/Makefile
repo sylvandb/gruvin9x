@@ -25,23 +25,14 @@
 # To rebuild project do "make clean" then "make all".
 #----------------------------------------------------------------------------
 
+#----------- BUILD OPTIONS ---------------------------
 
-# MCU name
-MCU = atmega64
+#gruvin: PCB version -- OVERRIDES the following settings if not STD
+# Values: STD, V2, V3 (includes PPMIN mod for JR compatibility)
+PCB = V2
 
-# Processor frequency.
-F_CPU = 16000000
+# Following options for PCB=STD only (ignored otherwise) ...
 
-# Output format. (can be srec, ihex, binary)
-FORMAT = ihex
-
-# Target file name (without extension).
-TARGET = gruvin9x
-
-# Object files directory
-OBJDIR = obj
-
-#---------------- OPTIONS ---------------------------
 # Enable JETI-Telemetry or FrSky Telemetry reception on UART0
 # For this option you need to modify your hardware!
 # More information at [insertURLhere]
@@ -57,7 +48,28 @@ USART1 = FREED
 
 # gruvin: PCM-in circuit mod for JR/Spektrum (and others) compatability
 # Values = STD, MOD1
-PPMIN = MOD1
+PPMIN =  STD
+
+#------- END BUILD OPTIONS ---------------------------
+
+# MCU name
+ifeq ($(PCB), V2)
+MCU = atmega2561
+else
+MCU = atmega64
+endif
+
+# Processor frequency.
+F_CPU = 16000000
+
+# Output format. (can be srec, ihex, binary)
+FORMAT = ihex
+
+# Target file name (without extension).
+TARGET = gruvin9x
+
+# Object files directory
+OBJDIR = obj
 
 # List C++ source files here. (C dependencies are automatically generated.)
 CPPSRC = $(TARGET).cpp stamp.cpp menus.cpp pers.cpp file.cpp lcd.cpp drivers.cpp templates.cpp
@@ -117,29 +129,44 @@ CPPDEFS = -DF_CPU=$(F_CPU)UL
 #CPPDEFS += -D__STDC_LIMIT_MACROS
 #CPPDEFS += -D__STDC_CONSTANT_MACROS
 
+#PCB version overrides all the earlier individual settings
+
+ifeq ($(PCB), STD)
+# STD PCB, so ...
+
 # If JETI-Support is enabled
-ifeq ($(EXT), JETI)
- CPPDEFS += -DJETI
-endif
+  ifeq ($(EXT), JETI)
+   CPPDEFS += -DJETI
+  endif
 
 # If FRSKY-Support is enabled
-ifeq ($(EXT), FRSKY)
- CPPDEFS += -DFRSKY
-endif
+  ifeq ($(EXT), FRSKY)
+   CPPDEFS += -DFRSKY
+  endif
 
 # gruvin: If buzzer speaker replacment supported 
-ifeq ($(BEEPER), SPEAKER)
- CPPDEFS += -DBEEPSPKR
-endif
+  ifeq ($(BEEPER), SPEAKER)
+   CPPDEFS += -DBEEPSPKR
+  endif
 
 # gruvin: Legacy support for hardware mod freeing USART1 [DEPRECATED]
-ifeq ($(USART1), FREED)
-  CPPDEFS += -DUSART1FREED
-endif
+  ifeq ($(USART1), FREED)
+    CPPDEFS += -DUSART1FREED
+  endif
 
 # gruvin: PCM-in circuit mod for JR/Spektrum (and others) compatability
-ifeq ($(PPMIN), MOD1)
-  CPPDEFS += -DPPMIN_MOD1
+  ifeq ($(PPMIN), MOD1)
+    CPPDEFS += -DPPMIN_MOD1
+  endif
+
+else
+# not STD PCB, so ...
+  ifeq ($(PCB), V2)
+    CPPDEFS += -DPCBV2
+  endif
+  ifeq ($(PCB), V3)
+    CPPDEFS += -DPCBV3
+  endif
 endif
 
 #---------------- Compiler Options C ----------------
@@ -292,7 +319,7 @@ AVRDUDE_READ_EEPROM = -U eeprom:r:$(TARGET).bin:r
 
 # Uncomment the following if you do /not/ wish a verification to be
 # performed after programming the device.
-# AVRDUDE_NO_VERIFY = -V
+AVRDUDE_NO_VERIFY = -V
 
 # Increase verbosity level.  Please use this when submitting bug
 # reports about avrdude. See <http://savannah.nongnu.org/projects/avrdude>

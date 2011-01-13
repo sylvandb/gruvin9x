@@ -18,7 +18,9 @@
 
 #include "gruvin9x.h"
 #include "templates.h"
+#if defined (FRSKY) || defined (PCBV2)
 #include "frsky.h"
+#endif
 #include "menus.h"
 
 int16_t calibratedStick[7];
@@ -2234,14 +2236,14 @@ void menuProc0(uint8_t event)
       killEvents(event);
       break;
     case EVT_KEY_LONG(KEY_DOWN):
-#if (!(defined(JETI) || defined(FRSKY)))
+#if (!(defined(JETI) || defined(FRSKY) || defined(PCBV2)))
       chainMenu(menuProcStatistic2);
 #endif
 #ifdef JETI
       JETI_EnableRXD(); // enable JETI-Telemetry reception
       chainMenu(menuProcJeti);
 #endif
-#ifdef FRSKY
+#if defined (FRSKY) || defined (PCBV2)
       // G: RX/TX already enabled at system start-up
       // G: FRSKY Menus are in frsky.cpp now
       pushMenu(menuProcFrsky);

@@ -388,9 +388,11 @@ void menuProcFrsky(uint8_t event)
   {
     lcd_putsAtt(32, 0, PSTR("NO"), DBLSIZE);
     lcd_putsAtt(62, 0, PSTR("DATA"), DBLSIZE);
-
   }
 
+//DEBUG
+    lcd_outdezAtt(FW*4, FH*5, DEBUG1, 0); 
+    lcd_outdezAtt(FW*10, FH*5, DEBUG2, 0); 
 
   uint8_t y = 2*FH;
 
@@ -461,7 +463,7 @@ void menuProcFrsky(uint8_t event)
         uint8_t vbarLen = (centaVolts - (10 * (uint16_t)g_eeFrsky.rxVoltsBarMin))  * 12 
                             / (g_eeFrsky.rxVoltsBarMax - g_eeFrsky.rxVoltsBarMin);
         for (uint8_t i = 59; i < 63; i++) // Bar 4 pixels thick (high)
-          lcd_hline(4, i, vbarLen);
+          lcd_hline(4, i, (vbarLen > 120) ? 120 : vbarLen);
       }
     }
   } // if data streaming / blink choice

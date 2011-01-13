@@ -26,7 +26,11 @@ static inline void __attribute__ ((always_inline))
 eeprom_write_byte_cmp (uint8_t dat, uint16_t pointer_eeprom)
 {
   //see /home/thus/work/avr/avrsdk4/avr-libc-1.4.4/libc/misc/eeprom.S:98 143
-  while(EECR & (1<<EEWE)) /* make sure EEPROM is ready */
+#if defined (FRSKY) || defined (PCBV2)
+  while(EECR & (1<<EEPE)) //ZZZ /* make sure EEPROM is ready */
+#else
+  while(EECR & (1<<EEWE)) //ZZZ /* make sure EEPROM is ready */
+#endif
     ;
   EEAR  = pointer_eeprom;
 
@@ -36,8 +40,13 @@ eeprom_write_byte_cmp (uint8_t dat, uint16_t pointer_eeprom)
   EEDR  = dat;
   uint8_t flags=SREG;
   cli();
+#if defined (FRSKY) || defined (PCBV2)
+  EECR |= 1<<EEMPE;
+  EECR |= 1<<EEPE;
+#else
   EECR |= 1<<EEMWE;
   EECR |= 1<<EEWE;
+#endif
   SREG = flags;
 }
 
@@ -169,10 +178,10 @@ bool keyState(EnumKeys enuk)
     case SW_ElevDR : return PINE & (1<<INP_E_ElevDR);
     
     //case SW_AileDR : return PINE & (1<<INP_E_AileDR);
-#if (!(defined(JETI) || defined(FRSKY)))
+#if (!(defined(JETI) || defined(FRSKY) || defined(PCBV2)))
     case SW_AileDR : return PINE & (1<<INP_E_AileDR);
 #endif
-#if (defined(JETI) || defined(FRSKY))
+#if (defined(JETI) || defined(FRSKY) || defined(PCBV2))
     case SW_AileDR : return PINC & (1<<INP_C_AileDR); //shad974: rerouted inputs to free up UART0
 #endif
 
@@ -188,10 +197,10 @@ bool keyState(EnumKeys enuk)
     case SW_Gear   : return PINE & (1<<INP_E_Gear);
     //case SW_ThrCt  : return PINE & (1<<INP_E_ThrCt);
 
-#if (!(defined(JETI) || defined(FRSKY)))
+#if (!(defined(JETI) || defined(FRSKY) || defined(PCBV2)))
      case SW_ThrCt  : return PINE & (1<<INP_E_ThrCt);
 #endif
-#if (defined(JETI) || defined(FRSKY))
+#if (defined(JETI) || defined(FRSKY) || defined(PCBV2))
     case SW_ThrCt  : return PINC & (1<<INP_C_ThrCt); //shad974: rerouted inputs to free up UART0
 #endif
 
@@ -223,13 +232,45 @@ uint8_t getEventDbl(uint8_t event)
 volatile uint16_t g_tmr10ms;
 volatile uint8_t  g_blinkTmr10ms;
 
-
 void per10ms()
 {
   g_tmr10ms++;
   g_blinkTmr10ms++;
+
+/**** BEGIN KEY STATE READ ****/
   uint8_t enuk = KEY_MENU;
-  uint8_t    in = ~PINB;
+
+  //ZZZ uint8_t in = ~PINB;
+
+  /* Original keys were connected to PORTB as follows:
+
+     Bit  Key
+      7   other use
+      6   LEFT
+      5   RIGHT
+      4   UP
+      3   DOWN
+      2   EXIT
+      1   MENU
+      0   other use
+  */
+
+#define KEY_Y0 1 // EXIT / MENU
+#define KEY_Y1 2 // LEFT / RIGHT / UP / DOWN
+#define KEY_Y2 4 // LV_Trim_Up / Down / LH_Trim_Up / Down 
+#define KEY_Y3 8 // RV_Trim_Up / Down / RH_Trim_Up / Down 
+
+  uint8_t in, tin;
+  PORTD = ~KEY_Y0; // select KEY_Y0 row (Bits 3:2 EXIT:MENU)
+  _delay_us(1);
+  tin = ~PIND & 0b11000000; // mask out non-applicable bits
+  in = tin >> 5; // Put EXIT and MENU into their old positions
+
+  PORTD = ~KEY_Y1; // select Y1 row. (Bits 3:0 Left/Right/Up/Down)
+  _delay_us(1);
+  tin = ~PIND & 0xf0; // mask out non-applicable bits
+  in |= tin >> 1; // Put these keys into their old positions
+
   for(int i=1; i<7; i++)
   {
     //INP_B_KEY_MEN 1  .. INP_B_KEY_LFT 6
@@ -246,8 +287,9 @@ void per10ms()
     1<<INP_D_TRM_RH_DWN,
     1<<INP_D_TRM_RH_UP
   };
-  in = ~PIND;
 
+  //ZZZ uint8_t in = ~PIND;
+/*
 // Legacy support for USART1 free hardware mod [DEPRECATED]
 #if defined(USART1FREED)
   // mask out original INP_D_TRM_LV_UP and INP_D_TRM_LV_DWN bits
@@ -257,6 +299,32 @@ void per10ms()
   in |= (~PINC & (1<<INP_C_TRM_LV_UP)) ? (1<<INP_D_TRM_LV_UP) : 0;
   in |= (~PING & (1<<INP_G_TRM_LV_DWN)) ? (1<<INP_D_TRM_LV_DWN) : 0;
 #endif
+*/
+
+  /*** Original Trims were all on PORTD as follows
+
+    Bit Switch
+     7  LH_Trim_Up
+     6  LH_Trim_Dwn
+     5  RV_Trim_Dwn
+     4  RV_Trim_Up
+     3  LV_Trim_Dwn
+     2  LV_Trim_Up
+     1  RH_Trim_Dwn
+     0  RH_Trim_Up
+
+  */
+
+  PORTD = ~KEY_Y2; // select Y2 row. (Bits 3:0 LVD / LVU / LHU / LHD)
+  _delay_us(1);
+  tin = ~PIND & 0xf0; // mask out outputs
+  in = ((tin & 0b11000000) >> 4) | ((tin & 0b00110000) << 2);
+
+  PORTD = ~KEY_Y3; // select Y3 row. (Bits 3:0 RHU / RHD / RVD / RVU)
+  _delay_us(1);
+  tin = ~PIND & 0xf0; // mask out outputs
+  in |= ((tin & 0b10000000) >> 7) | ((tin & 0b01000000) >> 5) | (tin & 0b00110000);
+
 
   for(int i=0; i<8; i++)
   {
@@ -265,22 +333,34 @@ void per10ms()
     ++enuk;
   }
 
-#ifdef FRSKY
+/**** END KEY STATE READ ****/
+
+#if defined (FRSKY) || defined (PCBV2)
   // Used to detect presence of valid FrSky telemetry packets inside the 
-  // last FRSKY_TIMEOUT10ms 10ms intervals
+  // last <FRSKY_TIMEOUT10ms> 10ms intervals
   if (frskyStreaming > 0) frskyStreaming--;
   else if (g_eeFrsky.noDataAlarm)
   {
-#ifdef BEEPSPKR
+#if defined (BEEPSPKR) || defined (PCBV2)
     if (!(g_tmr10ms % 30)) beepWarn2Spkr(!(g_tmr10ms % 60) ? 25 : 19);
 #else
-    if (!(g_tmr10ms % 30)) if (g_tmr10ms % 60) { warble=false; beepWarn2() } else  { warble=true; beepErr() };
+    if (!(g_tmr10ms % 30)) 
+    {
+      if (g_tmr10ms % 60) 
+      { 
+        warble=false; beepWarn2(); 
+      } 
+      else
+      { 
+        warble=true; beepErr(); 
+      }
+    }
 #endif
   }
 #endif
 
   // These moved here from perOut() [gruvin9x.cpp] to improve beep trigger reliability.
-#ifdef BEEPSPKR
+#if defined (BEEPSPKR) || defined (PCBV2)
   if(mixWarning & 1) if(((g_tmr10ms&0xFF)==  0)) beepWarn1Spkr(BEEP_DEFAULT_FREQ+7);
   if(mixWarning & 2) if(((g_tmr10ms&0xFF)== 64) 
       || ((g_tmr10ms&0xFF)== 72)) beepWarn1Spkr(BEEP_DEFAULT_FREQ+9);
