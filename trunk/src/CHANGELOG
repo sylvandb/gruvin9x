@@ -1,5 +1,7 @@
 Changes in v1.2
 
++ Issue 17: Fr-Sky Page 1/3 off-screen write causes crash, fixed.
+
 Committed r452 (trunk/)
 
 + Issue 15: Added make directive 'PPMIN=MOD1' (as default -- use PPMIN=STD to

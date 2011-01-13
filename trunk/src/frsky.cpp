@@ -461,7 +461,7 @@ void menuProcFrsky(uint8_t event)
         uint8_t vbarLen = (centaVolts - (10 * (uint16_t)g_eeFrsky.rxVoltsBarMin))  * 12 
                             / (g_eeFrsky.rxVoltsBarMax - g_eeFrsky.rxVoltsBarMin);
         for (uint8_t i = 59; i < 63; i++) // Bar 4 pixels thick (high)
-          lcd_hline(4, i, vbarLen);
+          lcd_hline(4, i, (vbarLen > 120) ? 120 : vbarLen);
       }
     }
   } // if data streaming / blink choice
