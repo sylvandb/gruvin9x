@@ -24,7 +24,7 @@ As a starting point, a PCB design was worked up from scratch in [http://kicad.so
 
 *Past Milestones in descending date order ...*
 
-2011-01-14: First prototype board fully constructed, code updated and functioning. There were some issues with the wiring layout of the trim switches that will need to be fixed on the V3 board, but otherwise, everything seems to be working.  All in all, it doesn't make much sense to produce another V2 prototype board, since the V3 board will include several fixes and enhancements.
+2011-01-14: First prototype board fully constructed, code updated and functioning. There were some issues with the wiring layout of the trim switches that will need to be fixed on the V3 board. But otherwise, everything seems to be working.  All in all, it doesn't make much sense to produce another V2 prototype board, since the V3 board will include several fixes and enhancements.
 
 Next step is probably going to be to take advantage of the extra Flash space (now 256KBytes) and start playing with MM/SDCARD mass storage.
 
