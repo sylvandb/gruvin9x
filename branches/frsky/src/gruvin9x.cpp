@@ -374,7 +374,8 @@ uint8_t checkTrim(uint8_t event)
       if(event & _MSK_KEY_REPT) warble = true;
 #if defined (BEEPSPKR) || defined (PCBV2)
       // toneFreq higher/lower according to trim position
-      beepTrimSpkr((x/3)+60);  // range -125 to 125 = toneFreq: 19 to 101
+      // beepTrimSpkr((x/3)+60);  // Range -125 to 125 = toneFreq: 19 to 101
+      beepTrimSpkr((x/4)+60);  // Divide by 4 more efficient. Range -125 to 125 = toneFreq: 28 to 91
 #else
       beepKey();
 #endif
@@ -385,7 +386,7 @@ uint8_t checkTrim(uint8_t event)
       STORE_MODELVARS;
       warble = false;
 #if defined (BEEPSPKR) || defined (PCBV2)
-      beepWarn2Spkr((x/3)+60);
+      beepWarn2Spkr((x/4)+60);
 #else
       beepWarn2();
 #endif
@@ -825,8 +826,9 @@ ISR(TIMER1_COMPA_vect) //2MHz pulse generation
 volatile uint8_t g_tmr16KHz;
 ISR(TIMER0_OVF_vect) //continuous timer 16ms (16MHz/1024/256) -- 8-bit counter overflow
 {
-  g_tmr16KHz++; // gruvin: Not. It's about 62.5Hz (1/256th pf 16KHz) to give 16ms intervals.
-                // However, g_tmr16KHz appears to be used to software-construct a 16-bit timer
+  g_tmr16KHz++; // gruvin: Not 16KHz. Each overflows occur at 61.035Hz (1/256th of 15.625KHz) 
+                // to give *16.384ms* intervals.
+                // However, g_tmr16KHz is also used to software-construct a 16-bit timer
                 // from TIMER-0 (8-bit). See getTmr16KHz, below.
 }
 
@@ -867,7 +869,7 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
 
 #if defined (BEEPSPKR) || defined (PCBV2)
   // gruvin: Begin Tone Generator
-  static uint16_t toneCounter;
+  static uint8_t toneCounter;
 
   if (toneOn)
   {
@@ -881,15 +883,15 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
       PORTE &=  ~(1<<OUT_E_BUZZER); // speaker output 'low'
   // gruvin: END Tone Generator
 
-  static uint8_t cnt10ms = 78; // execute 10ms code once every 78 ISRs
+  static uint8_t cnt10ms = 77; // execute 10ms code once every 78 ISRs
   if (cnt10ms-- == 0) // BEGIN { ... every 10ms ... }
   {
     // Begin 10ms event
-    cnt10ms = 78; 
+    cnt10ms = 77; 
     
 /*
     // DEBUG: gruvin: crude test to time if I have in fact still got 10ms
-    // Test confirms 1 second bips, at about 1/60th a second slow, just as original code.
+    // Test confirms 1 second bips. Too accurate to count error offset over 6 full minutes. (Good.)
     static uint8_t test10ms = 100;
     if (test10ms-- == 0)
     {
@@ -1080,38 +1082,50 @@ int main(void)
   ADCSRA=0x85; // ADC enabled, pre-scaler division=32 (no interrupt, no auto-triggering)
 
   /**** Set up timer/counter 0 ****/
-  // TCNT0         10ms = 16MHz/160000  periodic timer
 #ifdef PCBV2  
-  TCCR0B  = (5 << CS00); //ZZZ 5 was 7 (for 64A chip!) //  Norm mode, clk/1024
-  OCR0A   = 1; // G: 7812.5 interrupts / second for tone generator
+  // TCNT0  10ms = 16MHz/1024/2(/78) periodic timer (for speaker tone generation)
+  //        Capture ISR 7812.5/second -- runs per-10ms code segment once every 78
+  //        cycles (9.984ms). Timer overflows at about 61Hz or once every 16ms.
+  TCCR0B  = (0b101 << CS00); // Norm mode, clk/1024 (differs from ATmega64 chip)
+  OCR0A   = 2;
   TIMSK0 |= (1<<OCIE0A) |  (1<<TOIE0); // Enable Output-Compare and Overflow interrrupts
 #else
-  #ifdef BEEPSPKR
-    OCR0   = 2;
-  #else
-    OCR0   = 156;
-  #endif
+#ifdef BEEPSPKR
+  // TCNT0  10ms = 16MHz/1024/2(/78) periodic timer (for speaker tone generation)
+  //        Capture ISR 7812.5/second -- runs per-10ms code segment once every 78 
+  //        cycles (9.984ms). Timer overflows at about 61Hz or once every 16ms.
+  TCCR0  = (0b111 << CS00);//  Norm mode, clk/1024
+  OCR0 = 2;
+#else
+  // TCNT0  10ms = 16MHz/1024/156 periodic timer (9.984ms)
+  // Timer overflows at about 61Hz or once every 16ms.
+  TCCR0  = (0b111 << CS00);//  Norm mode, clk/1024
+  OCR0 = 156;
+#endif
   TIMSK |= (1<<OCIE0) |  (1<<TOIE0); // Enable Output-Compare and Overflow interrrupts
   /********************************/
 #endif
 
-  // TCNT1 2MHz Pulse generator
+  // TCNT1 2MHz counter (auto-cleared) plus Capture Compare int. 
+  //       Used for PPM pulse generator
   TCCR1B = (1 << WGM12) | (2<<CS10); // CTC OCR1A, 16MHz / 8
   // not here ... TIMSK1 |= (1<<OCIE1A); ... enable immediately before mainloop
 
-  // Timer 3 used for PPM_IN pulse width capture
+  // TCNT3 (2MHz) used for PPM_IN pulse width capture
 #ifdef PPMIN_MOD1
-  TCCR3B  = (1<<ICNC3) | (1<<ICES3) | (0b010 << CS30);      // Noise Canceller enabled, pos. edge, clock at 16MHz / 8 (2MHz)
+  // Noise Canceller enabled, pos. edge, clock at 16MHz / 8 (2MHz)
+  TCCR3B  = (1<<ICNC3) | (1<<ICES3) | (0b010 << CS30);
 #else
-  TCCR3B  = (1<<ICNC3) | (0b010 << CS30);      // Noise Canceller enabled, neg. edge, clock at 16MHz / 8 (2MHz)
+  // Noise Canceller enabled, neg. edge, clock at 16MHz / 8 (2MHz)
+  TCCR3B  = (1<<ICNC3) | (0b010 << CS30);
 #endif
-#if defined (FRSKY) || defined (PCBV2)
+#ifdef PCBV2
   TIMSK3 |= (1<<ICIE3);         // Enable capture event interrupt
 #else
   TIMSK |= (1<<TICIE3);         // Enable capture event interrupt
 #endif
 
-  sei(); // interrupts needed for eeRead functions
+  sei(); // interrupts needed for eeReadAll function (soon).
 
   g_menuStack[0] =  menuProc0;
 
@@ -1128,12 +1142,12 @@ int main(void)
   setupPulses();
 
 #ifdef PCBV2
-  // wdt_enable(WDTO_500MS); // This doesn't seem to set the right time on the 2561 :/
+  // wdt_enable(WDTO_500MS); // This doesn't set the right time on the '2561 chip :/
   // Try it manually ...
   cli();
   wdt_reset();
   WDTCSR |= (1<<WDCE) | (1<<WDE);
-  WDTCSR = (1<<WDE) | (1<<WDP2) | (1<<WDP0);
+  WDTCSR = (1<<WDE) | (1<<WDP2) | (1<<WDP0); // 500ms, system reset
   sei();
   // Yup. That works. *shrug*
 #else

@@ -240,7 +240,7 @@ void per10ms()
 /**** BEGIN KEY STATE READ ****/
   uint8_t enuk = KEY_MENU;
 
-#if defined(PCBV2)
+#ifdef PCBV2
 
   /* Original keys were connected to PORTB as follows:
 
@@ -323,7 +323,7 @@ void per10ms()
 
 #else
 
-  uint8_t in = ~PIND;
+  in = ~PIND;
 
 // Legacy support for USART1 free hardware mod [DEPRECATED]
 #if defined(USART1FREED)
