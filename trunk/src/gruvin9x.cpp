@@ -374,7 +374,8 @@ uint8_t checkTrim(uint8_t event)
       if(event & _MSK_KEY_REPT) warble = true;
 #ifdef BEEPSPKR
       // toneFreq higher/lower according to trim position
-      beepTrimSpkr((x/3)+60);  // range -125 to 125 = toneFreq: 19 to 101
+      // beepTrimSpkr((x/3)+60);  // Range -125 to 125 = toneFreq: 19 to 101
+      beepTrimSpkr((x/4)+60);  // Divide by 4 more efficient. Range -125 to 125 = toneFreq: 28 to 91
 #else
       beepKey();
 #endif
@@ -385,7 +386,7 @@ uint8_t checkTrim(uint8_t event)
       STORE_MODELVARS;
       warble = false;
 #ifdef BEEPSPKR
-      beepWarn2Spkr((x/3)+60);
+      beepWarn2Spkr((x/4)+60);
 #else
       beepWarn2();
 #endif
@@ -846,19 +847,19 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
   TIMSK &= ~(1<<OCIE0); //stop reentrance
   sei();
 #ifdef BEEPSPKR
-  OCR0 += 1;
+  OCR0 += 2;
 #else  
   OCR0 = OCR0 + 156;
 #endif
 
 #ifdef BEEPSPKR
   // gruvin: Begin Tone Generator
-  static uint16_t toneCounter;
+  static uint8_t toneCounter;
 
   if (toneOn)
   {
     toneCounter += toneFreq;
-    if ((toneCounter & 0x100) == 0x100)
+    if ((toneCounter & 0x80) == 0x80)
       PORTE |=  (1<<OUT_E_BUZZER); // speaker output 'high'
     else
       PORTE &=  ~(1<<OUT_E_BUZZER); // speaker output 'low'
@@ -867,15 +868,15 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
       PORTE &=  ~(1<<OUT_E_BUZZER); // speaker output 'low'
   // gruvin: END Tone Generator
 
-  static uint8_t cnt10ms = 156; // execute 10ms code once every 156 cycles
+  static uint8_t cnt10ms = 77; // execute 10ms code once every 78 ISRs
   if (cnt10ms-- == 0) // BEGIN { ... every 10ms ... }
   {
     // Begin 10ms event
-    cnt10ms = 156; 
+    cnt10ms = 77; 
     
 /*
     // DEBUG: gruvin: crude test to time if I have in fact still got 10ms
-    // Test confirms 1 second bips, at about 1/60th a second slow, just as original code.
+    // Test confirms 1 second bips. Too accurate to count error offset over 6 full minutes. (Good.)
     static uint8_t test10ms = 100;
     if (test10ms-- == 0)
     {
@@ -1025,7 +1026,7 @@ int main(void)
   //TCCR0  = (1<<WGM01)|(7 << CS00);//  CTC mode, clk/1024
   TCCR0  = (7 << CS00);//  Norm mode, clk/1024
 #ifdef BEEPSPKR
-  OCR0   = 1;   // gruvin: 7812.5 interrupts / second for tone generator
+  OCR0   = 2;   // gruvin: 7812.5 interrupts / second for tone generator
 #else
   OCR0   = 156; // 10ms
 #endif
