@@ -803,13 +803,13 @@ ISR(TIMER1_COMPA_vect) //2MHz pulse generation
     pulsePtr = pulses2MHz;
     pulsePol = g_model.pulsePol;//0;
 
+    cli(); // sei();
 #ifdef PCBV2
     TIMSK1 &= ~(1<<OCIE1A); //stop reentrance
 #else
     TIMSK &= ~(1<<OCIE1A); //stop reentrance
 #endif
-    
-    sei();
+    sei();    
     setupPulses();
     cli();
 #ifdef PCBV2
@@ -817,6 +817,7 @@ ISR(TIMER1_COMPA_vect) //2MHz pulse generation
 #else
     TIMSK |= (1<<OCIE1A);
 #endif
+    sei();
   }
   heartbeat |= HEART_TIMER2Mhz;
 }
@@ -852,14 +853,14 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
   cli();
 #ifdef PCBV2
   TIMSK0 &= ~(1<<OCIE0A); //stop reentrance
-  OCR0A += 1;
+  OCR0A += 2;
 #else
-    TIMSK &= ~(1<<OCIE0); // stop reentrance
-  #ifdef BEEPSPKR
-    OCR0 += 1;
-  #else  
-    OCR0 = OCR0 + 156;
-  #endif
+  TIMSK &= ~(1<<OCIE0); //stop reentrance
+#ifdef BEEPSPKR
+  OCR0 += 2;
+#else  
+  OCR0 = OCR0 + 156;
+#endif
 #endif
   sei();
 
@@ -871,7 +872,7 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
   if (toneOn)
   {
     toneCounter += toneFreq;
-    if ((toneCounter & 0x100) == 0x100)
+    if ((toneCounter & 0x80) == 0x80)
       PORTE |=  (1<<OUT_E_BUZZER); // speaker output 'high'
     else
       PORTE &=  ~(1<<OUT_E_BUZZER); // speaker output 'low'
@@ -880,11 +881,11 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
       PORTE &=  ~(1<<OUT_E_BUZZER); // speaker output 'low'
   // gruvin: END Tone Generator
 
-  static uint8_t cnt10ms = 156; // execute 10ms code once every 156 cycles
+  static uint8_t cnt10ms = 78; // execute 10ms code once every 78 ISRs
   if (cnt10ms-- == 0) // BEGIN { ... every 10ms ... }
   {
     // Begin 10ms event
-    cnt10ms = 156; 
+    cnt10ms = 78; 
     
 /*
     // DEBUG: gruvin: crude test to time if I have in fact still got 10ms
@@ -901,7 +902,9 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
 #endif
     
     // Record start time from TCNT1 to record excution time
+    cli();
     uint16_t dt=TCNT1;// TCNT1 (used for PPM out pulse generation) is running at 2MHz
+    sei();
 
     //cnt >/=0
     //beepon/off
@@ -959,8 +962,10 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
     heartbeat |= HEART_TIMER10ms;
 
     // Record per10ms ISR execution time, in us(x2) for STAT2 page
+    cli();
     uint16_t dt2 = TCNT1; // capture end time
-    g_time_per10 = dt2 - dt; 
+    sei();
+    g_time_per10 = dt2 - dt; // NOTE: These spike to nearly 65535 just now and then. Why? :/
 
 #if defined (BEEPSPKR) || defined (PCBV2)
   } // end 10ms event
@@ -1082,7 +1087,7 @@ int main(void)
   TIMSK0 |= (1<<OCIE0A) |  (1<<TOIE0); // Enable Output-Compare and Overflow interrrupts
 #else
   #ifdef BEEPSPKR
-    OCR0   = 1;
+    OCR0   = 2;
   #else
     OCR0   = 156;
   #endif

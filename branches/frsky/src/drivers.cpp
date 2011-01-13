@@ -240,7 +240,7 @@ void per10ms()
 /**** BEGIN KEY STATE READ ****/
   uint8_t enuk = KEY_MENU;
 
-  //ZZZ uint8_t in = ~PINB;
+#if defined(PCBV2)
 
   /* Original keys were connected to PORTB as follows:
 
@@ -271,6 +271,12 @@ void per10ms()
   tin = ~PIND & 0xf0; // mask out non-applicable bits
   in |= tin >> 1; // Put these keys into their old positions
 
+  PORTD = 0xFF;
+
+#else
+  uint8_t in = ~PINB;
+#endif
+
   for(int i=1; i<7; i++)
   {
     //INP_B_KEY_MEN 1  .. INP_B_KEY_LFT 6
@@ -288,19 +294,7 @@ void per10ms()
     1<<INP_D_TRM_RH_UP
   };
 
-  //ZZZ uint8_t in = ~PIND;
-/*
-// Legacy support for USART1 free hardware mod [DEPRECATED]
-#if defined(USART1FREED)
-  // mask out original INP_D_TRM_LV_UP and INP_D_TRM_LV_DWN bits
-  in &= ~((1<<INP_D_TRM_LV_UP) | (1<<INP_D_TRM_LV_DWN));
-
-  // merge in the two new switch port values
-  in |= (~PINC & (1<<INP_C_TRM_LV_UP)) ? (1<<INP_D_TRM_LV_UP) : 0;
-  in |= (~PING & (1<<INP_G_TRM_LV_DWN)) ? (1<<INP_D_TRM_LV_DWN) : 0;
-#endif
-*/
-
+#if defined (PCBV2)
   /*** Original Trims were all on PORTD as follows
 
     Bit Switch
@@ -325,6 +319,22 @@ void per10ms()
   tin = ~PIND & 0xf0; // mask out outputs
   in |= ((tin & 0b10000000) >> 7) | ((tin & 0b01000000) >> 5) | (tin & 0b00110000);
 
+  PORTD = 0xFF;
+
+#else
+
+  uint8_t in = ~PIND;
+
+// Legacy support for USART1 free hardware mod [DEPRECATED]
+#if defined(USART1FREED)
+  // mask out original INP_D_TRM_LV_UP and INP_D_TRM_LV_DWN bits
+  in &= ~((1<<INP_D_TRM_LV_UP) | (1<<INP_D_TRM_LV_DWN));
+
+  // merge in the two new switch port values
+  in |= (~PINC & (1<<INP_C_TRM_LV_UP)) ? (1<<INP_D_TRM_LV_UP) : 0;
+  in |= (~PING & (1<<INP_G_TRM_LV_DWN)) ? (1<<INP_D_TRM_LV_DWN) : 0;
+#endif
+#endif
 
   for(int i=0; i<8; i++)
   {

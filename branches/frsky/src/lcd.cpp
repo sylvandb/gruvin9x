@@ -146,10 +146,10 @@ void lcd_puts_P(uint8_t x,uint8_t y,const prog_char * s)
 }
 void lcd_outhex4(uint8_t x,uint8_t y,uint16_t val)
 {
-  x+=FWNUM*4;
+  x+=FW; // was FWNUM*4;
   for(int i=0; i<4; i++)
   {
-    x-=FWNUM;
+    x-=FW; // was FWNUM;
     char c = val & 0xf;
     c = c>9 ? c+'A'-10 : c+'0';
     lcd_putc(x,y,c);
