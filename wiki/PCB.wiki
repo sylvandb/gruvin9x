@@ -24,6 +24,10 @@ As a starting point, a PCB design was worked up from scratch in [http://kicad.so
 
 *Past Milestones in descending date order ...*
 
+2011-01-14: First prototype board fully constructed, code updated and functioning. There were some issues with the wiring layout of the trim switches that will need to be fixed on the V3 board, but otherwise, everything seems to be working.  All in all, it doesn't make much sense to produce another V2 prototype board, since the V3 board will include several fixes and enhancements.
+
+Next step is probably going to be to take advantage of the extra Flash space (now 256KBytes) and start playing with MM/SDCARD mass storage.
+
 2010-12-30: Components and PCBs have arrived (ahead of schedule). Have ordered components to make up the 'plug' end of the 2-way, 3-way and 8-way JST sockets, which I had thought were included with same. I'm elated to report that the PCB mounting holes and push-button-switch physical locations are within spec and fit well into the actual radio '9X cabinet. (That had been one of my greater concerns during the design process.)
 
 2010-12-22: [http://gruvin9x.googlecode.com/svn/trunk/pcb/rev2.14-frozen/production/gruvin9x-bom.xls  Components] to build three prototypes ordered from Digikey.com
