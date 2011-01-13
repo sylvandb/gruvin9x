@@ -1,6 +1,10 @@
 Changes in v1.2
 
-+ Issue 17: Fr-Sky Page 1/3 off-screen write causes crash, fixed.
++ Issue 18: Hex value on ANA CALIB set-up page missing pixels, FIXED.
+
+Committed r475
+
++ Issue 17: Fr-Sky Page 1/3 off-screen write causes crash, FIXED.
 
 Committed r452 (trunk/)
 
