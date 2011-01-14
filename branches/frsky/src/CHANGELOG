@@ -1,5 +1,9 @@
 Changes in v1.2
 
++ Improved battery voltage calibrartion system. Changes are now instant (instead
+  of waiting for the running average to kick in) and accurate to 2 decimal places,
+  like most digital multimeters.
+
 Committed r485 (/branches/frsky)
 
 + Fixed double-size outdez decimal point and time colon (again)

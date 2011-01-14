@@ -589,6 +589,7 @@ extern uint16_t jeti_keys;
 
 //extern TrainerData g_trainer;
 //extern uint16_t           g_anaIns[8];
+extern uint16_t           abRunningAvg;
 extern uint8_t            g_vbat100mV;
 extern volatile uint16_t  g_tmr10ms;
 extern volatile uint8_t   g_blinkTmr10ms;

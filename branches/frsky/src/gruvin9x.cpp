@@ -644,6 +644,7 @@ getADCp getADC[3] = {
   getADC_filt
 };
 
+uint16_t abRunningAvg = 0;
 uint8_t  g_vbat100mV;
 volatile uint8_t tick10ms = 0;
 uint16_t g_LightOffCounter;
@@ -703,15 +704,6 @@ void perMain()
 
     case 2:
       {
-        //check v-bat
-        //14.2246465682983   -> 10.7 V  ((2.65+5.07)/2.65*5/1024)*1000  mV
-        //0.142246465682983   -> 10.7 V  ((2.65+5.07)/2.65*5/1024)*10    1/10 V
-        //0.137176291331963    k=((2.65+5.07)/2.65*5/1024)*10*9.74/10.1
-        // g_vbat100mV=g_anaIns[7]*35/256; //34/239;
-        // g_vbat100mV += g_vbat100mV*g_eeGeneral.vBatCalib/256;
-        //g_vbat100mV = (g_anaIns[7]*35+g_anaIns[7]/4*g_eeGeneral.vBatCalib) / 256;
-        uint16_t ab = anaIn(7);
-
 /* 
 Gruvin:
   Interesting fault with new unit. Sample is reading 0x06D0 (around 12.3V) but
@@ -724,17 +716,19 @@ Gruvin:
   See the wiki (VoltageAveraging) if you're interested in my long-winded analysis.
 */
 
+        // initialize to first sample if on first averaging cycle
+        if (abRunningAvg == 0) abRunningAvg = anaIn(7);
+
         // G: Running average (virtual 7 stored plus current sample) for batt volts to stablise display
-        static uint8_t vbatRunningAvg = 0;
+        // Average the raw samples so the calibrartion screen updates instantly
+        uint16_t ab = ((uint32_t)(abRunningAvg * 7) + anaIn(7)) / 8;
+        abRunningAvg = ab;
+
 #ifdef THBATVOLTS
         g_vbat100mV = (ab*35 + ab / 4 * g_eeGeneral.vBatCalib) / 512; // G: Hmmm. See above.
 #else
         g_vbat100mV = (ab + 4 * g_eeGeneral.vBatCalib) * 36 / 512; // G: Similar still, but no overflow now.
 #endif
-        // initialize to first sample if on first averaging cycle
-        if (vbatRunningAvg==0) vbatRunningAvg = g_vbat100mV;
-        vbatRunningAvg = ( (uint16_t)((uint16_t)vbatRunningAvg * 7) + g_vbat100mV) / 8;
-        g_vbat100mV = vbatRunningAvg;
 
         static uint8_t s_batCheck;
         s_batCheck+=32;
