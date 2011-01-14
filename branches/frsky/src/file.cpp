@@ -34,8 +34,13 @@
 // bs=16  128 blocks    verlust link:128  16files:16*8  128     sum 256
 // bs=32   64 blocks    verlust link: 64  16files:16*16 256     sum 320
 //
-#  define EESIZE   2048 // ZZZ
-#  define BS       16
+#  ifdef PCBV2
+#    define EESIZE   4096 // 2048 // ZZZ
+#    define BS       32
+#  else
+#    define EESIZE   2048
+#    define BS       16
+#  endif
 #  define RESV     64  //reserv for eeprom header with directory (eeFs)
 #endif
 #define FIRSTBLK (RESV/BS)

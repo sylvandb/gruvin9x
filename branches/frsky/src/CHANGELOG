@@ -1,5 +1,7 @@
 Changes in v1.2
 
++ Fixed double-size outdez decimal point and time colon (again)
+
 Committed r475 (trunk)
 
 + Issue 17: Fr-Sky Page 1/3 off-screen write causes crash, fixed.

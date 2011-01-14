@@ -1607,9 +1607,9 @@ void menuProcDiagCalib(uint8_t event)
   {
     uint8_t y=i*FH+0;
     lcd_puts_P( 11*FW+1, y+1*FH, PSTR("<    >"));
-    lcd_outhex4(11*FW-4, y+1*FH, sub==2 ? loVals[i]  : g_eeGeneral.calibSpanNeg[i]);
-    lcd_outhex4(15*FW,   y+1*FH, sub==1 ? anaIn(i) : (sub==2 ? midVals[i] : g_eeGeneral.calibMid[i]));
-    lcd_outhex4(20*FW-1, y+1*FH, sub==2 ? hiVals[i]  : g_eeGeneral.calibSpanPos[i]);
+    lcd_outhex4( 8*FW-4, y+1*FH, sub==2 ? loVals[i]  : g_eeGeneral.calibSpanNeg[i]);
+    lcd_outhex4(12*FW,   y+1*FH, sub==1 ? anaIn(i) : (sub==2 ? midVals[i] : g_eeGeneral.calibMid[i]));
+    lcd_outhex4(17*FW-1, y+1*FH, sub==2 ? hiVals[i]  : g_eeGeneral.calibSpanPos[i]);
   }
 
 }
@@ -1625,7 +1625,7 @@ void menuProcDiagAna(uint8_t event)
   {
     uint8_t y=i*FH;
     lcd_putsn_P( 4*FW, y,PSTR("A1A2A3A4A5A6A7A8")+2*i,2);
-    lcd_outhex4(10*FW, y,anaIn(i));
+    lcd_outhex4( 8*FW, y,anaIn(i));
     if(i<7)  lcd_outdez(17*FW, y, (int32_t)calibratedStick[i]*100/1024);
     if(i==7) putsVBat(13*FW,y,false,(sub==1 ? INVERS : 0)|PREC1);
   }
@@ -2291,11 +2291,12 @@ void menuProc0(uint8_t event)
   uint8_t tn = (g_vbat100mV/10) % 10;
   uint8_t sn = g_vbat100mV % 10;
 
+  // decimal point
   if(sn==2 || sn==3) ln++;
   if(tn==1 || tn==2) {xn--;ln++;}
 
-  lcd_hline(xn+2*FW,4*FH-4,ln);
-  lcd_hline(xn+2*FW,4*FH-3,ln);
+  lcd_hline(xn+2*FW-1,4*FH-4,ln);
+  lcd_hline(xn+2*FW-1,4*FH-3,ln);
 
 
   if(s_timerState != TMR_OFF){

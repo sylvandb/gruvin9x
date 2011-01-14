@@ -54,11 +54,11 @@ void putsTime(uint8_t x,uint8_t y,int16_t tme,uint8_t att,uint8_t att2)
   //uint8_t fw=FWNUM; //FW-1;
   //if(att&DBLSIZE) fw+=fw;
 
-  lcd_putcAtt(   x,   y, tme<0 ?'-':' ',att);
-  x += (att&DBLSIZE) ? FWNUM*5 : FWNUM*3+2;
-  lcd_putcAtt(   x+3, y, ':',att & ~INVERS);
+  lcd_putcAtt(   x,   y, tme<0 ?'-':' ',att & ~INVERS & ~BLINK);
+  x += (att&DBLSIZE) ? FWNUM*5-1 : FWNUM*3+2;
+  lcd_putcAtt(   (att&DBLSIZE) ? x+3 : x-3, y, ':',att & ~INVERS & ~BLINK);
   lcd_outdezNAtt(x,   y, abs(tme)/60,LEADING0|att,2);
-  x += (att&DBLSIZE) ? FWNUM*5-1 : FWNUM*4-2;
+  x += (att&DBLSIZE) ? FWNUM*5 : FWNUM*2+2;
   lcd_outdezNAtt(x,   y, abs(tme)%60,LEADING0|att2,2);
 }
 void putsVBat(uint8_t x,uint8_t y,uint8_t hideV,uint8_t att)
