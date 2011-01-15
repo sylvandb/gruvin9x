@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPCB (2010-05-05 BZR 2356)-stable date = 12/12/2010 12:19:36 p.m.
+Cmp-Mod V01 Created by CvPCB (2010-05-05 BZR 2356)-stable date = 15/01/2011 8:44:28 p.m.
 
 BeginCmp
 TimeStamp = /4CE748AC;
@@ -220,35 +220,35 @@ EndCmp
 BeginCmp
 TimeStamp = /4CE74DBD;
 Reference = C46;
-ValeurCmp = 0.1;
+ValeurCmp = 1u;
 IdModule  = SM0603;
 EndCmp
 
 BeginCmp
 TimeStamp = /4CE74DC4;
 Reference = C47;
-ValeurCmp = 0.1;
+ValeurCmp = 1u;
 IdModule  = SM0603;
 EndCmp
 
 BeginCmp
 TimeStamp = /4CE74D99;
 Reference = C48;
-ValeurCmp = 0.1;
+ValeurCmp = 1u;
 IdModule  = SM0603;
 EndCmp
 
 BeginCmp
 TimeStamp = /4CE74DB1;
 Reference = C49;
-ValeurCmp = 0.1;
+ValeurCmp = 1u;
 IdModule  = SM0603;
 EndCmp
 
 BeginCmp
 TimeStamp = /4CE74DCB;
 Reference = C50;
-ValeurCmp = 0.1;
+ValeurCmp = 1u;
 IdModule  = SM0603;
 EndCmp
 
@@ -263,34 +263,6 @@ BeginCmp
 TimeStamp = /4CE74D00;
 Reference = C52;
 ValeurCmp = 1u;
-IdModule  = SM0603;
-EndCmp
-
-BeginCmp
-TimeStamp = /4CF6DFAB;
-Reference = C53;
-ValeurCmp = 0.1;
-IdModule  = SM0603;
-EndCmp
-
-BeginCmp
-TimeStamp = /4CF6DFAA;
-Reference = C54;
-ValeurCmp = 0.1;
-IdModule  = SM0603;
-EndCmp
-
-BeginCmp
-TimeStamp = /4CF6DFA7;
-Reference = C55;
-ValeurCmp = 0.1;
-IdModule  = SM0603;
-EndCmp
-
-BeginCmp
-TimeStamp = /4CF6DFA9;
-Reference = C56;
-ValeurCmp = 0.1;
 IdModule  = SM0603;
 EndCmp
 
@@ -402,7 +374,7 @@ EndCmp
 BeginCmp
 TimeStamp = /4CE70A3F;
 Reference = I1;
-ValeurCmp = ATMEGA128A;
+ValeurCmp = ATmega2561;
 IdModule  = TQFP64_08;
 EndCmp
 
@@ -575,9 +547,16 @@ IdModule  = SOT23-BCE;
 EndCmp
 
 BeginCmp
+TimeStamp = /4D315001;
+Reference = Q4;
+ValeurCmp = BC847C;
+IdModule  = SOT23-BCE;
+EndCmp
+
+BeginCmp
 TimeStamp = /4CE749EC;
 Reference = R1;
-ValeurCmp = 10K;
+ValeurCmp = 5K1;
 IdModule  = SM0603;
 EndCmp
 
@@ -1033,6 +1012,27 @@ BeginCmp
 TimeStamp = /4D016C92;
 Reference = R78;
 ValeurCmp = 0;
+IdModule  = SM0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /4D191ECB;
+Reference = R79;
+ValeurCmp = 200;
+IdModule  = SM0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /4D191ECD;
+Reference = R80;
+ValeurCmp = 150K;
+IdModule  = SM0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /4D191ECE;
+Reference = R81;
+ValeurCmp = 4K7;
 IdModule  = SM0603;
 EndCmp
 

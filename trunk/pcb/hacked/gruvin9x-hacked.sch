@@ -1,4 +1,4 @@
-EESchema Schematic File Version 2  date 28/12/2010 12:05:06 p.m.
+EESchema Schematic File Version 2  date 14/01/2011 12:24:02 p.m.
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -36,8 +36,8 @@ EELAYER END
 $Descr A3 16535 11700
 Sheet 1 1
 Title "Main Controller PCB (Stock)"
-Date "27 dec 2010"
-Rev "1.2"
+Date "13 jan 2011"
+Rev "1.3"
 Comp "gruvin9x"
 Comment1 "(Layout designed to suit easy conversion to 2xA4 if required.)"
 Comment2 "for use with KiCad. Some corrections and notation improvements have been made."
@@ -2215,7 +2215,7 @@ L C C50
 U 1 1 4CE74DCB
 P 14700 3600
 F 0 "C50" V 14650 3700 50  0000 L CNN
-F 1 "0.1" V 14750 3700 50  0000 L CNN
+F 1 "1u" V 14750 3700 50  0000 L CNN
 	1    14700 3600
 	0    1    1    0   
 $EndComp
@@ -2224,7 +2224,7 @@ L C C47
 U 1 1 4CE74DC4
 P 14300 3500
 F 0 "C47" V 14250 3600 50  0000 L CNN
-F 1 "0.1" V 14350 3600 50  0000 L CNN
+F 1 "1u" V 14350 3600 50  0000 L CNN
 	1    14300 3500
 	0    1    1    0   
 $EndComp
@@ -2233,7 +2233,7 @@ L C C46
 U 1 1 4CE74DBD
 P 14300 3300
 F 0 "C46" V 14250 3400 50  0000 L CNN
-F 1 "0.1" V 14350 3400 50  0000 L CNN
+F 1 "1u" V 14350 3400 50  0000 L CNN
 	1    14300 3300
 	0    1    1    0   
 $EndComp
@@ -2242,7 +2242,7 @@ L C C49
 U 1 1 4CE74DB1
 P 14700 3400
 F 0 "C49" V 14650 3500 50  0000 L CNN
-F 1 "0.1" V 14750 3500 50  0000 L CNN
+F 1 "1u" V 14750 3500 50  0000 L CNN
 	1    14700 3400
 	0    1    1    0   
 $EndComp
@@ -2251,7 +2251,7 @@ L C C48
 U 1 1 4CE74D99
 P 14700 3200
 F 0 "C48" V 14650 3300 50  0000 L CNN
-F 1 "0.1" V 14750 3300 50  0000 L CNN
+F 1 "1u" V 14750 3300 50  0000 L CNN
 	1    14700 3200
 	0    1    1    0   
 $EndComp
