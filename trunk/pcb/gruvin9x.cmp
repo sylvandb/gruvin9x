@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPCB (2010-05-05 BZR 2356)-stable date = 15/01/2011 8:44:28 p.m.
+Cmp-Mod V01 Created by CvPCB (2010-05-05 BZR 2356)-stable date = 16/01/2011 2:28:02 p.m.
 
 BeginCmp
 TimeStamp = /4CE748AC;
@@ -71,7 +71,7 @@ IdModule  = SM0603;
 EndCmp
 
 BeginCmp
-TimeStamp = /4CE74946;
+TimeStamp = /4D3246D5;
 Reference = C11;
 ValeurCmp = 10u;
 IdModule  = SM1206;
@@ -505,13 +505,6 @@ IdModule  = CONN_2MM_2x1;
 EndCmp
 
 BeginCmp
-TimeStamp = /4CF59E5C;
-Reference = P15;
-ValeurCmp = CONN_1;
-IdModule  = TP;
-EndCmp
-
-BeginCmp
 TimeStamp = /4D016D1D;
 Reference = P16;
 ValeurCmp = CONN_1;
@@ -523,6 +516,13 @@ TimeStamp = /4D016D21;
 Reference = P17;
 ValeurCmp = CONN_1;
 IdModule  = TP;
+EndCmp
+
+BeginCmp
+TimeStamp = /4D324737;
+Reference = P18;
+ValeurCmp = CONN_2;
+IdModule  = CONN_2MM_2x1;
 EndCmp
 
 BeginCmp
@@ -1033,6 +1033,27 @@ BeginCmp
 TimeStamp = /4D191ECE;
 Reference = R81;
 ValeurCmp = 4K7;
+IdModule  = SM0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /4D324656;
+Reference = R82;
+ValeurCmp = 1K0;
+IdModule  = SM1206;
+EndCmp
+
+BeginCmp
+TimeStamp = /4D324782;
+Reference = R83;
+ValeurCmp = 200;
+IdModule  = SM0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /4D32475D;
+Reference = R84;
+ValeurCmp = 200;
 IdModule  = SM0603;
 EndCmp
 
