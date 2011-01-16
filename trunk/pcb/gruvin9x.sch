@@ -1,4 +1,4 @@
-EESchema Schematic File Version 2  date 16/01/2011 8:05:06 p.m.
+EESchema Schematic File Version 2  date 16/01/2011 9:16:43 p.m.
 LIBS:conn_5
 LIBS:atmega64
 LIBS:power
@@ -46,6 +46,8 @@ Comment2 "Copyright 2011 Bryan J. Rentoul (gruvin@gmail.com)"
 Comment3 ""
 Comment4 "Licensed under the TAPR Open Hardware License (see file,  LICENSE)"
 $EndDescr
+Text Notes 9100 9450 0    60   ~ 0
+Backlight\nPCB
 Wire Wire Line
 	8900 9000 8900 9100
 Wire Wire Line
