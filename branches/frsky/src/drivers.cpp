@@ -352,7 +352,7 @@ void per10ms()
   else if (g_eeFrsky.noDataAlarm)
   {
 #if defined (BEEPSPKR) || defined (PCBV2)
-    if (!(g_tmr10ms % 30)) beepWarn2Spkr(!(g_tmr10ms % 60) ? 25 : 19);
+    if (!(g_tmr10ms % 30)) beepWarn2Spkr((g_tmr10ms % 60) ? 25 : 20);
 #else
     if (!(g_tmr10ms % 30)) 
     {
@@ -362,7 +362,7 @@ void per10ms()
       } 
       else
       { 
-        warble=true; beepErr(); 
+        warble=true; beepWarn2(); 
       }
     }
 #endif

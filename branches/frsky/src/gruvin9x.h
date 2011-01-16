@@ -99,7 +99,11 @@
 //                            SIM_CTL  ID1      NC      RF_POW RuddDR
 
 #define PORTA_LCD_DAT  PORTA
+#ifdef PCBV2
+#define OUT_C_LIGHT   0
+#else
 #define OUT_B_LIGHT   7
+#endif
 #define INP_B_KEY_LFT 6
 #define INP_B_KEY_RGT 5
 #define INP_B_KEY_UP  4
@@ -459,9 +463,13 @@ extern uint8_t s_editMode;     //global editmode
 
 
 #define STORE_MODELVARS eeDirty(EE_MODEL)
+#ifdef PCBV2
+#define BACKLIGHT_ON    PORTC |=  (1<<OUT_C_LIGHT)
+#define BACKLIGHT_OFF   PORTC &= ~(1<<OUT_C_LIGHT)
+#else
 #define BACKLIGHT_ON    PORTB |=  (1<<OUT_B_LIGHT)
 #define BACKLIGHT_OFF   PORTB &= ~(1<<OUT_B_LIGHT)
-
+#endif
 
 
 
@@ -621,13 +629,21 @@ inline void _beep(uint8_t b) {
   g_beepCnt=b;
 }
 
-#if defined (BEEPSPKR) || defined (PCBV2)
 extern uint8_t toneFreq;
+#ifdef PCBV2
+inline void _beepSpkr(uint8_t d, uint8_t f)
+{
+  g_beepCnt=d;
+  OCR0A = (5000 / f); // sticking with old values approx 20(abs. min) to 90, 60 being the default tone(?).
+}
+#else
+#if defined (BEEPSPKR)
 inline void _beepSpkr(uint8_t d, uint8_t f)
 {
   g_beepCnt=d;
   toneFreq=f;
 }
+#endif
 #endif
 
 #if defined (BEEPSPKR) || defined (PCBV2)

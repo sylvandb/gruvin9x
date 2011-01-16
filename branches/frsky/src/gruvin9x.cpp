@@ -34,8 +34,7 @@ ModelData  g_model;
 EEFrskyData g_eeFrsky;
 #endif
 
-#if defined (BEEPSPKR) || defined (PCBV2)
-// gruvin: Tone Generator Globals
+#if defined (BEEPSPKR)
 uint8_t toneFreq = BEEP_DEFAULT_FREQ;
 uint8_t toneOn = false;
 #endif
@@ -818,7 +817,8 @@ ISR(TIMER1_COMPA_vect) //2MHz pulse generation
 }
 
 volatile uint8_t g_tmr16KHz;
-ISR(TIMER0_OVF_vect) //continuous timer 16ms (16MHz/1024/256) -- 8-bit counter overflow
+//ZZZ
+ISR(TIMER2_OVF_vect) //continuous timer 16ms (16MHz/1024/256) -- 8-bit counter overflow
 {
   g_tmr16KHz++; // gruvin: Not 16KHz. Each overflows occur at 61.035Hz (1/256th of 15.625KHz) 
                 // to give *16.384ms* intervals.
@@ -841,27 +841,28 @@ uint8_t beepOn = false;
 extern uint16_t g_time_per10; // instantiated in menus.cpp
 
 #if defined (FRSKY) || defined (PCBV2)
-ISR(TIMER0_COMPA_vect, ISR_NOBLOCK) //10ms timer
+//ZZZ
+ISR(TIMER2_COMPA_vect, ISR_NOBLOCK) //10ms timer
 #else
 ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
 #endif
 {
   cli();
 #ifdef PCBV2
-  TIMSK0 &= ~(1<<OCIE0A); //stop reentrance
-  OCR0A += 2;
+  TIMSK2 &= ~(1<<OCIE2A); //stop reentrance
+  OCR2A += 156;
 #else
   TIMSK &= ~(1<<OCIE0); //stop reentrance
 #ifdef BEEPSPKR
   OCR0 += 2;
 #else  
-  OCR0 = OCR0 + 156;
+  OCR0 += 156;
 #endif
 #endif
   sei();
 
 
-#if defined (BEEPSPKR) || defined (PCBV2)
+#if defined (BEEPSPKR)
   // gruvin: Begin Tone Generator
   static uint8_t toneCounter;
 
@@ -926,7 +927,21 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
         }
     }
 
-#if defined (BEEPSPKR) || defined (PCBV2)
+#ifdef PCBV2
+    // G: use timer0 WGM mode tone generator for beeps
+    if(beepOn)
+    {
+      static bool warbleC;
+      warbleC = warble && !warbleC;
+      if(warbleC)
+        TCCR0A  &= ~(0b01<<COM0A0); // tone off
+      else
+        TCCR0A  |= (0b01<<COM0A0);  // tone on
+    }else{
+      TCCR0A  &= ~(0b01<<COM0A0);   // tone off
+    }
+#else
+#if defined (BEEPSPKR)
     // G: use speaker tone generator for beeps
     if(beepOn)
     {
@@ -953,7 +968,7 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
       PORTE &= ~(1<<OUT_E_BUZZER);
     }
 #endif
-
+#endif // PCBV2
     per10ms();
     heartbeat |= HEART_TIMER10ms;
 
@@ -963,13 +978,13 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
     sei();
     g_time_per10 = dt2 - dt; // NOTE: These spike to nearly 65535 just now and then. Why? :/
 
-#if defined (BEEPSPKR) || defined (PCBV2)
+#if defined (BEEPSPKR)
   } // end 10ms event
 #endif
 
   cli();
 #ifdef PCBV2
-  TIMSK0 |= (1<<OCIE0A);
+  TIMSK2 |= (1<<OCIE2A);
 #else
   TIMSK |= (1<<OCIE0);
 #endif
@@ -1055,9 +1070,13 @@ int main(void)
 
   DDRA = 0xff;  PORTA = 0x00;
   DDRB = 0x81;  PORTB = 0x7e; //pullups keys+nc
-  DDRC = 0x3e;  PORTC = 0xc1; //pullups nc
-  //ZZZ DDRD = 0x00;  PORTD = 0xff; //pullups keys
+#ifdef PCBV2
+  DDRC = 0x3f;  PORTC = 0xc0; // PC0 used for LCD back light control
   DDRD = 0x0F;  PORTD = 0xff; // 7:4=inputs (keys/trims, pull-ups on), 3:0=outputs (keyscan row select)
+#else
+  DDRC = 0x3e;  PORTC = 0xc1; //pullups nc
+  DDRD = 0x00;  PORTD = 0xff; //pullups keys
+#endif
   DDRE = 0x08;  PORTE = 0xff-(1<<OUT_E_BUZZER); //pullups + buzzer 0
   DDRF = 0x00;  PORTF = 0xff; //anain
   DDRG = 0x10;  PORTG = 0xff; //pullups + SIM_CTL=1 = phonejack = ppm_in
@@ -1077,12 +1096,28 @@ int main(void)
 
   /**** Set up timer/counter 0 ****/
 #ifdef PCBV2  
+  /** Move old 64A Timer0 functions to Timer2 and use WGM on OC0(A) (PB7) for spkear tone output **/
+
   // TCNT0  10ms = 16MHz/1024/2(/78) periodic timer (for speaker tone generation)
   //        Capture ISR 7812.5/second -- runs per-10ms code segment once every 78
   //        cycles (9.984ms). Timer overflows at about 61Hz or once every 16ms.
-  TCCR0B  = (0b101 << CS00); // Norm mode, clk/1024 (differs from ATmega64 chip)
-  OCR0A   = 2;
-  TIMSK0 |= (1<<OCIE0A) |  (1<<TOIE0); // Enable Output-Compare and Overflow interrrupts
+  TCCR2B  = (0b111 << CS20); // Norm mode, clk/1024 (differs from ATmega64 chip)
+  OCR2A   = 2;
+  TIMSK2 |= (1<<OCIE2A) |  (1<<TOIE2); // Enable Output-Compare and Overflow interrrupts
+
+  // TCNT0  10ms = 16MHz/1024/2(/78) periodic timer (for speaker tone generation)
+  //        Capture ISR 7812.5/second -- runs per-10ms code segment once every 78
+  //        cycles (9.984ms). Timer overflows at about 61Hz or once every 16ms.
+
+  // Set up Phase correct Waveform Gen. mode, at clk/64 = 250,000 counts/second
+  // (Higher speed allows for finer control of frquencies in the audio range.)
+  TCCR0B  = (1<<WGM02) | (0b011 << CS00);
+  TCCR0A  = (0b01<<WGM00);
+
+//  OCR0A   = 31;               // Set freq. about 2KHz toggle, so 1KHz output tone
+//  TCCR0A  |= (0b01<<COM0A0);  // Output on. (Toggle OC0A [PB7] on compare match.)
+//  TCCR0A  &= ~(0b01<<COM0A0); // Output off.
+
 #else
 #ifdef BEEPSPKR
   // TCNT0  10ms = 16MHz/1024/2(/78) periodic timer (for speaker tone generation)
