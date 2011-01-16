@@ -22,7 +22,7 @@ This logic board PCB design is licensed under the [http://www.tapr.org/TAPR_Open
 
 As a starting point, a PCB design was worked up from scratch in [http://kicad.sourceforge.net/ KiCAD] to closely replicate the wiring and functions of Turnigy V2 '9X logic board. See [http://code.google.com/p/gruvin9x/source/browse/#svn/trunk/pcb/original /trunk/pcb/original/] (as of r155). From there, numerous changes and additions were made -- and continue to be made, as features and versions progress.
 
-The first custom PCB was, somewhat oddly, versioned v2.14. This was ordered and the first prototype built upon it. A few relatively minor bugs were found and a (presently v3.2) second custom board design got underway. As of this writing, the v3.2 board is probably ready for production. But I want to wait until I have the mass storage interface working first, just in case some last minute bugs come to light during that process.
+The first custom PCB actually built was, somewhat oddly, versioned v2.14. This was ordered and the first prototype built upon it. A few relatively minor bugs were found and a (presently v3.2) second custom board design got underway. As of this writing, the v3.2 board is probably ready for production. But I want to wait until I have the mass storage interface working first, just in case some last minute bugs come to light during that process.
 
 A couple of notable changes were made for V3 ...
 
