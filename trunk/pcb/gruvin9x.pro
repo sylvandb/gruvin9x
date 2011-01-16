@@ -1,4 +1,4 @@
-update=15/01/2011 11:54:07 p.m.
+update=16/01/2011 9:13:44 p.m.
 version=1
 last_client=pcbnew
 [cvpcb]
@@ -84,9 +84,9 @@ LibName32=valves
 LibName33=Custom Components\\library\\trans-sot23
 [pcbnew]
 version=1
-PadDrlX=250
-PadDimH=350
-PadDimV=350
+PadDrlX=400
+PadDimH=600
+PadDimV=600
 BoardThickness=630
 SgPcb45=1
 TxtPcbV=800

@@ -1,4 +1,4 @@
-PCBNEW-BOARD Version 1 date 16/01/2011 8:06:01 p.m.
+PCBNEW-BOARD Version 1 date 16/01/2011 9:13:42 p.m.
 
 # Created by Pcbnew(2010-05-05 BZR 2356)-stable
 
@@ -878,10 +878,10 @@ Ne 143 "VCC"
 Po 1476 0
 $EndPAD
 $SHAPE3D
-Na "pin_array/pins_array_3x1.wrl"
-Sc 1.000000 1.000000 1.000000
+Na "backlight_driver_board.wrl"
+Sc 0.393700 0.393700 0.393700
 Of 0.000000 0.000000 0.000000
-Ro 0.000000 0.000000 0.000000
+Ro 0.000000 0.000000 90.000000
 $EndSHAPE3D
 $EndMODULE  PIN_ARRAY_3X1
 $MODULE CONN_2MM_8x1
