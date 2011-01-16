@@ -22,6 +22,22 @@ This logic board PCB design is licensed under the [http://www.tapr.org/TAPR_Open
 
 As a starting point, a PCB design was worked up from scratch in [http://kicad.sourceforge.net/ KiCAD] to closely replicate the wiring and functions of Turnigy V2 '9X logic board. See [http://code.google.com/p/gruvin9x/source/browse/#svn/trunk/pcb/original /trunk/pcb/original/] (as of r155). From there, numerous changes and additions were made -- and continue to be made, as features and versions progress.
 
+The first custom PCB was, somewhat oddly, versioned v2.14. This was ordered and the first prototype built upon it. A few relatively minor bugs were found and a (presently v3.2) second custom board design got underway. As of this writing, the v3.2 board is probably ready for production. But I want to wait until I have the mass storage interface working first, just in case some last minute bugs come to light during that process.
+
+A couple of notable changes were made for V3 ...
+
+ 1. The speaker tone generator is now using waveform generator mode on Timer0, output on PB7, which produces much cleaner, smooth sounding tones. Previous internal timing from Timer0 has been moved to Timer2. 
+
+ 2. PB7 used to be the LCD back-light control output. This has now been moved to PC0, which appears on a 3-pin break-out with correct spacing to solder the [http://smartieparts.com/ SmartieParts.com] LCD back-light driver PCB to.
+
+ 3. The original, stock "buzzer" output is retained along with the, now separate speaker output. This make using a speaker optional, and also allows the buzzer output to be used independently for its own beeps and buzzes or to drive a vibrating alert motor. The program code will probably be adjusted such that both speaker and buzzer output work simultaneously. The idea for that being to simply cut one trace to disable the buzzer if you have a speaker, or install a vibrating motor in the buzzer's place.
+
+Of course, all of this is under condition code build, using make directives. That is, if you don't have a V3 PCB, you can still build the code for the stock hardware and expect things to work properly.
+
+The "V3" board is planned to be offered to other users, depending on demand -- and of course, anybody can have their own PCBs manufactured from the open design files. Here's a KiCAD 3D perspective of the present v3.2 design ...
+
+[http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/pcb_v3.2_3d_top.png]
+ 
 *Past Milestones in descending date order ...*
 
 2011-01-14: First prototype board fully constructed, code updated and functioning. There were some issues with the wiring layout of the trim switches that will need to be fixed on the V3 board. But otherwise, everything seems to be working.  All in all, it doesn't make much sense to produce another V2 prototype board, since the V3 board will include several fixes and enhancements.
