@@ -22,19 +22,23 @@ This logic board PCB design is licensed under the [http://www.tapr.org/TAPR_Open
 
 As a starting point, a PCB design was worked up from scratch in [http://kicad.sourceforge.net/ KiCAD] to closely replicate the wiring and functions of Turnigy V2 '9X logic board. See [http://code.google.com/p/gruvin9x/source/browse/#svn/trunk/pcb/original /trunk/pcb/original/] (as of r155). From there, numerous changes and additions were made -- and continue to be made, as features and versions progress.
 
-The first custom PCB actually built was, somewhat oddly, versioned v2.14. This was ordered and the first prototype built upon it. A few relatively minor bugs were found and a (presently v3.2) second custom board design got underway. As of this writing, the v3.2 board is probably ready for production. But I want to wait until I have the mass storage interface working first, just in case some last minute bugs come to light during that process.
+The first custom PCB actually built was, somewhat oddly, versioned v2.14. A few minor bugs were found, additions and changes made and a  second custom board design got underway. As of this writing, the v3.2 board is probably ready for production. But I want to wait until I've the mass storage interface working first, just in case some last minute bugs come to light during that process.
 
-A couple of notable changes were made for V3 ...
+Besides the bug-fixes, a few notable changes were made for V3 ...
 
  1. The speaker tone generator is now using waveform generator mode on Timer0, output on PB7, which produces much cleaner, smooth sounding tones. Previous internal timing from Timer0 has been moved to Timer2. 
 
- 2. PB7 used to be the LCD back-light control output. This has now been moved to PC0, which appears on a 3-pin break-out with correct spacing to solder the [http://smartieparts.com/ SmartieParts.com] LCD back-light driver PCB to.
+ 2. PB7 used to be the LCD back-light control output. This has now been moved to PC0, and appears on a 3-pin break-out with pin spacing to accept the GND/SWITCH/VCC inputs of the [http://smartieparts.com/ SmartieParts.com] LCD back-light driver PCB. I did this to give the back-light driver board a proper home, rather than having to hot-glue it "somewhere".
 
  3. The original, stock "buzzer" output is retained along with the, now separate speaker output. This make using a speaker optional, and also allows the buzzer output to be used independently for its own beeps and buzzes or to drive a vibrating alert motor. The program code will probably be adjusted such that both speaker and buzzer output work simultaneously. The idea for that being to simply cut one trace to disable the buzzer if you have a speaker, or install a vibrating motor in the buzzer's place.
 
-Of course, all of this is under condition code build, using make directives. That is, if you don't have a V3 PCB, you can still build the code for the stock hardware and expect things to work properly.
+ 4. Not a change, but the 5x2 ICP header pins remain for the programming interface. There is a plan to make a programmer interface board to sit permanently on this header, thus making a USB socket available. However, that plan is low priority.
 
-The "V3" board is planned to be offered to other users, depending on demand -- and of course, anybody can have their own PCBs manufactured from the open design files. Here's a KiCAD 3D perspective of the present v3.2 design ...
+Of course, all of the above comes under condition code build, using make directives in the typical fashion. EG. `make PCBV2`. So, if you don't have a V3 PCB, you will still be able to build gruvin9x for the stock hardware, expecting things to work properly, albeit lacking certain features, of course.
+
+It is planned to offer the "V3" PCB (possibly pre-constructed?) to whomever wants it. This will depend on demand. A DigiKey.com part no. kitset of parts will be available as well. Of course, anybody can have their own PCBs manufactured from the open design files. Though, I would suggest you wait until I've built the thing first and tested it out.
+
+Here's a KiCAD 3D perspective of the present v3.2 design ...
 
 [http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/pcb_v3.2_3d_top.png]
  
