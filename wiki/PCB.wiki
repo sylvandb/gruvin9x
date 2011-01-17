@@ -38,9 +38,9 @@ Of course, all of the above comes under conditional code build control, using ma
 
 It is planned to offer the "V3" PCB (possibly pre-constructed?) to whomever wants it. This will depend on demand. A DigiKey.com part no. kitset of parts will be available as well. Of course, anybody can have their own PCBs manufactured from the open design files. Though, I would suggest you wait until I've built the thing first and tested it out.
 
-Here's a KiCAD 3D perspective of the present v3.2 design ...
+Here's a (Photoshop'd) KiCAD 3D perspective of the present v3.2 design ...
 
-[http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/pcb_v3.2_3d_top.png]
+[http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/pcb_v3.2_3d_top.gif]
  
 *Past Milestones in descending date order ...*
 
