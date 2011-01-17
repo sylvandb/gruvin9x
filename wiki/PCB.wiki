@@ -12,7 +12,7 @@ Initial intentions are to ...
  * add RS-232 and TTL level telemetry serial data ports
  * free up most of PORTB for use with an MM/SD card interface
 
-Many more ideas are swimming around in the author's mind and several suggestions have already come in from others. Just how far this design will go is of course a mystery at this time.
+Many more ideas are swimming around in the author's mind and several suggestions have already come in from others. Just how far this design will go, remains to be seen.
 
 == License ==
 
