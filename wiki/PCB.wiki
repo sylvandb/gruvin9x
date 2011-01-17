@@ -41,7 +41,7 @@ It is planned to offer the "V3" PCB (possibly pre-constructed?) to whomever want
 Here's a (Photoshop'd) KiCAD 3D perspective of the present v3.2 design ...
 
 [http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/pcb_v3.2_3d_top.gif]
- 
+
 *Past Milestones in descending date order ...*
 
 2011-01-14: First prototype board fully constructed, code updated and functioning. There were some issues with the wiring layout of the trim switches that will need to be fixed on the V3 board. But otherwise, everything seems to be working.  All in all, it doesn't make much sense to produce another V2 prototype board, since the V3 board will include several fixes and enhancements.
