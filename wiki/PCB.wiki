@@ -34,7 +34,7 @@ Besides the bug-fixes, a few notable changes were made for V3 ...
 
  4. Not a change, but the 5x2 ICP header pins remain for the programming interface. There is a plan to make a programmer interface board to sit permanently on this header, thus making a USB socket available. However, that plan is low priority.
 
-Of course, all of the above comes under condition code build, using make directives in the typical fashion. EG. `make PCBV2`. So, if you don't have a V3 PCB, you will still be able to build gruvin9x for the stock hardware, expecting things to work properly, albeit lacking certain features, of course.
+Of course, all of the above comes under conditional code build control, using make directives in the typical fashion. EG. `make PCBV2`. So, if you don't have a V3 PCB, you will still be able to build gruvin9x for the stock hardware, expecting things to work properly, albeit lacking certain features, of course.
 
 It is planned to offer the "V3" PCB (possibly pre-constructed?) to whomever wants it. This will depend on demand. A DigiKey.com part no. kitset of parts will be available as well. Of course, anybody can have their own PCBs manufactured from the open design files. Though, I would suggest you wait until I've built the thing first and tested it out.
 
