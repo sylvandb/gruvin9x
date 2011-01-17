@@ -1,4 +1,4 @@
-EESchema Schematic File Version 2  date 16/01/2011 9:16:43 p.m.
+EESchema Schematic File Version 2  date 17/01/2011 3:42:48 p.m.
 LIBS:conn_5
 LIBS:atmega64
 LIBS:power
@@ -38,7 +38,7 @@ EELAYER END
 $Descr A3 16535 11700
 Sheet 1 1
 Title "Main Controller PCB (Stock)"
-Date "16 jan 2011"
+Date "17 jan 2011"
 Rev "3.2"
 Comp ""
 Comment1 ""
@@ -1260,7 +1260,7 @@ L R R82
 U 1 1 4D324656
 P 2600 8500
 F 0 "R82" V 2680 8500 50  0000 C CNN
-F 1 "1K0" V 2600 8500 50  0000 C CNN
+F 1 "1K" V 2600 8500 50  0000 C CNN
 	1    2600 8500
 	0    1    1    0   
 $EndComp
@@ -1279,7 +1279,7 @@ L R R81
 U 1 1 4D191ECE
 P 9300 9850
 F 0 "R81" V 9380 9850 50  0000 C CNN
-F 1 "4K7" V 9300 9850 50  0000 C CNN
+F 1 "5K1" V 9300 9850 50  0000 C CNN
 	1    9300 9850
 	0    1    1    0   
 $EndComp
