@@ -1,8 +1,9 @@
 Changes in v1.2
 
 + Improved CPU efficiency for speaker tone generator. (V2 PCB required this.)
+
 + Changed freq. range of trim tone frequencies to use a divide by 4 instead
-  of 3, for better code efficiency. (Upp tone not so ear piercing now either. 
+  of 3, for better code efficiency. (Upper tone not so ear piercing now either. 
   Bonus.)
 
 Committed r479

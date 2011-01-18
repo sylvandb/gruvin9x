@@ -1,4 +1,4 @@
-EESchema Schematic File Version 2  date 17/01/2011 3:42:48 p.m.
+EESchema Schematic File Version 2  date 19/01/2011 10:47:29 a.m.
 LIBS:conn_5
 LIBS:atmega64
 LIBS:power
@@ -38,7 +38,7 @@ EELAYER END
 $Descr A3 16535 11700
 Sheet 1 1
 Title "Main Controller PCB (Stock)"
-Date "17 jan 2011"
+Date "18 jan 2011"
 Rev "3.2"
 Comp ""
 Comment1 ""
@@ -2900,8 +2900,8 @@ $Comp
 L CAPAPOL C16
 U 1 1 4CE74935
 P 3000 5800
-F 0 "C16" V 3050 5900 50  0000 L CNN
-F 1 "47u" V 3150 5850 50  0000 L CNN
+F 0 "C16" V 2900 5650 50  0000 L CNN
+F 1 "10u" V 3050 5650 50  0000 L CNN
 	1    3000 5800
 	0    -1   -1   0   
 $EndComp
