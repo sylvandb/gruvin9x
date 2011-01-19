@@ -274,7 +274,7 @@ void per10ms()
 #ifdef BEEPSPKR
     if (!(g_tmr10ms % 30)) beepWarn2Spkr(!(g_tmr10ms % 60) ? 25 : 19);
 #else
-    if (!(g_tmr10ms % 30)) if (g_tmr10ms % 60) { warble=false; beepWarn2() } else  { warble=true; beepErr() };
+    if (!(g_tmr10ms % 30)) if (g_tmr10ms % 60) { warble=false; beepWarn2(); } else  { warble=true; beepErr(); };
 #endif
   }
 #endif
