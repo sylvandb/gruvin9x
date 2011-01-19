@@ -840,8 +840,7 @@ uint8_t beepAgainOrig = 0;
 uint8_t beepOn = false;
 extern uint16_t g_time_per10; // instantiated in menus.cpp
 
-#if defined (FRSKY) || defined (PCBV2)
-//ZZZ
+#ifdef PCBV2
 ISR(TIMER2_COMPA_vect, ISR_NOBLOCK) //10ms timer
 #else
 ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
@@ -1056,7 +1055,7 @@ uint8_t DEBUG2 = 0;
 
 int main(void)
 {
-#if defined (FRSKY) || defined (PCBV2)
+#ifdef PCBV2
   /////////////////////////////////////////////
   // Shut the WDT off. None of the fuse settings 
   // seem to accomplish this. Strange.

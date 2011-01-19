@@ -26,7 +26,7 @@ static inline void __attribute__ ((always_inline))
 eeprom_write_byte_cmp (uint8_t dat, uint16_t pointer_eeprom)
 {
   //see /home/thus/work/avr/avrsdk4/avr-libc-1.4.4/libc/misc/eeprom.S:98 143
-#if defined (FRSKY) || defined (PCBV2)
+#ifdef PCBV2
   while(EECR & (1<<EEPE)) //ZZZ /* make sure EEPROM is ready */
 #else
   while(EECR & (1<<EEWE)) //ZZZ /* make sure EEPROM is ready */
@@ -40,7 +40,7 @@ eeprom_write_byte_cmp (uint8_t dat, uint16_t pointer_eeprom)
   EEDR  = dat;
   uint8_t flags=SREG;
   cli();
-#if defined (FRSKY) || defined (PCBV2)
+#ifdef PCBV2
   EECR |= 1<<EEMPE;
   EECR |= 1<<EEPE;
 #else
@@ -294,7 +294,7 @@ void per10ms()
     1<<INP_D_TRM_RH_UP
   };
 
-#if defined (PCBV2)
+#ifdef PCBV2
   /*** Original Trims were all on PORTD as follows
 
     Bit Switch
