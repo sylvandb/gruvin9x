@@ -5,15 +5,15 @@
 
 == Why? ==
 
-The primary intention with this new main board is to provide a more powerful and flexible hardware platform for the TH/ER/gruvin9x open source firmware to run on -- because we can :p. The design is "open", so you can follow its progress as well as make requests and suggestions for additions and improvements -- or, of course, get involved more directly and do those for yourself.
+The primary intention with this new main board is to provide a more powerful and flexible platform for the TH/ER/gruvin9x open source firmware to run on – because we can :p. The design is "open", so you can follow its progress as well as make requests and suggestions for additions and improvements – or, of course, get involved more directly and do those for yourself.
 
 Initial intentions are to ...
 
- * provide a programming header capable of supporting an onboard USB programming board (later). 
- * add RS-232 and TTL level telemetry serial data ports
- * free up most of PORTB for use with an MM/SD card interface
+ * provide a programming header capable of supporting an onboard USB programming board. (For now, this header simply enables connection of an AVR ICP programmer.) 
+ * add RS-232 and TTL level telemetry serial data send/receive ports
+ * free up most of PORTB for use with an MM/SD card interface for mass storage
 
-Many more ideas are swimming around in the author's mind and several suggestions have already come in from others. Just how far this design will go, remains to be seen.
+Many more ideas are swimming around in the author's head, as well as several suggestions from others. Just how far this design will go, well, it remains to be seen.
 
 == License ==
 
