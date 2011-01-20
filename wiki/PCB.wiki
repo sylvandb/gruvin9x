@@ -5,7 +5,7 @@
 
 == Why? ==
 
-The primary intention is provide a more powerful and flexible hardware platform for the TH/ER/gruvin9x open source firmware to run on -- because we can :p. The design is "open", so you can follow its progress as well as make requests and suggestions for additions and improvements -- or, of course, get involved more directly and do those for yourself.
+The primary intention with this new main board is to provide a more powerful and flexible hardware platform for the TH/ER/gruvin9x open source firmware to run on -- because we can :p. The design is "open", so you can follow its progress as well as make requests and suggestions for additions and improvements -- or, of course, get involved more directly and do those for yourself.
 
 Initial intentions are to ...
 
