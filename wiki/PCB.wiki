@@ -12,6 +12,7 @@ Initial intentions are to ...
  * provide a programming header capable of supporting an onboard USB programming board. (For now, this header simply enables connection of an AVR ICP programmer.) 
  * add RS-232 and TTL level telemetry serial data send/receive ports
  * free up most of PORTB for use with an MM/SD card interface for mass storage
+ * upgrade the processor for more program, RAM and EEPROM storage memory
 
 Many more ideas are swimming around in the author's head, as well as several suggestions from others. Just how far this design will go, well, it remains to be seen.
 
