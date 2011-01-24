@@ -669,10 +669,10 @@ inline void _beepSpkr(uint8_t d, uint8_t f)
 
 #endif
 
-
-//DEBUG
-extern uint8_t DEBUG1;  
-extern uint8_t DEBUG2;  
+// MM/SD card Disk IO Support
+#ifdef PCBV2
+extern void disk_timerproc(void);
+#endif
 
 #endif // gruvin9x_h
 /*eof*/

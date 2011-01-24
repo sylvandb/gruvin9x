@@ -19,6 +19,13 @@
 #include "gruvin9x.h"
 #include "s9xsplash.lbm"
 
+// MM/SD card Disk IO Support
+#ifdef PCBV2
+#include "integer.h"
+#include "ff.h"
+#include "diskio.h"
+#endif
+
 /*
 mode1 rud ele thr ail
 mode2 rud thr ele ail
@@ -968,7 +975,13 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
     }
 #endif
 #endif // PCBV2
+
     per10ms();
+
+#ifdef PCBV2
+    disk_timerproc();
+#endif
+
     heartbeat |= HEART_TIMER10ms;
 
     // Record per10ms ISR execution time, in us(x2) for STAT2 page
@@ -1036,6 +1049,42 @@ ISR(TIMER3_CAPT_vect, ISR_NOBLOCK) //capture ppm in 16MHz / 8 = 2MHz
   sei();
 }
 
+#ifdef PCBV2
+/*---------------------------------------------------------*/
+/* User Provided Timer Function for FatFs module           */
+/*---------------------------------------------------------*/
+/* This is a real time clock service to be called from     */
+/* FatFs module. Any valid time must be returned even if   */
+/* the system does not support a real time clock.          */
+/* This is not required in read-only configuration.        */
+
+#include "rtc.h"
+
+uint32_t get_fattime(void)
+{
+  RTC rtc;
+
+  /* Get local time */
+  //rtc_gettime(&rtc);
+
+  rtc.year = 2011;
+  rtc.month = 1;
+  rtc.mday = 1;
+  rtc.wday = 1;
+  rtc.hour = 0;
+  rtc.min = 0;
+  rtc.sec = 0;
+
+  /* Pack date and time into a DWORD variable */
+  return    ((DWORD)(rtc.year - 1980) << 25)
+    | ((uint32_t)rtc.month << 21)
+    | ((uint32_t)rtc.mday << 16)
+    | ((uint32_t)rtc.hour << 11)
+    | ((uint32_t)rtc.min << 5)
+    | ((uint32_t)rtc.sec >> 1);
+}
+#endif
+
 extern uint16_t g_timeMain;
 //void main(void) __attribute__((noreturn));
 
@@ -1068,11 +1117,12 @@ int main(void)
 #endif
 
   DDRA = 0xff;  PORTA = 0x00;
-  DDRB = 0x81;  PORTB = 0x7e; //pullups keys+nc
 #ifdef PCBV2
+  DDRB = 0xF7;  PORTB = 0x7e;
   DDRC = 0x3f;  PORTC = 0xc0; // PC0 used for LCD back light control
   DDRD = 0x0F;  PORTD = 0xff; // 7:4=inputs (keys/trims, pull-ups on), 3:0=outputs (keyscan row select)
 #else
+  DDRB = 0x81;  PORTB = 0x7e; //pullups keys+nc
   DDRC = 0x3e;  PORTC = 0xc1; //pullups nc
   DDRD = 0x00;  PORTD = 0xff; //pullups keys
 #endif

@@ -19,6 +19,11 @@
 #include "gruvin9x.h"
 #include "frsky.h"
 
+#ifdef PCBV2
+#include "ff.h"
+#include "diskio.h"
+#endif
+
 uint8_t frskyRxBuffer[19];   // Receive buffer. 9 bytes (full packet), worst case 18 bytes with byte-stuffing (+1)
 uint8_t frskyTxBuffer[19]; // Ditto for transmit buffer
 uint8_t frskyTxBufferCount = 0;
@@ -381,18 +386,13 @@ void menuProcFrsky(uint8_t event)
   static uint8_t blinkCount = 0; // let's blink the data on and off if there's no data stream
   static MState2 mstate2;
   TITLE("FRSKY");
-  MSTATE_CHECK_V(1,menuTabFrsky,1); // curr,menuTab,numRows(including the page counter [1/2] etc)
-  // int8_t  sub    = mstate2.m_posVert; // alias sub to m_posvert. Clever Mr. TH :-D
+  MSTATE_CHECK_V(1,menuTabFrsky,1); // curr,menuTab,numRows(including the page counter [1/3] etc)
 
   if (!frskyStreaming)
   {
     lcd_putsAtt(32, 0, PSTR("NO"), DBLSIZE);
     lcd_putsAtt(62, 0, PSTR("DATA"), DBLSIZE);
   }
-
-//DEBUG
-    lcd_outdezAtt(FW*4, FH*5, DEBUG1, 0); 
-    lcd_outdezAtt(FW*10, FH*5, DEBUG2, 0); 
 
   uint8_t y = 2*FH;
 

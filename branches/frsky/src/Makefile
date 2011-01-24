@@ -82,6 +82,12 @@ ifeq ($(EXT), FRSKY)
  CPPSRC += frsky.cpp
 endif
 
+# Disk IO support (PCB V2 only)
+ifeq ($(PCB), V2)
+  CPPSRC += ff.cpp
+  CPPSRC += diskio.cpp
+endif
+
 # List Assembler source files here.
 #     Make them always end in a capital .S.  Files ending in a lowercase .s
 #     will not be considered source files but generated files (assembler
