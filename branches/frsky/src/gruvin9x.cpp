@@ -788,10 +788,10 @@ ISR(TIMER1_COMPA_vect) //2MHz pulse generation
 
   if(pulsePol)
   {
-    PORTB |=  (1<<OUT_B_PPM);
+    PORTB |=  (1<<OUT_B_PPM); // GCC optimisation should result in a single SBI instruction
     pulsePol = 0;
   }else{
-    PORTB &= ~(1<<OUT_B_PPM);
+    PORTB &= ~(1<<OUT_B_PPM); // GCC optimisation should result in a single CLI instruction
     pulsePol = 1;
   }
   g_tmr1Latency_max = max(dt,g_tmr1Latency_max);    // max has leap, therefore vary in length

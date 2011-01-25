@@ -37,6 +37,7 @@
 #define CT_BLOCK	0x08		/* Block addressing */
 
 /* Port Controls  (Platform dependent) */
+// GCC optimisation should result in a single CBI/SBI instructions here
 #define CS_LOW()	PORTB &= ~0x20    	/* MMC CS = L */
 #define	CS_HIGH()	PORTB |= 0x20		/* MMC CS = H */
 
