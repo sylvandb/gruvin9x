@@ -1,4 +1,4 @@
-EESchema Schematic File Version 2  date 14/01/2011 12:17:27 p.m.
+EESchema Schematic File Version 2  date 25/01/2011 3:32:26 p.m.
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -35,7 +35,7 @@ EELAYER END
 $Descr A3 16535 11700
 Sheet 1 1
 Title "Main Controller PCB (Stock)"
-Date "13 jan 2011"
+Date "25 jan 2011"
 Rev "1.2"
 Comp "gruvin9x"
 Comment1 "(Layout designed to suit easy conversion to 2xA4 if required.)"
@@ -2889,7 +2889,7 @@ AilDR_SW
 Text Label 700  8200 0    60   ~ 0
 TCut_SW
 Text Label 700  8500 0    60   ~ 0
-Speaker
+Buzzer
 $Comp
 L R R26
 U 1 1 4CE70B44

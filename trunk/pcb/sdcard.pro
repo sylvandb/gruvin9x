@@ -1,4 +1,4 @@
-update=25/01/2011 1:02:19 p.m.
+update=25/01/2011 4:05:04 p.m.
 last_client=eeschema
 [eeschema]
 version=1
@@ -66,4 +66,5 @@ LibName27=opto
 LibName28=atmel
 LibName29=contrib
 LibName30=valves
-LibName31=H:\\Documents\\gruvin9x\\trunk\\pcb\\Custom Components\\library\\sdc_mmc_socket
+LibName31=Custom Components\\library\\ds1338-rtc
+LibName32=Custom Components\\library\\sdc_mmc_socket
