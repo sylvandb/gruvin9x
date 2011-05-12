@@ -1,5 +1,5 @@
-update=25/01/2011 4:05:04 p.m.
-last_client=eeschema
+update=8/04/2011 10:44:41 a.m.
+last_client=pcbnew
 [eeschema]
 version=1
 LibDir=
@@ -68,3 +68,33 @@ LibName29=contrib
 LibName30=valves
 LibName31=Custom Components\\library\\ds1338-rtc
 LibName32=Custom Components\\library\\sdc_mmc_socket
+[pcbnew]
+version=1
+PadDrlX=320
+PadDimH=600
+PadDimV=600
+BoardThickness=630
+SgPcb45=1
+TxtPcbV=800
+TxtPcbH=600
+TxtModV=600
+TxtModH=600
+TxtModW=120
+VEgarde=100
+DrawLar=150
+EdgeLar=150
+TxtLar=120
+MSegLar=150
+LastNetListRead=
+[pcbnew/libraries]
+LibDir=
+LibName1=sockets
+LibName2=connect
+LibName3=discret
+LibName4=pin_array
+LibName5=divers
+LibName6=libcms
+LibName7=display
+LibName8=valves
+LibName9=led
+LibName10=dip_sockets
