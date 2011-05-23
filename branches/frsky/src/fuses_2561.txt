@@ -1,0 +1,25 @@
+The ATmega2561 uses quite different bit assignment for its option fuses
+
+Default values for ATmega64 are:
+  hfuse = 0b10011001 (0x99)
+  lfuse = 0b11100001 (0xE1)
+  efuse = 0b11111101 (0xFD)
+
+These are set to ...
+  0x89
+  0xe
+  0xff
+  ... respectively.
+
+Defaults for ATmega2561 are:
+
+  hfuse = 0b10011001 (0x99)
+  lfuse = 0b01100010 (0x62)
+  efuse = 0b11111111 (0xFF)
+
+The bit assignments ae quite different in all cases. For the 2561 we want:
+
+  hfuse = 0b10011001 (0x99)
+  lfuse = 0b01101110 (0xee)
+  efuse = 0b11111111 (0xfc) [ Brownout Detector bits BOD2:0 = 100 = 4.3V ]
+
