@@ -7,12 +7,8 @@ Just respond in the group discussion.
 ========
 = Todo =
 ========
-* You will notice there are some loose tracks on the left hand side of the board. These are to be used to drive a
-  vibrating motor for alarms etc. It will probably just consist of another 3v regulator and a transistor, maybe a 
-  series inductor to separate the motor rail from the battery, and a couple of caps for the regulator. You will
-  notice the supply for the motor goes right back to source, didn't want a dirty motor causing supply problems.
-  But first I need to get my hands on a suitable motor and see what sort of voltage and current it needs. I am 
-  thinking Playstation2-3 controllers or similar, off to eBay.......
+
+* Get a TPS77601 regulator and check the Enable input can tolerate a PWM signal, may not be needed (read below, line 46).
 
 * Move component labels about for the silkscreen, but first I am going to get a look at a V2.14 board.
    
@@ -45,6 +41,12 @@ Major
   matrix to operate correctly we must remove the connection to analogue GND (by cutting PCB traces) and connect it 
   across to the digi GND point (now the KEY_Yn point) on the vertical trim board. 
   Pictures for this mod are in the .\Data Sheets\Switch Matrix Changes\ directory
+* Added circuity to drive a vibrating motor for alarms etc. Have used a variable voltage regulator with enable signal
+ (1.2v - 5.5v @ 500ma). This should hopefully allow a selection of motors to be used. Have also added a jumper 
+ that either allows the Spare_2/PG5 signal or the PH3/OC4A PWM ouput to drive the enable on the regulator. I think 
+ PWM control maybe an overkill but the option is there. Early indications show PS3 controller vibration motors 
+ look good, they wedge in just fine in the bottom left of the back of the case. Got a copy ps3 wired controller
+ of eBay for 6GBP. Contains two motors with differing weights, either seems fine.
 
 Minor
 -----
