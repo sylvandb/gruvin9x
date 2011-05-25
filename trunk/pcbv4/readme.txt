@@ -46,7 +46,7 @@ Major
  that either allows the Spare_2/PG5 signal or the PH3/OC4A PWM ouput to drive the enable on the regulator. I think 
  PWM control maybe an overkill but the option is there. Early indications show PS3 controller vibration motors 
  look good, they wedge in just fine in the bottom left of the back of the case. Got a copy ps3 wired controller
- of eBay for 6GBP. Contains two motors with differing weights, either seems fine.
+ from eBay for 6GBP. Contains two motors with differing weights, either seems fine.
 
 Minor
 -----
