@@ -117,7 +117,8 @@ inline int16_t getValue(uint8_t i)
 {
     if(i<MIX_MAX) return calibratedStick[i];//-512..512
     else if(i<=MIX_FULL) return 1024; //FULL/MAX
-    else if(i<MIX_FULL+NUM_PPM) return (g_ppmIns[i-MIX_FULL] - g_eeGeneral.ppmInCalib[i-MIX_FULL])*2;
+    else if(i<PPM_BASE+4) return (g_ppmIns[i-PPM_BASE] - g_eeGeneral.trainer.calib[i-PPM_BASE])*2;
+    else if(i<PPM_BASE+NUM_PPM) return g_ppmIns[i-PPM_BASE]*2;
     else return ex_chans[i-MIX_FULL-NUM_PPM];
     return 0;
 }
@@ -558,7 +559,33 @@ void pushMenu(MenuFuncP newMenu)
 uint8_t  g_vbat100mV;
 volatile uint8_t tick10ms = 0;
 uint16_t g_LightOffCounter;
+uint8_t beepAgain = 0;
+uint8_t beepAgainOrig = 0;
+uint8_t beepOn = false;
+
 void evalCaptures();
+
+inline bool checkSlaveMode()
+{
+  // no power -> only phone jack = slave mode
+
+#if defined(BUZZER_MOD) || defined(BEEPSPKR)
+  return SLAVE_MODE;
+#else
+  static bool lastSlaveMode = false;
+  static uint8_t checkDelay = 0;
+  if (g_beepCnt || beepAgain || beepOn) {
+    checkDelay = 20;
+  }
+  else if (checkDelay) {
+    --checkDelay;
+  }
+  else {
+    lastSlaveMode = SLAVE_MODE;
+  }
+  return lastSlaveMode;
+#endif
+}
 
 void perMain()
 {
@@ -595,7 +622,7 @@ void perMain()
   refreshDiplay();
 
   // PPM signal on phono-jack. In or out? ...
-  if(PING & (1<<INP_G_RF_POW)) { //no power -> only phone jack = slave mode
+  if(checkSlaveMode()) {
     PORTG &= ~(1<<OUT_G_SIM_CTL); // 0=ppm out
   }else{
     PORTG |=  (1<<OUT_G_SIM_CTL); // 1=ppm-in
@@ -836,9 +863,6 @@ uint16_t getTmr16KHz()
   }
 }
 
-uint8_t beepAgain = 0;
-uint8_t beepAgainOrig = 0;
-uint8_t beepOn = false;
 extern uint16_t g_time_per10; // instantiated in menus.cpp
 
 ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer

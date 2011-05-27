@@ -44,7 +44,7 @@ MenuFuncP_PROGMEM APM menuTabModel[] = {
 
 MenuFuncP_PROGMEM APM menuTabDiag[] = {
   menuProcSetup,
-  menuProcPPMIn,
+  menuProcTrainer,
   menuProcDiagVers,
   menuProcDiagKeys,
   menuProcDiagAna,
@@ -1681,43 +1681,87 @@ void menuProcDiagVers(uint8_t event)
   lcd_puts_P(0, 6*FH,stamp3 );
 }
 
-void menuProcPPMIn(uint8_t event)
+void menuProcTrainer(uint8_t event)
 {
   static MState2 mstate2;
-  TITLE("PPMIN");
-  MSTATE_TAB = { 1,4};
-  MSTATE_CHECK_VxH(2,menuTabDiag,2+1);
+  TITLE("TRAINER");
+  MSTATE_TAB = {4,4};
+  MSTATE_CHECK_VxH(2, menuTabDiag, 1+1+4+1);
+  int8_t  sub    = mstate2.m_posVert;
+  uint8_t subSub = mstate2.m_posHorz+1;
   uint8_t y;
-  uint8_t sub = mstate2.m_posVert;
+  bool    edit;
+
+  if (SLAVE_MODE) { // i am the slave
+    lcd_puts_P(7*FW, 3*FH, PSTR("Slave"));
+    return;
+  }
 
   switch(event)
   {
-    case EVT_ENTRY:
-      s_editMode = false;
-      //mstate2.m_posHorz = -1;
-      break;
+      case EVT_ENTRY:
+        s_editMode = false;
+        break;
+      case EVT_KEY_FIRST(KEY_MENU):
+        if (sub != 0 && sub != 6) s_editMode = !s_editMode;
+        break;
+      case EVT_KEY_FIRST(KEY_EXIT):
+        if(s_editMode) {
+          s_editMode = false;
+          killEvents(event);
+        }
+        break;
   }
 
-  y    = 2*FH;
-  lcd_putsnAtt(  0*FW, y,      PSTR("Cal"),3, (sub==1) ? INVERS : 0);
+  lcd_puts_P(3*FW, 1*FH, PSTR("mode   % src  sw"));
 
-  for(uint8_t i=0; i<8; i++)
-  {
-    uint8_t x = i<4 ? (i*8+16)*FW/2 : ((i-4)*8+16)*FW/2;
-    lcd_outdezAtt( x, i<4 ? y : y+FH, (g_ppmIns[i]-g_eeGeneral.ppmInCalib[i])/5, 0);
+  sub--;
+  y = 2*FH;
+  for (uint8_t i=0; i<4; i++) {
+    TrainerMix *td = &g_eeGeneral.trainer.mix[i];
+    putsChnRaw(0, y, i+1, 0);
+
+    edit = (sub==i && subSub==1);
+    lcd_putsnAtt(4*FW, y, PSTR("off += :=")+3*td->mode, 3, edit ? (s_editMode ? BLINK : INVERS) : 0);
+    if (edit && s_editMode)
+      CHECK_INCDEC_H_GENVAR_BF(event, td->mode, 0, 2); //!! bitfield
+
+    edit = (sub==i && subSub==2);
+    lcd_outdezAtt(11*FW, y, td->studWeight*13/4, edit ? (s_editMode ? BLINK : INVERS) : 0);
+    if (edit && s_editMode)
+      CHECK_INCDEC_H_GENVAR_BF(event, td->studWeight, -31, 31); //!! bitfield
+
+    edit = (sub==i && subSub==3);
+    lcd_putsnAtt(12*FW, y, PSTR("ch1ch2ch3ch4")+3*td->srcChn, 3, edit ? (s_editMode ? BLINK : INVERS) : 0);
+    if (edit && s_editMode)
+      CHECK_INCDEC_H_GENVAR_BF(event, td->srcChn, 0, 3); //!! bitfield
+
+    edit = (sub==i && subSub==4);
+    putsDrSwitches(15*FW, y, td->swtch, edit ? (s_editMode ? BLINK : INVERS) : 0);
+    if (edit && s_editMode)
+      CHECK_INCDEC_H_GENVAR_BF(event, td->swtch, -MAX_DRSWITCH, MAX_DRSWITCH);
+
+    y += FH;
   }
-  if(sub==1) {
-    if(event==EVT_KEY_FIRST(KEY_MENU)){
-      memcpy(g_eeGeneral.ppmInCalib,g_ppmIns,sizeof(g_eeGeneral.ppmInCalib));
+
+  lcd_putsAtt(0*FW, y, PSTR("Multiplier"), 0);
+  lcd_outdezAtt(13*FW, y, g_eeGeneral.PPM_Multiplier+10, (sub==4 ? INVERS : 0)|PREC1);
+  if(sub==4) CHECK_INCDEC_H_GENVAR(event, g_eeGeneral.PPM_Multiplier, -10, 40);
+  y += FH;
+
+  edit = (sub==5);
+  lcd_putsAtt(0*FW, y, PSTR("Cal"), edit ? INVERS : 0);
+  for (uint8_t i=0; i<4; i++) {
+    uint8_t x = (i*8+16)*FW/2;
+    lcd_outdezAtt(x , y, (g_ppmIns[i]-g_eeGeneral.trainer.calib[i])*2, PREC1);
+  }
+  if (edit) {
+    if (event==EVT_KEY_FIRST(KEY_MENU)){
+      memcpy(g_eeGeneral.trainer.calib, g_ppmIns, sizeof(g_eeGeneral.trainer.calib));
       eeDirty(EE_GENERAL);
       beepKey();
     }
   }
-
-  y+= 3*FH;
-  lcd_putsnAtt(  0*FW, y, PSTR("Multiplier"),10, 0);
-  lcd_outdezAtt(13*FW, y, g_eeGeneral.PPM_Multiplier+10, (sub==2 ? INVERS : 0)|PREC1);
-  if(sub==2) CHECK_INCDEC_H_GENVAR(event, g_eeGeneral.PPM_Multiplier, -10, 40);
 }
 
 
@@ -2476,6 +2520,18 @@ void perOut(int16_t *chanOut, uint8_t zeroInput)
 
 
     if(i<4) { //only do this for sticks
+
+      // trainer mode
+      TrainerMix* td = &g_eeGeneral.trainer.mix[i];
+      if (td->mode && getSwitch(td->swtch, 1)) {
+        uint8_t chStud = td->srcChn;
+        int16_t vStud  = (g_ppmIns[chStud]- g_eeGeneral.trainer.calib[chStud])*2*td->studWeight/31;
+        switch (td->mode) {
+        case 1: v += vStud;   break; // add-mode
+        case 2: v  = vStud;   break; // subst-mode
+        }
+      }
+
       uint8_t expoDrOn = GET_DR_STATE(i);
       uint8_t stkDir = v>0 ? DR_RIGHT : DR_LEFT;
 
@@ -2509,8 +2565,8 @@ void perOut(int16_t *chanOut, uint8_t zeroInput)
 
   anas[MIX_MAX-1]  = RESX;     // MAX
   anas[MIX_FULL-1] = RESX;     // FULL
-  for(uint8_t i=PPM_BASE;i<CHOUT_BASE;i++)
-    anas[i] = (g_ppmIns[i-PPM_BASE] - g_eeGeneral.ppmInCalib[i-PPM_BASE])*2; //add ppm channels
+  for(uint8_t i=0;i<4;i++)       anas[i+PPM_BASE]   = (g_ppmIns[i] - g_eeGeneral.trainer.calib[i])*2; //add ppm channels
+  for(uint8_t i=4;i<NUM_PPM;i++) anas[i+PPM_BASE]   = g_ppmIns[i]*2; //add ppm channels
   for(uint8_t i=CHOUT_BASE;i<NUM_XCHNRAW;i++) anas[i] = chans[i-CHOUT_BASE]; //other mixes previous outputs
 
 
