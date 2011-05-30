@@ -8,8 +8,6 @@ Just respond in the group discussion.
 = Todo =
 ========
 
-* Get a TPS77601 regulator and check the Enable input can tolerate a PWM signal, may not be needed (read below, line 46).
-
 * Move component labels about for the silkscreen, but first I am going to get a look at a V2.14 board.
    
 * Copper pour.
@@ -45,9 +43,13 @@ Major
  (1.2v - 5.5v @ 500ma). This should hopefully allow a selection of motors to be used. Have also added a jumper 
  that either allows the Spare_2/PG5 signal or the PH3/OC4A PWM ouput to drive the enable on the regulator. I think 
  PWM control maybe an overkill but the option is there. Early indications show PS3 controller vibration motors 
- look good, they wedge in just fine in the bottom left of the back of the case. Got a copy ps3 wired controller
- from eBay for 6GBP. Contains two motors with differing weights, either seems fine.
-
+ look good, they wedge in just fine in the bottom left of the back of the case (to the left of the battery 
+ compartment). Got a copy ps3 wired controller from eBay for 6GBP. Contains two motors with differing weights, 
+ either seems fine.
+ Have tried driving the TPS77601 enable input with a PWM signal of around 250Hz while using one of the PS3 motors 
+ and it seems fine. Have uped filter capacitors from the datasheet to try and keep noise generated low. The current
+ combination of caps represent the lowest noise I have managed to get on both the motor side and the input side.
+ 
 Minor
 -----
 * Added mounting holes into schematic so they don't disappear if you tell the netlist update to delete components 
