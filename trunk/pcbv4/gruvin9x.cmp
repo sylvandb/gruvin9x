@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPCB (2011-03-30 BZR 2932)-stable date = 30/05/2011 16:21:12
+Cmp-Mod V01 Created by CvPCB (2011-03-30 BZR 2932)-stable date = 05/06/2011 13:53:19
 
 BeginCmp
 TimeStamp = /4CE748AC;
@@ -115,13 +115,6 @@ EndCmp
 BeginCmp
 TimeStamp = /4CE741E9;
 Reference = C17;
-ValeurCmp = 0.1;
-IdModule  = SM0603_GRUVIN;
-EndCmp
-
-BeginCmp
-TimeStamp = /4CE746E8;
-Reference = C18;
 ValeurCmp = 0.1;
 IdModule  = SM0603_GRUVIN;
 EndCmp
@@ -764,6 +757,34 @@ IdModule  = SOT23-BCE;
 EndCmp
 
 BeginCmp
+TimeStamp = /4DEB7560;
+Reference = Q5;
+ValeurCmp = BC847C;
+IdModule  = SOT23-BCE;
+EndCmp
+
+BeginCmp
+TimeStamp = /4DEB756C;
+Reference = Q6;
+ValeurCmp = BC847C;
+IdModule  = SOT23-BCE;
+EndCmp
+
+BeginCmp
+TimeStamp = /4DEB7648;
+Reference = Q7;
+ValeurCmp = BC847C;
+IdModule  = SOT23-BCE;
+EndCmp
+
+BeginCmp
+TimeStamp = /4DEB762D;
+Reference = Q8;
+ValeurCmp = BC857C;
+IdModule  = SOT23-BCE;
+EndCmp
+
+BeginCmp
 TimeStamp = /4CE749EC;
 Reference = R1;
 ValeurCmp = 5K1;
@@ -869,6 +890,20 @@ IdModule  = SM0603_GRUVIN;
 EndCmp
 
 BeginCmp
+TimeStamp = /4DEB759C;
+Reference = R16;
+ValeurCmp = 5K1;
+IdModule  = SM0603_GRUVIN;
+EndCmp
+
+BeginCmp
+TimeStamp = /4DEB75A3;
+Reference = R17;
+ValeurCmp = 5K1;
+IdModule  = SM0603_GRUVIN;
+EndCmp
+
+BeginCmp
 TimeStamp = /4CE70B25;
 Reference = R18;
 ValeurCmp = 200;
@@ -904,6 +939,20 @@ IdModule  = SM0603_GRUVIN;
 EndCmp
 
 BeginCmp
+TimeStamp = /4DEB77E8;
+Reference = R23;
+ValeurCmp = 5K1;
+IdModule  = SM0603_GRUVIN;
+EndCmp
+
+BeginCmp
+TimeStamp = /4DEB7830;
+Reference = R24;
+ValeurCmp = 5K1;
+IdModule  = SM0603_GRUVIN;
+EndCmp
+
+BeginCmp
 TimeStamp = /4CE71B5E;
 Reference = R25;
 ValeurCmp = 10K;
@@ -918,16 +967,30 @@ IdModule  = SM0603_GRUVIN;
 EndCmp
 
 BeginCmp
-TimeStamp = /4CE762A8;
-Reference = R33;
-ValeurCmp = 10K;
+TimeStamp = /4DEB76CF;
+Reference = R27;
+ValeurCmp = 5K1;
 IdModule  = SM0603_GRUVIN;
 EndCmp
 
 BeginCmp
-TimeStamp = /4CE75C5A;
-Reference = R34;
-ValeurCmp = 10K;
+TimeStamp = /4DEB789B;
+Reference = R28;
+ValeurCmp = 5K1;
+IdModule  = SM0603_GRUVIN;
+EndCmp
+
+BeginCmp
+TimeStamp = /4DEB790F;
+Reference = R29;
+ValeurCmp = 200R;
+IdModule  = SM0603_GRUVIN;
+EndCmp
+
+BeginCmp
+TimeStamp = /4DEB791C;
+Reference = R30;
+ValeurCmp = 200R;
 IdModule  = SM0603_GRUVIN;
 EndCmp
 
@@ -1363,13 +1426,6 @@ TimeStamp = /4CE74879;
 Reference = U1;
 ValeurCmp = 78L05;
 IdModule  = SOT89_OGI;
-EndCmp
-
-BeginCmp
-TimeStamp = /4CE75B53;
-Reference = U2;
-ValeurCmp = 4066;
-IdModule  = SO14N;
 EndCmp
 
 BeginCmp

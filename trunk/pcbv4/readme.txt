@@ -20,6 +20,11 @@ Just respond in the group discussion.
 Major
 -----
 * Replaced 64 pin AMega 2561 with 100 pin 2560
+* Removed the 4066. Gruvin felt it bad for not offering enough protection to the CPU incase of user misconnects. So 
+  it had to go. We now have seperate output buffer transistors to the module and the trainer jack. The trainer jack
+  PPM_Out transistor can be shut off the using Spare_1 line, this then allows the CPU to listen to a PPM_IN signal.
+  There is also an optional active pull up operated by the Sim_Ctrl line, this can be used for incoming and 
+  outgoing signals if needed.
 * Added JTAG header
 * Changed 10pin ISP header to 6pin
 * Added breakout headers for spare pins, the whole of port L, half of port F (4x ADCs), and port H (inc. a second 
