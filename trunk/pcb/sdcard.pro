@@ -1,4 +1,4 @@
-update=13/05/2011 10:12:12 a.m.
+update=3/06/2011 10:06:26 a.m.
 last_client=pcbnew
 [eeschema]
 version=1
@@ -33,7 +33,7 @@ RptLab=1
 SimCmd=
 UseNetN=0
 LabSize=60
-PrintMonochrome=1
+PrintMonochrome=0
 ShowSheetReferenceAndTitleBlock=1
 [eeschema/libraries]
 LibName1=power
