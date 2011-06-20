@@ -39,7 +39,8 @@ PCB = V2
 # Values = STD, JETI, FRSKY
 EXT = FRSKY
 
-# gruvin: BEEPER. Values = BUZZER or SPEAKER
+# gruvin: BEEPER. Values = BUZZER, BUZZER_MOD or SPEAKER
+# (without a mod, BUZZER can make PPM jack output switch from output to input at random)
 BEEPER = SPEAKER
 
 # gruvin: Legacy support freeing of USART1 TX/RX pins [DEPRECATED]
@@ -153,6 +154,11 @@ ifeq ($(PCB), STD)
 # gruvin: If buzzer speaker replacment supported 
   ifeq ($(BEEPER), SPEAKER)
    CPPDEFS += -DBEEPSPKR
+  endif
+  
+# If buzzer modified (no interference with PPM jack)
+  ifeq ($(BEEPER), BUZZER_MOD)
+   CPPDEFS += -DBUZZER_MOD
   endif
 
 # gruvin: Legacy support for hardware mod freeing USART1 [DEPRECATED]

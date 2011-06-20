@@ -38,6 +38,19 @@
 #define BEEP_VAL     ( (g_eeGeneral.warnOpts & WARN_BVAL_BIT) >>3 )
 
 #define GENERAL_MYVER 3
+
+typedef struct t_TrainerMix {
+  uint8_t srcChn:3; //0-7 = ch1-8
+  int8_t  swtch:5;
+  int8_t  studWeight:6;
+  uint8_t mode:2;   //off,add-mode,subst-mode
+} __attribute__((packed)) TrainerMix; //
+
+typedef struct t_TrainerData {
+  int16_t        calib[4];
+  TrainerMix     mix[4];
+} __attribute__((packed)) TrainerData;
+
 typedef struct t_EEGeneral {
   uint8_t   myVers;
   int16_t   calibMid[7];
@@ -49,7 +62,7 @@ typedef struct t_EEGeneral {
   uint8_t   vBatWarn;
   int8_t    vBatCalib;
   int8_t    lightSw;
-  int16_t   ppmInCalib[8];
+  TrainerData trainer;
   uint8_t   view;     //index of subview in main scrren
 //  uint8_t   warnOpts; //bitset for several warnings
   uint8_t   disableThrottleWarning:1;
@@ -143,8 +156,8 @@ typedef struct t_SwashRingData { // Swash Ring data
 typedef struct t_ModelData {
   char      name[10];             // 10 must be first for eeLoadModelName
   uint8_t   mdVers;
-  int8_t    tmrMode;   //timer trigger source -> off, abs, stk, stk%, sw/!sw, !m_sw/!m_sw
-  int8_t    tmrDir;    //0=>Count Down, 1=>Count Up
+  int8_t    tmrMode;              // timer trigger source -> off, abs, stk, stk%, sw/!sw, !m_sw/!m_sw
+  uint8_t   tmrDir;               // 0=>Count Down, 1=>Count Up
   uint16_t  tmrVal;
   uint8_t   protocol;
   int8_t    ppmNCH;
@@ -153,7 +166,7 @@ typedef struct t_ModelData {
   int8_t    trimInc;              // Trim Increments
   int8_t    ppmDelay;
   int8_t    trimSw;
-  uint8_t   beepANACenter;        //1<<0->A1.. 1<<6->A7
+  uint8_t   beepANACenter;        // 1<<0->A1.. 1<<6->A7
   uint8_t   pulsePol;
   char      res[3];
   MixData   mixData[MAX_MIXERS];

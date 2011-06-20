@@ -164,6 +164,8 @@
 #define INP_G_RF_POW   1
 #define INP_G_RuddDR   0
 
+#define SLAVE_MODE (PING & (1<<INP_G_RF_POW))
+
 const uint8_t modn12x3[4][4]= {
   {1, 2, 3, 4},
   {1, 3, 2, 4},
@@ -360,7 +362,10 @@ void    perMain();
 void    per10ms();
 /// Erzeugt periodisch alle Outputs ausser Bildschirmausgaben.
 void zeroVariables();
-void perOut(int16_t *chanOut, uint8_t zeroInput);
+
+#define NO_TRAINER 0x01
+#define NO_INPUT   0x02
+void perOut(int16_t *chanOut, uint8_t att);
 ///   Liefert den Zustand des Switches 'swtch'. Die Numerierung erfolgt ab 1
 ///   (1=SW_ON, 2=SW_ThrCt, 10=SW_Trainer). 0 Bedeutet not conected.
 ///   Negative Werte  erzeugen invertierte Ergebnisse.
@@ -554,7 +559,7 @@ void menuProcDiagCalib(uint8_t event);
 void menuProcDiagAna(uint8_t event);
 void menuProcDiagKeys(uint8_t event);
 void menuProcDiagVers(uint8_t event);
-void menuProcPPMIn(uint8_t event);
+void menuProcTrainer(uint8_t event);
 void menuProcSetup(uint8_t event);
 void menuProcMain(uint8_t event);
 void menuProcModelSelect(uint8_t event);
