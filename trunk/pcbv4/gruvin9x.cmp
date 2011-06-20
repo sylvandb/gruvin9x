@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPCB (2011-03-30 BZR 2932)-stable date = 05/06/2011 13:53:19
+Cmp-Mod V01 Created by CvPCB (2011-03-30 BZR 2932)-stable date = 20/06/2011 19:55:06
 
 BeginCmp
 TimeStamp = /4CE748AC;
@@ -120,6 +120,13 @@ IdModule  = SM0603_GRUVIN;
 EndCmp
 
 BeginCmp
+TimeStamp = /4DFF92E7;
+Reference = C18;
+ValeurCmp = 47u;
+IdModule  = SM1206;
+EndCmp
+
+BeginCmp
 TimeStamp = /4CE746EC;
 Reference = C19;
 ValeurCmp = 0.1;
@@ -229,6 +236,13 @@ TimeStamp = /4DE3AEF0;
 Reference = C34;
 ValeurCmp = 0.1;
 IdModule  = SM0603_GRUVIN;
+EndCmp
+
+BeginCmp
+TimeStamp = /4DFF92F5;
+Reference = C35;
+ValeurCmp = 47u;
+IdModule  = SM1206;
 EndCmp
 
 BeginCmp
@@ -444,6 +458,13 @@ EndCmp
 BeginCmp
 TimeStamp = /4DDD61E7;
 Reference = D16;
+ValeurCmp = DIODESCH;
+IdModule  = SM0603_GRUVIN;
+EndCmp
+
+BeginCmp
+TimeStamp = /4DFF927D;
+Reference = D17;
 ValeurCmp = DIODESCH;
 IdModule  = SM0603_GRUVIN;
 EndCmp
@@ -764,23 +785,9 @@ IdModule  = SOT23-BCE;
 EndCmp
 
 BeginCmp
-TimeStamp = /4DEB756C;
-Reference = Q6;
-ValeurCmp = BC847C;
-IdModule  = SOT23-BCE;
-EndCmp
-
-BeginCmp
 TimeStamp = /4DEB7648;
 Reference = Q7;
 ValeurCmp = BC847C;
-IdModule  = SOT23-BCE;
-EndCmp
-
-BeginCmp
-TimeStamp = /4DEB762D;
-Reference = Q8;
-ValeurCmp = BC857C;
 IdModule  = SOT23-BCE;
 EndCmp
 
@@ -897,13 +904,6 @@ IdModule  = SM0603_GRUVIN;
 EndCmp
 
 BeginCmp
-TimeStamp = /4DEB75A3;
-Reference = R17;
-ValeurCmp = 5K1;
-IdModule  = SM0603_GRUVIN;
-EndCmp
-
-BeginCmp
 TimeStamp = /4CE70B25;
 Reference = R18;
 ValeurCmp = 200;
@@ -946,13 +946,6 @@ IdModule  = SM0603_GRUVIN;
 EndCmp
 
 BeginCmp
-TimeStamp = /4DEB7830;
-Reference = R24;
-ValeurCmp = 5K1;
-IdModule  = SM0603_GRUVIN;
-EndCmp
-
-BeginCmp
 TimeStamp = /4CE71B5E;
 Reference = R25;
 ValeurCmp = 10K;
@@ -983,14 +976,14 @@ EndCmp
 BeginCmp
 TimeStamp = /4DEB790F;
 Reference = R29;
-ValeurCmp = 200R;
+ValeurCmp = 100R;
 IdModule  = SM0603_GRUVIN;
 EndCmp
 
 BeginCmp
 TimeStamp = /4DEB791C;
 Reference = R30;
-ValeurCmp = 200R;
+ValeurCmp = 100R;
 IdModule  = SM0603_GRUVIN;
 EndCmp
 
@@ -1292,13 +1285,6 @@ BeginCmp
 TimeStamp = /4D016C92;
 Reference = R78;
 ValeurCmp = 0;
-IdModule  = SM0603_GRUVIN;
-EndCmp
-
-BeginCmp
-TimeStamp = /4D191ECB;
-Reference = R79;
-ValeurCmp = 200;
 IdModule  = SM0603_GRUVIN;
 EndCmp
 
