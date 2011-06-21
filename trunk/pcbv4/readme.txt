@@ -22,6 +22,8 @@ Major
 * Replaced 64 pin AMega 2561 with 100 pin 2560
 * Removed the 4066. Gruvin felt it bad for not offering enough protection to the CPU incase of user misconnects. So 
   it had to go. We now have seperate output buffer transistors to the module and the trainer jack. 
+* Added voltage dividers for two of the four spare ADC pins, these can be used for monitoring individual cell voltages
+  on 2 or 3 cell LiPo packs. First cell doesn't need a divider as it's below the 5v ADC reference voltage.   
 * Added JTAG header
 * Changed 10pin ISP header to 6pin
 * Added breakout headers for spare pins, the whole of port L, half of port F (4x ADCs), and port H (inc. a second 
