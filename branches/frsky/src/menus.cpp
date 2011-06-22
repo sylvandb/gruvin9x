@@ -1763,6 +1763,10 @@ void menuProcTrainer(uint8_t event)
   lcd_putsAtt(0*FW, y, PSTR("Multiplier"), 0);
   lcd_outdezAtt(13*FW, y, g_eeGeneral.PPM_Multiplier+10, (sub==4 ? INVERS : 0)|PREC1);
   if(sub==4) CHECK_INCDEC_H_GENVAR(event, g_eeGeneral.PPM_Multiplier, -10, 40);
+
+  // DEBUG
+  lcd_outdezAtt(20*FW, y, g_PPMIN_val, 0);
+
   y += FH;
 
   edit = (sub==5);
@@ -1775,6 +1779,7 @@ void menuProcTrainer(uint8_t event)
     lcd_outdezAtt(x , y, (g_ppmIns[i]-g_eeGeneral.trainer.calib[i])/5, 0);
 #endif
   }
+
   if (edit) {
     if (event==EVT_KEY_FIRST(KEY_MENU)){
       memcpy(g_eeGeneral.trainer.calib, g_ppmIns, sizeof(g_eeGeneral.trainer.calib));

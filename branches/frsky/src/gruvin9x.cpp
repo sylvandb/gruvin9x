@@ -33,7 +33,8 @@ mode3 ail ele thr rud
 mode4 ail thr ele rud
 */
 
-
+// DEBUG
+uint16_t g_PPMIN_val = 111;
 
 EEGeneral  g_eeGeneral;
 ModelData  g_model;
@@ -1044,8 +1045,11 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
 // (The timer is free-running and is thus not reset to zero at each capture interval.)
 ISR(TIMER3_CAPT_vect, ISR_NOBLOCK) //capture ppm in 16MHz / 8 = 2MHz
 {
-  uint16_t capture=ICR3; 
-  cli();
+  static uint16_t lastCapt;
+
+  uint16_t capture=ICR3;
+
+  cli(); // gruvin: are these global int disables really needed? Consult data sheet.
 #if defined (PCBV2) || defined (PCBV3)
   TIMSK3 &= ~(1<<ICIE3);
 #else
@@ -1053,21 +1057,26 @@ ISR(TIMER3_CAPT_vect, ISR_NOBLOCK) //capture ppm in 16MHz / 8 = 2MHz
 #endif
   sei();
 
-  static uint16_t lastCapt;
-
-  uint16_t val = (capture - lastCapt) / 2;
   lastCapt = capture;
+  uint16_t val = (capture - lastCapt) / 2;
+  
+  // DEBUG
+  g_PPMIN_val = val;
 
   // G: We prcoess g_ppmInsright here to make servo movement as smooth as possible
   //    while under trainee control
-  if (val>4000 && val < 16000) { // G: Priorotise reset pulse. (Needed when less than 8 incoming pulses)
+  if (val>4000 && val < 16000) // G: Priorotise reset pulse. (Needed when less than 8 incoming pulses)
     ppmInState = 1; // triggered
-  } else {
-    if (ppmInState && ppmInState<=8) {
-      if (val>800 && val<2200){
+  else 
+  {
+    if (ppmInState && ppmInState<=8) 
+    {
+      if (val>800 && val<2200) // if valid pulse-width range
+      { 
         g_ppmIns[ppmInState++ - 1] = 
           (int16_t)(val - 1500)*(g_eeGeneral.PPM_Multiplier+10)/10; //+-500 != 512, but close enough.
-      } else 
+      } 
+      else 
         ppmInState = 0; // not triggered
     }
   }
@@ -1083,7 +1092,7 @@ ISR(TIMER3_CAPT_vect, ISR_NOBLOCK) //capture ppm in 16MHz / 8 = 2MHz
 
 #if defined (PCBV2) || defined (PCBV3)
 /*---------------------------------------------------------*/
-/* User Provided Timer Function for FatFs module           */
+/* User Provided Date/Time Function for FatFs module       */
 /*---------------------------------------------------------*/
 /* This is a real time clock service to be called from     */
 /* FatFs module. Any valid time must be returned even if   */
@@ -1141,6 +1150,7 @@ int main(void)
   // Shut the WDT off. None of the fuse settings 
   // seem to accomplish this. Strange.
   // XXX: Take another look some time. *shrug*
+  // GRUVIN: Umm, why aren't we using the WDT? :/ Is it enabled later?
   wdt_reset();
   MCUSR &= ~(1<<WDRF);
   WDTCSR |= (1<<WDCE) | (1<<WDE);
@@ -1158,7 +1168,7 @@ int main(void)
   DDRC = 0x3e;  PORTC = 0xc1; //pullups nc
   DDRD = 0x00;  PORTD = 0xff; //pullups keys
 #endif
-  DDRE = 0x08;  PORTE = 0xff-(1<<OUT_E_BUZZER); //pullups + buzzer 0
+  DDRE = (1<<OUT_E_BUZZER);  PORTE = 0xff-(1<<OUT_E_BUZZER); //pullups + buzzer 0
   DDRF = 0x00;  PORTF = 0xff; //anain
   DDRG = 0x10;  PORTG = 0xff; //pullups + SIM_CTL=1 = phonejack = ppm_in
 
@@ -1195,10 +1205,6 @@ int main(void)
   TCCR0B  = (1<<WGM02) | (0b011 << CS00);
   TCCR0A  = (0b01<<WGM00);
 
-//  OCR0A   = 31;               // Set freq. about 2KHz toggle, so 1KHz output tone
-//  TCCR0A  |= (0b01<<COM0A0);  // Output on. (Toggle OC0A [PB7] on compare match.)
-//  TCCR0A  &= ~(0b01<<COM0A0); // Output off.
-
 #else
 #ifdef BEEPSPKR
   // TCNT0  10ms = 16MHz/1024/2(/78) periodic timer (for speaker tone generation)
@@ -1222,7 +1228,7 @@ int main(void)
   // not here ... TIMSK1 |= (1<<OCIE1A); ... enable immediately before mainloop
 
   // TCNT3 (2MHz) used for PPM_IN pulse width capture
-#ifdef PPMIN_MOD1
+#if defined (PPMIN_MOD1) || defined (PCBV2) || defined (PCBV3)
   // Noise Canceller enabled, pos. edge, clock at 16MHz / 8 (2MHz)
   TCCR3B  = (1<<ICNC3) | (1<<ICES3) | (0b010 << CS30);
 #else

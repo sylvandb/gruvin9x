@@ -682,5 +682,8 @@ inline void _beepSpkr(uint8_t d, uint8_t f)
 extern void disk_timerproc(void);
 #endif
 
+// DEBUG
+extern uint16_t g_PPMIN_val;
+
 #endif // gruvin9x_h
 /*eof*/
