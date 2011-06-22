@@ -51,6 +51,10 @@ USART1 = FREED
 # Values = STD, MOD1
 PPMIN =  STD
 
+# Decimals display in the main view (PPM calibration, 
+# Values = YES, NO
+DECIMALS = NO
+
 #------- END BUILD OPTIONS ---------------------------
 
 # MCU name
@@ -169,6 +173,10 @@ ifeq ($(PCB), STD)
 # gruvin: PCM-in circuit mod for JR/Spektrum (and others) compatability
   ifeq ($(PPMIN), MOD1)
     CPPDEFS += -DPPMIN_MOD1
+  endif
+  
+  ifeq ($(DECIMAL), YES)
+    CPPDEFS += -DDECIMALS_DISPLAYED
   endif
 
 else

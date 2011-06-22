@@ -1769,7 +1769,11 @@ void menuProcTrainer(uint8_t event)
   lcd_putsAtt(0*FW, y, PSTR("Cal"), edit ? INVERS : 0);
   for (uint8_t i=0; i<4; i++) {
     uint8_t x = (i*8+16)*FW/2;
+#if defined(DECIMALS_DISPLAYED)
     lcd_outdezAtt(x , y, (g_ppmIns[i]-g_eeGeneral.trainer.calib[i])*2, PREC1);
+#else
+    lcd_outdezAtt(x , y, (g_ppmIns[i]-g_eeGeneral.trainer.calib[i])/5, 0);
+#endif
   }
   if (edit) {
     if (event==EVT_KEY_FIRST(KEY_MENU)){
@@ -2410,7 +2414,11 @@ void menuProc0(uint8_t event)
 // *1000/1024 = x - x/32 + x/128
 #define GPERC(x)  (x - x/32 + x/128)
           // lcd_outdezAtt( x0+4*FW , y0, GPERC(val), PREC1);
-          lcd_outdezAtt( x0+4*FW , y0, GPERC(val)/10, 0); // G: Don't like the decimal part
+#if defined(DECIMALS_DISPLAYED)
+          lcd_outdezAtt( x0+4*FW , y0, GPERC(val), PREC1 );
+#else
+          lcd_outdezAtt( x0+4*FW , y0, GPERC(val)/10, 0); // G: Don't like the decimal part*
+#endif
           break;
         case 1:
 #define WBAR2 (50/2)
