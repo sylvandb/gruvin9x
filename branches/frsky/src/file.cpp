@@ -29,7 +29,7 @@
 // bs=32   64 blocks    verlust link: 64  16files:16*16 256     sum 320
 //
 #if defined (PCBV2) || defined(PCBV3)
-#define EESIZE   4096 // 2048 // ZZZ
+#define EESIZE   4096
 #define BS       32
 #else
 #define EESIZE   2048

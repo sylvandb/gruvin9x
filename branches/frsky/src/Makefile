@@ -87,7 +87,7 @@ ifeq ($(EXT), FRSKY)
  CPPSRC += frsky.cpp
 endif
 
-# Disk IO support (PCB V2 only)
+# Disk IO support (PCB V2+ only)
 ifneq ($(PCB), STD)
   CPPSRC += ff.cpp
   CPPSRC += diskio.cpp

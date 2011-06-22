@@ -27,9 +27,9 @@ eeprom_write_byte_cmp (uint8_t dat, uint16_t pointer_eeprom)
 {
   //see /home/thus/work/avr/avrsdk4/avr-libc-1.4.4/libc/misc/eeprom.S:98 143
 #if defined (PCBV2) || defined (PCBV3)
-  while(EECR & (1<<EEPE)) //ZZZ /* make sure EEPROM is ready */
+  while(EECR & (1<<EEPE))
 #else
-  while(EECR & (1<<EEWE)) //ZZZ /* make sure EEPROM is ready */
+  while(EECR & (1<<EEWE))
 #endif
     ;
   EEAR  = pointer_eeprom;

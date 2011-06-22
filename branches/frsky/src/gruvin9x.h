@@ -99,11 +99,13 @@
 //                            SIM_CTL  ID1      NC      RF_POW RuddDR
 
 #define PORTA_LCD_DAT  PORTA
+
 #if defined (PCBV2) || defined (PCBV3)
 #define OUT_C_LIGHT   0
 #else
 #define OUT_B_LIGHT   7
 #endif
+
 #define INP_B_KEY_LFT 6
 #define INP_B_KEY_RGT 5
 #define INP_B_KEY_UP  4
@@ -432,6 +434,7 @@ int8_t checkIncDec_vg(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max);
 
 #if defined (FRSKY) || defined (PCBV2) || defined (PCBV3)
 // Gruvin: This uses a new _FL_UNSIGNED flag to allow for unsigned values, so 0-255 works in an 8bit var. 
+// Probably shouldn't be dependant on any particular hardware variant?
 int8_t checkIncDec_Frsky(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max);
 #endif
 

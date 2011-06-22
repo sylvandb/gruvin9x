@@ -851,11 +851,14 @@ ISR(TIMER1_COMPA_vect) //2MHz pulse generation
   heartbeat |= HEART_TIMER2Mhz;
 }
 
-volatile uint8_t g_tmr16KHz;
-//ZZZ
-ISR(TIMER2_OVF_vect) //continuous timer 16ms (16MHz/1024/256) -- 8-bit counter overflow
+volatile uint8_t g_tmr16KHz; //continuous timer 16ms (16MHz/1024/256) -- 8-bit counter overflow 
+#if defined (PCBV2) || defined (PCBV3)
+ISR(TIMER2_OVF_vect) 
+#else
+ISR(TIMER0_OVF_vect)
+#endif
 {
-  g_tmr16KHz++; // gruvin: Not 16KHz. Each overflows occur at 61.035Hz (1/256th of 15.625KHz) 
+  g_tmr16KHz++; // gruvin: Not 16KHz. Overflows occur at 61.035Hz (1/256th of 15.625KHz) 
                 // to give *16.384ms* intervals.
                 // However, g_tmr16KHz is also used to software-construct a 16-bit timer
                 // from TIMER-0 (8-bit). See getTmr16KHz, below.
@@ -865,7 +868,11 @@ uint16_t getTmr16KHz()
 {
   while(1){
     uint8_t hb  = g_tmr16KHz;
+#if defined (PCBV2) || defined (PCBV3)
+    uint8_t lb  = TCNT2;
+#else
     uint8_t lb  = TCNT0;
+#endif
     if(hb-g_tmr16KHz==0) return (hb<<8)|lb;
   }
 }
