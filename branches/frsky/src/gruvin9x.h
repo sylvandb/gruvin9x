@@ -249,22 +249,18 @@ enum EnumKeys {
 #define CS_VCOMP      2
 #define CS_STATE(x)   ((x)<CS_AND ? CS_VOFS : ((x)<CS_EQUAL ? CS_VBOOL : CS_VCOMP))
 
-
-
 //#define SW_BASE      SW_NC
 #define SW_BASE      SW_ThrCt
 #define SW_BASE_DIAG SW_ThrCt
 //#define SWITCHES_STR "  NC  ON THR RUD ELE ID0 ID1 ID2 AILGEARTRNR"
 #define MAX_DRSWITCH (1+SW_Trainer-SW_ThrCt+1+NUM_CSW)
 
-#define MIX_P1    5
-#define MIX_P2    6
-#define MIX_P3    7
-#define MIX_MAX   8
-#define MIX_FULL  9
-
-#define PPM_BASE   (MIX_FULL)
-#define CHOUT_BASE (MIX_FULL+NUM_PPM)
+#define NUM_STICKS      4
+#define NUM_POTS        3
+#define PPM_BASE        (MIX_FULL) // because srcRaw is shifted +1!
+#define NUM_CAL_PPM     4
+#define NUM_PPM         8
+#define CHOUT_BASE      (PPM_BASE+NUM_PPM)
 
 #define DR_HIGH   0
 #define DR_MID    1
@@ -512,7 +508,6 @@ void eeLoadModel(uint8_t id);
 //void eeSaveModel(uint8_t id);
 bool eeDuplicateModel(uint8_t id);
 
-#define NUM_PPM     8
 //number of real outputchannels CH1-CH8
 #define NUM_CHNOUT   16
 ///number of real input channels (1-9) plus virtual input channels X1-X4

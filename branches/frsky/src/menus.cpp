@@ -23,7 +23,7 @@
 #endif
 #include "menus.h"
 
-int16_t calibratedStick[7];
+int16_t calibratedStick[NUM_STICKS+NUM_POTS];
 int16_t ex_chans[NUM_CHNOUT];          // Outputs + intermidiates
 uint8_t s_pgOfs;
 uint8_t s_editMode;
@@ -2600,14 +2600,6 @@ void perOut(int16_t *chanOut, uint8_t att)
 
   anas[MIX_MAX-1]  = RESX;     // MAX
   anas[MIX_FULL-1] = RESX;     // FULL
-  for(uint8_t i=0;i<4;i++)       anas[i+PPM_BASE]   = (g_ppmIns[i] - g_eeGeneral.trainer.calib[i])*2; //add ppm channels
-  for(uint8_t i=4;i<NUM_PPM;i++) anas[i+PPM_BASE]   = g_ppmIns[i]*2; //add ppm channels
-  for(uint8_t i=CHOUT_BASE;i<NUM_XCHNRAW;i++) anas[i] = chans[i-CHOUT_BASE]; //other mixes previous outputs
-
-
-  if(tick10ms) trace(); //trace thr 0..32  (/32)
-
-  memset(chans,0,sizeof(chans));        // All outputs to 0
 
   if(att&NO_INPUT) { //zero input for setStickCenter()
     for(uint8_t i=0;i<4;i++) {
@@ -2616,8 +2608,19 @@ void perOut(int16_t *chanOut, uint8_t att)
         trimA[i] = 0;
       }
     }
-    for(uint8_t i=0;i<4;i++) anas[i+PPM_BASE] = 0;
+    for(uint8_t i=0;i<NUM_PPM;i++) anas[i+PPM_BASE] = 0;
   }
+  else {
+    for(uint8_t i=0;i<NUM_CAL_PPM;i++)       anas[i+PPM_BASE]   = (g_ppmIns[i] - g_eeGeneral.trainer.calib[i])*2; //add ppm channels
+    for(uint8_t i=NUM_CAL_PPM;i<NUM_PPM;i++) anas[i+PPM_BASE]   = g_ppmIns[i]*2; //add ppm channels
+  }
+
+  for(uint8_t i=CHOUT_BASE;i<NUM_XCHNRAW;i++) anas[i] = chans[i-CHOUT_BASE]; //other mixes previous outputs
+
+  if(tick10ms) trace(); //trace thr 0..32  (/32)
+
+  memset(chans,0,sizeof(chans));        // All outputs to 0
+  
   //========== SWASH RING ===============
   /*
   if(g_model.swashR.lim) {

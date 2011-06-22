@@ -122,12 +122,12 @@ void putsTmrMode(uint8_t x, uint8_t y, uint8_t attr)
 
 inline int16_t getValue(uint8_t i)
 {
-    if(i<MIX_MAX) return calibratedStick[i];//-512..512
-    else if(i<=MIX_FULL) return 1024; //FULL/MAX
-    else if(i<PPM_BASE+4) return (g_ppmIns[i-PPM_BASE] - g_eeGeneral.trainer.calib[i-PPM_BASE])*2;
+    if(i<NUM_STICKS+NUM_POTS) return calibratedStick[i];//-512..512
+    else if(i<MIX_FULL/*srcRaw is shifted +1!*/) return 1024; //FULL/MAX
+    else if(i<PPM_BASE+NUM_CAL_PPM) return (g_ppmIns[i-PPM_BASE] - g_eeGeneral.trainer.calib[i-PPM_BASE])*2;
     else if(i<PPM_BASE+NUM_PPM) return g_ppmIns[i-PPM_BASE]*2;
-    else return ex_chans[i-MIX_FULL-NUM_PPM];
-    return 0;
+    else if(i<CHOUT_BASE+NUM_CHNOUT) return ex_chans[i-CHOUT_BASE];
+    else return 0;
 }
 
 bool getSwitch(int8_t swtch, bool nc, uint8_t level)
