@@ -19,7 +19,7 @@
 #include "gruvin9x.h"
 #include "frsky.h"
 
-#ifdef PCBV2
+#if defined (PCBV2) || defined(PCBV3)
 #include "ff.h"
 #include "diskio.h"
 #endif

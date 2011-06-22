@@ -20,7 +20,7 @@
 #include "s9xsplash.lbm"
 
 // MM/SD card Disk IO Support
-#ifdef PCBV2
+#if defined (PCBV2) || defined (PCBV3)
 #include "integer.h"
 #include "ff.h"
 #include "diskio.h"
@@ -37,7 +37,7 @@ mode4 ail thr ele rud
 
 EEGeneral  g_eeGeneral;
 ModelData  g_model;
-#if defined (FRSKY) || defined (PCBV2)
+#if defined (FRSKY) || defined (PCBV2) || defined (PCBV3)
 EEFrskyData g_eeFrsky;
 #endif
 
@@ -369,7 +369,7 @@ uint8_t checkTrim(uint8_t event)
       g_model.trim[idx]=0;
       killEvents(event);
       warble = false;
-#if defined (BEEPSPKR) || defined (PCBV2)
+#if defined (BEEPSPKR) || defined (PCBV2) || defined (PCBV3)
       beepWarn2Spkr(60);
 #else
       beepWarn2();
@@ -379,7 +379,7 @@ uint8_t checkTrim(uint8_t event)
       g_model.trim[idx] = (int8_t)x;
       STORE_MODELVARS;
       if(event & _MSK_KEY_REPT) warble = true;
-#if defined (BEEPSPKR) || defined (PCBV2)
+#if defined (BEEPSPKR) || defined (PCBV2) || defined (PCBV3)
       // toneFreq higher/lower according to trim position
       // beepTrimSpkr((x/3)+60);  // Range -125 to 125 = toneFreq: 19 to 101
       beepTrimSpkr((x/4)+60);  // Divide by 4 more efficient. Range -125 to 125 = toneFreq: 28 to 91
@@ -392,7 +392,7 @@ uint8_t checkTrim(uint8_t event)
       g_model.trim[idx] = (x>0) ? 125 : -125;
       STORE_MODELVARS;
       warble = false;
-#if defined (BEEPSPKR) || defined (PCBV2)
+#if defined (BEEPSPKR) || defined (PCBV2) || defined (PCBV3)
       beepWarn2Spkr((x/4)+60);
 #else
       beepWarn2();
@@ -432,7 +432,7 @@ bool checkIncDecGen2(uint8_t event, void *i_pval, int16_t i_min, int16_t i_max, 
   }
   if(event==EVT_KEY_FIRST(kpl) || event== EVT_KEY_REPT(kpl) || (s_editMode && (event==EVT_KEY_FIRST(KEY_UP) || event== EVT_KEY_REPT(KEY_UP))) ) {
     newval++;
-#if defined (BEEPSPKR) || defined (PCBV2)
+#if defined (BEEPSPKR) || defined (PCBV2) || defined (PCBV3)
     beepKeySpkr(BEEP_KEY_UP_FREQ);
 #else
     beepKey();
@@ -440,7 +440,7 @@ bool checkIncDecGen2(uint8_t event, void *i_pval, int16_t i_min, int16_t i_max, 
     kother=kmi;
   }else if(event==EVT_KEY_FIRST(kmi) || event== EVT_KEY_REPT(kmi) || (s_editMode && (event==EVT_KEY_FIRST(KEY_DOWN) || event== EVT_KEY_REPT(KEY_DOWN))) ) {
     newval--;
-#if defined (BEEPSPKR) || defined (PCBV2)
+#if defined (BEEPSPKR) || defined (PCBV2) || defined (PCBV3)
     beepKeySpkr(BEEP_KEY_DOWN_FREQ);
 #else
     beepKey();
@@ -460,7 +460,7 @@ bool checkIncDecGen2(uint8_t event, void *i_pval, int16_t i_min, int16_t i_max, 
   {
     newval = i_max;
     killEvents(event);
-#if defined (BEEPSPKR) || defined (PCBV2)
+#if defined (BEEPSPKR) || defined (PCBV2) || defined (PCBV3)
     beepWarn2Spkr(BEEP_KEY_UP_FREQ);
 #else
     beepWarn2();
@@ -470,7 +470,7 @@ bool checkIncDecGen2(uint8_t event, void *i_pval, int16_t i_min, int16_t i_max, 
   {
     newval = i_min;
     killEvents(event);
-#if defined (BEEPSPKR) || defined (PCBV2)
+#if defined (BEEPSPKR) || defined (PCBV2) || defined (PCBV3)
     beepWarn2Spkr(BEEP_KEY_DOWN_FREQ);
 #else
     beepWarn2();
@@ -479,7 +479,7 @@ bool checkIncDecGen2(uint8_t event, void *i_pval, int16_t i_min, int16_t i_max, 
   if(newval != val){
     if(newval==0) {
       pauseEvents(event); // delay before auto-repeat continues
-#if defined (BEEPSPKR) || defined (PCBV2)
+#if defined (BEEPSPKR) || defined (PCBV2) || defined (PCBV3)
       if (newval>val)
         beepWarn2Spkr(BEEP_KEY_UP_FREQ);
       else
@@ -495,7 +495,7 @@ bool checkIncDecGen2(uint8_t event, void *i_pval, int16_t i_min, int16_t i_max, 
     else
       if (i_flags & _FL_UNSIGNED8) *(uint8_t*)i_pval = newval;
       else                        *( int8_t*)i_pval = newval;
-#if defined (FRSKY) || defined (PCBV2)
+#if defined (FRSKY) || defined (PCBV2) || defined (PCBV3)
     eeDirty(i_flags & (EE_GENERAL|EE_MODEL|EE_FRSKY));
 #else
     eeDirty(i_flags & (EE_GENERAL|EE_MODEL));
@@ -833,7 +833,7 @@ ISR(TIMER1_COMPA_vect) //2MHz pulse generation
     pulsePol = g_model.pulsePol;//0;
 
     cli(); // sei();
-#ifdef PCBV2
+#if defined (PCBV2) || defined (PCBV3)
     TIMSK1 &= ~(1<<OCIE1A); //stop reentrance
 #else
     TIMSK &= ~(1<<OCIE1A); //stop reentrance
@@ -841,7 +841,7 @@ ISR(TIMER1_COMPA_vect) //2MHz pulse generation
     sei();    
     setupPulses();
     cli();
-#ifdef PCBV2
+#if defined (PCBV2) || defined (PCBV3)
     TIMSK1 |= (1<<OCIE1A);
 #else
     TIMSK |= (1<<OCIE1A);
@@ -872,14 +872,14 @@ uint16_t getTmr16KHz()
 
 extern uint16_t g_time_per10; // instantiated in menus.cpp
 
-#ifdef PCBV2
+#if defined (PCBV2) || defined (PCBV3)
 ISR(TIMER2_COMPA_vect, ISR_NOBLOCK) //10ms timer
 #else
 ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
 #endif
 {
   cli();
-#ifdef PCBV2
+#if defined (PCBV2) || defined (PCBV3)
   TIMSK2 &= ~(1<<OCIE2A); //stop reentrance
   OCR2A += 156;
 #else
@@ -958,7 +958,7 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
         }
     }
 
-#ifdef PCBV2
+#if defined (PCBV2) || defined (PCBV3)
     // G: use timer0 WGM mode tone generator for beeps
     if(beepOn)
     {
@@ -999,11 +999,11 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
       PORTE &= ~(1<<OUT_E_BUZZER);
     }
 #endif
-#endif // PCBV2
+#endif // PCBV2 || PCBV3
 
     per10ms();
 
-#ifdef PCBV2
+#if defined (PCBV2) || defined (PCBV3)
     disk_timerproc();
 #endif
 
@@ -1020,7 +1020,7 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
 #endif
 
   cli();
-#ifdef PCBV2
+#if defined (PCBV2) || defined (PCBV3)
   TIMSK2 |= (1<<OCIE2A);
 #else
   TIMSK |= (1<<OCIE0);
@@ -1039,7 +1039,7 @@ ISR(TIMER3_CAPT_vect, ISR_NOBLOCK) //capture ppm in 16MHz / 8 = 2MHz
 {
   uint16_t capture=ICR3; 
   cli();
-#ifdef PCBV2
+#if defined (PCBV2) || defined (PCBV3)
   TIMSK3 &= ~(1<<ICIE3);
 #else
   ETIMSK &= ~(1<<TICIE3);
@@ -1066,7 +1066,7 @@ ISR(TIMER3_CAPT_vect, ISR_NOBLOCK) //capture ppm in 16MHz / 8 = 2MHz
   }
 
   cli();
-#ifdef PCBV2
+#if defined (PCBV2) || defined (PCBV3)
   TIMSK3 |= (1<<ICIE3);
 #else
   ETIMSK |= (1<<TICIE3);
@@ -1074,7 +1074,7 @@ ISR(TIMER3_CAPT_vect, ISR_NOBLOCK) //capture ppm in 16MHz / 8 = 2MHz
   sei();
 }
 
-#ifdef PCBV2
+#if defined (PCBV2) || defined (PCBV3)
 /*---------------------------------------------------------*/
 /* User Provided Timer Function for FatFs module           */
 /*---------------------------------------------------------*/
@@ -1129,7 +1129,7 @@ uint8_t DEBUG2 = 0;
 
 int main(void)
 {
-#ifdef PCBV2
+#if defined (PCBV2) || defined (PCBV3)
   /////////////////////////////////////////////
   // Shut the WDT off. None of the fuse settings 
   // seem to accomplish this. Strange.
@@ -1142,7 +1142,7 @@ int main(void)
 #endif
 
   DDRA = 0xff;  PORTA = 0x00;
-#ifdef PCBV2
+#if defined (PCBV2) || defined (PCBV3)
   DDRB = 0xF7;  PORTB = 0x7e;
   DDRC = 0x3f;  PORTC = 0xc0; // PC0 used for LCD back light control
   DDRD = 0x0F;  PORTD = 0xff; // 7:4=inputs (keys/trims, pull-ups on), 3:0=outputs (keyscan row select)
@@ -1161,7 +1161,7 @@ int main(void)
   JETI_Init();
 #endif
 
-#if defined (FRSKY) || defined (PCBV2)
+#if defined (FRSKY) || defined (PCBV2) || defined (PCBV3)
   FRSKY_Init();
 #endif
 
@@ -1169,7 +1169,7 @@ int main(void)
   ADCSRA=0x85; // ADC enabled, pre-scaler division=32 (no interrupt, no auto-triggering)
 
   /**** Set up timer/counter 0 ****/
-#ifdef PCBV2  
+#if defined (PCBV2) || defined (PCBV3)
   /** Move old 64A Timer0 functions to Timer2 and use WGM on OC0(A) (PB7) for spkear tone output **/
 
   // TCNT0  10ms = 16MHz/1024/2(/78) periodic timer (for speaker tone generation)
@@ -1222,7 +1222,7 @@ int main(void)
   // Noise Canceller enabled, neg. edge, clock at 16MHz / 8 (2MHz)
   TCCR3B  = (1<<ICNC3) | (0b010 << CS30);
 #endif
-#ifdef PCBV2
+#if defined (PCBV2) || defined (PCBV3)
   TIMSK3 |= (1<<ICIE3);         // Enable capture event interrupt
 #else
   TIMSK |= (1<<TICIE3);         // Enable capture event interrupt
@@ -1244,7 +1244,7 @@ int main(void)
   checkAlarm();
   setupPulses();
 
-#ifdef PCBV2
+#if defined (PCBV2) || defined (PCBV3)
   // wdt_enable(WDTO_500MS); // This doesn't set the right time on the '2561 chip :/
   // Try it manually ...
   cli();
@@ -1266,7 +1266,7 @@ int main(void)
   lcdSetRefVolt(g_eeGeneral.contrast);
   g_LightOffCounter = g_eeGeneral.lightAutoOff*500; //turn on light for x seconds - no need to press key Issue 152
 
-#ifdef PCBV2
+#if defined (PCBV2) || defined (PCBV3)
   TIMSK1 |= (1<<OCIE1A); // Pulse generator enable immediately before mainloop
 #else
   TIMSK |= (1<<OCIE1A); // Pulse generator enable immediately before mainloop

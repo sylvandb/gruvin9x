@@ -26,7 +26,7 @@ static inline void __attribute__ ((always_inline))
 eeprom_write_byte_cmp (uint8_t dat, uint16_t pointer_eeprom)
 {
   //see /home/thus/work/avr/avrsdk4/avr-libc-1.4.4/libc/misc/eeprom.S:98 143
-#ifdef PCBV2
+#if defined (PCBV2) || defined (PCBV3)
   while(EECR & (1<<EEPE)) //ZZZ /* make sure EEPROM is ready */
 #else
   while(EECR & (1<<EEWE)) //ZZZ /* make sure EEPROM is ready */
@@ -40,7 +40,7 @@ eeprom_write_byte_cmp (uint8_t dat, uint16_t pointer_eeprom)
   EEDR  = dat;
   uint8_t flags=SREG;
   cli();
-#ifdef PCBV2
+#if defined (PCBV2) || defined (PCBV3)
   EECR |= 1<<EEMPE;
   EECR |= 1<<EEPE;
 #else
@@ -178,10 +178,10 @@ bool keyState(EnumKeys enuk)
     case SW_ElevDR : return PINE & (1<<INP_E_ElevDR);
     
     //case SW_AileDR : return PINE & (1<<INP_E_AileDR);
-#if (!(defined(JETI) || defined(FRSKY) || defined(PCBV2)))
+#if (!(defined(JETI) || defined(FRSKY) || defined(PCBV2) || defined (PCBV3) ))
     case SW_AileDR : return PINE & (1<<INP_E_AileDR);
 #endif
-#if (defined(JETI) || defined(FRSKY) || defined(PCBV2))
+#if (defined(JETI) || defined(FRSKY) || defined(PCBV2) || defined(PCBV3))
     case SW_AileDR : return PINC & (1<<INP_C_AileDR); //shad974: rerouted inputs to free up UART0
 #endif
 
@@ -197,10 +197,10 @@ bool keyState(EnumKeys enuk)
     case SW_Gear   : return PINE & (1<<INP_E_Gear);
     //case SW_ThrCt  : return PINE & (1<<INP_E_ThrCt);
 
-#if (!(defined(JETI) || defined(FRSKY) || defined(PCBV2)))
+#if (!(defined(JETI) || defined(FRSKY) || defined(PCBV2) || defined(PCBV3)))
      case SW_ThrCt  : return PINE & (1<<INP_E_ThrCt);
 #endif
-#if (defined(JETI) || defined(FRSKY) || defined(PCBV2))
+#if (defined(JETI) || defined(FRSKY) || defined(PCBV2) || defined(PCBV3))
     case SW_ThrCt  : return PINC & (1<<INP_C_ThrCt); //shad974: rerouted inputs to free up UART0
 #endif
 
@@ -240,7 +240,7 @@ void per10ms()
 /**** BEGIN KEY STATE READ ****/
   uint8_t enuk = KEY_MENU;
 
-#ifdef PCBV2
+#if defined (PCBV2) || defined (PCBV3)
 
   /* Original keys were connected to PORTB as follows:
 
@@ -294,7 +294,7 @@ void per10ms()
     1<<INP_D_TRM_RH_UP
   };
 
-#ifdef PCBV2
+#if defined (PCBV2) || defined (PCBV3)
   /*** Original Trims were all on PORTD as follows
 
     Bit Switch
@@ -345,13 +345,13 @@ void per10ms()
 
 /**** END KEY STATE READ ****/
 
-#if defined (FRSKY) || defined (PCBV2)
+#if defined (FRSKY) || defined (PCBV2) || defined(PCBV3)
   // Used to detect presence of valid FrSky telemetry packets inside the 
   // last <FRSKY_TIMEOUT10ms> 10ms intervals
   if (frskyStreaming > 0) frskyStreaming--;
   else if (g_eeFrsky.noDataAlarm)
   {
-#if defined (BEEPSPKR) || defined (PCBV2)
+#if defined (BEEPSPKR) || defined (PCBV2) || defined(PCBV3)
     if (!(g_tmr10ms % 30)) beepWarn2Spkr((g_tmr10ms % 60) ? 25 : 20);
 #else
     if (!(g_tmr10ms % 30)) 
@@ -370,7 +370,7 @@ void per10ms()
 #endif
 
   // These moved here from perOut() [gruvin9x.cpp] to improve beep trigger reliability.
-#if defined (BEEPSPKR) || defined (PCBV2)
+#if defined (BEEPSPKR) || defined (PCBV2) || defined(PCBV3)
   if(mixWarning & 1) if(((g_tmr10ms&0xFF)==  0)) beepWarn1Spkr(BEEP_DEFAULT_FREQ+7);
   if(mixWarning & 2) if(((g_tmr10ms&0xFF)== 64) 
       || ((g_tmr10ms&0xFF)== 72)) beepWarn1Spkr(BEEP_DEFAULT_FREQ+9);

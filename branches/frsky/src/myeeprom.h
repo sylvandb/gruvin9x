@@ -182,7 +182,7 @@ typedef struct t_ModelData {
 extern EEGeneral g_eeGeneral;
 extern ModelData g_model;
 
-#if !(defined (FRSKY) || defined (PCBV2))
+#if !(defined (FRSKY) || defined (PCBV2) || defined (PCBV3) )
 #define TOTAL_EEPROM_USAGE (sizeof(ModelData)*MAX_MODELS + sizeof(EEGeneral))
 #else
 

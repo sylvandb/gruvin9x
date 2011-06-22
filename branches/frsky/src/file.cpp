@@ -24,25 +24,19 @@
 #include "string.h"
 
 
-#ifdef TEST
-#include "assert.h"
-#  define EESIZE   150
-#  define BS       4
-#  define RESV     64  //reserv for eeprom header with directory (eeFs)
-#else
 //
 // bs=16  128 blocks    verlust link:128  16files:16*8  128     sum 256
 // bs=32   64 blocks    verlust link: 64  16files:16*16 256     sum 320
 //
-#  ifdef PCBV2
-#    define EESIZE   4096 // 2048 // ZZZ
-#    define BS       32
-#  else
-#    define EESIZE   2048
-#    define BS       16
-#  endif
-#  define RESV     64  //reserv for eeprom header with directory (eeFs)
+#if defined (PCBV2) || defined(PCBV3)
+#define EESIZE   4096 // 2048 // ZZZ
+#define BS       32
+#else
+#define EESIZE   2048
+#define BS       16
 #endif
+
+#define RESV     64  //reserv for eeprom header with directory (eeFs)
 #define FIRSTBLK (RESV/BS)
 #define BLOCKS   (EESIZE/BS)
 

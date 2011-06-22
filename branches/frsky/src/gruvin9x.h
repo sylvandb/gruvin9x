@@ -99,7 +99,7 @@
 //                            SIM_CTL  ID1      NC      RF_POW RuddDR
 
 #define PORTA_LCD_DAT  PORTA
-#ifdef PCBV2
+#if defined (PCBV2) || defined (PCBV3)
 #define OUT_C_LIGHT   0
 #else
 #define OUT_B_LIGHT   7
@@ -145,14 +145,14 @@
 #define INP_E_AileDR  1
 #define INP_E_ThrCt   0
 
-#if defined(JETI) || defined(FRSKY) || defined(PCBV2)
+#if defined(JETI) || defined(FRSKY) || defined(PCBV2) || defined (PCBV3)
   #undef INP_E_ThrCt
   #undef INP_E_AileDR
   #define INP_C_ThrCt   6
   #define INP_C_AileDR  7
 #endif
 
-#if defined (BEEPSPKR) || defined (PCBV2)
+#if defined (BEEPSPKR) || defined (PCBV2) || defined (PCBV3)
 #define BEEP_KEY_TIME 5
 #define BEEP_DEFAULT_FREQ 50
 #define BEEP_KEY_UP_FREQ 55
@@ -430,7 +430,7 @@ int8_t checkIncDec_hg(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max);
 ///Hilfs-funktion zum Aufruf von checkIncDecGen2 fuer bitfield Variablen
 int8_t checkIncDec_vg(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max);
 
-#if defined (FRSKY) || defined (PCBV2)
+#if defined (FRSKY) || defined (PCBV2) || defined (PCBV3)
 // Gruvin: This uses a new _FL_UNSIGNED flag to allow for unsigned values, so 0-255 works in an 8bit var. 
 int8_t checkIncDec_Frsky(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max);
 #endif
@@ -468,7 +468,7 @@ extern uint8_t s_editMode;     //global editmode
 
 
 #define STORE_MODELVARS eeDirty(EE_MODEL)
-#ifdef PCBV2
+#if defined (PCBV2) || defined (PCBV3)
 #define BACKLIGHT_ON    PORTC |=  (1<<OUT_C_LIGHT)
 #define BACKLIGHT_OFF   PORTC &= ~(1<<OUT_C_LIGHT)
 #else
@@ -492,7 +492,7 @@ template<class t> inline int8_t sgn(t a){ return a>0 ? 1 : (a < 0 ? -1 : 0); }
 
 #define EE_GENERAL 1
 #define EE_MODEL   2
-#if defined (FRSKY) || defined (PCBV2)
+#if defined (FRSKY) || defined (PCBV2) || defined (PCBV3)
 #define EE_FRSKY  32
 #endif
 
@@ -566,7 +566,7 @@ void menuProcModelSelect(uint8_t event);
 void menuProcTemplates(uint8_t event);
 void menuProcSwitches(uint8_t event);
 
-#if defined (FRSKY) || defined (PCBV2)
+#if defined (FRSKY) || defined (PCBV2) || defined (PCBV3)
 void menuProcFrsky(uint8_t event);
 void menuProcFrskyAlarms(uint8_t event);
 #endif
@@ -595,7 +595,7 @@ extern uint16_t jeti_keys;
 #include "jeti.h"
 #endif
 
-#if defined (FRSKY) || defined (PCBV2)
+#if defined (FRSKY) || defined (PCBV2) || defined (PCBV3)
 // FrSky Telemetry
 #include "frsky.h"
 #endif
@@ -635,7 +635,7 @@ inline void _beep(uint8_t b) {
 }
 
 extern uint8_t toneFreq;
-#ifdef PCBV2
+#if defined (PCBV2) || defined (PCBV3)
 inline void _beepSpkr(uint8_t d, uint8_t f)
 {
   g_beepCnt=d;
@@ -651,7 +651,7 @@ inline void _beepSpkr(uint8_t d, uint8_t f)
 #endif
 #endif
 
-#if defined (BEEPSPKR) || defined (PCBV2)
+#if defined (BEEPSPKR) || defined (PCBV2) || defined (PCBV3)
 
 #define beepKeySpkr(freq) _beepSpkr(g_beepVal[0],freq)
 #define beepTrimSpkr(freq) _beepSpkr(g_beepVal[0],freq)
@@ -675,7 +675,7 @@ inline void _beepSpkr(uint8_t d, uint8_t f)
 #endif
 
 // MM/SD card Disk IO Support
-#ifdef PCBV2
+#if defined (PCBV2) || defined (PCBV3)
 extern void disk_timerproc(void);
 #endif
 

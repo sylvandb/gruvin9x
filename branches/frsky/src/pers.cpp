@@ -26,7 +26,7 @@ EFile theFile2; //sometimes we need two files
 #define FILE_TYP_GENERAL 1
 #define FILE_TYP_MODEL   2
 
-#if defined (FRSKY) || defined (PCBV2)
+#if defined (FRSKY) || defined (PCBV2) || defined(PCBV3)
 #define FILE_TYP_FRSKY   3
 #endif
 
@@ -69,7 +69,7 @@ bool eeLoadGeneral()
   return false;
 }
 
-#if defined (FRSKY) || defined (PCBV2)
+#if defined (FRSKY) || defined (PCBV2) || defined(PCBV3)
 void frskyDefault()
 {
   memset(&g_eeFrsky, 0, sizeof(g_eeFrsky));
@@ -196,7 +196,7 @@ void eeReadAll()
     //alert(PSTR("modwrite ok"));
   }
 
-#if defined (FRSKY) || defined (PCBV2)
+#if defined (FRSKY) || defined (PCBV2) || defined(PCBV3)
   if(!eeLoadFrsky()){
     frskyDefault();
     // alert(PSTR("FrSky Default OK"));
@@ -238,7 +238,7 @@ void eeCheck(bool immediately)
     }
     //first finish GENERAL, then MODEL !!avoid Toggle effect
   }
-#if defined (FRSKY) || defined (PCBV2)
+#if defined (FRSKY) || defined (PCBV2) || defined(PCBV3)
     // G: ... or then FRSKY. What's Toggle Effect? Hmmm. :/
   else if (msk & EE_FRSKY){
 // ref: uint16_t EFile::writeRlc(uint8_t i_fileId, uint8_t typ,uint8_t*buf,uint16_t i_len, uint8_t maxTme10ms){

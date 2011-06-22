@@ -29,7 +29,7 @@
 
 #gruvin: PCB version -- OVERRIDES the following settings if not STD
 # Values: STD, V2, V3 (includes PPMIN mod for JR compatibility)
-PCB = V2
+PCB = V3
 
 # Following options for PCB=STD only (ignored otherwise) ...
 
@@ -54,10 +54,10 @@ PPMIN =  STD
 #------- END BUILD OPTIONS ---------------------------
 
 # MCU name
-ifeq ($(PCB), V2)
-MCU = atmega2561
-else
+ifeq ($(PCB), STD)
 MCU = atmega64
+else
+MCU = atmega2561
 endif
 
 # Processor frequency.
@@ -84,7 +84,7 @@ ifeq ($(EXT), FRSKY)
 endif
 
 # Disk IO support (PCB V2 only)
-ifeq ($(PCB), V2)
+ifneq ($(PCB), STD)
   CPPSRC += ff.cpp
   CPPSRC += diskio.cpp
 endif
