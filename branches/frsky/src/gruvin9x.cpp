@@ -1056,8 +1056,7 @@ ISR(TIMER3_CAPT_vect, ISR_NOBLOCK) //capture ppm in 16MHz / 8 = 2MHz
   ETIMSK &= ~(1<<TICIE3);
 #endif
   sei();
-
-  lastCapt = capture;
+  
   uint16_t val = (capture - lastCapt) / 2;
   
   // DEBUG
@@ -1080,6 +1079,8 @@ ISR(TIMER3_CAPT_vect, ISR_NOBLOCK) //capture ppm in 16MHz / 8 = 2MHz
         ppmInState = 0; // not triggered
     }
   }
+  
+  lastCapt = capture;
 
   cli();
 #if defined (PCBV2) || defined (PCBV3)
@@ -1238,7 +1239,7 @@ int main(void)
 #if defined (PCBV2) || defined (PCBV3)
   TIMSK3 |= (1<<ICIE3);         // Enable capture event interrupt
 #else
-  TIMSK |= (1<<TICIE3);         // Enable capture event interrupt
+  ETIMSK |= (1<<TICIE3);
 #endif
 
   sei(); // interrupts needed for eeReadAll function (soon).
