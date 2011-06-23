@@ -89,6 +89,7 @@ endif
 
 # Disk IO support (PCB V2+ only)
 ifneq ($(PCB), STD)
+  CPPSRC += rtc.cpp
   CPPSRC += ff.cpp
   CPPSRC += diskio.cpp
 endif

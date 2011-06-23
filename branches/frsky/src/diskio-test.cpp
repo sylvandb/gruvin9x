@@ -12,15 +12,31 @@
 
   if (!onceonly)
   {
+    // First, let's try to set the RTC date/time
+    RTC rtc;
+
+    rtc.year = 2011;
+    rtc.month = 6;
+    rtc.mday = 23;
+    rtc.wday = 5;
+    rtc.hour = 21;
+    rtc.min = 53;
+    rtc.sec = 0;
+
+//    rtc_settime(&rtc);
+// IT WORKED! And battery back-up for the RTC chip is working also.
+    //////////////////////
+
     f_err_code = f_mount(0, &FATFS_Obj);
     FIL fil_obj;
 
-    int variableName = 123;
-    result = f_open(&fil_obj, "/foo.txt", FA_READ);
-    // f_printf(&fil_obj, "bar %d\n", variableName);
+    // atempt creating and writing to a new file
+    result = f_open(&fil_obj, "/foo.txt", FA_CREATE_ALWAYS | FA_WRITE);
+    f_printf(&fil_obj, "gruvin9x created this file! Yay!\n");
+    f_close(&fil_obj);
 
-    // That worked! Now test reading a line from a file.
-    // f_lseek(&fil_obj, 0);
+    // That worked! Now test reading a line from another file.
+    result = f_open(&fil_obj, "/foo.txt", FA_READ);
     myStr = f_gets(sBuffer, 100, &fil_obj);
 
     f_close(&fil_obj);

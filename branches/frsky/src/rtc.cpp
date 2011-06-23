@@ -7,12 +7,12 @@
 
 
 
-#define SCL_LOW()	DDRE |=	0x04			/* SCL = LOW */
-#define SCL_HIGH()	DDRE &=	0xFB			/* SCL = High-Z */
-#define	SCL_VAL		((PINE & 0x04) ? 1 : 0)	/* SCL input level */
-#define SDA_LOW()	DDRE |=	0x08			/* SDA = LOW */
-#define SDA_HIGH()	DDRE &=	0xF7			/* SDA = High-Z */
-#define	SDA_VAL		((PINE & 0x08) ? 1 : 0)	/* SDA input level */
+#define SCL_LOW()	DDRB |=	0x20		/* SCL = LOW */
+#define SCL_HIGH()	DDRB &=	~0x20		/* SCL = High-Z */
+#define	SCL_VAL		((PINB & 0x20) ? 1 : 0)	/* SCL input level */
+#define SDA_LOW()	DDRB |=	0x40		/* SDA = LOW */
+#define SDA_HIGH()	DDRB &=	~0x40   	/* SDA = High-Z */
+#define	SDA_VAL		((PINB & 0x40) ? 1 : 0)	/* SDA input level */
 
 
 
@@ -128,7 +128,7 @@ int iic_read (
 	BYTE dev,		/* Device address */
 	UINT adr,		/* Read start address */
 	UINT cnt,		/* Read byte count */
-	void* buff		/* Read data buffer */
+	BYTE *buff		/* Read data buffer */
 )
 {
 	BYTE *rbuff = buff;
@@ -164,7 +164,7 @@ int iic_write (
 	BYTE dev,			/* Device address */
 	UINT adr,			/* Write start address */
 	UINT cnt,			/* Write byte count */
-	const void* buff	/* Data to be written */
+	const BYTE *buff	/* Data to be written */
 )
 {
 	const BYTE *wbuff = buff;

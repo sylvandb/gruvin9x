@@ -38,12 +38,12 @@
 
 /* Port Controls  (Platform dependent) */
 // GCC optimisation should result in a single CBI/SBI instructions here
-#define CS_LOW()	PORTB &= ~0x20    	/* MMC CS = L */
-#define	CS_HIGH()	PORTB |= 0x20		/* MMC CS = H */
+#define CS_LOW()	PORTB &= ~0x10    	/* MMC CS = L */
+#define	CS_HIGH()	PORTB |= 0x10		/* MMC CS = H */
 
 #define SOCKPORT	PINB			/* Socket contact port */
-#define SOCKWP		0x20//G: not implemented /* Write protect switch (PB5) */
-#define SOCKINS		0x10//G: not implemented /* Card detect switch (PB4) */
+#define SOCKWP		0x00 // not implemented /* Write protect switch */
+#define SOCKINS		0x00 // not implemented /* Card detect switch */
 
 #define	FCLK_SLOW()	SPCR = 0x52		/* Set slow clock (100k-400k) */
 #define	FCLK_FAST()	SPCR = 0x50		/* Set fast clock (depends on the CSD) */
@@ -579,7 +579,7 @@ DRESULT disk_ioctl (
 
 void disk_timerproc (void)
 {
-	BYTE n, s;
+	BYTE s;
 	
         /*
 	n = Timer1;			// 100Hz decrement timer 

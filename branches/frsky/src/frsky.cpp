@@ -20,6 +20,7 @@
 #include "frsky.h"
 
 #if defined (PCBV2) || defined(PCBV3)
+#include "rtc.h"
 #include "ff.h"
 #include "diskio.h"
 #endif
@@ -383,6 +384,10 @@ MenuFuncP_PROGMEM APM menuTabFrsky[] = {
 // FRSKY menu
 void menuProcFrsky(uint8_t event)
 {
+// DEBUG - TEST DISK-IO - Replaces FRSKY menu page with one-shot, no return test code
+// #include "diskio-test.cpp"
+// DEBUG END
+
   static uint8_t blinkCount = 0; // let's blink the data on and off if there's no data stream
   static MState2 mstate2;
   TITLE("FRSKY");

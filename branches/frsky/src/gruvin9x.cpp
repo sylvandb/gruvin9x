@@ -22,6 +22,7 @@
 // MM/SD card Disk IO Support
 #if defined (PCBV2) || defined (PCBV3)
 #include "integer.h"
+#include "rtc.h"
 #include "ff.h"
 #include "diskio.h"
 #endif
@@ -1094,15 +1095,14 @@ ISR(TIMER3_CAPT_vect, ISR_NOBLOCK) //capture ppm in 16MHz / 8 = 2MHz
 /* the system does not support a real time clock.          */
 /* This is not required in read-only configuration.        */
 
-#include "rtc.h"
-
 uint32_t get_fattime(void)
 {
   RTC rtc;
 
   /* Get local time */
-  //rtc_gettime(&rtc);
+  rtc_gettime(&rtc);
 
+/*
   rtc.year = 2011;
   rtc.month = 1;
   rtc.mday = 1;
@@ -1110,6 +1110,7 @@ uint32_t get_fattime(void)
   rtc.hour = 0;
   rtc.min = 0;
   rtc.sec = 0;
+*/
 
   /* Pack date and time into a DWORD variable */
   return    ((DWORD)(rtc.year - 1980) << 25)
@@ -1155,7 +1156,7 @@ int main(void)
 
   DDRA = 0xff;  PORTA = 0x00;
 #if defined (PCBV2) || defined (PCBV3)
-  DDRB = 0xF7;  PORTB = 0x7e;
+  DDRB = 0x97;  PORTB = 0x1e; // 7:AUDIO, SD_CARD[6:SDA 5:SCL 4:CS 3:MISO 2:MOSI 1:SCK], 0:PPM_OUT
   DDRC = 0x3f;  PORTC = 0xc0; // PC0 used for LCD back light control
   DDRD = 0x0F;  PORTD = 0xff; // 7:4=inputs (keys/trims, pull-ups on), 3:0=outputs (keyscan row select)
 #else
