@@ -347,7 +347,7 @@ void per10ms()
   if (frskyStreaming > 0) frskyStreaming--;
   else if (g_eeFrsky.noDataAlarm)
   {
-#if defined (BEEPSPKR) || defined (PCBV2) || defined(PCBV3)
+#if defined (BEEPSPKR)
     if (!(g_tmr10ms % 30)) beepWarn2Spkr((g_tmr10ms % 60) ? 25 : 20);
 #else
     if (!(g_tmr10ms % 30)) 
@@ -366,7 +366,7 @@ void per10ms()
 #endif
 
   // These moved here from perOut() [gruvin9x.cpp] to improve beep trigger reliability.
-#if defined (BEEPSPKR) || defined (PCBV2) || defined(PCBV3)
+#if defined (BEEPSPKR)
   if(mixWarning & 1) if(((g_tmr10ms&0xFF)==  0)) beepWarn1Spkr(BEEP_DEFAULT_FREQ+7);
   if(mixWarning & 2) if(((g_tmr10ms&0xFF)== 64) 
       || ((g_tmr10ms&0xFF)== 72)) beepWarn1Spkr(BEEP_DEFAULT_FREQ+9);

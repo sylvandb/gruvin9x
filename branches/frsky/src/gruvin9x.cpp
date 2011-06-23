@@ -367,7 +367,7 @@ uint8_t checkTrim(uint8_t event)
       g_model.trim[idx]=0;
       killEvents(event);
       warble = false;
-#if defined (BEEPSPKR) || defined (PCBV2) || defined (PCBV3)
+#if defined (BEEPSPKR)
       beepWarn2Spkr(60);
 #else
       beepWarn2();
@@ -377,7 +377,7 @@ uint8_t checkTrim(uint8_t event)
       g_model.trim[idx] = (int8_t)x;
       STORE_MODELVARS;
       if(event & _MSK_KEY_REPT) warble = true;
-#if defined (BEEPSPKR) || defined (PCBV2) || defined (PCBV3)
+#if defined (BEEPSPKR)
       // toneFreq higher/lower according to trim position
       // beepTrimSpkr((x/3)+60);  // Range -125 to 125 = toneFreq: 19 to 101
       beepTrimSpkr((x/4)+60);  // Divide by 4 more efficient. Range -125 to 125 = toneFreq: 28 to 91
@@ -390,7 +390,7 @@ uint8_t checkTrim(uint8_t event)
       g_model.trim[idx] = (x>0) ? 125 : -125;
       STORE_MODELVARS;
       warble = false;
-#if defined (BEEPSPKR) || defined (PCBV2) || defined (PCBV3)
+#if defined (BEEPSPKR)
       beepWarn2Spkr((x/4)+60);
 #else
       beepWarn2();
@@ -430,7 +430,7 @@ bool checkIncDecGen2(uint8_t event, void *i_pval, int16_t i_min, int16_t i_max, 
   }
   if(event==EVT_KEY_FIRST(kpl) || event== EVT_KEY_REPT(kpl) || (s_editMode && (event==EVT_KEY_FIRST(KEY_UP) || event== EVT_KEY_REPT(KEY_UP))) ) {
     newval++;
-#if defined (BEEPSPKR) || defined (PCBV2) || defined (PCBV3)
+#if defined (BEEPSPKR)
     beepKeySpkr(BEEP_KEY_UP_FREQ);
 #else
     beepKey();
@@ -438,7 +438,7 @@ bool checkIncDecGen2(uint8_t event, void *i_pval, int16_t i_min, int16_t i_max, 
     kother=kmi;
   }else if(event==EVT_KEY_FIRST(kmi) || event== EVT_KEY_REPT(kmi) || (s_editMode && (event==EVT_KEY_FIRST(KEY_DOWN) || event== EVT_KEY_REPT(KEY_DOWN))) ) {
     newval--;
-#if defined (BEEPSPKR) || defined (PCBV2) || defined (PCBV3)
+#if defined (BEEPSPKR)
     beepKeySpkr(BEEP_KEY_DOWN_FREQ);
 #else
     beepKey();
@@ -458,7 +458,7 @@ bool checkIncDecGen2(uint8_t event, void *i_pval, int16_t i_min, int16_t i_max, 
   {
     newval = i_max;
     killEvents(event);
-#if defined (BEEPSPKR) || defined (PCBV2) || defined (PCBV3)
+#if defined (BEEPSPKR)
     beepWarn2Spkr(BEEP_KEY_UP_FREQ);
 #else
     beepWarn2();
@@ -468,7 +468,7 @@ bool checkIncDecGen2(uint8_t event, void *i_pval, int16_t i_min, int16_t i_max, 
   {
     newval = i_min;
     killEvents(event);
-#if defined (BEEPSPKR) || defined (PCBV2) || defined (PCBV3)
+#if defined (BEEPSPKR)
     beepWarn2Spkr(BEEP_KEY_DOWN_FREQ);
 #else
     beepWarn2();
@@ -477,7 +477,7 @@ bool checkIncDecGen2(uint8_t event, void *i_pval, int16_t i_min, int16_t i_max, 
   if(newval != val){
     if(newval==0) {
       pauseEvents(event); // delay before auto-repeat continues
-#if defined (BEEPSPKR) || defined (PCBV2) || defined (PCBV3)
+#if defined (BEEPSPKR)
       if (newval>val)
         beepWarn2Spkr(BEEP_KEY_UP_FREQ);
       else
@@ -889,7 +889,7 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
   OCR2A += 156;
 #else
   TIMSK &= ~(1<<OCIE0); //stop reentrance
-#ifdef BEEPSPKR
+#if defined (BEEPSPKR)
   OCR0 += 2;
 #else  
   OCR0 += 156;
@@ -1201,7 +1201,7 @@ int main(void)
   TCCR0A  = (0b01<<WGM00);
 
 #else
-#ifdef BEEPSPKR
+#if defined (BEEPSPKR)
   // TCNT0  10ms = 16MHz/1024/2(/78) periodic timer (for speaker tone generation)
   //        Capture ISR 7812.5/second -- runs per-10ms code segment once every 78 
   //        cycles (9.984ms). Timer overflows at about 61Hz or once every 16ms.

@@ -154,7 +154,7 @@
   #define INP_C_AileDR  7
 #endif
 
-#if defined (BEEPSPKR) || defined (PCBV2) || defined (PCBV3)
+#if defined (BEEPSPKR)
 #define BEEP_KEY_TIME 5
 #define BEEP_DEFAULT_FREQ 50
 #define BEEP_KEY_UP_FREQ 55
@@ -639,17 +639,15 @@ inline void _beepSpkr(uint8_t d, uint8_t f)
   g_beepCnt=d;
   OCR0A = (5000 / f); // sticking with old values approx 20(abs. min) to 90, 60 being the default tone(?).
 }
-#else
-#if defined (BEEPSPKR)
+#elif defined (BEEPSPKR)
 inline void _beepSpkr(uint8_t d, uint8_t f)
 {
   g_beepCnt=d;
   toneFreq=f;
 }
 #endif
-#endif
 
-#if defined (BEEPSPKR) || defined (PCBV2) || defined (PCBV3)
+#if defined (BEEPSPKR)
 
 #define beepKeySpkr(freq) _beepSpkr(g_beepVal[0],freq)
 #define beepTrimSpkr(freq) _beepSpkr(g_beepVal[0],freq)
