@@ -408,21 +408,11 @@ bool    checkIncDec_Ret;
 int16_t p1val;
 int16_t p1valdiff;
 
-bool checkIncDecGen2(uint8_t event, void *i_pval, int16_t i_min, int16_t i_max, uint8_t i_flags)
+int16_t checkIncDec16(uint8_t event, int16_t val, int16_t i_min, int16_t i_max, uint8_t i_flags)
 {
-  int16_t val;
-  
-  if (i_flags & _FL_UNSIGNED8)
-    val = i_flags & _FL_SIZE2 ? *(uint16_t*)i_pval : *(uint8_t*)i_pval ;
-  else
-    val = i_flags & _FL_SIZE2 ? *(int16_t*)i_pval : *(int8_t*)i_pval ;
-
   int16_t newval = val;
   uint8_t kpl=KEY_RIGHT, kmi=KEY_LEFT, kother = -1;
 
-  if(i_flags&_FL_VERT){
-    kpl=KEY_UP; kmi=KEY_DOWN;
-  }
   if(event & _MSK_KEY_DBL){
     uint8_t hlp=kpl;
     kpl=kmi;
@@ -451,11 +441,16 @@ bool checkIncDecGen2(uint8_t event, void *i_pval, int16_t i_min, int16_t i_max, 
     killEvents(kmi);
     killEvents(kpl);
   }
+  if(i_min==0 && i_max==1 && event==EVT_KEY_FIRST(KEY_MENU)) {
+    s_editMode = false; // TODO BSS line to be removed at the end (s_editMode will never more be false here)
+    newval=!val;
+    killEvents(event);
+  }
 
   //change values based on P1
   newval -= p1valdiff;
 
-  if(newval>i_max)
+  if(newval > i_max)
   {
     newval = i_max;
     killEvents(event);
@@ -484,46 +479,37 @@ bool checkIncDecGen2(uint8_t event, void *i_pval, int16_t i_min, int16_t i_max, 
       else
         beepWarn2Spkr(BEEP_KEY_DOWN_FREQ);
 #else
-      beepWarn2();
+      beepKey();
 #endif
     }
-    // gruvin: added support for unsigned values to be returned
-    if(i_flags & _FL_SIZE2)
-      if (i_flags & _FL_UNSIGNED8) *(uint16_t*)i_pval = newval;
-      else                        *( int16_t*)i_pval = newval;
-    else
-      if (i_flags & _FL_UNSIGNED8) *(uint8_t*)i_pval = newval;
-      else                        *( int8_t*)i_pval = newval;
 #if defined (FRSKY)
     eeDirty(i_flags & (EE_GENERAL|EE_MODEL|EE_FRSKY));
 #else
     eeDirty(i_flags & (EE_GENERAL|EE_MODEL));
 #endif
-    return checkIncDec_Ret=true;
+    checkIncDec_Ret = true;
   }
-  return checkIncDec_Ret=false;
+  else {
+    checkIncDec_Ret = false;
+  }
+  return newval;
+}
+
+int8_t checkIncDec(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max, uint8_t i_flags)
+{
+  return checkIncDec16(event,i_val,i_min,i_max,i_flags);
 }
 
 int8_t checkIncDec_hm(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max)
 {
-  checkIncDecGen2(event,&i_val,i_min,i_max,EE_MODEL);
-  return i_val;
+  return checkIncDec(event,i_val,i_min,i_max,EE_MODEL);
 }
-int8_t checkIncDec_vm(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max)
-{
-  checkIncDecGen2(event,&i_val,i_min,i_max,_FL_VERT|EE_MODEL);
-  return i_val;
-}
+
 int8_t checkIncDec_hg(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max)
 {
-  checkIncDecGen2(event,&i_val,i_min,i_max,EE_GENERAL);
-  return i_val;
+  return checkIncDec(event,i_val,i_min,i_max,EE_GENERAL);
 }
-int8_t checkIncDec_vg(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max)
-{
-  checkIncDecGen2(event,&i_val,i_min,i_max,_FL_VERT|EE_GENERAL);
-  return i_val;
-}
+
 MenuFuncP lastPopMenu()
 {
   return  g_menuStack[g_menuStackPtr+1];

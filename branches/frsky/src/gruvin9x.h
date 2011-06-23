@@ -392,24 +392,6 @@ void checkTHR();
 ///   Pr�ft beim Einschalten ob alle Switches 'off' sind.
 void    checkSwitches();
 
-/// Bearbeite alle events die zum gewaehlten mode passen.
-/// KEY_LEFT u. KEY_RIGHT
-/// oder KEY_UP u. KEY_DOWN falls _FL_VERT in i_flags gesetzt ist.
-/// Dabei wird der Wert der Variablen i_pval unter Beachtung der Grenzen
-/// i_min und i_max veraendet.
-/// i_pval hat die Groesse 1Byte oder 2Bytes falls _FL_SIZE2  in i_flags gesetzt ist
-/// falls EE_GENERAL oder EE_MODEL in i_flags gesetzt ist wird bei Aenderung
-/// der Variablen zusaetzlich eeDirty() aufgerufen.
-/// Als Bestaetigung wird beep() aufgerufen bzw. beepWarn() wenn die Stellgrenze erreicht wird.
-bool checkIncDecGen2(uint8_t event, void *i_pval, int16_t i_min, int16_t i_max, uint8_t i_flags);
-
-///Hilfs-template zum Speichersparenden Aufruf von checkIncDecGen2
-template<int16_t min,int16_t max>
-bool checkIncDecModVar(uint8_t event, void*p, uint8_t flags)
-{
-  return checkIncDecGen2(event, p, min, max, flags);
-}
-
 //void getADC_filt();
 //void getADC_osmp();
 //void getADC_single();
@@ -418,55 +400,29 @@ bool checkIncDecModVar(uint8_t event, void*p, uint8_t flags)
 #define GETADC_FILT = 2
 
 
-
-///Hilfs-funktion zum Aufruf von checkIncDecGen2 fuer bitfield Variablen
-int8_t checkIncDec_hm(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max);
-///Hilfs-funktion zum Aufruf von checkIncDecGen2 fuer bitfield Variablen
-int8_t checkIncDec_vm(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max);
-///Hilfs-funktion zum Aufruf von checkIncDecGen2 fuer bitfield Variablen
-int8_t checkIncDec_hg(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max);
-///Hilfs-funktion zum Aufruf von checkIncDecGen2 fuer bitfield Variablen
-int8_t checkIncDec_vg(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max);
-
+// checkIncDec16 flags
+#define   EE_GENERAL 0x01
+#define   EE_MODEL   0x02
 #if defined (FRSKY)
-// Gruvin: This uses a new _FL_UNSIGNED flag to allow for unsigned values, so 0-255 works in an 8bit var. 
-// Probably shouldn't be dependant on any particular hardware variant?
-int8_t checkIncDec_Frsky(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max);
+#define   EE_FRSKY   0x04
 #endif
 
-extern bool    checkIncDec_Ret;//global helper vars
-extern uint8_t s_editMode;     //global editmode
+extern bool checkIncDec_Ret;  // global helper vars
+extern uint8_t s_editMode;    // global editmode
 
-#define _FL_SIZE2      4
-#define _FL_VERT       8
-#define _FL_UNSIGNED8 16
-
-#define CHECK_INCDEC_H_GENVAR( event, var, min, max)     \
-  checkIncDecModVar<min,max>(event,&var,(sizeof(var)==2 ? _FL_SIZE2 : 0)|EE_GENERAL) \
+int16_t checkIncDec16(uint8_t event, int16_t i_pval, int16_t i_min, int16_t i_max, uint8_t i_flags);
+int8_t checkIncDec(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max, uint8_t i_flags);
+int8_t checkIncDec_hm(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max);
+int8_t checkIncDec_hg(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max);
 
 #define CHECK_INCDEC_H_MODELVAR( event, var, min, max)     \
-  checkIncDecModVar<min,max>(event,&var,(sizeof(var)==2 ? _FL_SIZE2 : 0)|EE_MODEL) \
+  var = checkIncDec_hm(event,var,min,max)
 
-#define CHECK_INCDEC_V_MODELVAR( event, var, min, max)     \
-  checkIncDecModVar<min,max>(event,&var,(sizeof(var)==2 ? _FL_SIZE2 : 0)|_FL_VERT|EE_MODEL) \
-
-//for bitfields
-#define CHECK_INCDEC_H_GENVAR_BF( event, var, min, max)               \
-  ( var=checkIncDec_hg(event,var,min,max),                              \
-    checkIncDec_Ret                                                     \
-  )
-#define CHECK_INCDEC_H_MODELVAR_BF( event, var, min, max)               \
-  ( var=checkIncDec_hm(event,var,min,max),                              \
-    checkIncDec_Ret                                                     \
-  )
-#define CHECK_INCDEC_V_MODELVAR_BF( event, var, min, max)               \
-  ( var=checkIncDec_vm(event,var,min,max),                              \
-    checkIncDec_Ret                                                     \
-  )
-
-
+#define CHECK_INCDEC_H_GENVAR( event, var, min, max)     \
+  var = checkIncDec_hg(event,var,min,max)
 
 #define STORE_MODELVARS eeDirty(EE_MODEL)
+
 #if defined (PCBV2) || defined (PCBV3)
 #define BACKLIGHT_ON    PORTC |=  (1<<OUT_C_LIGHT)
 #define BACKLIGHT_OFF   PORTC &= ~(1<<OUT_C_LIGHT)
@@ -487,13 +443,6 @@ template<class t> inline t min(t a, t b){ return a<b?a:b; }
 /// liefert das Maximum der Argumente
 template<class t> inline t max(t a, t b){ return a>b?a:b; }
 template<class t> inline int8_t sgn(t a){ return a>0 ? 1 : (a < 0 ? -1 : 0); }
-
-
-#define EE_GENERAL 1
-#define EE_MODEL   2
-#if defined (FRSKY)
-#define EE_FRSKY  32
-#endif
 
 /// Markiert einen EEPROM-Bereich als dirty. der Bereich wird dann in
 /// eeCheck ins EEPROM zurueckgeschrieben.

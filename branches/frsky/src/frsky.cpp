@@ -502,40 +502,40 @@ void menuProcFrskySettings(uint8_t event)
   uint8_t subN = 1;
   lcd_puts_P(0, y,PSTR("Rx Volts Channel"));
   lcd_putsnAtt(PARAM_OFS, y, PSTR("--""A1""A2")+2*fs->rxVoltsChannel,2,(sub==subN ? INVERS:0));
-  if(sub==subN) checkIncDecGen2( event, &fs->rxVoltsChannel, 0, 2, EE_FRSKY); 
+  if(sub==subN) fs->rxVoltsChannel = checkIncDec( event, fs->rxVoltsChannel, 0, 2, EE_FRSKY);
 
   y+=FH; subN++;
   lcd_puts_P(0, y, PSTR("Rx Max Volts"));
   uint8_t t = PARAM_OFS + NUM_OFSP1(fs->rxVoltsMax);
   lcd_outdezAtt(t, y, fs->rxVoltsMax,(sub==subN ? INVERS:0)|PREC1);
   lcd_putcAtt(  t, y, 'v', 0);
-  if(sub==subN) checkIncDecGen2( event, &fs->rxVoltsMax, 0, 255, _FL_UNSIGNED8 | EE_FRSKY); 
+  if(sub==subN) fs->rxVoltsMax = checkIncDec16( event, fs->rxVoltsMax, 0, 255, EE_FRSKY);
 
   y+=FH; subN++;
   lcd_puts_P(0, y, PSTR("Volts Calibrate"));
   t = PARAM_OFS + NUM_OFSP1(fs->rxVoltsOfs);
   lcd_outdezAtt(t, y, fs->rxVoltsOfs,(sub==subN ? INVERS:0)|PREC1);
   lcd_putcAtt(  t, y, 'v', 0);
-  if(sub==subN) checkIncDecGen2( event, &fs->rxVoltsOfs, -127, 127, EE_FRSKY); 
+  if(sub==subN) fs->rxVoltsOfs = checkIncDec( event, fs->rxVoltsOfs, -127, 127, EE_FRSKY);
 
   y+=FH; subN++;
   lcd_puts_P(0, y, PSTR("VBar Min Volts"));
   t = PARAM_OFS + NUM_OFSP1(fs->rxVoltsBarMin);
   lcd_outdezAtt(t, y, fs->rxVoltsBarMin,(sub==subN ? INVERS:0)|PREC1);
   lcd_putcAtt(  t, y, 'v', 0);
-  if(sub==subN) checkIncDecGen2( event, &fs->rxVoltsBarMin, 0, 255, _FL_UNSIGNED8 | EE_FRSKY); 
+  if(sub==subN) fs->rxVoltsBarMin = checkIncDec16( event, fs->rxVoltsBarMin, 0, 255, EE_FRSKY);
 
   y+=FH; subN++;
   lcd_puts_P(0, y, PSTR("VBar Max Volts"));
   t = PARAM_OFS + NUM_OFSP1(fs->rxVoltsBarMax);
   lcd_outdezAtt(t, y, fs->rxVoltsBarMax,(sub==subN ? INVERS:0)|PREC1);
   lcd_putcAtt(  t, y, 'v', 0);
-  if(sub==subN) checkIncDecGen2( event, &fs->rxVoltsBarMax, 0, 255, _FL_UNSIGNED8 | EE_FRSKY); 
+  if(sub==subN) fs->rxVoltsBarMax = checkIncDec16( event, fs->rxVoltsBarMax, 0, 255, EE_FRSKY);
 
   y+=FH; subN++;
   lcd_puts_P(0, y, PSTR("No Data Alarm"));
   lcd_putsnAtt(PARAM_OFS, y, PSTR("No ""Yes")+3*(fs->noDataAlarm&1),3,(sub==subN ? INVERS:0));
-  if(sub==subN) checkIncDecGen2( event, &fs->noDataAlarm, 0, 1, EE_FRSKY); 
+  if(sub==subN) fs->noDataAlarm = checkIncDec( event, fs->noDataAlarm, 0, 1, EE_FRSKY);
 
 }
 
@@ -598,12 +598,12 @@ void menuProcFrskyAlarms(uint8_t event)
         case 1:
           lcd_putsnAtt(5*FW,y,PSTR("---""Yel""Org""Red")+ad->level*3,3, attr);
           if(attr && (s_editMode || p1valdiff)) // p1valdiff is analog user input via Pot 1 (rear/left)
-            checkIncDecGen2( event, &ad->level, 0, 3, _FL_UNSIGNED8); 
+            ad->level = checkIncDec( event, ad->level, 0, 3, 0);
           break;
         case 2:
           lcd_putsnAtt(11*FW,y,PSTR("LT<""GT>")+ad->greater*3,3, attr);
           if(attr && s_editMode)
-            checkIncDecGen2( event, &ad->greater, 0, 1, _FL_UNSIGNED8);
+            ad->greater = checkIncDec( event, ad->greater, 0, 1, 0);
           break;
         case 3:
           if ((g_eeFrsky.rxVoltsChannel-1) == ((i>>1)^1)) {
@@ -614,7 +614,7 @@ void menuProcFrskyAlarms(uint8_t event)
           } else
             lcd_outdezAtt(19*FW,y, ad->value, attr);
           if(attr && (s_editMode || p1valdiff))
-            checkIncDecGen2( event, &ad->value, 0, 255, _FL_UNSIGNED8);
+            ad->value = checkIncDec16( event, ad->value, 0, 255, 0);
           break;
       }
     }
