@@ -33,9 +33,6 @@ mode3 ail ele thr rud
 mode4 ail thr ele rud
 */
 
-// DEBUG
-uint16_t g_PPMIN_val = 111;
-
 EEGeneral  g_eeGeneral;
 ModelData  g_model;
 #if defined (FRSKY) || defined (PCBV2) || defined (PCBV3)
@@ -1059,9 +1056,6 @@ ISR(TIMER3_CAPT_vect, ISR_NOBLOCK) //capture ppm in 16MHz / 8 = 2MHz
   
   uint16_t val = (capture - lastCapt) / 2;
   
-  // DEBUG
-  g_PPMIN_val = val;
-
   // G: We prcoess g_ppmInsright here to make servo movement as smooth as possible
   //    while under trainee control
   if (val>4000 && val < 16000) // G: Priorotise reset pulse. (Needed when less than 8 incoming pulses)
@@ -1231,7 +1225,7 @@ int main(void)
   // TCNT3 (2MHz) used for PPM_IN pulse width capture
 #if defined (PPMIN_MOD1) || defined (PCBV2) || defined (PCBV3)
   // Noise Canceller enabled, pos. edge, clock at 16MHz / 8 (2MHz)
-  TCCR3B  = (1<<ICNC3) | (1<<ICES3) | (0b010 << CS30);
+  TCCR3B  = (1<<ICNC3) | (1<<ICES3) | (0b010 << CS30); 
 #else
   // Noise Canceller enabled, neg. edge, clock at 16MHz / 8 (2MHz)
   TCCR3B  = (1<<ICNC3) | (0b010 << CS30);

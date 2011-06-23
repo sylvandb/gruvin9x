@@ -448,6 +448,7 @@ ALL_ASFLAGS = -mmcu=$(MCU) -I. -x assembler-with-cpp $(ASFLAGS)
 SUB_VER = ${shell sh -c "grep \"SUB_VERS\" gruvin9x.h | cut -d\  -f3 | egrep -o \"[[:digit:]]\""}
 ABUILD_NUM = ${shell sh -c "grep \"BUILD_NUM\" stamp-gruvin9x.h | egrep -o \"[[:digit:]]+\""}
 BUILD_NUM = $(shell echo $$(( $(ABUILD_NUM) + 1 )))
+BUILD_DIR = $(shell pwd | awk -F'/' '{print $$((NF-1))}')
 ifeq "$(USER)" "bryan"
   THEUSER=gruvin
 else 
@@ -477,11 +478,11 @@ lib: $(LIBNAME)
 stamp:
 	@echo
 	@echo "Generate Version-stamp:"
-	@echo "//Automatically generated file - do not edit" > stamp-gruvin9x.h
+	@echo "//Automatically generated file (Makefile) - do not edit" > stamp-gruvin9x.h
 	@echo "#define DATE_STR \"`date +%d.%m.%Y`\"" >> stamp-gruvin9x.h
 	@echo "#define TIME_STR \"`date +%H:%I:%S`\"" >> stamp-gruvin9x.h
 	@echo "#define SUB_VERS $(SUB_VER)-$(THEUSER)" >> stamp-gruvin9x.h
-	@echo "#define SVN_VERS \"trunk-r$(REV)\"" >> stamp-gruvin9x.h
+	@echo "#define SVN_VERS \"$(BUILD_DIR)-r$(REV)\"" >> stamp-gruvin9x.h
 	@echo "#define BUILD_NUM $(BUILD_NUM)" >> stamp-gruvin9x.h
 	@cat stamp-gruvin9x.h
 
