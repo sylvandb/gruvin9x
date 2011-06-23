@@ -26,7 +26,7 @@
 /// convert model number 0..MAX_MODELS-1  int fileId
 #define FILE_MODEL(n) (1+n)
 #define FILE_TMP      (1+16)
-#if defined (FRSKY) || defined (PCBV2) || defined (PCBV3)
+#if defined (FRSKY)
 #define FILE_FRSKY    (FILE_TMP+1)
 #endif
 

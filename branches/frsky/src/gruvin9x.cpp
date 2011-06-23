@@ -35,7 +35,7 @@ mode4 ail thr ele rud
 
 EEGeneral  g_eeGeneral;
 ModelData  g_model;
-#if defined (FRSKY) || defined (PCBV2) || defined (PCBV3)
+#if defined (FRSKY)
 EEFrskyData g_eeFrsky;
 #endif
 
@@ -493,7 +493,7 @@ bool checkIncDecGen2(uint8_t event, void *i_pval, int16_t i_min, int16_t i_max, 
     else
       if (i_flags & _FL_UNSIGNED8) *(uint8_t*)i_pval = newval;
       else                        *( int8_t*)i_pval = newval;
-#if defined (FRSKY) || defined (PCBV2) || defined (PCBV3)
+#if defined (FRSKY)
     eeDirty(i_flags & (EE_GENERAL|EE_MODEL|EE_FRSKY));
 #else
     eeDirty(i_flags & (EE_GENERAL|EE_MODEL));
@@ -1173,7 +1173,7 @@ int main(void)
   JETI_Init();
 #endif
 
-#if defined (FRSKY) || defined (PCBV2) || defined (PCBV3)
+#if defined (FRSKY)
   FRSKY_Init();
 #endif
 

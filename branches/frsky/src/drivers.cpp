@@ -177,14 +177,11 @@ bool keyState(EnumKeys enuk)
   switch(enuk){
     case SW_ElevDR : return PINE & (1<<INP_E_ElevDR);
     
-    //case SW_AileDR : return PINE & (1<<INP_E_AileDR);
-#if (!(defined(JETI) || defined(FRSKY) || defined(PCBV2) || defined (PCBV3) ))
+#if defined(JETI) || defined(FRSKY)
+    case SW_AileDR : return PINC & (1<<INP_C_AileDR); //shad974: rerouted inputs to free up UART0
+#else
     case SW_AileDR : return PINE & (1<<INP_E_AileDR);
 #endif
-#if (defined(JETI) || defined(FRSKY) || defined(PCBV2) || defined(PCBV3))
-    case SW_AileDR : return PINC & (1<<INP_C_AileDR); //shad974: rerouted inputs to free up UART0
-#endif
-
 
     case SW_RuddDR : return PING & (1<<INP_G_RuddDR);
       //     INP_G_ID1 INP_E_ID2
@@ -197,11 +194,10 @@ bool keyState(EnumKeys enuk)
     case SW_Gear   : return PINE & (1<<INP_E_Gear);
     //case SW_ThrCt  : return PINE & (1<<INP_E_ThrCt);
 
-#if (!(defined(JETI) || defined(FRSKY) || defined(PCBV2) || defined(PCBV3)))
-     case SW_ThrCt  : return PINE & (1<<INP_E_ThrCt);
-#endif
-#if (defined(JETI) || defined(FRSKY) || defined(PCBV2) || defined(PCBV3))
+#if defined(JETI) || defined(FRSKY)
     case SW_ThrCt  : return PINC & (1<<INP_C_ThrCt); //shad974: rerouted inputs to free up UART0
+#else
+    case SW_ThrCt  : return PINE & (1<<INP_E_ThrCt);
 #endif
 
     case SW_Trainer: return PINE & (1<<INP_E_Trainer);
@@ -345,7 +341,7 @@ void per10ms()
 
 /**** END KEY STATE READ ****/
 
-#if defined (FRSKY) || defined (PCBV2) || defined(PCBV3)
+#if defined (FRSKY)
   // Used to detect presence of valid FrSky telemetry packets inside the 
   // last <FRSKY_TIMEOUT10ms> 10ms intervals
   if (frskyStreaming > 0) frskyStreaming--;
