@@ -146,6 +146,8 @@ CPPDEFS = -DF_CPU=$(F_CPU)UL
 ifeq ($(PCB), STD)
 # STD PCB, so ...
 
+  CPPDEFS += -DPCBSTD
+
 # If JETI-Support is enabled
   ifeq ($(EXT), JETI)
    CPPDEFS += -DJETI

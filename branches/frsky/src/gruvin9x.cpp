@@ -40,7 +40,7 @@ ModelData  g_model;
 EEFrskyData g_eeFrsky;
 #endif
 
-#if defined (BEEPSPKR)
+#if defined (PCBSTD) && defined (BEEPSPKR)
 uint8_t toneFreq = BEEP_DEFAULT_FREQ;
 uint8_t toneOn = false;
 #endif
@@ -899,7 +899,7 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
   sei();
 
 
-#if defined (BEEPSPKR)
+#if defined (PCBSTD) && defined (BEEPSPKR)
   // gruvin: Begin Tone Generator
   static uint8_t toneCounter;
 
@@ -1021,7 +1021,7 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
     sei();
     g_time_per10 = dt2 - dt; // NOTE: These spike to nearly 65535 just now and then. Why? :/
 
-#if defined (BEEPSPKR)
+#if defined (PCBSTD) && defined (BEEPSPKR)
   } // end 10ms event
 #endif
 
