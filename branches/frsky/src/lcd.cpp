@@ -27,7 +27,6 @@ uint8_t displayBuf[DISPLAY_W*DISPLAY_H/8];
 #include "font_dblsize.lbm"
 #define font_10x16_x20_x7f (font_dblsize+3)
 
-#define BITMASK(bit) (1<<(bit))
 void lcd_clear()
 {
   //for(unsigned i=0; i<sizeof(displayBuf); i++) displayBuf[i]=0;
@@ -52,7 +51,6 @@ void lcd_img(uint8_t i_x,uint8_t i_y,const prog_uchar * imgdat,uint8_t idx,uint8
   }
 }
 
-/// invers: 0 no 1=yes 2=blink
 void lcd_putcAtt(uint8_t x,uint8_t y,const char c,uint8_t mode)
 {
   uint8_t *p    = &displayBuf[ y / 8 * DISPLAY_W + x ];
@@ -103,22 +101,36 @@ void lcd_putcAtt(uint8_t x,uint8_t y,const char c,uint8_t mode)
 //        p+=2;
 //      }
 //    }
-  }else{
-    for(char i=5; i!=0; i--){
-      uint8_t b = pgm_read_byte(q++);
-      if(p<DISPLAY_END) *p++ = inv ? ~b : b;
+  }
+  else {
+    uint8_t condense=0;
+
+    if (mode & CONDENSED) {
+        *p++ = inv ? ~0 : 0;
+        condense=1;
+    }
+
+    for (char i=5; i!=0; i--) {
+        uint8_t b = pgm_read_byte(q++);
+        if (condense && i==4) {
+            /*condense the letter by skipping column 4 */
+            continue;
+        }
+        if(p<DISPLAY_END) *p++ = inv ? ~b : b;
     }
     if(p<DISPLAY_END) *p++ = inv ? ~0 : 0;
   }
 }
+
 void lcd_putc(uint8_t x,uint8_t y,const char c)
 {
-  lcd_putcAtt(x,y,c,false);
+  lcd_putcAtt(x,y,c,0);
 }
+
 void lcd_putsnAtt(uint8_t x,uint8_t y,const prog_char * s,uint8_t len,uint8_t mode)
 {
   while(len!=0) {
-    char c = (mode & BSS_NO_INV) ? *s++ : pgm_read_byte(s++);
+    char c = (mode & BSS) ? *s++ : pgm_read_byte(s++);
     lcd_putcAtt(x,y,c,mode);
     x+=FW;
     len--;
@@ -126,13 +138,13 @@ void lcd_putsnAtt(uint8_t x,uint8_t y,const prog_char * s,uint8_t len,uint8_t mo
 }
 void lcd_putsn_P(uint8_t x,uint8_t y,const prog_char * s,uint8_t len)
 {
-  lcd_putsnAtt( x,y,s,len,false);
+  lcd_putsnAtt( x,y,s,len,0);
 }
 uint8_t lcd_putsAtt(uint8_t x,uint8_t y,const prog_char * s,uint8_t mode)
 {
   //while(char c=pgm_read_byte(s++)) {
   while(1) {
-    char c = (mode & BSS_NO_INV) ? *s++ : pgm_read_byte(s++);
+    char c = (mode & BSS) ? *s++ : pgm_read_byte(s++);
     if(!c) break;
     lcd_putcAtt(x,y,c,mode);
     x+=FW;
@@ -146,13 +158,13 @@ void lcd_puts_P(uint8_t x,uint8_t y,const prog_char * s)
 }
 void lcd_outhex4(uint8_t x,uint8_t y,uint16_t val)
 {
-  x+=FW*4;
+  x+=FWNUM*4;
   for(int i=0; i<4; i++)
   {
-    x-=FW;
+    x-=FWNUM;
     char c = val & 0xf;
     c = c>9 ? c+'A'-10 : c+'0';
-    lcd_putc(x,y,c);
+    lcd_putcAtt(x,y,c,c>='A'?CONDENSED:0);
     val>>=4;
   }
 }
@@ -160,35 +172,99 @@ void lcd_outdez(uint8_t x,uint8_t y,int16_t val)
 {
   lcd_outdezAtt(x,y,val,0);
 }
+
 void lcd_outdezAtt(uint8_t x,uint8_t y,int16_t val,uint8_t mode)
 {
   lcd_outdezNAtt( x,y,val,mode,5);
 }
+
+uint8_t lcd_lastPos;
+#define PREC(n) ((n&0x20) ? ((n&0x10) ? 2 : 1) : 0)
 void lcd_outdezNAtt(uint8_t x,uint8_t y,int16_t val,uint8_t mode,uint8_t len)
 {
-  uint8_t fw=FWNUM; //FW-1;
-  if(mode&DBLSIZE) fw+=fw+1;
-  uint8_t prec=PREC(mode);
-  bool neg=val<0;
-  if(neg) val=-val;
-  //x+=fw*len;
-  x-=FW;
-  for(uint8_t i=0;i<len;i++)
-  {
-    if( prec && prec==i){
-      x-=1;
-      lcd_putcAtt(x,y,(val % 10)+'0',mode);
-      lcd_plot( x+5, y+6); // period
-      prec=0;
-    }else{
-      lcd_putcAtt(x,y,(val % 10)+'0',mode);
+  uint8_t fw = FWNUM;
+  uint8_t prec = PREC(mode);
+  int16_t tmp = abs(val);
+  uint8_t xn = 0;
+  uint8_t ln = 2;
+  char c;
+
+  if (mode & DBLSIZE) {
+    fw += FWNUM;
+    if (mode & LEFT) {
+      if (tmp >= 100)
+        x += 2*FW;
+      if (tmp >= 10)
+        x += 2*FW;
     }
-    val /= 10;
-    if(!(mode & LEADING0) && !val && !prec) break;
+    else {
+      x -= 2*FW;
+    }
+    lcd_lastPos = x + 2*FW;
+  }
+  else {
+    if (mode & LEFT) {
+      if (prec)
+        x += 2;
+      if (val < 0)
+        x += FWNUM;
+      if (tmp >= 100)
+        x += FWNUM;
+      if (tmp >= 10)
+        x += FWNUM;
+    }
+    else {
+      x -= FW;
+    }
+    lcd_lastPos = x + FW;
+  }
+
+  for (uint8_t i=1; i<=len; i++) {
+    c = (tmp % 10) + '0';
+    lcd_putcAtt(x, y, c, mode);
+    if (prec==i) {
+      mode &= ~PREC2;
+      if (mode & DBLSIZE) {
+        xn = x;
+        if(c=='2' || c=='3' || c=='1') ln++;
+        uint8_t tn = (tmp/10) % 10;
+        if(tn==2 || tn==4) {
+          if (c=='4') {
+            xn++;
+          }
+          else {
+            xn--; ln++;
+          }
+        }
+      }
+      else {
+        x -= 2;
+        if (mode & INVERS)
+          lcd_vline(x+1, y, 7);
+        else
+          lcd_plot(x+1, y+6);
+      }
+      if (tmp >= 10)
+        prec = 0;
+    }
+    tmp /= 10;
+    if (!tmp) {
+      if (prec) {
+        if (i >= prec)
+          prec = 0;
+      }
+      else if (mode & LEADING0)
+        mode -= LEADING0;
+      else
+        break;
+    }
     x-=fw;
   }
-  if(neg) lcd_putcAtt(x-fw,y,'-',mode);
-  else  if((mode & SIGN)) lcd_putcAtt(x-fw,y,'+',mode);
+  if (xn) {
+    lcd_hline(xn, y+2*FH-4, ln);
+    lcd_hline(xn, y+2*FH-3, ln);
+  }
+  if(val<0) lcd_putcAtt(x-fw,y,'-',mode);
 }
 
 void lcd_plot(uint8_t x,uint8_t y)
@@ -255,28 +331,11 @@ void lcdSendCtl(uint8_t val)
   PORTC_LCD_CTRL |=  (1<<OUT_C_LCD_CS1);
 }
 
-void lcdSendDat(uint8_t val)
-{
-  PORTC_LCD_CTRL &= ~(1<<OUT_C_LCD_CS1);
-#ifdef LCD_MULTIPLEX
-  DDRA = 0xFF; // set LCD_DAT pins to output
-#endif
-  PORTC_LCD_CTRL |=  (1<<OUT_C_LCD_A0);
-  PORTC_LCD_CTRL &= ~(1<<OUT_C_LCD_RnW);
-  PORTA_LCD_DAT = val;
-  PORTC_LCD_CTRL |=  (1<<OUT_C_LCD_E);
-  PORTC_LCD_CTRL &= ~(1<<OUT_C_LCD_E);
-  PORTC_LCD_CTRL |=  (1<<OUT_C_LCD_A0);
-#ifdef LCD_MULTIPLEX
-  DDRA = 0x00; // set LCD_DAT pins to input
-#endif
-  PORTC_LCD_CTRL |=  (1<<OUT_C_LCD_CS1);
-}
 
 #define delay_1us() _delay_us(1)
 void delay_1_5us(int ms)
 {
-  for(int i=0; i<ms; i++) delay_1us(); 
+  for(int i=0; i<ms; i++) delay_1us();
 }
 
 
@@ -317,9 +376,18 @@ void refreshDiplay()
     lcdSendCtl(0x04);
     lcdSendCtl(0x10); //column addr 0
     lcdSendCtl( y | 0xB0); //page addr y
-    for(uint8_t x=0; x<128; x++){
-      lcdSendDat(*p);
-      p++;
+    PORTC_LCD_CTRL &= ~(1<<OUT_C_LCD_CS1);
+#ifdef LCD_MULTIPLEX
+    DDRA = 0xFF; // set LCD_DAT pins to output
+#endif
+    PORTC_LCD_CTRL |=  (1<<OUT_C_LCD_A0);
+    PORTC_LCD_CTRL &= ~(1<<OUT_C_LCD_RnW);
+    for(uint8_t x=128; x>0; --x) {
+      PORTA_LCD_DAT = *p++;
+      PORTC_LCD_CTRL |= (1<<OUT_C_LCD_E);
+      PORTC_LCD_CTRL &= ~(1<<OUT_C_LCD_E);
     }
+    PORTC_LCD_CTRL |=  (1<<OUT_C_LCD_A0);
+    PORTC_LCD_CTRL |=  (1<<OUT_C_LCD_CS1);
   }
 }

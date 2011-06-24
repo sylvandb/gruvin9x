@@ -26,22 +26,25 @@
 #define FWNUM       5
 #define FH          8
 
-
-#define NO_INV        0x00
+/* lcd common flags */
 #define INVERS        0x01
 #define BLINK         0x02
-#define LEADING0      0x04
-#define SIGN          0x08
+#define DBLSIZE       0x04
+#define CONDENSED     0x08
 
-#define BSS_NO_INV    0x10
-#define BSS_INVERS    0x11
-#define BSS_BLINK     0x12
+/* lcd puts flags */
+#define BSS           0x10
+
+/* lcd outdez flags */
+#define LEADING0      0x10
 #define PREC1         0x20
-#define PREC2         0x40
-#define PREC3         0x60
-#define PREC(n)       (((n)>>5)&3)
-#define DBLSIZE       0x80
+#define PREC2         0x30 /* 4 modes in 2bits! */
+#define LEFT          0x40 /* align left */
 
+/* time & telemetry flags */
+#define NO_UNIT       0x80
+
+extern uint8_t lcd_lastPos;
 
 //extern unsigned char font_5x8_x20_x7f[];
 extern unsigned char displayBuf[DISPLAY_W*DISPLAY_H/8];

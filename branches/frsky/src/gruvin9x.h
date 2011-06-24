@@ -25,7 +25,7 @@
 #include <string.h>
 
 ///opt/cross/avr/include/avr/pgmspace.h
-  #include <stddef.h>
+#include <stddef.h>
 #include <avr/io.h>
 #define assert(x)
 //disable whole pgmspace functionality for all avr-gcc because
@@ -431,7 +431,7 @@ int8_t checkIncDec_hg(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max);
 #define BACKLIGHT_OFF   PORTB &= ~(1<<OUT_B_LIGHT)
 #endif
 
-
+#define BITMASK(bit) (1<<(bit))
 
 /// liefert Dimension eines Arrays
 #define DIM(arr) (sizeof((arr))/sizeof((arr)[0]))
@@ -472,7 +472,8 @@ void putsChnRaw(uint8_t x,uint8_t y,uint8_t idx1,uint8_t att);
 /// Schreibt [CH1 CH2 CH3 CH4 CH5 CH6 CH7 CH8] aufs lcd
 void putsChn(uint8_t x,uint8_t y,uint8_t idx1,uint8_t att);
 /// Schreibt die Batteriespannung aufs lcd
-void putsVBat(uint8_t x,uint8_t y,uint8_t hideV,uint8_t att);
+void putsVolts(uint8_t x,uint8_t y, uint16_t volts, uint8_t att);
+void putsVBat(uint8_t x,uint8_t y,uint8_t att);
 void putsTime(uint8_t x,uint8_t y,int16_t tme,uint8_t att,uint8_t att2);
 
 extern inline int16_t calc100toRESX(int8_t x)

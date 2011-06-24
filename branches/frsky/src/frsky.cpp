@@ -417,18 +417,11 @@ void menuProcFrsky(uint8_t event)
     lcd_vline(3, 58, 6);  // marker
 
     y = 6*FH;
-    uint8_t t = 1+NUM_OFSP1(g_eeFrsky.rxVoltsBarMin);
-    lcd_outdezAtt(t, y, g_eeFrsky.rxVoltsBarMin, 0|PREC1);
-    lcd_putc(t, y, 'v');
-
+    putsVolts(1, y, g_eeFrsky.rxVoltsBarMin, LEFT);
     uint8_t middleVolts = g_eeFrsky.rxVoltsBarMin+(g_eeFrsky.rxVoltsBarMax - g_eeFrsky.rxVoltsBarMin)/2;
-    t = 64+((FW+NUM_OFS(middleVolts))>>1);
-    lcd_outdezAtt(t, y, middleVolts, 0|PREC1);
-    lcd_putc(t, y, 'v');
+    putsVolts(64+FW/2, y, middleVolts, LEFT);
     lcd_vline(64, 58, 6);  // marker
-
-    lcd_outdezAtt(128-FW, y, g_eeFrsky.rxVoltsBarMax, 0|PREC1);
-    lcd_putc(128-FW, y, 'v');
+    putsVolts(128-FW, y, g_eeFrsky.rxVoltsBarMax, 0);
     lcd_vline(125, 58, 6); // marker
   }
 
@@ -506,30 +499,22 @@ void menuProcFrskySettings(uint8_t event)
 
   y+=FH; subN++;
   lcd_puts_P(0, y, PSTR("Rx Max Volts"));
-  uint8_t t = PARAM_OFS + NUM_OFSP1(fs->rxVoltsMax);
-  lcd_outdezAtt(t, y, fs->rxVoltsMax,(sub==subN ? INVERS:0)|PREC1);
-  lcd_putcAtt(  t, y, 'v', 0);
+  putsVolts(PARAM_OFS, y, fs->rxVoltsMax, (sub==subN ? INVERS:0)|LEFT);
   if(sub==subN) fs->rxVoltsMax = checkIncDec16( event, fs->rxVoltsMax, 0, 255, EE_FRSKY);
 
   y+=FH; subN++;
   lcd_puts_P(0, y, PSTR("Volts Calibrate"));
-  t = PARAM_OFS + NUM_OFSP1(fs->rxVoltsOfs);
-  lcd_outdezAtt(t, y, fs->rxVoltsOfs,(sub==subN ? INVERS:0)|PREC1);
-  lcd_putcAtt(  t, y, 'v', 0);
+  putsVolts(PARAM_OFS, y, fs->rxVoltsOfs, (sub==subN ? INVERS:0)|LEFT);
   if(sub==subN) fs->rxVoltsOfs = checkIncDec( event, fs->rxVoltsOfs, -127, 127, EE_FRSKY);
 
   y+=FH; subN++;
   lcd_puts_P(0, y, PSTR("VBar Min Volts"));
-  t = PARAM_OFS + NUM_OFSP1(fs->rxVoltsBarMin);
-  lcd_outdezAtt(t, y, fs->rxVoltsBarMin,(sub==subN ? INVERS:0)|PREC1);
-  lcd_putcAtt(  t, y, 'v', 0);
+  putsVolts(PARAM_OFS, y, fs->rxVoltsBarMin, (sub==subN ? INVERS:0)|LEFT);
   if(sub==subN) fs->rxVoltsBarMin = checkIncDec16( event, fs->rxVoltsBarMin, 0, 255, EE_FRSKY);
 
   y+=FH; subN++;
   lcd_puts_P(0, y, PSTR("VBar Max Volts"));
-  t = PARAM_OFS + NUM_OFSP1(fs->rxVoltsBarMax);
-  lcd_outdezAtt(t, y, fs->rxVoltsBarMax,(sub==subN ? INVERS:0)|PREC1);
-  lcd_putcAtt(  t, y, 'v', 0);
+  putsVolts(PARAM_OFS, y, fs->rxVoltsBarMax, (sub==subN ? INVERS:0)|LEFT);
   if(sub==subN) fs->rxVoltsBarMax = checkIncDec16( event, fs->rxVoltsBarMax, 0, 255, EE_FRSKY);
 
   y+=FH; subN++;
