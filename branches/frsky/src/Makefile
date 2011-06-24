@@ -177,10 +177,6 @@ ifeq ($(PCB), STD)
   ifeq ($(PPMIN), MOD1)
     CPPDEFS += -DPPMIN_MOD1
   endif
-  
-  ifeq ($(DECIMAL), YES)
-    CPPDEFS += -DDECIMALS_DISPLAYED
-  endif
 
 else
 # not STD PCB, so ...
@@ -190,6 +186,10 @@ else
   ifeq ($(PCB), V3)
     CPPDEFS += -DPCBV3 -DFRSKY -DBEEPSPKR
   endif
+endif
+
+ifeq ($(DECIMALS), YES)
+  CPPDEFS += -DDECIMALS_DISPLAYED
 endif
 
 #---------------- Compiler Options C ----------------
@@ -596,11 +596,11 @@ $(TARGET).elf $(DEBUG_HOST):$(DEBUG_PORT)
 
 
 # Convert ELF to COFF for use in debugging / simulating in AVR Studio or VMLAB.
-        COFFCONVERT = $(OBJCOPY) --debugging
-        COFFCONVERT += --change-section-address .data-0x800000
-        COFFCONVERT += --change-section-address .bss-0x800000
-        COFFCONVERT += --change-section-address .noinit-0x800000
-        COFFCONVERT += --change-section-address .eeprom-0x810000
+	COFFCONVERT = $(OBJCOPY) --debugging
+	COFFCONVERT += --change-section-address .data-0x800000
+	COFFCONVERT += --change-section-address .bss-0x800000
+	COFFCONVERT += --change-section-address .noinit-0x800000
+	COFFCONVERT += --change-section-address .eeprom-0x810000
 
 
 coff: $(TARGET).elf
