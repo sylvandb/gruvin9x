@@ -8,7 +8,7 @@ Just respond in the group discussion.
 = Todo =
 ========
 
-* Move component labels about for the silkscreen, but first I am going to get a look at a V2.14 board.
+* Move component labels about for the silkscreen.
    
 * Copper pour.
 
@@ -22,6 +22,7 @@ Major
 * Replaced 64 pin AMega 2561 with 100 pin 2560
 * Removed the 4066. Gruvin felt it bad for not offering enough protection to the CPU incase of user misconnects. So 
   it had to go. We now have seperate output buffer transistors to the module and the trainer jack. 
+* Added a filter cap around Q1 to try and stop spurious switching when the buzzer sounds.
 * Added voltage dividers to the four spare ADC pins, these may be used for monitoring individual Tx cell voltages,
   or anything, thought it useful to provide voltage dividers onboard.  
 * Added JTAG header

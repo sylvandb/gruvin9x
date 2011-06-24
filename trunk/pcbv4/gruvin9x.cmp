@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPCB (2011-03-30 BZR 2932)-stable date = 22/06/2011 13:28:50
+Cmp-Mod V01 Created by CvPCB (2011-03-30 BZR 2932)-stable date = 24/06/2011 17:56:44
 
 BeginCmp
 TimeStamp = /4CE748AC;
@@ -243,6 +243,13 @@ TimeStamp = /4DFF92F5;
 Reference = C35;
 ValeurCmp = 47u;
 IdModule  = SM1206;
+EndCmp
+
+BeginCmp
+TimeStamp = /4E04C0B7;
+Reference = C36;
+ValeurCmp = 0.1;
+IdModule  = SM0603_GRUVIN;
 EndCmp
 
 BeginCmp
