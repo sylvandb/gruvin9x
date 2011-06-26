@@ -375,6 +375,13 @@ uint8_t hex2dec(uint16_t number, uint8_t multiplier)
 	
 }
 */
+
+enum EnumTabFrsky {
+  e_FrskyOutput,
+  e_FrskySettings,
+  e_FrskyAlarms
+};
+
 MenuFuncP_PROGMEM APM menuTabFrsky[] = {
   menuProcFrsky,
   menuProcFrskySettings,
@@ -388,10 +395,9 @@ void menuProcFrsky(uint8_t event)
 // #include "diskio-test.cpp"
 // DEBUG END
 
+  SIMPLE_MENU("FRSKY", menuTabFrsky, e_FrskyOutput, 1);
+
   static uint8_t blinkCount = 0; // let's blink the data on and off if there's no data stream
-  static MState2 mstate2;
-  TITLE("FRSKY");
-  MSTATE_CHECK_V(1,menuTabFrsky,1); // curr,menuTab,numRows(including the page counter [1/3] etc)
 
   if (!frskyStreaming)
   {
@@ -419,7 +425,7 @@ void menuProcFrsky(uint8_t event)
     y = 6*FH;
     putsVolts(1, y, g_eeFrsky.rxVoltsBarMin, LEFT);
     uint8_t middleVolts = g_eeFrsky.rxVoltsBarMin+(g_eeFrsky.rxVoltsBarMax - g_eeFrsky.rxVoltsBarMin)/2;
-    putsVolts(64+FW/2, y, middleVolts, LEFT);
+    putsVolts(64-FW, y, middleVolts, LEFT);
     lcd_vline(64, 58, 6);  // marker
     putsVolts(128-FW, y, g_eeFrsky.rxVoltsBarMax, 0);
     lcd_vline(125, 58, 6); // marker
@@ -474,23 +480,11 @@ void menuProcFrskySettings(uint8_t event)
 #define COUNT_ITEMS 5
 #define PARAM_OFS   17*FW
 
-  static MState2 mstate2;
-  TITLE("FRSKY SETTINGS");
-  MSTATE_CHECK_V(2,menuTabFrsky,7); // current page=2, 7 rows of settings including page counter top/right
+  SIMPLE_MENU("FRSKY SETTINGS", menuTabFrsky, e_FrskySettings, 7);
+
+  EEFrskyData *fs = &g_eeFrsky;
 
   int8_t  sub    = mstate2.m_posVert; // 0 = page/pages at top right
-  
-  EEFrskyData *fs = &g_eeFrsky;
-  switch(event)
-  {
-    case EVT_ENTRY:
-      s_editMode = false;
-      break;
-    case EVT_KEY_FIRST(KEY_MENU):
-      if(sub>=0) s_editMode = !s_editMode;
-      break;
-  }
-
   uint8_t y = 2*FH;
   uint8_t subN = 1;
   lcd_puts_P(0, y,PSTR("Rx Volts Channel"));
@@ -527,10 +521,7 @@ void menuProcFrskySettings(uint8_t event)
 // FRSKY Alarms menu
 void menuProcFrskyAlarms(uint8_t event)
 {
-  static MState2 mstate2;
-  TITLE("FRSKY ALARMS");
-  MSTATE_TAB = {1,3}; // horizontal column counts for MSTAT_CHECK_VxH (1 is the page/pages field I think.)
-  MSTATE_CHECK_VxH(3,menuTabFrsky,5); // current page=3, 5 rows of settings including page counter top/right
+  MENU("FRSKY ALARMS", menuTabFrsky, e_FrskyAlarms, 5, {0,2});
 
   int8_t  sub    = mstate2.m_posVert - 1; // vertical position (1 = page counter, top/right)
   uint8_t subSub = mstate2.m_posHorz;     // horizontal position
@@ -544,24 +535,15 @@ void menuProcFrskyAlarms(uint8_t event)
 
   switch(event)
   {
-    case EVT_ENTRY:
-      s_editMode = false;
-      break;
     case EVT_KEY_LONG(KEY_MENU):
-        frskyAlarmsRefresh();
-        killEvents(event);
+      frskyAlarmsRefresh();
+      killEvents(event);
       break;
     case EVT_KEY_FIRST(KEY_MENU):
-      if(sub>=0) s_editMode = !s_editMode;
-      if (!s_editMode) frskyWriteAlarm(sub); // update Fr-Sky module when edit mode exited
+      if (sub >= 0 && !s_editMode) frskyWriteAlarm(sub); // update Fr-Sky module when edit mode exited
       break;
     case EVT_KEY_FIRST(KEY_EXIT):
-      if(s_editMode)
-      {
-        frskyWriteAlarm(sub); // update Fr-Sky module when edit mode exited
-        s_editMode = false;
-        killEvents(event);
-      }
+      if(sub >= 0) frskyWriteAlarm(sub); // update Fr-Sky module when edit mode exited
       refreshAlarmsFlag = 0;
       break;
   }
@@ -572,34 +554,32 @@ void menuProcFrskyAlarms(uint8_t event)
     uint8_t y=(i+3)*FH;
     FrskyAlarm *ad = &frskyAlarms[i];
 
-    for(uint8_t j=0; j<4;j++) // 4 settings each slot
+    lcd_putsnAtt(0,y,PSTR("A2a""A2b""A1a""A1b")+i*3,3, 0);
+
+    for(uint8_t j=0; j<3;j++) // 4 settings each slot
     {
-      uint8_t attr = ((sub==i && (subSub+1)==j) ? (s_editMode ? BLINK : INVERS) : 0);
+      uint8_t attr = (sub==i && subSub==j) ? (s_editMode ? BLINK : INVERS) : 0;
       switch(j)
       {
         case 0:
-          lcd_putsnAtt(0,y,PSTR("A2a""A2b""A1a""A1b")+i*3,3, (sub==i) ? INVERS : 0);
+          lcd_putsnAtt(5*FW,y,PSTR("---""Yel""Org""Red")+ad->level*3,3, attr);
+          if(attr && (s_editMode || p1valdiff)) ad->level = checkIncDec( event, ad->level, 0, 3, 0);
           break;
         case 1:
-          lcd_putsnAtt(5*FW,y,PSTR("---""Yel""Org""Red")+ad->level*3,3, attr);
-          if(attr && (s_editMode || p1valdiff)) // p1valdiff is analog user input via Pot 1 (rear/left)
-            ad->level = checkIncDec( event, ad->level, 0, 3, 0);
+          lcd_putsnAtt(11*FW,y,PSTR("LT<""GT>")+ad->greater*3,3, attr);
+          if(attr && (s_editMode || p1valdiff)) ad->greater = checkIncDec( event, ad->greater, 0, 1, 0);
           break;
         case 2:
-          lcd_putsnAtt(11*FW,y,PSTR("LT<""GT>")+ad->greater*3,3, attr);
-          if(attr && s_editMode)
-            ad->greater = checkIncDec( event, ad->greater, 0, 1, 0);
-          break;
-        case 3:
           if ((g_eeFrsky.rxVoltsChannel-1) == ((i>>1)^1)) {
             uint16_t centaVolts = (ad->value > 0) ? 
                 (10 * (uint16_t)g_eeFrsky.rxVoltsMax * (uint32_t)(ad->value) / 255) + g_eeFrsky.rxVoltsOfs : 0;
             lcd_outdezAtt(19*FW, y, centaVolts, attr|PREC2);
             lcd_putc(     19*FW, y, 'v');
-          } else
+          }
+          else {
             lcd_outdezAtt(19*FW,y, ad->value, attr);
-          if(attr && (s_editMode || p1valdiff))
-            ad->value = checkIncDec16( event, ad->value, 0, 255, 0);
+          }
+          if(attr && (s_editMode || p1valdiff)) ad->value = checkIncDec16( event, ad->value, 0, 255, 0);
           break;
       }
     }

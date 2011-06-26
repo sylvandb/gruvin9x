@@ -53,6 +53,16 @@ const prog_char APM modi12x3[]=
   "AIL ELE THR RUD "
   "AIL THR ELE RUD ";
 
+MixData *mixaddress( uint8_t idx )
+{
+  return &g_model.mixData[idx] ;
+}
+
+LimitData *limitaddress( uint8_t idx )
+{
+  return &g_model.limitData[idx];
+}
+
 void putsTime(uint8_t x,uint8_t y,int16_t tme,uint8_t att,uint8_t att2)
 {
   /* TODO BSS

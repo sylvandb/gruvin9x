@@ -384,6 +384,13 @@ bool    getSwitch(int8_t swtch, bool nc, uint8_t level=0);
 void putsDrSwitches(uint8_t x,uint8_t y,int8_t swtch,uint8_t att);
 void putsTmrMode(uint8_t x, uint8_t y, uint8_t attr);
 
+extern uint8_t  s_timerState;
+#define TMR_OFF     0
+#define TMR_RUNNING 1
+#define TMR_BEEPING 2
+#define TMR_STOPPED 3
+void resetTimer();
+
 uint16_t getTmr16KHz();
 
 
@@ -422,6 +429,7 @@ int8_t checkIncDec_hg(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max);
   var = checkIncDec_hg(event,var,min,max)
 
 #define STORE_MODELVARS eeDirty(EE_MODEL)
+#define STORE_GENERALVARS eeDirty(EE_GENERAL)
 
 #if defined (PCBV2) || defined (PCBV3)
 #define BACKLIGHT_ON    PORTC |=  (1<<OUT_C_LIGHT)
