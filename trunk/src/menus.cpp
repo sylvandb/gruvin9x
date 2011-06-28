@@ -2325,7 +2325,7 @@ void menuProc0(uint8_t event)
       }
       ym -= val;
     }else{
-      ym=60;
+      ym=59; // was 60. Issue 25 (er9x issue 180)
       lcd_hline(xm-TL,ym,    TL*2);
       lcd_hline(xm-1, ym-1,  3);
       lcd_hline(xm-1, ym+1,  3);
