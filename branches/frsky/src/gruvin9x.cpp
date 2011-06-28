@@ -1138,16 +1138,25 @@ uint32_t get_fattime(void)
 extern uint16_t g_timeMain;
 //void main(void) __attribute__((noreturn));
 
-/* FUSES doean't work with AVRDUDE for some reason (Address out of range when programming)
-   so they need to manually and independantly set (only once.)
 #include <avr/io.h>
 
-FUSES = 
-{
-  0xEE, // LFUSE_DEFAULT, // .low
-  0x99, // (FUSE_BOOTSZ0 & FUSE_BOOTSZ1 & FUSE_EESAVE & FUSE_SPIEN & FUSE_JTAGEN), // .high
-  0xFF  // EFUSE_DEFAULT, // .extended
-};
+/* FUSE declaration cause trouble for AVR Studio and AVRDUDE. So they have to be set manually.
+#if defined (PCBV2) || defined (PCBV3)
+// See fuses_2561.txt
+  FUSES = 
+  {
+    0xD7, // .low
+    0x11, // .high
+    0xFC  // .extended
+  };
+#else
+  FUSES = 
+  {
+    0xEE, // LFUSE_DEFAULT, // .low
+    0x99, // (FUSE_BOOTSZ0 & FUSE_BOOTSZ1 & FUSE_EESAVE & FUSE_SPIEN & FUSE_JTAGEN), // .high
+    0xFF  // EFUSE_DEFAULT, // .extended
+  };
+#endif
 */
 
 uint8_t DEBUG1 = 0;

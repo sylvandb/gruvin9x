@@ -233,7 +233,7 @@ void per10ms()
 
 #if defined (PCBV2) || defined (PCBV3)
   /* Update gloabal Date/Time every 100 per10ms cycles */
-  static timeCounter = 100;
+  static uint8_t timeCounter = 100;
   if (timeCounter-- == 0)
   {
     timeCounter = 100;

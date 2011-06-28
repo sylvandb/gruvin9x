@@ -18,8 +18,12 @@ Defaults for ATmega2561 are:
   efuse = 0b11111111 (0xFF)
 
 The bit assignments ae quite different in all cases. For the 2561 we want:
+(includes EESAVE bit programmed to protect EEPROM contents during chip erase)
 
-  hfuse = 0b10011001 (0x99)
-  lfuse = 0b01101110 (0xee)
-  efuse = 0b11111111 (0xfc) [ Brownout Detector bits BOD2:0 = 100 = 4.3V ]
+  hfuse = 0b10011001 (0x11) [OCD enabled, JTAG enabled, WDT disabled :(, 
+                             EESAVE enabled, BOOT at 0x0000] 
+  lfuse = 0b01101110 (0xd7) [CKDIV8 disabled, CKOUT disabled, 
+                             Full Swing Xtal Osc, 16K CK + 0ms reset,
+                             BOD enabled]
+  efuse = 0b11111111 (0xfc) [ Brown out detector (BOD) = 4.3V ]
 
