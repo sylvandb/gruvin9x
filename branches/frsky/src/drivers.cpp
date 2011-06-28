@@ -48,6 +48,7 @@ eeprom_write_byte_cmp (uint8_t dat, uint16_t pointer_eeprom)
   EECR |= 1<<EEWE;
 #endif
   SREG = flags;
+  sei();
 }
 
 void eeWriteBlockCmp(const void *i_pointer_ram, void *i_pointer_eeprom, size_t size)
