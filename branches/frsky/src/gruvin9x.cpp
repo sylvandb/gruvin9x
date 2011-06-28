@@ -25,6 +25,7 @@
 #include "rtc.h"
 #include "ff.h"
 #include "diskio.h"
+RTC g_DateTime; // Global date/time register, incremented each second in per10ms()
 #endif
 
 /*
@@ -1104,7 +1105,12 @@ ISR(TIMER3_CAPT_vect, ISR_NOBLOCK) //capture ppm in 16MHz / 8 = 2MHz
 
 uint32_t get_fattime(void)
 {
-  RTC rtc;
+  RTC rtc = g_DateTime;
+
+  // G: Time is read from RTC chip only once, at system start-up (or
+  //    changing date/time in the menu.) After that, the time is
+  //    maintained by software intrrupts by incrfementing the global
+  //    RTC record.
 
   /* Get local time */
   rtc_gettime(&rtc);
@@ -1132,7 +1138,8 @@ uint32_t get_fattime(void)
 extern uint16_t g_timeMain;
 //void main(void) __attribute__((noreturn));
 
-/* FUSES doean't work with AVRDUDE fro some reason (Address out of range when programming)
+/* FUSES doean't work with AVRDUDE for some reason (Address out of range when programming)
+   so they need to manually and independantly set (only once.)
 #include <avr/io.h>
 
 FUSES = 

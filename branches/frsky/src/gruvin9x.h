@@ -630,7 +630,9 @@ inline void _beepSpkr(uint8_t d, uint8_t f)
 
 // MM/SD card Disk IO Support
 #if defined (PCBV2) || defined (PCBV3)
+#include "rtc.h"
 extern void disk_timerproc(void);
+extern RTC g_DateTime; // Gloabl date/time record (see rtc.h)
 #endif
 
 #endif // gruvin9x_h

@@ -230,8 +230,20 @@ volatile uint8_t  g_blinkTmr10ms;
 
 void per10ms()
 {
+
+#if defined (PCBV2) || defined (PCBV3)
+  /* Update gloabal Date/Time every 100 per10ms cycles */
+  static timeCounter = 100;
+  if (timeCounter-- == 0)
+  {
+    timeCounter = 100;
+    // inc here
+  }
+#endif
+
   g_tmr10ms++;
   g_blinkTmr10ms++;
+
 
 /**** BEGIN KEY STATE READ ****/
   uint8_t enuk = KEY_MENU;

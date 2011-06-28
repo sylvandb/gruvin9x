@@ -1,3 +1,6 @@
+#ifndef RTC_H
+#define RTC_H
+
 #include "integer.h"
 
 typedef struct {
@@ -17,3 +20,4 @@ int rtc_init (void);				/* Initialize RTC */
 int rtc_gettime (RTC*);				/* Get time */
 int rtc_settime (const RTC*);			/* Set time */
 
+#endif
