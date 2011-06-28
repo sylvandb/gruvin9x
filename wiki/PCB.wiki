@@ -44,7 +44,20 @@ Here's a (Photoshop'd) KiCAD 3D perspective of the present v3.2 design ...
 
 [http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/pcb_v3.2_3d_top.gif]
 
+
+As at June 2011, the V3 board is about ready to go to production, just waiting on funds. 
+
+*V4 already in the pipeline*
+
+A V4 board is already under development, thanks to lots of work done by contributor Cam, in the UK. 
+
+The V4 board replaces the 64 pin ATmega2561 with its parent device, the 100-pin ATmega2560. This gives us lots more analogue input and digital I/O port to play with, as well as enabling JTAG in-circuit debugging and an additional (spare at this stage) serial port.
+
+Other features include pads for an on-board "OMG I bricked my chip!" emergency 1MHz SMD oscillator part, for allowing resetting of AVR fuse bits without so much hassle.
+
 *Past Milestones in descending date order ...*
+
+2011-06-25: SD card PCB assembled, installed and test OK. Physical size of board found to be 8mm too long for its decided installation position and the SD card socket should protrude beyond the board edge by 2.5mm also. Changes made to the design accordingly, awaiting ordering process. (Real Time Clock (RTC) on the same board also tested and working.)
 
 2011-06-01: SD card prototype PCBs arrive. Construction begins, noting that the custom component pads are all perfectly correct. Yay \o/.
 
