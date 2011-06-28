@@ -51,9 +51,9 @@ As at June 2011, the V3 board is about ready to go to production, just waiting o
 
 A V4 board is already under development, thanks to lots of work done by contributor Cam, in the UK. 
 
-The V4 board replaces the 64 pin ATmega2561 with its parent device, the 100-pin ATmega2560. This gives us lots more analogue input and digital I/O port to play with, as well as enabling JTAG in-circuit debugging and an additional (spare at this stage) serial port.
+The V4 board replaces the 64-pin ATmega2561 with its parent device, the full 100-pin ATmega2560. This gives us lots more analogue input and digital I/O ports to play with, as well as enabling JTAG in-circuit debugging <i>and</i> an additional serial port (just a spare at this stage.)
 
-Other features include pads for an on-board "OMG I bricked my chip!" emergency 1MHz SMD oscillator part, for allowing resetting of AVR fuse bits without so much hassle.
+Also included are pads for an on-board, "OMG I bricked my chip!" emergency 1MHz SMD oscillator part, for allowing resetting of AVR fuse bits without so much hassle. As a developer, having bricked my 9X three times now, this is going to be very useful! 
 
 *Past Milestones in descending date order ...*
 
