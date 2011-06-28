@@ -29,7 +29,6 @@ uint8_t displayBuf[DISPLAY_W*DISPLAY_H/8];
 
 void lcd_clear()
 {
-  //for(unsigned i=0; i<sizeof(displayBuf); i++) displayBuf[i]=0;
   memset(displayBuf, 0, sizeof(displayBuf));
 }
 
@@ -269,9 +268,6 @@ void lcd_outdezNAtt(uint8_t x,uint8_t y,int16_t val,uint8_t mode,uint8_t len)
 
 void lcd_plot(uint8_t x,uint8_t y)
 {
-  //  if(y>=64)  return;
-  //  if(x>=128) return;
-  //  displayBuf[ y / 8 * DISPLAY_W + x ] ^= BITMASK(y%8);
   uint8_t *p   = &displayBuf[ y / 8 * DISPLAY_W + x ];
   if(p<DISPLAY_END) *p ^= BITMASK(y%8);
 }
@@ -297,20 +293,23 @@ void lcd_hline(uint8_t x,uint8_t y, int8_t w)
 {
   lcd_hlineStip(x,y,w,0xff);
 }
+
 void lcd_vline(uint8_t x,uint8_t y, int8_t h)
 {
-  //while(h){
-  //    lcd_plot(x,y++);
-  //    h--;
-  //  }
   uint8_t *p  = &displayBuf[ y / 8 * DISPLAY_W + x ];
-  uint8_t *q  = &displayBuf[ (y+h) / 8 * DISPLAY_W + x ];
   *p ^= ~(BITMASK(y%8)-1);
-  while(p<q){
-    p  += DISPLAY_W;
+  p  += DISPLAY_W;
+  h -= 8-(y%8);
+
+  while (h>8) {
     *p ^= 0xff;
+    p += DISPLAY_W;
+    h -= 8;
   }
-  *p ^= ~(BITMASK((y+h)%8)-1);
+
+  if (h>0) {
+    *p ^= BITMASK(h) - 1;
+  }
 }
 
 void lcdSendCtl(uint8_t val)

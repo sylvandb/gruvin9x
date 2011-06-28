@@ -2373,7 +2373,7 @@ void menuProc0(uint8_t event)
       }
       ym -= val;
     }else{
-      ym=59; // was ym=60. Issue 25 (er9x issue 180) Off-screen rending causing unwanted trim movements
+      ym=60;
       lcd_hline(xm-TL,ym,    TL*2);
       lcd_hline(xm-1, ym-1,  3);
       lcd_hline(xm-1, ym+1,  3);
