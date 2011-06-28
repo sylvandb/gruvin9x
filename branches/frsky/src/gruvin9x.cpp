@@ -1140,7 +1140,12 @@ extern uint16_t g_timeMain;
 
 #include <avr/io.h>
 
-/* FUSE declaration cause trouble for AVR Studio and AVRDUDE. So they have to be set manually.
+/*
+// gruvin: Fuse declarations work if we use the .elf file for AVR Studio (v4)
+// instead of the Intel .hex files.  They should also work with AVRDUDE v5.10
+// (reading from the .hex file), since a bug relating to Intel HEX file record
+// interpretation was fixed. However, I leave these commented out, just in case
+// it causes trouble for others.
 #if defined (PCBV2) || defined (PCBV3)
 // See fuses_2561.txt
   FUSES = 
