@@ -2,9 +2,12 @@
 
 = Latest Stable Pre-Compiled Binaries =
 
-There are four versions if pre-compiled binary .hex files you can download for flashing your '9X without needing to compile from source.
+There are four versions of binary .hex files you can download for flashing your '9X, without needing to compile from source.
 
-These version all carry the latest stable bug-fixes and newest stable features, but each pertains to the various combinations of hardware mods that may or may not have been performed on the target radio.
+These versions carry the latest stable bug-fixes and new features. Each file relates to one of the four different hardware modification combinations. DOwnload the one that matches what you've done to your 9X. :D
+
+=== Current version info ... ===
+[http://gruvin9x.googlecode.com/svn/branches/trunk/svnversion.gif]
 
 == Binary .hex Download Links ==
 
