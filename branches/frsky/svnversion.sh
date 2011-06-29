@@ -1,6 +1,7 @@
 #!/bin/sh
 if [ -x /usr/local/bin/convert ]; then
-  svn info | /usr/local/bin/convert \
+  svn info | grep -v "Path:" | grep -v "Node Kind:" | grep -v "Schedule:" |\
+    /usr/local/bin/convert \
     -background lightgrey -fill black \
     -pointsize 14 -font Courier \
     label:@- \
