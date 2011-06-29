@@ -26,4 +26,4 @@ Each version pertains to the various combinations of hardware mods that may or m
 
 == Change Log ==
 
-A log of the most recent as well as previous changes (since r377) for the above binary versions can be found at [http://gruvin9x.googlecode.com/svn/trunk/src/CHANGELOG].
+A often not updated log of the most recent as well as previous changes for the above binary versions can be found at [http://gruvin9x.googlecode.com/svn/branches/frsky/src/CHANGELOG].
