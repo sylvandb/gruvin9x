@@ -36,5 +36,9 @@ mv $TARGET.hex ..
 make clean TARGET=$TARGET
 
 cd ..
+# Commit the new build
+svn commit -m 'Committing latest .hex binary build'
 # Create version info gif file for Google wiki
 ./svnversion.sh
+svn commit -m 'Updating svnversion.gif for wiki'
+
