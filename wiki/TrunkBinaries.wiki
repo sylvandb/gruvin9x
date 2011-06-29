@@ -7,7 +7,7 @@ There are four versions of binary .hex files you can download for flashing your 
 These versions carry the latest stable bug-fixes and new features. Each file relates to one of the four different hardware modification combinations. Download the one that matches what you've done to your 9X. :D
 
 === Current Binaries Version info ... ===
-[http://gruvin9x.googlecode.com/svn/trunk/svnversion.gif]
+[http://gruvin9x.googlecode.com/svn/trunk/svnversion.gif]<br/>
 NOTE: The above may lag way behind actual project status.
 
 == Binary .hex Download Links ==
