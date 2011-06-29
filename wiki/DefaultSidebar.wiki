@@ -4,7 +4,7 @@
  * [VersionMap Version Map]
  * [ReProgram Re-progamming Your Radio]
   * [TrunkBinaries Latest Stable Binaries]
-  * [DevBinaries Latest Development Binaries]
+  * [DevBinaries Development Binaries]
   * [FlashGuide Flashing Binary Versions]
   * [CompilingFromSource Compiling from Source]
   * [MakeOptions Make Options]
