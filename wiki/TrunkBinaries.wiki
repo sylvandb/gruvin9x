@@ -8,7 +8,7 @@ These versions carry the latest stable bug-fixes and new features. Each file rel
 
 === Current Binaries Version info ... ===
 [http://gruvin9x.googlecode.com/svn/trunk/svnversion.gif]<br/>
-NOTE: The above may lag way behind actual project status.
+NOTE: The above may lag way behind actual project status. Latest development snapshot binary releases can be found on the [DevBinaries Development Binaries] page.  
 
 == Binary .hex Download Links ==
 
