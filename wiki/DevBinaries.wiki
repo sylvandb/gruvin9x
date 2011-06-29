@@ -10,6 +10,8 @@ Each version pertains to the various combinations of hardware mods that may or m
 
 == UNSTABLE Development Snapshot Binary .hex Download Links ==
 
+NOTE: You may need to "right-click, save target/link as ..." to save these files to local disk.
+
 === Factory Original PC Board Based Versions ===
  * *<a href="http://gruvin9x.googlecode.com/svn/branches/frsky/gruvin9x-stock.hex"><img src="http://gruvin9x.googlecode.com/svn/branches/frsky/gruvin9x-stock.gif" align="absmiddle" border="0" alt="gruvin9x-stock.hex"/></a>* -- For stock hardware (no internal re-wiring) -- includes the keypad auto-repeat and bat. voltage averaging patches, nicer fonts and much more.
 
