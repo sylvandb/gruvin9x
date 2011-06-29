@@ -77,7 +77,7 @@ TARGET = gruvin9x
 OBJDIR = obj
 
 # List C++ source files here. (C dependencies are automatically generated.)
-CPPSRC = $(TARGET).cpp stamp.cpp menus.cpp pers.cpp file.cpp lcd.cpp drivers.cpp templates.cpp
+CPPSRC = gruvin9x.cpp stamp.cpp menus.cpp pers.cpp file.cpp lcd.cpp drivers.cpp templates.cpp
 
 ifeq ($(EXT), JETI)
  CPPSRC += jeti.cpp
@@ -466,8 +466,6 @@ build: stamp font.lbm font_dblsize.lbm sticks.lbm s9xsplash.lbm elf hex eep lss 
 #build: lib
 
 
-
-
 elf: $(TARGET).elf
 hex: $(TARGET).hex
 eep: $(TARGET).eep
@@ -488,7 +486,8 @@ stamp:
 	@echo "#define SVN_VERS \"$(BUILD_DIR)-r$(REV)\"" >> stamp-gruvin9x.h
 	@echo "#define BUILD_NUM $(BUILD_NUM)" >> stamp-gruvin9x.h
 	@cat stamp-gruvin9x.h
-
+	$(shell ./version.sh $(TARGET) $(BUILD_DIR)-r$(REV) )
+ 
 font.lbm: font_6x1.xbm
 	@echo
 	@echo "Convert font from xbm to lbm:"
@@ -525,7 +524,6 @@ end:
 
 # Display size of file.
 HEXSIZE = $(SIZE) --target=$(FORMAT) $(TARGET).hex
-#ELFSIZE = $(SIZE) -A $(TARGET).elf
 ELFSIZE = $(SIZE) --mcu=$(MCU) --format=avr $(TARGET).elf
 AVRMEM = avr-mem.sh $(TARGET).elf $(MCU)
 
