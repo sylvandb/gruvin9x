@@ -8,12 +8,15 @@ These versions all carry the latest development code changes, untested features,
 
 Each version pertains to the various combinations of hardware mods that may or may not have been performed on the target 9X radio.
 
+=== Current snapshot info ... ===
+[http://gruvin9x.googlecode.com/svn/branches/frsky/svnversion.gif]
+
 == UNSTABLE Development Snapshot Binary .hex Download Links ==
 
 NOTE: You may need to "right-click, save target/link as ..." to save these files to local disk.
 
 === Factory Original PC Board Based Versions ===
- * *<a href="http://gruvin9x.googlecode.com/svn/branches/frsky/gruvin9x-stock.hex"><img src="http://gruvin9x.googlecode.com/svn/branches/frsky/gruvin9x-stock.gif" align="absmiddle" border="0" alt="gruvin9x-stock.hex"/></a>* -- For stock hardware (no internal re-wiring) -- includes the keypad auto-repeat and bat. voltage averaging patches, nicer fonts and much more.
+ * *[http://gruvin9x.googlecode.com/svn/branches/frsky/gruvin9x-stock.hex" gruvin9x-stock.hex]* -- For stock hardware (no internal re-wiring) -- includes the keypad auto-repeat and bat. voltage averaging patches, nicer fonts and much more.
 
  * *<a href="http://gruvin9x.googlecode.com/svn/branches/frsky/gruvin9x-std-speaker.hex"><img src="http://gruvin9x.googlecode.com/svn/branches/frsky/gruvin9x-std-speaker.gif" align="absmiddle" border="0" alt="gruvin9x-std-speaker.hex"/></a>* -- For [SpeakerReplacement speaker upgrade] only. No Fr-Sky wiring mods.
 
