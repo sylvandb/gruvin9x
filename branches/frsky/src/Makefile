@@ -486,7 +486,6 @@ stamp:
 	@echo "#define SVN_VERS \"$(BUILD_DIR)-r$(REV)\"" >> stamp-gruvin9x.h
 	@echo "#define BUILD_NUM $(BUILD_NUM)" >> stamp-gruvin9x.h
 	@cat stamp-gruvin9x.h
-	$(shell ./version.sh $(TARGET) $(BUILD_DIR)-r$(REV) )
  
 font.lbm: font_6x1.xbm
 	@echo
