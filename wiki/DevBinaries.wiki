@@ -8,7 +8,7 @@ These versions all carry the latest development code changes, untested features,
 
 Each version pertains to the various combinations of hardware mods that may or may not have been performed on the target 9X radio.
 
-=== Current snapshot info ... ===
+=== Version Info for Binary Files Below ... ===
 [http://gruvin9x.googlecode.com/svn/branches/frsky/svnversion.gif]
 
 == UNSTABLE Development Snapshot Binary .hex Download Links ==
