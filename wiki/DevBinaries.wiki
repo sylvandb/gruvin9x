@@ -11,17 +11,17 @@ Each version pertains to the various combinations of hardware mods that may or m
 == UNSTABLE Development Snapshot Binary .hex Download Links ==
 
 === Factory Original PC Board Based Versions ===
- * *<a href="http://gruvin9x.googlecode.com/svn/branches/frsky/gruvin9x-stock.hex"><img src="http://gruvin9x.googlecode.com/svn/branches/frsky/gruvin9x-stock.gif" align="absmiddle" border="0"/></a>* -- For stock hardware (no internal re-wiring) -- includes the keypad auto-repeat and bat. voltage averaging patches, nicer fonts and much more.
+ * *<a href="http://gruvin9x.googlecode.com/svn/branches/frsky/gruvin9x-stock.hex"><img src="http://gruvin9x.googlecode.com/svn/branches/frsky/gruvin9x-stock.gif" align="absmiddle" border="0" alt="gruvin9x-stock.hex"/></a>* -- For stock hardware (no internal re-wiring) -- includes the keypad auto-repeat and bat. voltage averaging patches, nicer fonts and much more.
 
- * *<a href="http://gruvin9x.googlecode.com/svn/branches/frsky/gruvin9x-std-speaker.hex"><img src="http://gruvin9x.googlecode.com/svn/branches/frsky/gruvin9x-std-speaker.gif" align="absmiddle" border="0"/></a>* -- For [SpeakerReplacement speaker upgrade] only. No Fr-Sky wiring mods.
+ * *<a href="http://gruvin9x.googlecode.com/svn/branches/frsky/gruvin9x-std-speaker.hex"><img src="http://gruvin9x.googlecode.com/svn/branches/frsky/gruvin9x-std-speaker.gif" align="absmiddle" border="0" alt="gruvin9x-std-speaker.hex"/></a>* -- For [SpeakerReplacement speaker upgrade] only. No Fr-Sky wiring mods.
 
- * *<a href="http://gruvin9x.googlecode.com/svn/branches/frsky/gruvin9x-frsky-nospeaker.hex"><img src="http://gruvin9x.googlecode.com/svn/branches/frsky/gruvin9x-frsky-nospeaker.gif" align="absmiddle" border="0"/></a>* -- [FrskyInterfacing Fr-Sky telemetry] mod, but no speaker upgrade.
+ * *<a href="http://gruvin9x.googlecode.com/svn/branches/frsky/gruvin9x-frsky-nospeaker.hex"><img src="http://gruvin9x.googlecode.com/svn/branches/frsky/gruvin9x-frsky-nospeaker.gif" align="absmiddle" border="0" alt="gruvin9x-frsky-nospeaker.hex"/></a>* -- [FrskyInterfacing Fr-Sky telemetry] mod, but no speaker upgrade.
 
- * *<a href="http://gruvin9x.googlecode.com/svn/branches/frsky/gruvin9x-frsky-speaker.hex"><img src="http://gruvin9x.googlecode.com/svn/branches/frsky/gruvin9x-frsky-speaker.gif" align="absmiddle" border="0"/></a>* -- [FrskyInterfacing Fr-Sky telemetry] and [SpeakerReplacement speaker upgrade] mods in place.
+ * *<a href="http://gruvin9x.googlecode.com/svn/branches/frsky/gruvin9x-frsky-speaker.hex"><img src="http://gruvin9x.googlecode.com/svn/branches/frsky/gruvin9x-frsky-speaker.gif" align="absmiddle" border="0" alt="gruvin9x-frsky-speaker"/></a>* -- [FrskyInterfacing Fr-Sky telemetry] and [SpeakerReplacement speaker upgrade] mods in place.
 
 
 === Custom PCB Versions ===
- * <a href="http://gruvin9x.googlecode.com/svn/branches/frsky/gruvin9x.hex"><img src="http://gruvin9x.googlecode.com/svn/branches/frsky/gruvin9x.gif" align="absmiddle" border="0"/></a> -- *You probably _DON'T_ want this version!* -- Latest development version for custom PCB hardware. (PCB V3 as at 2011-06-29) 
+ * <a href="http://gruvin9x.googlecode.com/svn/branches/frsky/gruvin9x.hex"><img src="http://gruvin9x.googlecode.com/svn/branches/frsky/gruvin9x.gif" align="absmiddle" border="0" alt="gruvin9x.hex"/></a> -- *You probably _DON'T_ want this version!* -- Latest development version for custom PCB hardware. (PCB V3 as at 2011-06-29) 
 
 
 == Change Log ==
