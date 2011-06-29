@@ -1,4 +1,10 @@
 #! /bin/bash
+echo "Updating svn tree with current repository version."
+echo "Use CTRL-C to escape if there are problems."
+svn update
+if [ $? != 0 ]; then 
+  exit
+fi
 
 cd src
 
