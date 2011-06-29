@@ -1,4 +1,4 @@
-EESchema Schematic File Version 2  date 29/06/2011 00:35:47
+EESchema Schematic File Version 2  date 30/06/2011 00:19:45
 LIBS:device
 LIBS:transistors
 LIBS:linear
@@ -37,7 +37,7 @@ $Descr A2 23400 16535
 encoding utf-8
 Sheet 1 1
 Title "Main Controller PCB for 100pin ATMega"
-Date "28 jun 2011"
+Date "29 jun 2011"
 Rev "4.0"
 Comp ""
 Comment1 ""
@@ -3432,7 +3432,7 @@ Ext_Power
 Text Label 18450 9950 1    60   ~ 0
 RF_Power
 Text Label 18550 9950 1    60   ~ 0
-Jack_Power
+BATT+
 $Comp
 L GND #PWR70
 U 1 1 4CE75E75
