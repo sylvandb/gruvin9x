@@ -1,0 +1,26 @@
+#summary Binaries for download from the trunk/stable repository
+
+= Latest Development Snaphot Binaries (.HEX files) =
+
+There are five versions of pre-compiled development binary .hex files you can download for flashing your '9X without needing to compile from source. WARNING: Serious bugs can exist in these versions at any time, without warning. Exercise extreme caution.
+
+These versions all carry the latest development code changes, untested features, new bug and also recent bug-fixes.
+
+Each version pertains to the various combinations of hardware mods that may or may not have been performed on the target 9X radio.
+
+== UNSTABLE Binary .hex Download Links ==
+
+ * *[http://gruvin9x.googlecode.com/svn/branches/frsky/gruvin9x-stock.hex gruvin9x-stock.gif]* -- For stock hardware (no internal re-wiring) -- includes the keypad auto-repeat and bat. voltage averaging patches, nicer fonts and much more.
+
+ * *[http://gruvin9x.googlecode.com/svn/trunk/gruvin9x-std-speaker.hex gruvin9x-std-speaker.hex]* -- For [SpeakerReplacement speaker upgrade] only. No Fr-Sky wiring mods.
+
+ * *[http://gruvin9x.googlecode.com/svn/trunk/gruvin9x-frsky-nospeaker.hex gruvin9x-frsky-nospeaker.hex]* -- [FrskyInterfacing Fr-Sky telemetry] mod, but no speaker upgrade.
+
+ * *[http://gruvin9x.googlecode.com/svn/trunk/gruvin9x-frsky-speaker.hex gruvin9x-frsky-speaker.hex]* -- [FrskyInterfacing Fr-Sky telemetry] and [SpeakerReplacement speaker upgrade] mods in place.
+
+ * [http://gruvin9x.googlecode.com/svn/trunk/gruvin9x.hex gruvin9x.hex] -- *You probably _DON'T_ want this version!* Fully 'Gruvinvized' with [FrskyInterfacing Fr-Sky], [SpeakerReplacement speaker upgrade] and other 'random' gruvin9x features, such as moving LH_Trim_Up/Dwn away from USART1 to free same for secondary serial communications. (The latter mod is still experimental and no documentation exists for it.) 
+
+
+== Change Log ==
+
+A log of the most recent as well as previous changes (since r377) for the above binary versions can be found at [http://gruvin9x.googlecode.com/svn/trunk/src/CHANGELOG].
