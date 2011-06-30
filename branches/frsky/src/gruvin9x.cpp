@@ -22,10 +22,11 @@
 // MM/SD card Disk IO Support
 #if defined (PCBV2) || defined (PCBV3)
 #include "integer.h"
+#include "time.h"
 #include "rtc.h"
 #include "ff.h"
 #include "diskio.h"
-RTC g_DateTime; // Global date/time register, incremented each second in per10ms()
+time_t g_unixTime; // Global date/time register, incremented each second in per10ms()
 #endif
 
 /*
@@ -1105,33 +1106,16 @@ ISR(TIMER3_CAPT_vect, ISR_NOBLOCK) //capture ppm in 16MHz / 8 = 2MHz
 
 uint32_t get_fattime(void)
 {
-  RTC rtc = g_DateTime;
-
-  // G: Time is read from RTC chip only once, at system start-up (or
-  //    changing date/time in the menu.) After that, the time is
-  //    maintained by software intrrupts by incrfementing the global
-  //    RTC record.
-
-  /* Get local time */
-  rtc_gettime(&rtc);
-
-/*
-  rtc.year = 2011;
-  rtc.month = 1;
-  rtc.mday = 1;
-  rtc.wday = 1;
-  rtc.hour = 0;
-  rtc.min = 0;
-  rtc.sec = 0;
-*/
+  struct tm t;
+  filltm(&g_unixTime, &t); // create a struct tm date/time structure from global unix time stamp
 
   /* Pack date and time into a DWORD variable */
-  return    ((DWORD)(rtc.year - 1980) << 25)
-    | ((uint32_t)rtc.month << 21)
-    | ((uint32_t)rtc.mday << 16)
-    | ((uint32_t)rtc.hour << 11)
-    | ((uint32_t)rtc.min << 5)
-    | ((uint32_t)rtc.sec >> 1);
+  return    ((DWORD)(t.tm_year - 80) << 25)
+    | ((uint32_t)(t.tm_mon+1) << 21)
+    | ((uint32_t)t.tm_mday << 16)
+    | ((uint32_t)t.tm_hour << 11)
+    | ((uint32_t)t.tm_min << 5)
+    | ((uint32_t)t.tm_sec >> 1);
 }
 #endif
 
@@ -1307,6 +1291,21 @@ int main(void)
   TIMSK1 |= (1<<OCIE1A); // Pulse generator enable immediately before mainloop
 #else
   TIMSK |= (1<<OCIE1A); // Pulse generator enable immediately before mainloop
+#endif
+
+#if defined (PCBV2) || defined (PCBV3)
+// Initialise global unix timestamp with current time from RTC chip on SD card interface
+  RTC rtc;
+  struct tm utm;
+  rtc_gettime(&rtc);
+  utm.tm_year = rtc.year - 1900;
+  utm.tm_mon =  rtc.month - 1;
+  utm.tm_mday = rtc.mday;
+  utm.tm_hour = rtc.hour;
+  utm.tm_min =  rtc.min;
+  utm.tm_sec =  rtc.sec;
+  utm.tm_wday = rtc.wday - 1;
+  g_unixTime = mktime(&utm);
 #endif
 
   while(1){

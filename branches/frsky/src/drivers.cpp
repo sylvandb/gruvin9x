@@ -234,11 +234,11 @@ void per10ms()
 
 #if defined (PCBV2) || defined (PCBV3)
   /* Update gloabal Date/Time every 100 per10ms cycles */
-  static uint8_t timeCounter = 100;
-  if (timeCounter-- == 0)
+  static uint8_t ms100 = 100;
+  if (ms100-- == 0)
   {
-    timeCounter = 100;
-    // inc here
+    ms100 = 100;
+    g_unixTime++; // inc global unix timestamp one second
   }
 #endif
 

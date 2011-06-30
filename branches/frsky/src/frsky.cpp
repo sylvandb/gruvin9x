@@ -380,12 +380,18 @@ enum EnumTabFrsky {
   e_FrskyOutput,
   e_FrskySettings,
   e_FrskyAlarms
+#if defined(PCBV3)
+  ,e_FrskyTest
+#endif
 };
 
 MenuFuncP_PROGMEM APM menuTabFrsky[] = {
   menuProcFrsky,
   menuProcFrskySettings,
   menuProcFrskyAlarms
+#if defined(PCBV3)
+  ,menuProcFrskyTest // DEBUG
+#endif
 };
 
 // FRSKY menu
@@ -586,3 +592,30 @@ void menuProcFrskyAlarms(uint8_t event)
   }
 }
 
+
+#if defined(PCBV3)
+// FRSKY TEST page //DEBUG
+void menuProcFrskyTest(uint8_t event)
+{
+  SIMPLE_MENU("DATE AND TIME", menuTabFrsky, e_FrskyTest, 1);
+
+  struct tm t;
+  filltm(&g_unixTime, &t);
+
+  uint8_t y = 2;
+  lcd_outdezAtt(FW*4+2, FH*y, t.tm_year+1900, 0);
+  lcd_putc(FW*4+2, FH*y, '-');
+  lcd_outdezAtt(FW*7, FH*y, t.tm_mon+1, (t.tm_mon<9) ? LEADING0 : 0);
+  lcd_putc(FW*7, FH*y, '-');
+  lcd_outdezAtt(FW*10-2, FH*y, t.tm_mday, (t.tm_mday<10) ? LEADING0 : 0);
+
+  y = 4;
+  lcd_outdezAtt(FW*4+1, FH*y, t.tm_hour, (t.tm_hour<10) ? LEADING0 : 0);
+  lcd_putc(FW*4+1, FH*y, ':');
+  lcd_outdezAtt(FW*7-1, FH*y, t.tm_min, (t.tm_min<10) ? LEADING0 : 0);
+  lcd_putc(FW*7-1, FH*y, ':');
+  lcd_outdezAtt(FW*10-2, FH*y, t.tm_sec, (t.tm_sec<10) ? LEADING0 : 0);
+  
+
+}
+#endif

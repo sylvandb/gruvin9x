@@ -183,7 +183,7 @@ void lcd_outdezNAtt(uint8_t x,uint8_t y,int16_t val,uint8_t mode,uint8_t len)
 {
   uint8_t fw = FWNUM;
   uint8_t prec = PREC(mode);
-  int16_t tmp = abs(val);
+  int32_t tmp = abs(val);
   uint8_t xn = 0;
   uint8_t ln = 2;
   char c;

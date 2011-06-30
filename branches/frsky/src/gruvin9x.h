@@ -24,6 +24,10 @@
 #include <inttypes.h>
 #include <string.h>
 
+#if defined(PCBV2) || defined(PCBV3)
+#include "time.h"
+#endif
+
 ///opt/cross/avr/include/avr/pgmspace.h
 #include <stddef.h>
 #include <avr/io.h>
@@ -632,7 +636,7 @@ inline void _beepSpkr(uint8_t d, uint8_t f)
 #if defined (PCBV2) || defined (PCBV3)
 #include "rtc.h"
 extern void disk_timerproc(void);
-extern RTC g_DateTime; // Gloabl date/time record (see rtc.h)
+extern time_t g_unixTime; // global unix timestamp -- hold current time in seconds since 1970-01-01 00:00:00 
 #endif
 
 #endif // gruvin9x_h
