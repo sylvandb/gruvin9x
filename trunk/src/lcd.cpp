@@ -224,18 +224,24 @@ void lcd_hline(uint8_t x,uint8_t y, int8_t w)
 void lcd_vline(uint8_t x,uint8_t y, int8_t h)
 {
   uint8_t *p  = &displayBuf[ y / 8 * DISPLAY_W + x ];
-  *p ^= ~(BITMASK(y%8)-1);
-  p  += DISPLAY_W;
-  h -= 8-(y%8);
-
-  while (h>8) {
+  y = y % 8;
+  if (y) {
+    assert(p < DISPLAY_END);
+    *p ^= ~(BITMASK(y)-1);
+    p += DISPLAY_W;
+    h -= 8-y;
+  }
+  while (h>0) {
+    assert(p < DISPLAY_END);
     *p ^= 0xff;
     p += DISPLAY_W;
     h -= 8;
   }
-
-  if (h>0) {
-    *p ^= BITMASK(h) - 1;
+  h = (h+8) % 8;
+  if (h) {
+    p -= DISPLAY_W;
+    assert(p < DISPLAY_END);
+    *p ^= ~(BITMASK(h)-1);
   }
 }
 
