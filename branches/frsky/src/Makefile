@@ -77,7 +77,7 @@ TARGET = gruvin9x
 OBJDIR = obj
 
 # List C++ source files here. (C dependencies are automatically generated.)
-CPPSRC = gruvin9x.cpp stamp.cpp menus.cpp pers.cpp file.cpp lcd.cpp drivers.cpp templates.cpp time.cpp
+CPPSRC = gruvin9x.cpp stamp.cpp menus.cpp pers.cpp file.cpp lcd.cpp drivers.cpp templates.cpp 
 
 ifeq ($(EXT), JETI)
  CPPSRC += jeti.cpp
@@ -89,6 +89,7 @@ endif
 
 # Disk IO support (PCB V2+ only)
 ifneq ($(PCB), STD)
+  CPPSRC += time.cpp
   CPPSRC += rtc.cpp
   CPPSRC += ff.cpp
   CPPSRC += diskio.cpp

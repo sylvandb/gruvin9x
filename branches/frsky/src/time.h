@@ -22,7 +22,7 @@ struct tm
   int8_t tm_mon;                   /* Month.       [0-11] */
   int8_t tm_year;                  /* Year - 1900. Limited to the year 2115. Oh no! :P */
   int8_t tm_wday;                  /* Day of week. [0-6] */
-  int16_t tm_yday;                 /* Day of year. [0-365] Need internally for calculations*/
+  int16_t tm_yday;                 /* Day of year. [0-365] Needed internally for calculations */
 };
 
 extern const unsigned short int __mon_yday[2][13];
