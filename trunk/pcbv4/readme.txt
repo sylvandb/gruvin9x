@@ -8,9 +8,7 @@ Just respond in the group discussion.
 = Todo =
 ========
 
-* Move component labels about for the silkscreen.
-   
-* Copper pour.
+* Get it made !
 
 
 ===========================
