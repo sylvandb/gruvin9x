@@ -445,7 +445,7 @@ void menuProcLimits(uint8_t event)
         case 0:
           lcd_outdezAtt(  8*FW, y,  ld->offset, attr|PREC1);
           if(attr && (s_editMode || p1valdiff)) {
-            ld->offset = checkIncDec16(event, ld->offset, -1000, 1000, EE_MODEL);
+            ld->offset = checkIncDec(event, ld->offset, -1000, 1000, EE_MODEL);
           }
           break;
         case 1:
@@ -1836,7 +1836,7 @@ void menuProcSetup(uint8_t event)
     lcd_puts_P(0, y,PSTR("Inactivity alarm"));
     lcd_outdezAtt(PARAM_OFS, y, g_eeGeneral.inactivityTimer, (sub==subN ? INVERS : 0)|LEFT);
     lcd_putc(lcd_lastPos, y, 'm');
-    if(sub==subN) g_eeGeneral.inactivityTimer = checkIncDec16(event, g_eeGeneral.inactivityTimer, 0, 250, EE_GENERAL); //0..250minutes
+    if(sub==subN) g_eeGeneral.inactivityTimer = checkIncDec(event, g_eeGeneral.inactivityTimer, 0, 250, EE_GENERAL); //0..250minutes
     if((y+=FH)>7*FH) return;
   }subN++;
 

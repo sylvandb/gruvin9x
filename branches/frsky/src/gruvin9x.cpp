@@ -431,7 +431,7 @@ bool    checkIncDec_Ret;
 int16_t p1val;
 int16_t p1valdiff;
 
-int16_t checkIncDec16(uint8_t event, int16_t val, int16_t i_min, int16_t i_max, uint8_t i_flags)
+int16_t checkIncDec(uint8_t event, int16_t val, int16_t i_min, int16_t i_max, uint8_t i_flags)
 {
   int16_t newval = val;
   uint8_t kpl=KEY_RIGHT, kmi=KEY_LEFT, kother = -1;
@@ -516,11 +516,6 @@ int16_t checkIncDec16(uint8_t event, int16_t val, int16_t i_min, int16_t i_max, 
     checkIncDec_Ret = false;
   }
   return newval;
-}
-
-int8_t checkIncDec(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max, uint8_t i_flags)
-{
-  return checkIncDec16(event,i_val,i_min,i_max,i_flags);
 }
 
 int8_t checkIncDec_hm(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max)

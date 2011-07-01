@@ -35,7 +35,11 @@ uint8_t frskyA1;
 uint8_t frskyA2;
 uint8_t frskyRSSI; // RSSI (virtual 10 slot) running average
 
+#if defined (PCBV3)
 struct FrskyAlarm frskyAlarms[4];
+#else
+struct FrskyAlarm frskyAlarms[3];
+#endif
 
 /*
    Called from somewhere in the main loop or a low prioirty interrupt
@@ -500,7 +504,7 @@ void menuProcFrskySettings(uint8_t event)
   y+=FH; subN++;
   lcd_puts_P(0, y, PSTR("Rx Max Volts"));
   putsVolts(PARAM_OFS, y, fs->rxVoltsMax, (sub==subN ? INVERS:0)|LEFT);
-  if(sub==subN) fs->rxVoltsMax = checkIncDec16( event, fs->rxVoltsMax, 0, 255, EE_FRSKY);
+  if(sub==subN) fs->rxVoltsMax = checkIncDec( event, fs->rxVoltsMax, 0, 255, EE_FRSKY);
 
   y+=FH; subN++;
   lcd_puts_P(0, y, PSTR("Volts Calibrate"));
@@ -510,12 +514,12 @@ void menuProcFrskySettings(uint8_t event)
   y+=FH; subN++;
   lcd_puts_P(0, y, PSTR("VBar Min Volts"));
   putsVolts(PARAM_OFS, y, fs->rxVoltsBarMin, (sub==subN ? INVERS:0)|LEFT);
-  if(sub==subN) fs->rxVoltsBarMin = checkIncDec16( event, fs->rxVoltsBarMin, 0, 255, EE_FRSKY);
+  if(sub==subN) fs->rxVoltsBarMin = checkIncDec( event, fs->rxVoltsBarMin, 0, 255, EE_FRSKY);
 
   y+=FH; subN++;
   lcd_puts_P(0, y, PSTR("VBar Max Volts"));
   putsVolts(PARAM_OFS, y, fs->rxVoltsBarMax, (sub==subN ? INVERS:0)|LEFT);
-  if(sub==subN) fs->rxVoltsBarMax = checkIncDec16( event, fs->rxVoltsBarMax, 0, 255, EE_FRSKY);
+  if(sub==subN) fs->rxVoltsBarMax = checkIncDec( event, fs->rxVoltsBarMax, 0, 255, EE_FRSKY);
 
   y+=FH; subN++;
   lcd_puts_P(0, y, PSTR("No Data Alarm"));
@@ -585,7 +589,7 @@ void menuProcFrskyAlarms(uint8_t event)
           else {
             lcd_outdezAtt(19*FW,y, ad->value, attr);
           }
-          if(attr && (s_editMode || p1valdiff)) ad->value = checkIncDec16( event, ad->value, 0, 255, 0);
+          if(attr && (s_editMode || p1valdiff)) ad->value = checkIncDec( event, ad->value, 0, 255, 0);
           break;
       }
     }
@@ -597,24 +601,96 @@ void menuProcFrskyAlarms(uint8_t event)
 // FRSKY TEST page //DEBUG
 void menuProcFrskyTest(uint8_t event)
 {
-  SIMPLE_MENU("DATE AND TIME", menuTabFrsky, e_FrskyTest, 1);
+  MENU("DATE AND TIME", menuTabFrsky, e_FrskyTest, 3, {0,2});
 
-  struct tm t;
-  filltm(&g_unixTime, &t);
+  int8_t  sub    = mstate2.m_posVert - 1; // vertical position (1 = page counter, top/right)
+  uint8_t subSub = mstate2.m_posHorz;     // horizontal position
+  static struct tm t;
+  struct tm *at = &t;
 
-  uint8_t y = 2;
-  lcd_outdezAtt(FW*4+2, FH*y, t.tm_year+1900, 0);
-  lcd_putc(FW*4+2, FH*y, '-');
-  lcd_outdezAtt(FW*7, FH*y, t.tm_mon+1, (t.tm_mon<9) ? LEADING0 : 0);
-  lcd_putc(FW*7, FH*y, '-');
-  lcd_outdezAtt(FW*10-2, FH*y, t.tm_mday, (t.tm_mday<10) ? LEADING0 : 0);
+  switch(event)
+  {
+    case EVT_KEY_LONG(KEY_MENU):
+      // get data time from RTC chip (may not implement)
+      killEvents(event);
+      break;
+    case EVT_KEY_FIRST(KEY_MENU):
+    case EVT_KEY_FIRST(KEY_EXIT):
+      if (sub >= 0 && !s_editMode) // set the date and time into RTC chip
+      {
+        g_unixTime = mktime(&t); // update local timestamp and get wday calculated
 
-  y = 4;
-  lcd_outdezAtt(FW*4+1, FH*y, t.tm_hour, (t.tm_hour<10) ? LEADING0 : 0);
-  lcd_putc(FW*4+1, FH*y, ':');
-  lcd_outdezAtt(FW*7-1, FH*y, t.tm_min, (t.tm_min<10) ? LEADING0 : 0);
-  lcd_putc(FW*7-1, FH*y, ':');
-  lcd_outdezAtt(FW*10-2, FH*y, t.tm_sec, (t.tm_sec<10) ? LEADING0 : 0);
+        RTC rtc;
+        rtc.year = t.tm_year + 1900;
+        rtc.month = t.tm_mon + 1;
+        rtc.mday = t.tm_mday;
+        rtc.hour = t.tm_hour;
+        rtc.min = t.tm_min;
+        rtc.sec = t.tm_sec;
+        rtc.wday = t.tm_wday + 1;
+
+        rtc_settime(&rtc);
+
+      }
+      break;
+  }
+
+  if (!s_editMode) filltm(&g_unixTime, &t);
+
+  lcd_putc(FW*10+2, FH*2, '-'); lcd_putc(FW*13, FH*2, '-');
+  lcd_putc(FW*10+1, FH*4, ':'); lcd_putc(FW*13-1, FH*4, ':');
+
+  for(uint8_t i=0; i<2; i++) // 2 rows, date then time
+  {
+    uint8_t y=(i*2+2)*FH;
+
+    lcd_putsnAtt(0, y, PSTR("DATE:""TIME:")+i*5, 5, 0);
+
+    for(uint8_t j=0; j<3;j++) // 3 settings each for date and time (YMD and HMS)
+    {
+      uint8_t attr = (sub==i && subSub==j) ? (s_editMode ? BLINK : INVERS) : 0;
+      switch(i)
+      {
+        case 0: // DATE
+          switch(j)
+          {
+            case 0:
+              lcd_outdezAtt(FW*10+2, y, at->tm_year+1900, attr);
+              if(attr && (s_editMode || p1valdiff)) at->tm_year = checkIncDec( event, at->tm_year, 110, 200, 0);
+              break;
+            case 1:
+              lcd_outdezAtt(FW*13, y, at->tm_mon+1, attr | ((at->tm_mon<9) ? LEADING0 : 0));
+              if(attr && (s_editMode || p1valdiff)) at->tm_mon = checkIncDec( event, at->tm_mon, 0, 11, 0);
+              break;
+            case 2:
+              lcd_outdezAtt(FW*16-2, y, at->tm_mday, attr | ((t.tm_mday<10) ? LEADING0 : 0));
+              if(attr && (s_editMode || p1valdiff)) at->tm_mday = checkIncDec( event, at->tm_mday, 1, 31, 0);
+              break;
+          }
+          break;
+
+        case 1:
+          switch (j)
+          {
+            case 0:
+              lcd_outdezAtt(FW*10+1, y, at->tm_hour, attr | ((at->tm_hour<10) ? LEADING0 : 0));
+              if(attr && (s_editMode || p1valdiff)) at->tm_hour = checkIncDec( event, at->tm_hour, 0, 23, 0);
+              break;
+            case 1:
+              lcd_outdezAtt(FW*13-1, y, at->tm_min, attr | ((at->tm_min<10) ? LEADING0 : 0));
+              if(attr && (s_editMode || p1valdiff)) at->tm_min = checkIncDec( event, at->tm_min, 0, 59, 0);
+              break;
+            case 2:
+              lcd_outdezAtt(FW*16-2, y, at->tm_sec, attr | ((t.tm_sec<10) ? LEADING0 : 0));
+              if(attr && (s_editMode || p1valdiff)) at->tm_sec = checkIncDec( event, at->tm_sec, 0, 59, 0);
+              break;
+          }
+          break;
+
+      }
+    }
+  }
+
   
 
 }

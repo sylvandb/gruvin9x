@@ -411,7 +411,7 @@ void    checkSwitches();
 #define GETADC_FILT = 2
 
 
-// checkIncDec16 flags
+// checkIncDec flags
 #define   EE_GENERAL 0x01
 #define   EE_MODEL   0x02
 #if defined (FRSKY)
@@ -421,8 +421,7 @@ void    checkSwitches();
 extern bool checkIncDec_Ret;  // global helper vars
 extern uint8_t s_editMode;    // global editmode
 
-int16_t checkIncDec16(uint8_t event, int16_t i_pval, int16_t i_min, int16_t i_max, uint8_t i_flags);
-int8_t checkIncDec(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max, uint8_t i_flags);
+int16_t checkIncDec(uint8_t event, int16_t i_pval, int16_t i_min, int16_t i_max, uint8_t i_flags);
 int8_t checkIncDec_hm(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max);
 int8_t checkIncDec_hg(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max);
 
