@@ -39,6 +39,14 @@ PCB = V3
 # Values = STD, JETI, FRSKY
 EXT = FRSKY
 
+# Enable heli menu
+# Values = YES, NO
+HELI = NO
+
+# Enable templates menu
+# Values = YES, NO
+TEMPLATES = YES
+
 # gruvin: BEEPER. Values = BUZZER, BUZZER_MOD or SPEAKER
 # (without a mod, BUZZER can make PPM jack output switch from output to input at random)
 BEEPER = SPEAKER
@@ -54,6 +62,10 @@ PPMIN =  STD
 # Decimals display in the main view (PPM calibration, 
 # Values = YES, NO
 DECIMALS = NO
+
+# TRANSLATIONS from previous EEPROM formats 
+# Values = YES, NO
+TRANSLATIONS = NO
 
 #------- END BUILD OPTIONS ---------------------------
 
@@ -191,6 +203,10 @@ endif
 
 ifeq ($(DECIMALS), YES)
   CPPDEFS += -DDECIMALS_DISPLAYED
+endif
+
+ifeq ($(TRANSLATIONS), YES)
+  CPPDEFS += -DTRANSLATIONS
 endif
 
 #---------------- Compiler Options C ----------------
