@@ -42,6 +42,20 @@ typedef PROGMEM void (*MenuFuncP_PROGMEM)(uint8_t event);
 #define TITLEP(pstr) lcd_putsAtt(0,0,pstr,INVERS)
 #define TITLE(str)   TITLEP(PSTR(str))
 
+/* 
+   "lines..." below is a list of numbers representing the column count (minus 1) for each row
+  
+    Ex. Assuming all fields "11, 22, 33, etc" in this display are editibale elements ...
+
+    TEST MENU         4/4
+      11   22   33
+      44   55   66
+      77   88  99  00 
+      
+      ... one would use, MENU(... , 4, {0, 2, 2, 3}); ... 4 rows, last row with 4 columns.
+
+      (The page counter (4/4) occupies line 0. So first 'lines' entry is always 0.)
+*/
 #define MENU(title, tab, menu, lines_count, lines...) \
 TITLE(title); \
 static MState2 mstate2; \

@@ -229,22 +229,23 @@ uint8_t getEventDbl(uint8_t event)
 volatile uint16_t g_tmr10ms;
 volatile uint8_t  g_blinkTmr10ms;
 
-void per10ms()
-{
 
 #if defined (PCBV2) || defined (PCBV3)
-  /* Update gloabal Date/Time every 100 per10ms cycles */
-  static uint8_t ms100 = 99;
-  if (ms100-- == 0)
-  {
-    ms100 = 99;
-    g_unixTime++; // inc global unix timestamp one second
-  }
+uint8_t g_ms100 = 0; // global to allow time set function to reset to zero
 #endif
+void per10ms()
+{
+    g_tmr10ms++;
+    g_blinkTmr10ms++;
 
-  g_tmr10ms++;
-  g_blinkTmr10ms++;
-
+#if defined (PCBV2) || defined (PCBV3)
+    /* Update gloabal Date/Time every 100 per10ms cycles */
+    if (++g_ms100 == 100)
+    {
+      g_unixTime++; // inc global unix timestamp one second
+      g_ms100 = 0;
+    }
+#endif
 
 /**** BEGIN KEY STATE READ ****/
   uint8_t enuk = KEY_MENU;

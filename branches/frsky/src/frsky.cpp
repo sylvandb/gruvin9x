@@ -385,7 +385,7 @@ enum EnumTabFrsky {
   e_FrskySettings,
   e_FrskyAlarms
 #if defined(PCBV3)
-  ,e_FrskyTest
+  ,e_FrskyTime
 #endif
 };
 
@@ -394,7 +394,7 @@ MenuFuncP_PROGMEM APM menuTabFrsky[] = {
   menuProcFrskySettings,
   menuProcFrskyAlarms
 #if defined(PCBV3)
-  ,menuProcFrskyTest // DEBUG
+  ,menuProcFrskyTime
 #endif
 };
 
@@ -531,7 +531,7 @@ void menuProcFrskySettings(uint8_t event)
 // FRSKY Alarms menu
 void menuProcFrskyAlarms(uint8_t event)
 {
-  MENU("FRSKY ALARMS", menuTabFrsky, e_FrskyAlarms, 5, {0,2});
+  MENU("FRSKY ALARMS", menuTabFrsky, e_FrskyAlarms, 5, {0,2,2,2});
 
   int8_t  sub    = mstate2.m_posVert - 1; // vertical position (1 = page counter, top/right)
   uint8_t subSub = mstate2.m_posHorz;     // horizontal position
@@ -598,10 +598,9 @@ void menuProcFrskyAlarms(uint8_t event)
 
 
 #if defined(PCBV3)
-// FRSKY TEST page //DEBUG
-void menuProcFrskyTest(uint8_t event)
+void menuProcFrskyTime(uint8_t event)
 {
-  MENU("DATE AND TIME", menuTabFrsky, e_FrskyTest, 3, {0,2});
+  MENU("DATE AND TIME", menuTabFrsky, e_FrskyTime, 3, {0, 2, 2});
 
   int8_t  sub    = mstate2.m_posVert - 1; // vertical position (1 = page counter, top/right)
   uint8_t subSub = mstate2.m_posHorz;     // horizontal position
@@ -615,9 +614,9 @@ void menuProcFrskyTest(uint8_t event)
       killEvents(event);
       break;
     case EVT_KEY_FIRST(KEY_MENU):
-    case EVT_KEY_FIRST(KEY_EXIT):
       if (sub >= 0 && !s_editMode) // set the date and time into RTC chip
       {
+        g_ms100 = 0; // start of next second begins now
         g_unixTime = mktime(&t); // update local timestamp and get wday calculated
 
         RTC rtc;

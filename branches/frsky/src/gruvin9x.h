@@ -636,6 +636,7 @@ inline void _beepSpkr(uint8_t d, uint8_t f)
 #include "rtc.h"
 extern void disk_timerproc(void);
 extern time_t g_unixTime; // global unix timestamp -- hold current time in seconds since 1970-01-01 00:00:00 
+extern uint8_t g_ms100; // defined in drivers.cpp
 #endif
 
 #endif // gruvin9x_h

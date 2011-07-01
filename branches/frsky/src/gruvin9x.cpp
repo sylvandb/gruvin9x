@@ -862,8 +862,8 @@ ISR(TIMER0_OVF_vect)
 #endif
 {
   g_tmr16KHz++; // gruvin: Not 16KHz. Overflows occur at 61.035Hz (1/256th of 15.625KHz) 
-                // to give *16.384ms* intervals.
-                // However, g_tmr16KHz is also used to software-construct a 16-bit timer
+                // to give *16.384ms* intervals. Kind of matters for accuracy elsewhere. ;)
+                // g_tmr16KHz is used to software-construct a 16-bit timer
                 // from TIMER-0 (8-bit). See getTmr16KHz, below.
 }
 
@@ -889,15 +889,18 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
 #endif
 {
   cli();
+  static uint8_t accuracyWarble = 4; // becasue 16M / 1024 / 100 = 156.25. So bump every 4.
+  uint8_t bump;
+  bump = (!(accuracyWarble++ & 0x03)) ? 157 : 156; 
 #if defined (PCBV2) || defined (PCBV3)
   TIMSK2 &= ~(1<<OCIE2A); //stop reentrance
-  OCR2A += 156;
+  OCR2A += bump;
 #else
   TIMSK &= ~(1<<OCIE0); //stop reentrance
 #if defined (BEEPSPKR)
-  OCR0 += 2;
+  OCR0 += 2; // run much faster, to generate speaker tones
 #else  
-  OCR0 += 156;
+  OCR0 += bump;
 #endif
 #endif
   sei();
@@ -925,18 +928,6 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
     // Begin 10ms event
     cnt10ms = 77; 
     
-/*
-    // DEBUG: gruvin: crude test to time if I have in fact still got 10ms
-    // Test confirms 1 second bips. Too accurate to count error offset over 6 full minutes. (Good.)
-    static uint8_t test10ms = 100;
-    if (test10ms-- == 0)
-    {
-      test10ms = 100;
-      g_beepCnt = 5;
-      beepOn = true; // beep each second (beepOn function turns beep off)
-    }
-*/
-
 #endif
     
     // Record start time from TCNT1 to record excution time
@@ -1008,7 +999,7 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
     }else{
       PORTE &= ~(1<<OUT_E_BUZZER);
     }
-#endif
+#endif // BEEPSPKR
 #endif // PCBV2 || PCBV3
 
     per10ms();

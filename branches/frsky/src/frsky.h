@@ -56,7 +56,7 @@ void menuProcFrsky(uint8_t event);
 void menuProcFrskySettings(uint8_t event);
 void menuProcFrskyAlarms(uint8_t event);
 #if defined(PCBV3)
-void menuProcFrskyTest(uint8_t event);
+void menuProcFrskyTime(uint8_t event);
 #endif
 
 extern MenuFuncP_PROGMEM APM menuTabFrsky[4];
