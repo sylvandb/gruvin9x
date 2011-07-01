@@ -35,11 +35,7 @@ uint8_t frskyA1;
 uint8_t frskyA2;
 uint8_t frskyRSSI; // RSSI (virtual 10 slot) running average
 
-#if defined (PCBV3)
 struct FrskyAlarm frskyAlarms[4];
-#else
-struct FrskyAlarm frskyAlarms[3];
-#endif
 
 /*
    Called from somewhere in the main loop or a low prioirty interrupt
@@ -531,7 +527,7 @@ void menuProcFrskySettings(uint8_t event)
 // FRSKY Alarms menu
 void menuProcFrskyAlarms(uint8_t event)
 {
-  MENU("FRSKY ALARMS", menuTabFrsky, e_FrskyAlarms, 5, {0,2,2,2});
+  MENU("FRSKY ALARMS", menuTabFrsky, e_FrskyAlarms, 5, {0, 2});
 
   int8_t  sub    = mstate2.m_posVert - 1; // vertical position (1 = page counter, top/right)
   uint8_t subSub = mstate2.m_posHorz;     // horizontal position
@@ -600,7 +596,7 @@ void menuProcFrskyAlarms(uint8_t event)
 #if defined(PCBV3)
 void menuProcFrskyTime(uint8_t event)
 {
-  MENU("DATE AND TIME", menuTabFrsky, e_FrskyTime, 3, {0, 2, 2});
+  MENU("DATE AND TIME", menuTabFrsky, e_FrskyTime, 3, {0, 2});
 
   int8_t  sub    = mstate2.m_posVert - 1; // vertical position (1 = page counter, top/right)
   uint8_t subSub = mstate2.m_posHorz;     // horizontal position
