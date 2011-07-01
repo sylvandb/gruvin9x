@@ -37,7 +37,9 @@
 #define WARN_MEM     (!(g_eeGeneral.warnOpts & WARN_MEM_BIT))
 #define BEEP_VAL     ( (g_eeGeneral.warnOpts & WARN_BVAL_BIT) >>3 )
 
-#define GENERAL_MYVER 3
+#define EEPROM_VER_r584  3
+#define EEPROM_ER9X_VER  4
+#define EEPROM_VER       5
 
 typedef struct t_TrainerMix {
   uint8_t srcChn:3; //0-7 = ch1-8
@@ -51,6 +53,11 @@ typedef struct t_TrainerData {
   TrainerMix     mix[4];
 } __attribute__((packed)) TrainerData;
 
+typedef struct t_FrSkyRSSIAlarm {
+  uint8_t       level:2;
+  int8_t        value:6;
+} __attribute__((packed)) FrSkyRSSIAlarm;
+
 typedef struct t_EEGeneral {
   uint8_t   myVers;
   int16_t   calibMid[7];
@@ -63,13 +70,11 @@ typedef struct t_EEGeneral {
   int8_t    vBatCalib;
   int8_t    lightSw;
   TrainerData trainer;
-  uint8_t   view;     //index of subview in main scrren
-//  uint8_t   warnOpts; //bitset for several warnings
+  uint8_t   view;      //index of subview in main scrren
   uint8_t   disableThrottleWarning:1;
-  uint8_t   disableSwitchWarning:1;
-  uint8_t   disableMemoryWarning:1;
+  int8_t    switchWarning:2; // -1=down, 0=off, 1=up
   uint8_t   beeperVal:3;
-  uint8_t   reserveWarning:1;
+  uint8_t   disableMemoryWarning:1;
   uint8_t   disableAlarmWarning:1;
   uint8_t   stickMode;
   uint8_t   inactivityTimer;
@@ -78,27 +83,22 @@ typedef struct t_EEGeneral {
   uint8_t   preBeep:1;
   uint8_t   flashBeep:1;
   uint8_t   disableSplashScreen:1;
-  uint8_t   res1:3;
+  uint8_t   enableTelemetryWarning:1;   // 0=no, 1=yes (Sound alarm when there's no telem. data coming in)
+  uint8_t   spare:2;
   uint8_t   filterInput;
   uint8_t   lightAutoOff;
   uint8_t   templateSetup;  //RETA order according to chout_ar array 
   int8_t    PPM_Multiplier;
-  uint8_t   res[1];
+  FrSkyRSSIAlarm frskyRssiAlarms[2];
 } __attribute__((packed)) EEGeneral;
 
-
-
-
-
-//eeprom modelspec
-//expo[3][2][2] //[Norm/Dr][expo/weight][R/L]
+// eeprom modelspec
 
 typedef struct t_ExpoData {
-  int8_t  expo[3][2][2];
+  int8_t  expo[3][2][2]; //[Norm/Dr1/Dr2][expo/weight][R/L]
   int8_t  drSw1;
   int8_t  drSw2;
 } __attribute__((packed)) ExpoData;
-
 
 typedef struct t_LimitData {
   int8_t  min;
@@ -107,106 +107,121 @@ typedef struct t_LimitData {
   int16_t  offset;
 } __attribute__((packed)) LimitData;
 
-#define MLTPX_ADD  0
-#define MLTPX_MUL  1
-#define MLTPX_REP  2
-
 typedef struct t_MixData {
-  uint8_t destCh;            //        1..NUM_CHNOUT
+  uint8_t destCh:4;           // 1..NUM_CHNOUT
+  int8_t flightPhase:4;       // -4=!FP4, 0=normal, 4=FP4
 #define MIX_P1    5
 #define MIX_P2    6
 #define MIX_P3    7
 #define MIX_MAX   8
 #define MIX_FULL  9
+#define MIX_CYC1  10
+#define MIX_CYC2  11
+#define MIX_CYC3  12
   uint8_t srcRaw;            //
   int8_t  weight;
   int8_t  swtch;
-  uint8_t curve;             //0=symmetrisch 1=no neg 2=no pos
+  uint8_t curve;             // 0=symmetrisch, 1=no neg, 2=no pos
   uint8_t delayUp:4;
   uint8_t delayDown:4;
   uint8_t speedUp:4;         // Servogeschwindigkeit aus Tabelle (10ms Cycle)
   uint8_t speedDown:4;       // 0 nichts
   uint8_t carryTrim:1;
+#define MLTPX_ADD  0
+#define MLTPX_MUL  1
+#define MLTPX_REP  2
   uint8_t mltpx:3;           // multiplex method 0=+ 1=* 2=replace
   uint8_t mixWarn:4;         // mixer warning
   int8_t  sOffset;
-  int8_t  res;
 } __attribute__((packed)) MixData;
 
-
-typedef struct t_CSwData { // Custom Switches data
+typedef struct t_CustomSwData { // Custom Switches data
   int8_t  v1; //input
   int8_t  v2; //offset
   uint8_t func;
-} __attribute__((packed)) CSwData;
+} __attribute__((packed)) CustomSwData;
 
+typedef struct t_SafetySwData { // Safety Switches data
+  int8_t  swtch;
+  int8_t  val;
+} __attribute__((packed)) SafetySwData;
+
+typedef struct t_FrSkyChannelData {
+  uint8_t   ratio;              // 0.0 means not used, 0.1V steps EG. 6.6 Volts = 66. 25.1V = 251, etc.
+  uint8_t   type:4;             // channel unit (0=volts, ...)
+  int8_t    offset:4;           // calibration offset. Signed 0.1V steps. EG. -4 to substract 0.4V
+  uint8_t   alarms_value[2];    // 0.1V steps EG. 6.6 Volts = 66. 25.1V = 251, etc. 
+  uint8_t   alarms_level:4;
+  uint8_t   alarms_greater:2;   // 0=LT(<), 1=GT(>)
+  uint8_t   spare:2;
+  int8_t    barMin;             // minimum for bar display
+  uint8_t   barMax;             // ditto for max display (would usually = ratio)
+} __attribute__((packed)) FrSkyChannelData;
+
+typedef struct t_FrSkyData {
+  FrSkyChannelData channels[2];
+} __attribute__((packed)) FrSkyData;
 
 typedef struct t_SwashRingData { // Swash Ring data
+  uint8_t   invertELE:1;
+  uint8_t   invertAIL:1;
+  uint8_t   invertCOL:1;
+  uint8_t   type:5;  
+  uint8_t   collectiveSource;
+  uint8_t   value;
+
+/* TODO BSS everything is in comments in menus.cpp, how should it be used?
   uint8_t lim;   // 0 mean off 100 full deflection
   uint8_t chX; // 2 channels to limit
-  uint8_t chY; // 2 channels to limit
+  uint8_t chY; // 2 channels to limit */
 } __attribute__((packed)) SwashRingData;
 
 #define MAX_MODELS 16
 #define MAX_MIXERS 32
 #define MAX_CURVE5 8
 #define MAX_CURVE9 8
-#define MDVERS_r9  1
-#define MDVERS_r14 2
-#define MDVERS_r22 3
-#define MDVERS_r77 4
-#define MDVERS_r85 5
-#define MDVERS_205 6
-#define MDVERS     6
+#define MAX_PHASES 4
+
+#define NUM_CHNOUT   16 // number of real output channels CH1-CH16
+#define NUM_CSW      12  // number of custom switches
+
 typedef struct t_ModelData {
   char      name[10];             // 10 must be first for eeLoadModelName
-  uint8_t   mdVers;
-  int8_t    tmrMode;              // timer trigger source -> off, abs, stk, stk%, sw/!sw, !m_sw/!m_sw
-  uint8_t   tmrDir;               // 0=>Count Down, 1=>Count Up
+  int8_t    tmrMode:7;            // timer trigger source -> off, abs, stk, stk%, sw/!sw, !m_sw/!m_sw
+  uint8_t   tmrDir:1;             // 0=>Count Down, 1=>Count Up
   uint16_t  tmrVal;
-  uint8_t   protocol;
-  int8_t    ppmNCH;
-  int8_t    thrTrim:4;            // Enable Throttle Trim
-  int8_t    thrExpo:4;            // Enable Throttle Expo
-  int8_t    trimInc;              // Trim Increments
+  uint8_t   protocol:3;
+  int8_t    ppmNCH:3;
+  uint8_t   thrTrim:1;            // Enable Throttle Trim
+  uint8_t   thrExpo:1;            // Enable Throttle Expo
+  int8_t    trimInc:3;            // Trim Increments
+  uint8_t   traineron:1;          // 0 disable trainer, 1 allow trainer
+  uint8_t   pulsePol:1;
+  uint8_t   extendedLimits:1;
+  uint8_t   spare:2;
   int8_t    ppmDelay;
   int8_t    trimSw;
   uint8_t   beepANACenter;        // 1<<0->A1.. 1<<6->A7
-  uint8_t   pulsePol;
-  char      res[3];
+  int8_t    tmr2Mode:7;           // timer trigger source -> off, abs, stk, stk%, sw/!sw, !m_sw/!m_sw
+  uint8_t   tmr2Dir:1;            // 0=>Count Down, 1=>Count Up
+  uint16_t  tmr2Val;
   MixData   mixData[MAX_MIXERS];
   LimitData limitData[NUM_CHNOUT];
   ExpoData  expoData[4];
-  int8_t    trim[4];
+  int8_t    flightPhaseSw[MAX_PHASES-1];
+  int8_t    trim[MAX_PHASES][4];
   int8_t    curves5[MAX_CURVE5][5];
   int8_t    curves9[MAX_CURVE9][9];
-  CSwData   customSw[NUM_CSW];
+  CustomSwData  customSw[NUM_CSW];
+  SafetySwData  safetySw[NUM_CHNOUT];
   SwashRingData swashR;
+  FrSkyData     frsky;
 } __attribute__((packed)) ModelData;
 
 extern EEGeneral g_eeGeneral;
 extern ModelData g_model;
 
-#if !(defined (FRSKY))
 #define TOTAL_EEPROM_USAGE (sizeof(ModelData)*MAX_MODELS + sizeof(EEGeneral))
-#else
-
-#define FRSKY_MYVER  1
-typedef struct t_FrskyData {
-  uint8_t myVers; // data version
-  uint8_t rxVoltsChannel; // 0=none, 1=A1, 2=A2
-  uint8_t rxVoltsMax; // 0.1V steps EG. 6.6 Volts = 66. 25.1V = 251, etc.
-  int8_t  rxVoltsOfs; // Calibration offset. Signed 0.1V steps. EG. -4 to substract 0.4V
-  uint8_t rxVoltsBarMin; // Minimum voltage for voltage bar display (0.1V steps)
-  uint8_t rxVoltsBarMax; // ditto for max volts. (Would usually = rxVoltsmax)
-  uint8_t noDataAlarm;   // 0=no, 1=yes (Sound alarm when there's no telem. data coming in)
-} __attribute__((packed)) EEFrskyData;
-
-extern EEFrskyData g_eeFrsky;
-#define TOTAL_EEPROM_USAGE (sizeof(ModelData)*MAX_MODELS + sizeof(EEGeneral) + sizeof(EEFrskyData))
-
-#endif
-
 
 #endif
 /*eof*/

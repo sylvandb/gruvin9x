@@ -38,9 +38,6 @@ mode4 ail thr ele rud
 
 EEGeneral  g_eeGeneral;
 ModelData  g_model;
-#if defined (FRSKY)
-EEFrskyData g_eeFrsky;
-#endif
 
 #if defined (PCBSTD) && defined (BEEPSPKR)
 uint8_t toneFreq = BEEP_DEFAULT_FREQ;
@@ -84,26 +81,20 @@ void putsVolts(uint8_t x,uint8_t y, uint16_t volts, uint8_t att)
   lcd_outdezAtt(x, y, volts, att|PREC1);
   if(!(att&NO_UNIT)) lcd_putcAtt(lcd_lastPos, y, 'v', att);
 }
+
 void putsVBat(uint8_t x,uint8_t y,uint8_t att)
 {
-  //att |= g_vbat100mV < g_eeGeneral.vBatWarn ? BLINK : 0;
   putsVolts(x, y, g_vbat100mV, att);
 }
-void putsVBat(uint8_t x,uint8_t y,uint8_t hideV,uint8_t att)
+
+void putsChnRaw(uint8_t x,uint8_t y,uint8_t idx,uint8_t att)
 {
-  //att |= g_vbat100mV < g_eeGeneral.vBatWarn ? BLINK : 0;
-  if(!hideV) lcd_putcAtt(   x+ 4*FW,   y,    'V',att);
-  lcd_outdezAtt( x+ 4*FW,   y,   g_vbat100mV,att);
-}
-void putsChnRaw(uint8_t x,uint8_t y,uint8_t idx1,uint8_t att)
-{
-  if(!idx1)
+  if(idx==0)
     lcd_putsnAtt(x,y,PSTR("----"),4,att);
-  else if((idx1>=1) && (idx1 <=4))
-    lcd_putsnAtt(x,y,modi12x3+g_eeGeneral.stickMode*16+4*(idx1-1),4,att);
-  else                  // 4   5   6   7   8   9
-    lcd_putsnAtt(x,y,PSTR("P1  P2  P3  MAX FULLPPM1PPM2PPM3PPM4PPM5PPM6PPM7PPM8CH1 CH2 CH3 CH4 CH5 CH6 CH7 CH8 CH9 CH10CH11CH12CH13CH14CH15CH16"
-                          "CH17CH18CH19CH20CH21CH22CH23CH24CH25CH26CH27CH28CH29CH30")+4*(idx1-5),4,att);
+  else if(idx<=4)
+    lcd_putsnAtt(x,y,modi12x3+g_eeGeneral.stickMode*16+4*(idx-1),4,att);
+  else if(idx<=NUM_XCHNRAW)
+    lcd_putsnAtt(x,y,PSTR("P1  P2  P3  MAX FULLCYC1CYC2CYC3PPM1PPM2PPM3PPM4PPM5PPM6PPM7PPM8CH1 CH2 CH3 CH4 CH5 CH6 CH7 CH8 CH9 CH10CH11CH12CH13CH14CH15CH16"TELEMETRY_CHANNELS)+4*(idx-5),4,att);
 }
 void putsChn(uint8_t x,uint8_t y,uint8_t idx1,uint8_t att)
 {
@@ -120,7 +111,12 @@ void putsDrSwitches(uint8_t x,uint8_t y,int8_t idx1,uint8_t att)//, bool nc)
     case -MAX_DRSWITCH: lcd_putsAtt(x+FW,y,PSTR("OFF"),att);return;
   }
   lcd_putcAtt(x,y, idx1<0 ? '!' : ' ',att);
-  lcd_putsnAtt(x+FW,y,PSTR(SWITCHES_STR)+3*(abs(idx1)-1),3,att);
+  lcd_putsnAtt(x+FW,y,get_switches_string()+3*(abs(idx1)-1),3,att);
+}
+
+const prog_char *get_switches_string()
+{
+  return PSTR(SWITCHES_STR) ;
 }
 
 void putsTmrMode(uint8_t x, uint8_t y, uint8_t attr)
@@ -141,6 +137,18 @@ void putsTmrMode(uint8_t x, uint8_t y, uint8_t attr)
   lcd_putcAtt(x+3*FW,  y,'m',attr);
 }
 
+#ifdef FRSKY
+void putsTelemetry(uint8_t x, uint8_t y, uint8_t val, uint8_t unit, uint8_t att)
+{
+  if (unit == 0/*v*/) {
+    putsVolts(x, y, val, att);
+  }
+  else {
+    lcd_outdezAtt(x, y, val, att);
+  }
+}
+#endif
+
 inline int16_t getValue(uint8_t i)
 {
     if(i<NUM_STICKS+NUM_POTS) return calibratedStick[i];//-512..512
@@ -148,6 +156,9 @@ inline int16_t getValue(uint8_t i)
     else if(i<PPM_BASE+NUM_CAL_PPM) return (g_ppmIns[i-PPM_BASE] - g_eeGeneral.trainer.calib[i-PPM_BASE])*2;
     else if(i<PPM_BASE+NUM_PPM) return g_ppmIns[i-PPM_BASE]*2;
     else if(i<CHOUT_BASE+NUM_CHNOUT) return ex_chans[i-CHOUT_BASE];
+#ifdef FRSKY
+    else if(i<CHOUT_BASE+NUM_CHNOUT+NUM_TELEMETRY) return frskyTelemetry[i-CHOUT_BASE-NUM_CHNOUT].value;
+#endif
     else return 0;
 }
 
@@ -172,7 +183,7 @@ bool getSwitch(int8_t swtch, bool nc, uint8_t level)
   //input -> 1..4 -> sticks,  5..8 pots
   //MAX,FULL - disregard
   //ppm
-  CSwData &cs = g_model.customSw[abs(swtch)-(MAX_DRSWITCH-NUM_CSW)];
+  CustomSwData &cs = g_model.customSw[abs(swtch)-(MAX_DRSWITCH-NUM_CSW)];
   if(!cs.func) return false;
 
 
@@ -186,7 +197,12 @@ bool getSwitch(int8_t swtch, bool nc, uint8_t level)
   if(s == CS_VOFS)
   {
       x = getValue(cs.v1-1);
-      y = calc100toRESX(cs.v2);
+#ifdef FRSKY
+      if (cs.v1 > CHOUT_BASE+NUM_CHNOUT)
+        y = 125+cs.v2;
+      else
+#endif
+        y = calc100toRESX(cs.v2);
   }
   else if(s == CS_VCOMP)
   {
@@ -313,7 +329,7 @@ void checkAlarm() // added by Gohst
 
 void checkSwitches()
 {
-  if(g_eeGeneral.disableSwitchWarning) return; // if warning is on
+  if(!g_eeGeneral.switchWarning) return; // if warning is on
 
   // first - display warning
   lcd_clear();
@@ -323,6 +339,8 @@ void checkSwitches()
   refreshDiplay();
   lcdSetRefVolt(g_eeGeneral.contrast);
 
+  bool state = (g_eeGeneral.switchWarning > 0);
+
   //loop until all switches are reset
   while (1)
   {
@@ -330,7 +348,7 @@ void checkSwitches()
     for(i=SW_BASE; i<SW_Trainer; i++)
     {
         if(i==SW_ID0) continue;
-        if(getSwitch(i-SW_BASE+1,0)) break;
+        if(getSwitch(i-SW_BASE+1,0) != state) break;
     }
     if(i==SW_Trainer) return;
   }
@@ -381,14 +399,14 @@ uint8_t checkTrim(uint8_t event)
   {
     //LH_DWN LH_UP LV_DWN LV_UP RV_DWN RV_UP RH_DWN RH_UP
     uint8_t idx = k/2;
-    int8_t  v = (s==0) ? (abs(g_model.trim[idx])/4)+1 : s;
+    int8_t  v = (s==0) ? (abs(g_model.trim[0][idx])/4)+1 : s;
     bool thro = (((2-(g_eeGeneral.stickMode&1)) == idx) && (g_model.thrTrim));
     if (thro) v = 4; // if throttle trim and trim trottle then step=4
-    int16_t x = (k&1) ? g_model.trim[idx] + v : g_model.trim[idx] - v;   // positive = k&1
+    int16_t x = (k&1) ? g_model.trim[0][idx] + v : g_model.trim[0][idx] - v;   // positive = k&1
 
-    if(((x==0)  ||  ((x>=0) != (g_model.trim[idx]>=0))) && (!thro) && (g_model.trim[idx]!=0))
+    if(((x==0)  ||  ((x>=0) != (g_model.trim[0][idx]>=0))) && (!thro) && (g_model.trim[0][idx]!=0))
     {
-      g_model.trim[idx]=0;
+      g_model.trim[0][idx]=0;
       killEvents(event);
       warble = false;
 #if defined (BEEPSPKR)
@@ -398,7 +416,7 @@ uint8_t checkTrim(uint8_t event)
 #endif
     }
     else if(x>-125 && x<125){
-      g_model.trim[idx] = (int8_t)x;
+      g_model.trim[0][idx] = (int8_t)x;
       STORE_MODELVARS;
       if(event & _MSK_KEY_REPT) warble = true;
 #if defined (BEEPSPKR)
@@ -411,7 +429,7 @@ uint8_t checkTrim(uint8_t event)
     }
     else
     {
-      g_model.trim[idx] = (x>0) ? 125 : -125;
+      g_model.trim[0][idx] = (x>0) ? 125 : -125;
       STORE_MODELVARS;
       warble = false;
 #if defined (BEEPSPKR)
@@ -465,7 +483,7 @@ int16_t checkIncDec(uint8_t event, int16_t val, int16_t i_min, int16_t i_max, ui
     killEvents(kpl);
   }
   if(i_min==0 && i_max==1 && event==EVT_KEY_FIRST(KEY_MENU)) {
-    s_editMode = false; // TODO BSS line to be removed at the end (s_editMode will never more be false here)
+    s_editMode = false;
     newval=!val;
     killEvents(event);
   }
@@ -687,6 +705,16 @@ inline bool checkSlaveMode()
 #endif
 }
 
+uint8_t Timer2_running = 0 ;
+uint8_t Timer2_pre = 0 ;
+uint16_t timer2 = 0 ;
+
+void resetTimer2()
+{
+  Timer2_pre = 0 ;
+  timer2 = 0 ;
+}
+
 void perMain()
 {
   static uint16_t lastTMR;
@@ -696,6 +724,15 @@ void perMain()
 
   perOut(g_chans512, 0);
   if(!tick10ms) return; //make sure the rest happen only every 10ms.
+
+  if ( Timer2_running )
+    {
+      if ( (Timer2_pre += 1 ) >= 100 )
+      {
+        Timer2_pre -= 100 ;
+        timer2 += 1 ;
+      }
+    }
 
   eeCheck();
 
@@ -769,7 +806,7 @@ Gruvin:
 
         static uint8_t s_batCheck;
         s_batCheck+=32;
-        if(s_batCheck==0 && g_vbat100mV < g_eeGeneral.vBatWarn){
+        if(s_batCheck==0 && g_vbat100mV<g_eeGeneral.vBatWarn && g_vbat100mV>49) {
           beepErr();
           if (g_eeGeneral.flashBeep) g_LightOffCounter = FLASH_DURATION;
         }

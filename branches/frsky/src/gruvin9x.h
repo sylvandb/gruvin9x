@@ -193,7 +193,10 @@ const uint8_t chout_ar[24][4] = { //First number is 0..23 -> template setup,  Se
 //NOTICE!  =>  1..4 -> 1..4
 #define CONVERT_MODE(x)  (((x)<=4) ? modn12x3[g_eeGeneral.stickMode][((x)-1)] : (x))
 #define CHANNEL_ORDER(x) (chout_ar[g_eeGeneral.templateSetup][(x)-1])
-
+#define THR_STICK       (2-(g_eeGeneral.stickMode&1))
+#define ELE_STICK       (1+(g_eeGeneral.stickMode&1))
+#define AIL_STICK       ((g_eeGeneral.stickMode&2) ? 0 : 3)
+#define RUD_STICK       ((g_eeGeneral.stickMode&2) ? 3 : 0)
 
 enum EnumKeys {
   KEY_MENU ,
@@ -223,14 +226,21 @@ enum EnumKeys {
   SW_Trainer
 };
 
-#define SWITCHES_STR "THR""RUD""ELE""ID0""ID1""ID2""AIL""GEA""TRN""SW1""SW2""SW3""SW4""SW5""SW6"
-#define NUM_CSW  6 //number of custom switches
+#define SWITCHES_STR "THR""RUD""ELE""ID0""ID1""ID2""AIL""GEA""TRN""SW1""SW2""SW3""SW4""SW5""SW6""SW7""SW8""SW9""SWA""SWB""SWC"
 
 #define CURV_STR "---x>0x<0|x|f>0f<0|f|c1 c2 c3 c4 c5 c6 c7 c8 c9 c10c11c12c13c14c15c16"
 #define CURVE_BASE 7
 
 #define CSWITCH_STR  "----   v>ofs  v<ofs  |v|>ofs|v|<ofsAND    OR     XOR    ""v1==v2 ""v1!=v2 ""v1>v2  ""v1<v2  ""v1>=v2 ""v1<=v2 "
 #define CSW_LEN_FUNC 7
+
+#define SWASH_TYPE_STR   "---   ""120   ""120X  ""140   ""90    "
+
+#define SWASH_TYPE_120   1
+#define SWASH_TYPE_120X  2
+#define SWASH_TYPE_140   3
+#define SWASH_TYPE_90    4
+#define SWASH_TYPE_NUM   4
 
 #define CS_OFF       0
 #define CS_VPOS      1  //v>offset
@@ -265,6 +275,14 @@ enum EnumKeys {
 #define NUM_CAL_PPM     4
 #define NUM_PPM         8
 #define CHOUT_BASE      (PPM_BASE+NUM_PPM)
+
+#ifdef FRSKY
+#define NUM_TELEMETRY 2
+#define TELEMETRY_CHANNELS "AD1 AD2 "
+#else
+#define NUM_TELEMETRY 0
+#define TELEMETRY_CHANNELS ""
+#endif
 
 #define DR_HIGH   0
 #define DR_MID    1
@@ -395,6 +413,13 @@ extern uint8_t  s_timerState;
 #define TMR_STOPPED 3
 void resetTimer();
 
+extern uint8_t Timer2_running ;
+extern uint16_t timer2 ;
+void resetTimer2() ;
+
+
+const prog_char *get_switches_string() ;
+
 uint16_t getTmr16KHz();
 
 
@@ -417,6 +442,9 @@ void    checkSwitches();
 #if defined (FRSKY)
 #define   EE_FRSKY   0x04
 #endif
+
+extern bool warble;
+extern int16_t p1valdiff;
 
 extern bool checkIncDec_Ret;  // global helper vars
 extern uint8_t s_editMode;    // global editmode
@@ -468,8 +496,6 @@ void eeLoadModel(uint8_t id);
 //void eeSaveModel(uint8_t id);
 bool eeDuplicateModel(uint8_t id);
 
-//number of real outputchannels CH1-CH8
-#define NUM_CHNOUT   16
 ///number of real input channels (1-9) plus virtual input channels X1-X4
 #define NUM_XCHNRAW (NUM_CHNOUT+9+NUM_PPM) // NUMCH + P1P2P3+ AIL/RUD/ELE/THR + MAX/FULL
 ///number of real output channels (CH1-CH8) plus virtual output channels X1-X4
@@ -486,6 +512,10 @@ void putsChn(uint8_t x,uint8_t y,uint8_t idx1,uint8_t att);
 void putsVolts(uint8_t x,uint8_t y, uint16_t volts, uint8_t att);
 void putsVBat(uint8_t x,uint8_t y,uint8_t att);
 void putsTime(uint8_t x,uint8_t y,int16_t tme,uint8_t att,uint8_t att2);
+
+#ifdef FRSKY
+void putsTelemetry(uint8_t x, uint8_t y, uint8_t val, uint8_t unit, uint8_t att);
+#endif
 
 extern inline int16_t calc100toRESX(int8_t x)
 {
@@ -514,6 +544,9 @@ void menuProcTrim(uint8_t event);
 void menuProcExpoOne(uint8_t event);
 void menuProcExpoAll(uint8_t event);
 void menuProcModel(uint8_t event);
+#ifdef HELI
+void menuProcHeli(uint8_t event);
+#endif
 void menuProcDiagCalib(uint8_t event);
 void menuProcDiagAna(uint8_t event);
 void menuProcDiagKeys(uint8_t event);
@@ -522,12 +555,16 @@ void menuProcTrainer(uint8_t event);
 void menuProcSetup(uint8_t event);
 void menuProcMain(uint8_t event);
 void menuProcModelSelect(uint8_t event);
+#ifdef TEMPLATES
 void menuProcTemplates(uint8_t event);
-void menuProcSwitches(uint8_t event);
-
-#if defined (FRSKY)
-void menuProcFrsky(uint8_t event);
-void menuProcFrskyAlarms(uint8_t event);
+#endif
+void menuProcCustomSwitches(uint8_t event);
+void menuProcSafetySwitches(uint8_t event);
+#ifdef FRSKY
+void menuProcTelemetry(uint8_t event);
+#endif
+#if defined(PCBV3)
+void menuProcFrskyTime(uint8_t event);
 #endif
 
 void menuProcStatistic2(uint8_t event);
@@ -541,12 +578,13 @@ void setupPulsesTracerCtp1009();
 
 void initTemplates();
 
-extern int16_t intpol(int16_t, uint8_t);
-
-//extern uint16_t s_ana[8];
-extern uint16_t anaIn(uint8_t chan);
-extern int16_t calibratedStick[7];
-extern int16_t ex_chans[NUM_CHNOUT];
+#include "lcd.h"
+extern const char stamp1[];
+extern const char stamp2[];
+extern const char stamp3[];
+extern const char stamp4[];
+extern const char stamp5[];
+#include "myeeprom.h"
 
 #ifdef JETI
 // Jeti-DUPLEX Telemetry
@@ -559,8 +597,6 @@ extern uint16_t jeti_keys;
 #include "frsky.h"
 #endif
 
-//extern TrainerData g_trainer;
-//extern uint16_t           g_anaIns[8];
 extern uint16_t           abRunningAvg;
 extern uint8_t            g_vbat100mV;
 extern volatile uint16_t  g_tmr10ms;
@@ -568,19 +604,14 @@ extern volatile uint8_t   g_blinkTmr10ms;
 extern uint8_t            g_beepCnt;
 extern uint8_t            g_beepVal[5];
 extern const PROGMEM char modi12x3[];
-//extern uint16_t           pulses2MHz[9];
 extern uint16_t           pulses2MHz[120];
 extern int16_t            g_ppmIns[8];
 extern int16_t            g_chans512[NUM_CHNOUT];
 extern volatile uint8_t   tick10ms;
-
-#include "lcd.h"
-extern const char stamp1[];
-extern const char stamp2[];
-extern const char stamp3[];
-extern const char stamp4[];
-extern const char stamp5[];
-#include "myeeprom.h"
+extern int16_t intpol(int16_t, uint8_t);
+extern uint16_t anaIn(uint8_t chan);
+extern int16_t calibratedStick[7];
+extern int16_t ex_chans[NUM_CHNOUT];
 
 #define FLASH_DURATION 50
 

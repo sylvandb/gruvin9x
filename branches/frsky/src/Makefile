@@ -209,6 +209,15 @@ ifeq ($(TRANSLATIONS), YES)
   CPPDEFS += -DTRANSLATIONS
 endif
 
+ifeq ($(HELI), YES)
+ CPPDEFS += -DHELI
+endif
+
+ifeq ($(TEMPLATES), YES)
+ CPPDEFS += -DTEMPLATES
+endif
+
+
 #---------------- Compiler Options C ----------------
 #  -g*:          generate debugging information
 #  -O*:          optimization level

@@ -358,9 +358,12 @@ void per10ms()
 #if defined (FRSKY)
   // Used to detect presence of valid FrSky telemetry packets inside the 
   // last <FRSKY_TIMEOUT10ms> 10ms intervals
-  if (frskyStreaming > 0) frskyStreaming--;
-  else if (g_eeFrsky.noDataAlarm)
-  {
+  if ( FrskyAlarmSendState )
+    FRSKY10mspoll() ;
+  
+  if (frskyStreaming > 0)
+    frskyStreaming--;
+  else if (g_eeGeneral.enableTelemetryWarning) {
 #if defined (BEEPSPKR)
     if (!(g_tmr10ms % 30)) beepWarn2Spkr((g_tmr10ms % 60) ? 25 : 20);
 #else
