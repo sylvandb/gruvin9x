@@ -191,9 +191,9 @@ void lcd_outdezNAtt(uint8_t x,uint8_t y,int16_t val,uint8_t mode,uint8_t len)
   if (mode & DBLSIZE) {
     fw += FWNUM;
     if (mode & LEFT) {
-      if (tmp >= 100)
+      if (tmp >= 100 || prec==2)
         x += 2*FW;
-      if (tmp >= 10)
+      if (tmp >= 10 || prec>0)
         x += 2*FW;
     }
     else {
@@ -207,9 +207,9 @@ void lcd_outdezNAtt(uint8_t x,uint8_t y,int16_t val,uint8_t mode,uint8_t len)
         x += 2;
       if (val < 0)
         x += FWNUM;
-      if (tmp >= 100)
+      if (tmp >= 100 || prec==2)
         x += FWNUM;
-      if (tmp >= 10)
+      if (tmp >= 10 || prec>0)
         x += FWNUM;
     }
     else {
