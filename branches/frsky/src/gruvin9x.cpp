@@ -1157,6 +1157,9 @@ extern uint16_t g_timeMain;
 // See fuses_2561.txt
   FUSES = 
   {
+    // BOD=4.3V, WDT OFF (enabled in code), Boot Flash 4096 bytes at 0x1F000,
+    // JTAG and OCD enabled, EESAVE enabled, BOOTRST/CKDIV8/CKOUT disabled,
+    // Full swing Xtal oscillator. Start-up 16K clks + 0ms. BOD enabled.
     0xD7, // .low
     0x11, // .high
     0xFC  // .extended
@@ -1176,18 +1179,7 @@ uint8_t DEBUG2 = 0;
 
 int main(void)
 {
-#if defined (PCBV2) || defined (PCBV3)
-  /////////////////////////////////////////////
-  // Shut the WDT off. None of the fuse settings 
-  // seem to accomplish this. Strange.
-  // XXX: Take another look some time. *shrug*
-  // GRUVIN: Umm, why aren't we using the WDT? :/ Is it enabled later?
-  wdt_reset();
-  MCUSR &= ~(1<<WDRF);
-  WDTCSR |= (1<<WDCE) | (1<<WDE);
-  WDTCSR = 0x00;
-  /////////////////////////////////////////////
-#endif
+  // Set up I/O port data diretions and initial states
 
   DDRA = 0xff;  PORTA = 0x00;
 #if defined (PCBV2) || defined (PCBV3)
@@ -1288,18 +1280,7 @@ int main(void)
   checkAlarm();
   setupPulses();
 
-#if defined (PCBV2) || defined (PCBV3)
-  // wdt_enable(WDTO_500MS); // This doesn't set the right time on the '2561 chip :/
-  // Try it manually ...
-  cli();
-  wdt_reset();
-  WDTCSR |= (1<<WDCE) | (1<<WDE);
-  WDTCSR = (1<<WDE) | (1<<WDP2) | (1<<WDP0); // 500ms, system reset
-  sei();
-  // Yup. That works. *shrug*
-#else
   wdt_enable(WDTO_500MS);
-#endif
 
   perOut(g_chans512, 0);
 
