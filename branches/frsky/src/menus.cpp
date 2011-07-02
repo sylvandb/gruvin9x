@@ -623,7 +623,7 @@ void menuProcTelemetry(uint8_t event)
 #ifdef TEMPLATES
 void menuProcTemplates(uint8_t event)
 {
-  SIMPLE_MENU("TEMPLATES", menuTabModel, e_Templates, NUM_TEMPLATES+3);
+  SIMPLE_MENU("TEMPLATES", menuTabModel, e_Templates, NUM_TEMPLATES+2);
 
   uint8_t y = 0;
   uint8_t k = 0;
@@ -653,23 +653,9 @@ void menuProcTemplates(uint8_t event)
     lcd_putsAtt(  4*FW, y, n_Templates[k],BSS | (s_noHi ? 0 : (sub==k ? INVERS  : 0)));
     y+=FH;
   }
-
   if(y>7*FH) return;
-  uint8_t attr = s_noHi ? 0 : ((sub==NUM_TEMPLATES) ? INVERS : 0);
-  lcd_puts_P( 1*FW, y,PSTR("Channel Order"));//   RAET->AETR
 
-  {
-    uint8_t i ;
-    for ( i = 1 ; i <= 4 ; i += 1 ) {
-      lcd_putsnAtt((14+i)*FW, y, PSTR(" RETA")+CHANNEL_ORDER(i),1,attr);
-    }
-  }
-
-  if(attr) CHECK_INCDEC_H_GENVAR(event, g_eeGeneral.templateSetup, 0, 23);
-  y+=FH;
-
-  if(y>7*FH) return;
-  attr = s_noHi ? 0 : ((sub==NUM_TEMPLATES+1) ? INVERS : 0);
+  uint8_t attr = s_noHi ? 0 : ((sub==NUM_TEMPLATES+1) ? INVERS : 0);
   lcd_putsAtt(  1*FW,y,PSTR("CLEAR MIXES [MENU]"),attr);
   y+=FH;
 }
@@ -2116,7 +2102,7 @@ void menuProcTrainer(uint8_t event)
 
 void menuProcSetup(uint8_t event)
 {
-#define COUNT_ITEMS 17
+#define COUNT_ITEMS 18
 #define PARAM_OFS   17*FW
 
   SIMPLE_MENU("RADIO SETUP", menuTabDiag, e_Setup, COUNT_ITEMS+1);
@@ -2270,6 +2256,16 @@ void menuProcSetup(uint8_t event)
       if((y+=FH)>7*FH) return;
   }subN++;
 
+  uint8_t attr = sub==subN?INVERS:0;
+  lcd_puts_P(0, y,PSTR("Rx Channel Ord"));//   RAET->AETR
+  for (uint8_t i = 1 ; i <= 4 ; i += 1 ) {
+    lcd_putsnAtt((14+i)*FW, y, PSTR(" RETA")+CHANNEL_ORDER(i),1,attr);
+  }
+  if(attr) CHECK_INCDEC_H_GENVAR(event, g_eeGeneral.templateSetup, 0, 23);
+  subN++;
+
+  y+=FH;
+  if(y>7*FH) return;
 
   if(s_pgOfs<subN) {
     lcd_puts_P( 1*FW, y, PSTR("Mode"));//sub==3?INVERS:0);
