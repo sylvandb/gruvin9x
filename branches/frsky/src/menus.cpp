@@ -1518,13 +1518,13 @@ void menuProcModel(uint8_t event)
     lcd_puts_P(    0,    y, PSTR("Name"));
     lcd_putsnAtt(10*FW,   y, g_model.name ,sizeof(g_model.name),BSS | (sub==subN ? (s_editMode ? 0 : INVERS) : 0));
     if(sub==subN && s_editMode){
-        char v = char2idx(g_model.name[subSub-1]);
+        char v = char2idx(g_model.name[subSub]);
         if(p1valdiff || event==EVT_KEY_FIRST(KEY_DOWN) || event==EVT_KEY_FIRST(KEY_UP) 
             || event==EVT_KEY_REPT(KEY_DOWN) || event==EVT_KEY_REPT(KEY_UP))
            CHECK_INCDEC_H_MODELVAR( event,v ,0,NUMCHARS-1);
         v = idx2char(v);
-        g_model.name[subSub-1]=v;
-        lcd_putcAtt((10+subSub-1)*FW, y, v,INVERS);
+        g_model.name[subSub]=v;
+        lcd_putcAtt((10+subSub)*FW, y, v,INVERS);
     }
     if((y+=FH)>7*FH) return;
   }subN++;
@@ -1876,7 +1876,7 @@ void menuProcDiagCalib(uint8_t event)
 #if defined(PCBV3)
 void menuProcFrskyTime(uint8_t event)
 {
-  MENU("DATE AND TIME", menuTabDiag, e_FrskyTime, 3, {0, 2});
+  MENU("DATE AND TIME", menuTabDiag, e_FrskyTime, 3, {0, 2, 2});
 
   int8_t  sub    = mstate2.m_posVert - 1; // vertical position (1 = page counter, top/right)
   uint8_t subSub = mstate2.m_posHorz;     // horizontal position
