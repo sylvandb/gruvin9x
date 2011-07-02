@@ -1,4 +1,4 @@
-# EESchema Netlist Version 1.1 created  29/06/2011 00:35:53
+# EESchema Netlist Version 1.1 created  02/07/2011 01:38:42
 (
  ( /4E0A60B8 $noname  P26 CONN_1 {Lib=CONN_1}
   (    1 /I2C_SDA )
@@ -6,7 +6,7 @@
  ( /4E0A60AC $noname  P25 CONN_1 {Lib=CONN_1}
   (    1 /I2C_SCL )
  )
- ( /4E04C0B7 $noname  C36 0.1 {Lib=C}
+ ( /4E04C0B7 $noname  C36 0.1uF {Lib=C}
   (    1 N-000191 )
   (    2 GND )
  )
@@ -47,11 +47,11 @@
   (    1 N-000070 )
   (    2 N-000179 )
  )
- ( /4DFF92F5 $noname  C35 47u {Lib=CAPAPOL}
+ ( /4DFF92F5 $noname  C35 47uF {Lib=CAPAPOL}
   (    1 /Jack_PPM )
   (    2 N-000178 )
  )
- ( /4DFF92E7 $noname  C18 47u {Lib=CAPAPOL}
+ ( /4DFF92E7 $noname  C18 47uF {Lib=CAPAPOL}
   (    1 N-000189 )
   (    2 /Jack_PPM )
  )
@@ -93,15 +93,15 @@
   (    C N-000177 )
   (    E GND )
  )
- ( /4DE3AEF0 $noname  C34 0.1 {Lib=C}
+ ( /4DE3AEF0 $noname  C34 0.1uF {Lib=C}
   (    1 GND )
   (    2 N-000192 )
  )
- ( /4DE3AEE4 $noname  C33 0.1 {Lib=C}
+ ( /4DE3AEE4 $noname  C33 0.1uF {Lib=C}
   (    1 GND )
   (    2 /BATT+ )
  )
- ( /4DE3AC28 $noname  C31 47u {Lib=CAPAPOL}
+ ( /4DE3AC28 $noname  C31 47uF {Lib=CAPAPOL}
   (    1 GND )
   (    2 N-000192 )
  )
@@ -109,7 +109,7 @@
   (    1 GND )
   (    2 N-000192 )
  )
- ( /4DDD61B4 $noname  C32 22u {Lib=CAPAPOL}
+ ( /4DDD61B4 $noname  C32 22uF {Lib=CAPAPOL}
   (    1 GND )
   (    2 /BATT+ )
  )
@@ -118,11 +118,11 @@
   (    2 N-000193 )
   (    3 /VIB_OPTION )
  )
- ( /4DDD5235 $noname  R7 332K {Lib=R}
+ ( /4DDD5235 $noname  R7 180K {Lib=R}
   (    1 N-000183 )
   (    2 N-000192 )
  )
- ( /4DDD5224 $noname  R15 110K {Lib=R}
+ ( /4DDD5224 $noname  R15 100K {Lib=R}
   (    1 GND )
   (    2 N-000183 )
  )
@@ -140,7 +140,7 @@
   (    7 N-000183 )
   (    8 ? )
  )
- ( /4DC96A4E $noname  C30 0.1 {Lib=C}
+ ( /4DC96A4E $noname  C30 0.1uF {Lib=C}
   (    1 VCC )
   (    2 GND )
  )
@@ -246,47 +246,47 @@
   (   99 AGND )
   (  100 /AVCC )
  )
- ( /4DC1946D $noname  C95 0.1 {Lib=C}
+ ( /4DC1946D $noname  C95 0.1uF {Lib=C}
   (    1 /ROT_ENC_1_A )
   (    2 GND )
  )
- ( /4DC1946C $noname  C96 0.1 {Lib=C}
+ ( /4DC1946C $noname  C96 0.1uF {Lib=C}
   (    1 /ROT_ENC_1_B )
   (    2 GND )
  )
- ( /4DC1946B $noname  C93 0.1 {Lib=C}
+ ( /4DC1946B $noname  C93 0.1uF {Lib=C}
   (    1 /ROT_ENC_1_PUSH )
   (    2 GND )
  )
- ( /4DC1946A $noname  C92 0.1 {Lib=C}
+ ( /4DC1946A $noname  C92 0.1uF {Lib=C}
   (    1 /ROT_ENC_2_B )
   (    2 GND )
  )
- ( /4DC19469 $noname  C94 0.1 {Lib=C}
+ ( /4DC19469 $noname  C94 0.1uF {Lib=C}
   (    1 /ROT_ENC_2_PUSH )
   (    2 GND )
  )
- ( /4DC19467 $noname  C91 0.1 {Lib=C}
+ ( /4DC19467 $noname  C91 0.1uF {Lib=C}
   (    1 /ROT_ENC_2_A )
   (    2 GND )
  )
- ( /4DC19437 $noname  R96 220R {Lib=R}
+ ( /4DC19437 $noname  R96 200R {Lib=R}
   (    1 N-000028 )
   (    2 /ROT_ENC_1_B )
  )
- ( /4DC1942D $noname  R95 220R {Lib=R}
+ ( /4DC1942D $noname  R95 200R {Lib=R}
   (    1 N-000056 )
   (    2 /ROT_ENC_1_A )
  )
- ( /4DC193DB $noname  R94 220R {Lib=R}
+ ( /4DC193DB $noname  R94 200R {Lib=R}
   (    1 N-000076 )
   (    2 /ROT_ENC_2_PUSH )
  )
- ( /4DC193CE $noname  R93 220R {Lib=R}
+ ( /4DC193CE $noname  R93 200R {Lib=R}
   (    1 N-000075 )
   (    2 /ROT_ENC_1_PUSH )
  )
- ( /4DC193BF $noname  R92 220R {Lib=R}
+ ( /4DC193BF $noname  R92 200R {Lib=R}
   (    1 N-000074 )
   (    2 /ROT_ENC_2_B )
  )
@@ -391,7 +391,7 @@
  ( /4DC0276C $noname  H1 HOLE_M2.5 {Lib=HOLE_M3}
   (    1 ? )
  )
- ( /4DBD87B5 $noname  R91 220R {Lib=R}
+ ( /4DBD87B5 $noname  R91 200R {Lib=R}
   (    1 N-000058 )
   (    2 /ROT_ENC_2_A )
  )
@@ -432,11 +432,11 @@
   (    2 /Back_Light_TTL )
   (    3 VCC )
  )
- ( /4D324782 $noname  R83 200 {Lib=R}
+ ( /4D324782 $noname  R83 200R {Lib=R}
   (    1 /Speaker )
   (    2 N-000204 )
  )
- ( /4D32475D $noname  R84 200 {Lib=R}
+ ( /4D32475D $noname  R84 200R {Lib=R}
   (    1 /Speaker )
   (    2 N-000204 )
  )
@@ -444,7 +444,7 @@
   (    1 /Speaker )
   (    2 GND )
  )
- ( /4D3246D5 $noname  C11 10u {Lib=CAPAPOL}
+ ( /4D3246D5 $noname  C11 10uF {Lib=CAPAPOL}
   (    1 /Speaker_TTL )
   (    2 N-000204 )
  )
@@ -486,7 +486,7 @@
  ( /4D016D1D $noname  P16 CONN_1 {Lib=CONN_1}
   (    1 /J1 )
  )
- ( /4D016C92 $noname  R78 0 {Lib=R}
+ ( /4D016C92 $noname  R78 0R {Lib=R}
   (    1 /J1 )
   (    2 N-000022 )
  )
@@ -574,23 +574,23 @@
  ( /4CF47205 $noname  P11 CONN_1 {Lib=CONN_1}
   (    1 /Spare1 )
  )
- ( /4CE71D88 $noname  R14 200 {Lib=R}
+ ( /4CE71D88 $noname  R14 200R {Lib=R}
   (    1 /J2 )
   (    2 /KEY_Y3 )
  )
- ( /4CE71D86 $noname  R22 200 {Lib=R}
+ ( /4CE71D86 $noname  R22 200R {Lib=R}
   (    1 N-000022 )
   (    2 /KEY_Y2 )
  )
- ( /4CE71D85 $noname  R13 200 {Lib=R}
+ ( /4CE71D85 $noname  R13 200R {Lib=R}
   (    1 N-000042 )
   (    2 /DOWN )
  )
- ( /4CE71D84 $noname  R21 200 {Lib=R}
+ ( /4CE71D84 $noname  R21 200R {Lib=R}
   (    1 N-000030 )
   (    2 /EXIT )
  )
- ( /4CEECBE8 $noname  R68 200 {Lib=R}
+ ( /4CEECBE8 $noname  R68 200R {Lib=R}
   (    1 N-000035 )
   (    2 /RudDR_SW )
  )
@@ -599,7 +599,7 @@
   (    2 N-000017 )
   (    3 N-000010 )
  )
- ( /4CEE07E6 $noname  D1 DIODE {Lib=DIODE}
+ ( /4CEE07E6 $noname  D1 DIODESIL {Lib=DIODE}
   (    1 GND )
   (    2 N-000202 )
  )
@@ -620,15 +620,15 @@
   (    2 /TELEM_RX )
   (    3 /TELEM_TX )
  )
- ( /4CEDF919 $noname  R71 200 {Lib=R}
+ ( /4CEDF919 $noname  R71 200R {Lib=R}
   (    1 /AilDR_SW )
   (    2 N-000014 )
  )
- ( /4CE741E9 $noname  C17 0.1 {Lib=C}
+ ( /4CE741E9 $noname  C17 0.1uF {Lib=C}
   (    1 AGND )
   (    2 /AVCC )
  )
- ( /4CE85BBE $noname  R70 200 {Lib=R}
+ ( /4CE85BBE $noname  R70 200R {Lib=R}
   (    1 N-000159 )
   (    2 /TCut_SW )
  )
@@ -811,11 +811,11 @@
   (    1 GND )
   (    2 N-000203 )
  )
- ( /4CE74FB8 $noname  R40 0 {Lib=R}
+ ( /4CE74FB8 $noname  R40 0R {Lib=R}
   (    1 /Vcc_3V3 )
   (    2 N-000203 )
  )
- ( /4CE74FB4 $noname  R39 0 {Lib=R}
+ ( /4CE74FB4 $noname  R39 0R {Lib=R}
   (    1 /Vcc_3V3 )
   (    2 N-000176 )
  )
@@ -823,47 +823,47 @@
   (    1 GND )
   (    2 N-000176 )
  )
- ( /4CE74D04 $noname  C51 1u {Lib=C}
+ ( /4CE74D04 $noname  C51 1uF {Lib=C}
   (    1 N-000174 )
   (    2 N-000165 )
  )
- ( /4CE74DCB $noname  C50 1u {Lib=C}
+ ( /4CE74DCB $noname  C50 1uF {Lib=C}
   (    1 N-000173 )
   (    2 /Vcc_3V3 )
  )
- ( /4CE74DC4 $noname  C47 1u {Lib=C}
+ ( /4CE74DC4 $noname  C47 1uF {Lib=C}
   (    1 N-000172 )
   (    2 /Vcc_3V3 )
  )
- ( /4CE74DBD $noname  C46 1u {Lib=C}
+ ( /4CE74DBD $noname  C46 1uF {Lib=C}
   (    1 N-000171 )
   (    2 /Vcc_3V3 )
  )
- ( /4CE74DB1 $noname  C49 1u {Lib=C}
+ ( /4CE74DB1 $noname  C49 1uF {Lib=C}
   (    1 N-000170 )
   (    2 /Vcc_3V3 )
  )
- ( /4CE74D99 $noname  C48 1u {Lib=C}
+ ( /4CE74D99 $noname  C48 1uF {Lib=C}
   (    1 N-000169 )
   (    2 /Vcc_3V3 )
  )
- ( /4CE74D5F $noname  C45 1u {Lib=C}
+ ( /4CE74D5F $noname  C45 1uF {Lib=C}
   (    1 N-000167 )
   (    2 N-000055 )
  )
- ( /4CE74D00 $noname  C52 1u {Lib=C}
+ ( /4CE74D00 $noname  C52 1uF {Lib=C}
   (    1 N-000166 )
   (    2 N-000165 )
  )
- ( /4CE74C94 $noname  C44 1u {Lib=C}
+ ( /4CE74C94 $noname  C44 1uF {Lib=C}
   (    1 N-000164 )
   (    2 GND )
  )
- ( /4CE74A4E $noname  C12 47u {Lib=CAPAPOL}
+ ( /4CE74A4E $noname  C12 47uF {Lib=CAPAPOL}
   (    1 GND )
   (    2 VCC )
  )
- ( /4CE74A4D $noname  C15 0.1 {Lib=C}
+ ( /4CE74A4D $noname  C15 0.1uF {Lib=C}
   (    1 GND )
   (    2 VCC )
  )
@@ -875,15 +875,15 @@
   (    1 /BATT+ )
   (    2 /Battery )
  )
- ( /4CE7496F $noname  C6 0.1 {Lib=C}
+ ( /4CE7496F $noname  C6 0.1uF {Lib=C}
   (    1 GND )
   (    2 /BATT+ )
  )
- ( /4CE74935 $noname  C16 1u {Lib=CAPAPOL}
+ ( /4CE74935 $noname  C16 1uF {Lib=CAPAPOL}
   (    1 GND )
   (    2 /RESET )
  )
- ( /4CE748AC $noname  C1 10u {Lib=CAPAPOL}
+ ( /4CE748AC $noname  C1 10uF {Lib=CAPAPOL}
   (    1 GND )
   (    2 /BATT+ )
  )
@@ -892,103 +892,103 @@
   (   VI /BATT+ )
   (   VO VCC )
  )
- ( /4CE7478D $noname  L2 10u {Lib=INDUCTOR}
+ ( /4CE7478D $noname  L2 10uH {Lib=INDUCTOR}
   (    1 GND )
   (    2 AGND )
  )
- ( /4CE746EE $noname  C21 0.1 {Lib=C}
+ ( /4CE746EE $noname  C21 0.1uF {Lib=C}
   (    1 /Vcc_3V3 )
   (    2 GND )
  )
- ( /4CE746EC $noname  C19 0.1 {Lib=C}
+ ( /4CE746EC $noname  C19 0.1uF {Lib=C}
   (    1 VCC )
   (    2 GND )
  )
- ( /4CE744CE $noname  C2 0.1 {Lib=C}
+ ( /4CE744CE $noname  C2 0.1uF {Lib=C}
   (    1 /RH_Stick )
   (    2 AGND )
  )
- ( /4CE744CD $noname  C7 0.1 {Lib=C}
+ ( /4CE744CD $noname  C7 0.1uF {Lib=C}
   (    1 /RV_Stick )
   (    2 AGND )
  )
- ( /4CE744CC $noname  C3 0.1 {Lib=C}
+ ( /4CE744CC $noname  C3 0.1uF {Lib=C}
   (    1 /LV_Stick )
   (    2 AGND )
  )
- ( /4CE744CB $noname  C8 0.1 {Lib=C}
+ ( /4CE744CB $noname  C8 0.1uF {Lib=C}
   (    1 /LH_Stick )
   (    2 AGND )
  )
- ( /4CE744CA $noname  C4 0.1 {Lib=C}
+ ( /4CE744CA $noname  C4 0.1uF {Lib=C}
   (    1 /Hov_Pit )
   (    2 AGND )
  )
- ( /4CE744C9 $noname  C5 0.1 {Lib=C}
+ ( /4CE744C9 $noname  C5 0.1uF {Lib=C}
   (    1 /Pit_Trim )
   (    2 AGND )
  )
- ( /4CE744C8 $noname  C10 0.1 {Lib=C}
+ ( /4CE744C8 $noname  C10 0.1uF {Lib=C}
   (    1 /Battery )
   (    2 AGND )
  )
- ( /4CE744C6 $noname  C9 0.1 {Lib=C}
+ ( /4CE744C6 $noname  C9 0.1uF {Lib=C}
   (    1 /Hov_Thr )
   (    2 AGND )
  )
- ( /4CE742E5 $noname  R3 200 {Lib=R}
+ ( /4CE742E5 $noname  R3 200R {Lib=R}
   (    1 N-000100 )
   (    2 /RH_Stick )
  )
- ( /4CE742DC $noname  R5 200 {Lib=R}
+ ( /4CE742DC $noname  R5 200R {Lib=R}
   (    1 N-000099 )
   (    2 /Hov_Pit )
  )
- ( /4CE742D3 $noname  R9 200 {Lib=R}
+ ( /4CE742D3 $noname  R9 200R {Lib=R}
   (    1 N-000098 )
   (    2 /LV_Stick )
  )
- ( /4CE742D2 $noname  R4 200 {Lib=R}
+ ( /4CE742D2 $noname  R4 200R {Lib=R}
   (    1 N-000097 )
   (    2 /RV_Stick )
  )
- ( /4CE742D1 $noname  R10 200 {Lib=R}
+ ( /4CE742D1 $noname  R10 200R {Lib=R}
   (    1 N-000096 )
   (    2 /LH_Stick )
  )
- ( /4CE742D0 $noname  R11 200 {Lib=R}
+ ( /4CE742D0 $noname  R11 200R {Lib=R}
   (    1 N-000095 )
   (    2 /Hov_Thr )
  )
- ( /4CE742CF $noname  R6 200 {Lib=R}
+ ( /4CE742CF $noname  R6 200R {Lib=R}
   (    1 N-000094 )
   (    2 /Pit_Trim )
  )
- ( /4CE742CE $noname  R12 200 {Lib=R}
+ ( /4CE742CE $noname  R12 200R {Lib=R}
   (    1 N-000093 )
   (    2 /Battery )
  )
- ( /4CE74228 $noname  C20 0.1 {Lib=C}
+ ( /4CE74228 $noname  C20 0.1uF {Lib=C}
   (    1 N-000092 )
   (    2 AGND )
  )
- ( /4CE74148 $noname  L1 10u {Lib=INDUCTOR}
+ ( /4CE74148 $noname  L1 10uH {Lib=INDUCTOR}
   (    1 /AVCC )
   (    2 VCC )
  )
- ( /4CE74081 $noname  C28 0.1 {Lib=C}
+ ( /4CE74081 $noname  C28 0.1uF {Lib=C}
   (    1 /Train_SW )
   (    2 GND )
  )
- ( /4CE71CC8 $noname  C14 18p {Lib=C}
+ ( /4CE71CC8 $noname  C14 18pF {Lib=C}
   (    1 N-000044 )
   (    2 GND )
  )
- ( /4CE71CC2 $noname  C13 18p {Lib=C}
+ ( /4CE71CC2 $noname  C13 18pF {Lib=C}
   (    1 /FB_CLOCK )
   (    2 GND )
  )
- ( /4CE71C6E $noname  X1 16MHz_18pf {Lib=CRYSTAL}
+ ( /4CE71C6E $noname  X1 16MHz {Lib=CRYSTAL}
   (    1 /FB_CLOCK )
   (    2 N-000044 )
  )
@@ -1020,51 +1020,51 @@
   (    1 /EXIT )
   (    2 N-000115 )
  )
- ( /4CE71568 $noname  C29 0.1 {Lib=C}
+ ( /4CE71568 $noname  C29 0.1uF {Lib=C}
   (    1 /IDL2_SW )
   (    2 GND )
  )
- ( /4CE71566 $noname  C25 0.1 {Lib=C}
+ ( /4CE71566 $noname  C25 0.1uF {Lib=C}
   (    1 /IDL1_SW )
   (    2 GND )
  )
- ( /4CE7155D $noname  C24 0.1 {Lib=C}
+ ( /4CE7155D $noname  C24 0.1uF {Lib=C}
   (    1 /Gear_SW )
   (    2 GND )
  )
- ( /4CE7155A $noname  C27 0.1 {Lib=C}
+ ( /4CE7155A $noname  C27 0.1uF {Lib=C}
   (    1 /RudDR_SW )
   (    2 GND )
  )
- ( /4CE71552 $noname  C23 0.1 {Lib=C}
+ ( /4CE71552 $noname  C23 0.1uF {Lib=C}
   (    1 /EleDR_SW )
   (    2 GND )
  )
- ( /4CE7154F $noname  C26 0.1 {Lib=C}
+ ( /4CE7154F $noname  C26 0.1uF {Lib=C}
   (    1 /AilDR_SW )
   (    2 GND )
  )
- ( /4CE71537 $noname  C22 0.1 {Lib=C}
+ ( /4CE71537 $noname  C22 0.1uF {Lib=C}
   (    1 /TCut_SW )
   (    2 GND )
  )
- ( /4CE70B44 $noname  R26 200 {Lib=R}
+ ( /4CE70B44 $noname  R26 200R {Lib=R}
   (    1 N-000126 )
   (    2 /IDL1_SW )
  )
- ( /4CE70B41 $noname  R20 200 {Lib=R}
+ ( /4CE70B41 $noname  R20 200R {Lib=R}
   (    1 N-000125 )
   (    2 /IDL2_SW )
  )
- ( /4CE70B35 $noname  R8 200 {Lib=R}
+ ( /4CE70B35 $noname  R8 200R {Lib=R}
   (    1 N-000124 )
   (    2 /Train_SW )
  )
- ( /4CE70B2C $noname  R19 200 {Lib=R}
+ ( /4CE70B2C $noname  R19 200R {Lib=R}
   (    1 N-000123 )
   (    2 /Gear_SW )
  )
- ( /4CE70B25 $noname  R18 200 {Lib=R}
+ ( /4CE70B25 $noname  R18 200R {Lib=R}
   (    1 N-000122 )
   (    2 /EleDR_SW )
  )
