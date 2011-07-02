@@ -1,4 +1,5 @@
 This PCB is a rework of Bryan's V3.0 PCB to use the 100pin ATMega 2560. It was primarily done to enable the 
+This PCB is a rework of Bryan's V3.0 PCB to use the 100pin ATMega 2560. It was primarily done to enable the 
 use of JTAG debugging and also to free up some pins for future fun.
 
 If anyone spots any mistakes I want to know, it's not optional, you have to tell, it's the law !
@@ -8,6 +9,8 @@ Just respond in the group discussion.
 = Todo =
 ========
 
+* Need to create a variant of the latest SD/RTC board because I can't source the SD card holder used by Bryan in the UK.
+  Futher comments in "V4 BOM.xls"
 * Get it made !
 
 
@@ -59,7 +62,6 @@ Minor
   it can't find 
 * Amalgamated the projects KiCAD libraries, and restructured their directories to better reflect KiCAD's own 
   library structure. (They confuse me less this way)
-* Changed the sdcard board only to accept the library changes, no physical changes
 
 =====================
 = Component changes =
