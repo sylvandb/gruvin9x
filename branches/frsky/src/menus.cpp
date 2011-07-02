@@ -1862,7 +1862,7 @@ void menuProcDiagCalib(uint8_t event)
 #if defined(PCBV3)
 void menuProcFrskyTime(uint8_t event)
 {
-  MENU("DATE AND TIME", menuTabDiag, e_FrskyTime, 3, {0, 2, 2});
+  MENU("DATE AND TIME", menuTabDiag, e_FrskyTime, 3, {0, 2/*, 2*/});
 
   int8_t  sub    = mstate2.m_posVert - 1; // vertical position (1 = page counter, top/right)
   uint8_t subSub = mstate2.m_posHorz;     // horizontal position
@@ -2046,8 +2046,11 @@ void menuProcTrainer(uint8_t event)
   sub--;
   y = 2*FH;
   for (uint8_t i=0; i<4; i++) {
-    volatile TrainerMix *td = &g_eeGeneral.trainer.mix[i];
-    putsChnRaw(0, y, i+1, 0);
+    uint8_t chan = chout_ar[g_eeGeneral.templateSetup][i]; // G: Issue 30. 
+    
+    volatile TrainerMix *td = &g_eeGeneral.trainer.mix[chan-1];
+
+    putsChnRaw(0, y, chan, 0);
 
     edit = (sub==i && subSub==0);
     lcd_putsnAtt(4*FW, y, PSTR("off += :=")+3*td->mode, 3, edit ? (s_editMode ? BLINK : INVERS) : 0);
