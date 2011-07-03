@@ -2105,7 +2105,7 @@ void menuProcTrainer(uint8_t event)
 
 void menuProcSetup(uint8_t event)
 {
-#define COUNT_ITEMS 18
+#define COUNT_ITEMS 19
 #define PARAM_OFS   17*FW
 
   SIMPLE_MENU("RADIO SETUP", menuTabDiag, e_Setup, COUNT_ITEMS+1);
@@ -2259,16 +2259,27 @@ void menuProcSetup(uint8_t event)
       if((y+=FH)>7*FH) return;
   }subN++;
 
-  uint8_t attr = sub==subN?INVERS:0;
-  lcd_puts_P(0, y,PSTR("Rx Channel Ord"));//   RAET->AETR
-  for (uint8_t i = 1 ; i <= 4 ; i += 1 ) {
-    lcd_putsnAtt((14+i)*FW, y, PSTR(" RETA")+CHANNEL_ORDER(i),1,attr);
-  }
-  if(attr) CHECK_INCDEC_H_GENVAR(event, g_eeGeneral.templateSetup, 0, 23);
-  subN++;
+  if(s_pgOfs<subN) {
+      uint8_t b = g_eeGeneral.enableTelemetryWarning;
+      lcd_puts_P(0, y,PSTR("NO DATA Alarm"));
+      menu_lcd_onoff( PARAM_OFS, y, b, sub==subN ) ;
+      if(sub==subN)
+      {
+          CHECK_INCDEC_H_GENVAR(event, b, 0, 1);
+          g_eeGeneral.enableTelemetryWarning = b;
+      }
+      if((y+=FH)>7*FH) return;
+  }subN++;
 
-  y+=FH;
-  if(y>7*FH) return;
+  if(s_pgOfs<subN) {
+      uint8_t attr = sub==subN?INVERS:0;
+      lcd_puts_P(0, y,PSTR("Rx Channel Ord"));//   RAET->AETR
+      for (uint8_t i = 1 ; i <= 4 ; i += 1 ) {
+        lcd_putsnAtt((14+i)*FW, y, PSTR(" RETA")+CHANNEL_ORDER(i),1,attr);
+      }
+      if(attr) CHECK_INCDEC_H_GENVAR(event, g_eeGeneral.templateSetup, 0, 23);
+      if((y+=FH)>7*FH) return;
+  }subN++;
 
   if(s_pgOfs<subN) {
     lcd_puts_P( 1*FW, y, PSTR("Mode"));//sub==3?INVERS:0);

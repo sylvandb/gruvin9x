@@ -1143,7 +1143,6 @@ uint32_t get_fattime(void)
 #endif
 
 extern uint16_t g_timeMain;
-//void main(void) __attribute__((noreturn));
 
 #include <avr/io.h>
 
@@ -1167,9 +1166,10 @@ extern uint16_t g_timeMain;
 #else
   FUSES = 
   {
-    0xEE, // LFUSE_DEFAULT, // .low
-    0x99, // (FUSE_BOOTSZ0 & FUSE_BOOTSZ1 & FUSE_EESAVE & FUSE_SPIEN & FUSE_JTAGEN), // .high
-    0xFF  // EFUSE_DEFAULT, // .extended
+    // G: Changed 2011-07-03. Tested OK on stock 9X
+    0x1F, // LFUSE
+    0x19, // HFUSE
+    0xFF  // EFUSE
   };
 #endif
 */
@@ -1212,37 +1212,37 @@ int main(void)
 #if defined (PCBV2) || defined (PCBV3)
   /** Move old 64A Timer0 functions to Timer2 and use WGM on OC0(A) (PB7) for spkear tone output **/
 
-  // TCNT0  10ms = 16MHz/1024/2(/78) periodic timer (for speaker tone generation)
-  //        Capture ISR 7812.5/second -- runs per-10ms code segment once every 78
-  //        cycles (9.984ms). Timer overflows at about 61Hz or once every 16ms.
+  // TCNT0  10ms = 16MHz/1024/156(.25) periodic timer (100ms interval)
+  //        cycles at 9.984ms but includes 1:4 duty cycle correction to /157 to average at 10.0ms
   TCCR2B  = (0b111 << CS20); // Norm mode, clk/1024 (differs from ATmega64 chip)
-  OCR2A   = 2;
+  OCR2A   = 156;
   TIMSK2 |= (1<<OCIE2A) |  (1<<TOIE2); // Enable Output-Compare and Overflow interrrupts
-
-  // TCNT0  10ms = 16MHz/1024/2(/78) periodic timer (for speaker tone generation)
-  //        Capture ISR 7812.5/second -- runs per-10ms code segment once every 78
-  //        cycles (9.984ms). Timer overflows at about 61Hz or once every 16ms.
 
   // Set up Phase correct Waveform Gen. mode, at clk/64 = 250,000 counts/second
   // (Higher speed allows for finer control of frquencies in the audio range.)
+  // Used for audio tone generation
   TCCR0B  = (1<<WGM02) | (0b011 << CS00);
   TCCR0A  = (0b01<<WGM00);
 
 #else
-#if defined (BEEPSPKR)
+
+# if defined (BEEPSPKR)
   // TCNT0  10ms = 16MHz/1024/2(/78) periodic timer (for speaker tone generation)
   //        Capture ISR 7812.5/second -- runs per-10ms code segment once every 78 
   //        cycles (9.984ms). Timer overflows at about 61Hz or once every 16ms.
   TCCR0  = (0b111 << CS00);//  Norm mode, clk/1024
   OCR0 = 2;
-#else
-  // TCNT0  10ms = 16MHz/1024/156 periodic timer (9.984ms)
+# else
+  // TCNT0  10ms = 16MHz/1024/156 periodic timer (9.984ms) 
+  // (with 1:4 duty at 157 to average 10.0ms)
   // Timer overflows at about 61Hz or once every 16ms.
   TCCR0  = (0b111 << CS00);//  Norm mode, clk/1024
   OCR0 = 156;
-#endif
+# endif
+
   TIMSK |= (1<<OCIE0) |  (1<<TOIE0); // Enable Output-Compare and Overflow interrrupts
   /********************************/
+
 #endif
 
   // TCNT1 2MHz counter (auto-cleared) plus Capture Compare int. 
@@ -1258,6 +1258,7 @@ int main(void)
   // Noise Canceller enabled, neg. edge, clock at 16MHz / 8 (2MHz)
   TCCR3B  = (1<<ICNC3) | (0b010 << CS30);
 #endif
+
 #if defined (PCBV2) || defined (PCBV3)
   TIMSK3 |= (1<<ICIE3);         // Enable capture event interrupt
 #else
