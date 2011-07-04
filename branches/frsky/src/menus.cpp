@@ -2264,7 +2264,7 @@ void menuProcSetup(uint8_t event)
 
   if(s_pgOfs<subN) {
       uint8_t b = g_eeGeneral.enableTelemetryWarning;
-      lcd_puts_P(0, y,PSTR("NO DATA Alarm"));
+      lcd_puts_P(0, y,PSTR("NO DATA Warning"));
       menu_lcd_onoff( PARAM_OFS, y, b, sub==subN ) ;
       if(sub==subN)
       {
@@ -2278,7 +2278,7 @@ void menuProcSetup(uint8_t event)
       uint8_t attr = sub==subN?INVERS:0;
       lcd_puts_P(0, y,PSTR("Rx Channel Ord"));//   RAET->AETR
       for (uint8_t i = 1 ; i <= 4 ; i += 1 ) {
-        lcd_putsnAtt((14+i)*FW, y, PSTR(" RETA")+CHANNEL_ORDER(i),1,attr);
+        lcd_putsnAtt((16+i)*FW, y, PSTR("RETA")+CHANNEL_ORDER(i)-1,1,attr);
       }
       if(attr) CHECK_INCDEC_H_GENVAR(event, g_eeGeneral.templateSetup, 0, 23);
       if((y+=FH)>7*FH) return;
