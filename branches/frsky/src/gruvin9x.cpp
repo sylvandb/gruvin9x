@@ -1314,7 +1314,7 @@ int main(void)
   DDRD = 0x00;  PORTD = 0xff; //pullups keys
 #endif
   DDRE = (1<<OUT_E_BUZZER);  PORTE = 0xff-(1<<OUT_E_BUZZER); //pullups + buzzer 0
-  DDRF = 0x00;  PORTF = 0xff; //anain
+  DDRF = 0x00;  PORTF = 0x00; //anain
   DDRG = 0x10;  PORTG = 0xff; //pullups + SIM_CTL=1 = phonejack = ppm_in
 
   lcd_init();
