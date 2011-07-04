@@ -18,9 +18,6 @@
 
 #include "gruvin9x.h"
 #include "templates.h"
-#if defined (FRSKY)
-#include "frsky.h"
-#endif
 #include "menus.h"
 
 #define GET_DR_STATE(x) (!getSwitch(g_model.expoData[x].drSw1,0) ?   \
