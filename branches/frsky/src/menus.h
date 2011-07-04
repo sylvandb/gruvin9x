@@ -35,7 +35,8 @@ extern uint8_t s_noHi;
 
 extern int16_t expo(int16_t x, int16_t k);
 
-void menu_lcd_onoff( uint8_t x,uint8_t y, uint8_t value, uint8_t mode );
+void menu_lcd_onoff(uint8_t x, uint8_t y, uint8_t value, uint8_t mode);
+void menu_lcd_HYPHINV(uint8_t x, uint8_t y, uint8_t value, uint8_t mode);
 
 extern MenuFuncP g_menuStack[5];
 extern uint8_t g_menuStackPtr;
