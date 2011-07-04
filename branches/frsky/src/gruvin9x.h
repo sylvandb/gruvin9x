@@ -310,7 +310,8 @@ enum EnumKeys {
 #define DSW_SW5  14
 #define DSW_SW6  15
 
-
+#define THRCHK_DEADBAND 16
+#define SPLASH_TIMEOUT  (4*100)  //400 msec - 4 seconds
 
 #define NUM_KEYS TRM_RH_UP+1
 #define TRM_BASE TRM_LH_DWN
@@ -361,6 +362,7 @@ bool    keyState(EnumKeys enuk);
 /// Das Ergebnis hat die Form:
 /// EVT_KEY_BREAK(key), EVT_KEY_FIRST(key), EVT_KEY_REPT(key) oder EVT_KEY_LONG(key)
 uint8_t getEvent();
+void putEvent(uint8_t evt);
 
 /// goto given Menu, but substitute current menu in menuStack
 void    chainMenu(MenuFuncP newMenu);
@@ -421,20 +423,19 @@ void resetTimer2() ;
 const prog_char *get_switches_string() ;
 
 uint16_t getTmr16KHz();
-
+unsigned int stack_free();
 
 void checkMem();
 void checkTHR();
-///   Pr�ft beim Einschalten ob alle Switches 'off' sind.
-void    checkSwitches();
+void checkSwitches();
 
-//void getADC_filt();
-//void getADC_osmp();
-//void getADC_single();
 #define GETADC_SING = 0
 #define GETADC_OSMP = 1
 #define GETADC_FILT = 2
 
+void getADC_single();
+void getADC_osmp();
+void getADC_filt();
 
 // checkIncDec flags
 #define   EE_GENERAL 0x01
@@ -490,6 +491,7 @@ void eeDirty(uint8_t msk);
 void eeCheck(bool immediately=false);
 //void eeWriteGeneral();
 void eeReadAll();
+bool eeModelExists(uint8_t id);
 void eeLoadModelName(uint8_t id,char*buf,uint8_t len);
 uint16_t eeFileSize(uint8_t id);
 void eeLoadModel(uint8_t id);
@@ -519,15 +521,30 @@ void putsTelemetry(uint8_t x, uint8_t y, uint8_t val, uint8_t unit, uint8_t att)
 
 extern inline int16_t calc100toRESX(int8_t x)
 {
-  return (int16_t)x*10 + x/4 - x/64;
+  // return (int16_t)x*10 + x/4 - x/64;
+  return ((x*41)>>2) - x/64;
 }
 
 extern inline int16_t calc1000toRESX(int16_t x)
 {
-  return x + x/32 - x/128 + x/512;
+  // return x + x/32 - x/128 + x/512;
+  int16_t y = x>>5;
+  x+=y;
+  y=y>>2;
+  x-=y;
+  return x+(y>>2);
 }
 
+extern volatile uint16_t g_tmr10ms;
 
+extern inline uint16_t get_tmr10ms()
+{
+  uint16_t time  ;
+  cli();
+  time = g_tmr10ms ;  
+  sei();
+  return time ;
+}
 
 #define TMR_VAROFS  16
 

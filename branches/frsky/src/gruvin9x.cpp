@@ -116,7 +116,7 @@ void putsDrSwitches(uint8_t x,uint8_t y,int8_t idx1,uint8_t att)//, bool nc)
 
 const prog_char *get_switches_string()
 {
-  return PSTR(SWITCHES_STR) ;
+  return PSTR(SWITCHES_STR);
 }
 
 void putsTmrMode(uint8_t x, uint8_t y, uint8_t attr)
@@ -218,22 +218,38 @@ bool getSwitch(int8_t swtch, bool nc, uint8_t level)
       return swtch>0 ? (x<y) : !(x<y);
       break;
   case (CS_APOS):
-      return swtch>0 ? (abs(x)>y) : !(abs(x)>y);
+      {
+        bool res = (abs(x)>y) ;
+        return swtch>0 ? res : !res ;
+      }
       break;
   case (CS_ANEG):
-      return swtch>0 ? (abs(x)<y) : !(abs(x)<y);
+      {
+        bool res = (abs(x)<y) ;
+        return swtch>0 ? res : !res ;
+      }
       break;
 
   case (CS_AND):
-      return (getSwitch(a,0,level+1) && getSwitch(b,0,level+1));
-      break;
   case (CS_OR):
-      return (getSwitch(a,0,level+1) || getSwitch(b,0,level+1));
-      break;
   case (CS_XOR):
-      return (getSwitch(a,0,level+1) ^ getSwitch(b,0,level+1));
-      break;
-
+  {
+    bool res1 = getSwitch(a,0,level+1) ;
+    bool res2 = getSwitch(b,0,level+1) ;
+    if ( cs.func == CS_AND )
+    {
+      return res1 && res2 ;
+    }
+    else if ( cs.func == CS_OR )
+    {
+      return res1 || res2 ;
+    }
+    else  // CS_XOR
+    {
+      return res1 ^ res2 ;
+    }
+  }
+  break;
   case (CS_EQUAL):
       return (x==y);
       break;
@@ -267,25 +283,55 @@ bool getSwitch(int8_t swtch, bool nc, uint8_t level)
 //#define CS_EGREATER  12
 //#define CS_ELESS     13
 
+inline uint8_t keyDown()
+{
+    return (~PINB) & 0x7E;
+}
+
+void clearKeyEvents()
+{
+    while(keyDown());  // loop until all keys are up
+    putEvent(0);
+}
+
 void doSplash()
 {
     if(!g_eeGeneral.disableSplashScreen)
     {
-        lcd_clear();
-        lcd_img(0, 0, s9xsplash,0,0);
-        refreshDiplay();
-        lcdSetRefVolt(g_eeGeneral.contrast);
+      if(getSwitch(g_eeGeneral.lightSw,0) || g_eeGeneral.lightAutoOff)
+        BACKLIGHT_ON;
+      else
+        BACKLIGHT_OFF;
 
-        uint16_t tgtime = g_tmr10ms + 200;  //2sec splash screen
-        while(tgtime != g_tmr10ms)
-        {
-            if(IS_KEY_BREAK(getEvent()))   return;  //wait for key release
+      lcd_clear();
+      lcd_img(0, 0, s9xsplash,0,0);
+      refreshDiplay();
+      lcdSetRefVolt(g_eeGeneral.contrast);
+      clearKeyEvents();
 
-            if(getSwitch(g_eeGeneral.lightSw,0) || g_eeGeneral.lightAutoOff)
-                BACKLIGHT_ON;
-            else
-                BACKLIGHT_OFF;
-        }
+      for(uint8_t i=0; i<32; i++)
+        getADC_filt(); // init ADC array
+
+#define INAC_DEVISOR 256   // Bypass splash screen with stick movement
+      uint16_t inacSum = 0;
+      for(uint8_t i=0; i<4; i++)
+        inacSum += anaIn(i)/INAC_DEVISOR;
+
+      uint16_t tgtime = get_tmr10ms() + SPLASH_TIMEOUT;  //2sec splash screen
+      while(tgtime != get_tmr10ms())
+      {
+        getADC_filt();
+        uint16_t tsum = 0;
+        for(uint8_t i=0; i<4; i++)
+          tsum += anaIn(i)/INAC_DEVISOR;
+
+        if(keyDown() || (tsum!=inacSum))   return;  //wait for key release
+
+        if(getSwitch(g_eeGeneral.lightSw,0) || g_eeGeneral.lightAutoOff)
+          BACKLIGHT_ON;
+        else
+          BACKLIGHT_OFF;
+      }
     }
 }
 
@@ -298,26 +344,55 @@ void checkMem()
   }
 
 }
+
+void alertMessages( const prog_char * s, const prog_char * t )
+{
+  lcd_clear();
+  lcd_putsAtt(64-5*FW,0*FH,PSTR("ALERT"),DBLSIZE);
+  lcd_puts_P(0,4*FH,s);
+  lcd_puts_P(0,5*FH,t);
+  lcd_puts_P(0,6*FH,  PSTR("Press any key to skip") ) ;
+  refreshDiplay();
+  lcdSetRefVolt(g_eeGeneral.contrast);
+
+  clearKeyEvents();
+}
+
 void checkTHR()
 {
   if(g_eeGeneral.disableThrottleWarning) return;
 
-  while(g_tmr10ms<20){} //wait for some ana in
-
   int thrchn=(2-(g_eeGeneral.stickMode&1));//stickMode=0123 -> thr=2121
-  //int16_t v      = g_anaIns[thrchn];
-  int16_t v      = anaIn(thrchn);
 
-  int16_t lowLim = g_eeGeneral.calibMid[thrchn] - g_eeGeneral.calibSpanNeg[thrchn] +
+  int16_t lowLim = THRCHK_DEADBAND + g_eeGeneral.calibMid[thrchn] - g_eeGeneral.calibSpanNeg[thrchn] +
     g_eeGeneral.calibSpanNeg[thrchn]/8;
 
-  int16_t highLim = g_eeGeneral.calibMid[thrchn] + g_eeGeneral.calibSpanPos[thrchn] -
-    g_eeGeneral.calibSpanPos[thrchn]/8;
-  //  v -= g_eeGeneral.calibMid[thrchn];
-  //v  = v * (512/8) / (max(40,g_eeGeneral.calibSpan[thrchn]/8));
-  if(((v>lowLim) && !g_eeGeneral.throttleReversed) || ((v<highLim) && g_eeGeneral.throttleReversed))
+  getADC_single();   // if thr is down - do not display warning at all
+  int16_t v      = anaIn(thrchn);
+  if((v<=lowLim) ||
+     (keyDown()))
   {
-    alert(PSTR("THR not idle"));
+      return;
+  }
+
+  // first - display warning
+  alertMessages( PSTR("Throttle not idle"), PSTR("Reset throttle") ) ;
+
+  //loop until all switches are reset
+  while (1)
+  {
+      getADC_single();
+      int16_t v      = anaIn(thrchn);
+      if((v<=lowLim) ||
+         (keyDown()))
+      {
+          return;
+      }
+
+      if(getSwitch(g_eeGeneral.lightSw,0) || g_eeGeneral.lightAutoOff)
+          BACKLIGHT_ON;
+      else
+          BACKLIGHT_OFF;
   }
 }
 
@@ -332,13 +407,8 @@ void checkSwitches()
   if(!g_eeGeneral.switchWarning) return; // if warning is on
 
   // first - display warning
-  lcd_clear();
-  lcd_putsAtt(64-5*FW,0*FH,PSTR("ALERT"),DBLSIZE);
-  lcd_puts_P(0,4*FH,PSTR("Switches not off"));
-  lcd_puts_P(0,7*FH,PSTR("Please reset them"));
-  refreshDiplay();
-  lcdSetRefVolt(g_eeGeneral.contrast);
-
+  alertMessages( PSTR("Switches not off"), PSTR("Please reset them") ) ;
+  
   bool state = (g_eeGeneral.switchWarning > 0);
 
   //loop until all switches are reset
@@ -350,8 +420,45 @@ void checkSwitches()
         if(i==SW_ID0) continue;
         if(getSwitch(i-SW_BASE+1,0) != state) break;
     }
-    if(i==SW_Trainer) return;
+    if(i==SW_Trainer || keyDown()) return;
+    
+    if(getSwitch(g_eeGeneral.lightSw,0) || g_eeGeneral.lightAutoOff)
+      BACKLIGHT_ON;
+    else
+      BACKLIGHT_OFF;
   }
+}
+
+void checkQuickSelect()
+{
+    uint8_t i = keyDown(); //check for keystate
+    uint8_t j;
+    for(j=1; j<8; j++)
+        if(i & (1<<j)) break;
+    j--;
+
+    if(j<6) {
+        if(!eeModelExists(j)) return;
+
+        eeLoadModel(g_eeGeneral.currModel = j);
+        eeDirty(EE_GENERAL);
+
+        lcd_clear();
+        lcd_putsAtt(64-7*FW,0*FH,PSTR("LOADING"),DBLSIZE);
+
+        for(uint8_t i=0;i<sizeof(g_model.name);i++)
+            lcd_putcAtt(FW*2+i*2*FW-i-2, 3*FH, g_model.name[i],DBLSIZE);
+
+        refreshDiplay();
+        lcdSetRefVolt(g_eeGeneral.contrast);
+
+        if(g_eeGeneral.lightSw || g_eeGeneral.lightAutoOff) // if lightswitch is defined or auto off
+            BACKLIGHT_ON;
+        else
+            BACKLIGHT_OFF;
+
+        clearKeyEvents(); // wait for user to release key
+    }
 }
 
 MenuFuncP g_menuStack[5];
@@ -378,9 +485,10 @@ void alert(const prog_char * s, bool defaults)
   refreshDiplay();
   lcdSetRefVolt(defaults ? 25 : g_eeGeneral.contrast);
   beepErr();
+  clearKeyEvents();
   while(1)
   {
-    if(IS_KEY_BREAK(getEvent()))   return;  //wait for key release
+    if(keyDown())   return;  //wait for key release
 
     if(getSwitch(g_eeGeneral.lightSw,0) || g_eeGeneral.lightAutoOff || defaults)
         BACKLIGHT_ON;
@@ -718,8 +826,8 @@ void resetTimer2()
 void perMain()
 {
   static uint16_t lastTMR;
-  tick10ms = (g_tmr10ms != lastTMR);
-  lastTMR = g_tmr10ms;
+  tick10ms = (get_tmr10ms() != lastTMR);
+  lastTMR = get_tmr10ms();
 
 
   perOut(g_chans512, 0);
@@ -767,7 +875,7 @@ void perMain()
 //    evalCaptures();
   }
 
-  switch( g_tmr10ms & 0x1f ) { //alle 10ms*32
+  switch( get_tmr10ms() & 0x1f ) { //alle 10ms*32
 //    case 1:
       //check light switch and timer
 //      if( getSwitch(g_eeGeneral.lightSw,0) || g_LightOffCounter)
@@ -1177,6 +1285,20 @@ extern uint16_t g_timeMain;
 uint8_t DEBUG1 = 0;
 uint8_t DEBUG2 = 0;
 
+extern unsigned char __bss_end ;
+
+unsigned int stack_free()
+{
+  unsigned char *p ;
+
+  p = &__bss_end + 1 ;
+  while ( *p == 0x55 )
+  {
+    p+= 1 ;
+  }
+  return p - &__bss_end ;
+}
+
 int main(void)
 {
   // Set up I/O port data diretions and initial states
@@ -1271,6 +1393,10 @@ int main(void)
 
   lcdSetRefVolt(25);
   eeReadAll();
+  
+  uint8_t cModel = g_eeGeneral.currModel;
+  checkQuickSelect();
+  
   doSplash();
   checkMem();
 
@@ -1279,6 +1405,9 @@ int main(void)
   
   checkSwitches();
   checkAlarm();
+  
+  clearKeyEvents(); //make sure no keys are down before proceeding
+  
   setupPulses();
 
   wdt_enable(WDTO_500MS);
@@ -1292,6 +1421,8 @@ int main(void)
   lcdSetRefVolt(g_eeGeneral.contrast);
   g_LightOffCounter = g_eeGeneral.lightAutoOff*500; //turn on light for x seconds - no need to press key Issue 152
 
+  if(cModel!=g_eeGeneral.currModel) eeDirty(EE_GENERAL); // if model was quick-selected, make sure it sticks
+  
 #if defined (PCBV2) || defined (PCBV3)
   TIMSK1 |= (1<<OCIE1A); // Pulse generator enable immediately before mainloop
 #else
