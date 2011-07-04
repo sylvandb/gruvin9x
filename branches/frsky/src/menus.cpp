@@ -2025,6 +2025,8 @@ void menuProcDiagVers(uint8_t event)
   lcd_puts_P(0, 4*FH,stamp5 );
   lcd_puts_P(0, 5*FH,stamp2 );
   lcd_puts_P(0, 6*FH,stamp3 );
+  lcd_puts_P(0, 7*FH,PSTR("EEPROM v"));
+  lcd_outdezAtt(8*FW, 7*FH, g_eeGeneral.myVers, LEFT);
 }
 
 void menuProcTrainer(uint8_t event)
