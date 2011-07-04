@@ -265,6 +265,7 @@ CPPFLAGS += -O$(OPT)
 #CPPFLAGS += -fshort-enums
 #CPPFLAGS += -fno-exceptions
 #CPPFLAGS += -fno-unit-at-a-time
+CPPFLAGS += -fno-inline-small-functions
 CPPFLAGS += -Wall
 #CPPFLAGS += -Wstrict-prototypes
 #CFLAGS += -Wundef
