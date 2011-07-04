@@ -9,8 +9,6 @@ Just respond in the group discussion.
 = Todo =
 ========
 
-* Need to create a variant of the latest SD/RTC board because I can't source the SD card holder used by Bryan in the UK.
-  Futher comments in "V4 BOM.xls"
 * Get it made !
 
 
