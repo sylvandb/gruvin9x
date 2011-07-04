@@ -6,6 +6,9 @@
 #ifndef menus_h
 #define menus_h
 
+#include <inttypes.h>
+#include "gruvin9x.h"
+
 #define IS_THROTTLE(x)  (((2-(g_eeGeneral.stickMode&1)) == x) && (x<4))
 
 #define NO_HI_LEN 25
@@ -22,6 +25,36 @@
 #define RESXl   1024l
 #define RESKul  100ul
 #define RESX_PLUS_TRIM (RESX+128)
+
+typedef void (*MenuFuncP)(uint8_t event);
+
+void DisplayScreenIndex(uint8_t index, uint8_t count, uint8_t attr);
+
+extern uint8_t s_pgOfs;
+extern uint8_t s_noHi;
+
+extern int16_t expo(int16_t x, int16_t k);
+
+void menu_lcd_onoff( uint8_t x,uint8_t y, uint8_t value, uint8_t mode );
+
+extern MenuFuncP g_menuStack[5];
+extern uint8_t g_menuStackPtr;
+
+/// goto given Menu, but substitute current menu in menuStack
+void    chainMenu(MenuFuncP newMenu);
+/// goto given Menu, store current menu in menuStack
+void    pushMenu(MenuFuncP newMenu);
+///deliver address of last menu which was popped from
+MenuFuncP lastPopMenu();
+/// return to last menu in menustack
+/// if uppermost is set true, thenmenu return to uppermost menu in menustack
+void    popMenu(bool uppermost=false);
+
+void menuMainView(uint8_t event);
+void menuProcSetup(uint8_t event);
+void menuProcModelSelect(uint8_t event);
+void menuProcStatistic(uint8_t event);
+void menuProcStatistic2(uint8_t event);
 
 // Menus related stuff ...
 struct MState2

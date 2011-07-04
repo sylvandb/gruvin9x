@@ -18,6 +18,7 @@
 
 #include "gruvin9x.h"
 #include "s9xsplash.lbm"
+#include "menus.h"
 
 // MM/SD card Disk IO Support
 #if defined (PCBV2) || defined (PCBV3)
@@ -38,6 +39,11 @@ mode4 ail thr ele rud
 
 EEGeneral  g_eeGeneral;
 ModelData  g_model;
+
+uint16_t g_tmr1Latency_max;
+uint16_t g_tmr1Latency_min = 0x7ff;
+uint16_t g_timeMain;
+uint16_t g_time_per10;
 
 #if defined (PCBSTD) && defined (BEEPSPKR)
 uint8_t toneFreq = BEEP_DEFAULT_FREQ;
@@ -461,9 +467,6 @@ void checkQuickSelect()
     }
 }
 
-MenuFuncP g_menuStack[5];
-
-uint8_t  g_menuStackPtr = 0;
 uint8_t  g_beepCnt;
 uint8_t  g_beepVal[5];
 
@@ -654,44 +657,6 @@ int8_t checkIncDec_hg(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max)
   return checkIncDec(event,i_val,i_min,i_max,EE_GENERAL);
 }
 
-MenuFuncP lastPopMenu()
-{
-  return  g_menuStack[g_menuStackPtr+1];
-}
-
-void popMenu(bool uppermost)
-{
-  if(g_menuStackPtr>0){
-    g_menuStackPtr = uppermost ? 0 : g_menuStackPtr-1;
-    beepKey();
-    (*g_menuStack[g_menuStackPtr])(EVT_ENTRY_UP);
-  }else{
-    alert(PSTR("menuStack underflow"));
-  }
-}
-
-void chainMenu(MenuFuncP newMenu)
-{
-  g_menuStack[g_menuStackPtr] = newMenu;
-  (*newMenu)(EVT_ENTRY);
-  beepKey();
-}
-void pushMenu(MenuFuncP newMenu)
-{
-
-  g_menuStackPtr++;
-  if(g_menuStackPtr >= DIM(g_menuStack))
-  {
-    g_menuStackPtr--;
-    alert(PSTR("menuStack overflow"));
-    return;
-  }
-  beepKey();
-  g_menuStack[g_menuStackPtr] = newMenu;
-  (*newMenu)(EVT_ENTRY);
-}
-
-
 class AutoLock
 {
   uint8_t m_saveFlags;
@@ -812,6 +777,14 @@ inline bool checkSlaveMode()
   return lastSlaveMode;
 #endif
 }
+
+uint16_t s_timeCumTot;
+uint16_t s_timeCumAbs;  //laufzeit in 1/16 sec
+uint16_t s_timeCumSw;  //laufzeit in 1/16 sec
+uint16_t s_timeCumThr;  //gewichtete laufzeit in 1/16 sec
+uint16_t s_timeCum16ThrP; //gewichtete laufzeit in 1/16 sec
+uint8_t  s_timerState;
+int16_t  s_timerVal;
 
 uint8_t Timer2_running = 0 ;
 uint8_t Timer2_pre = 0 ;
@@ -947,9 +920,6 @@ uint8_t ppmInState = 0; //0=unsync 1..8= wait for value i-1
 #define HEART_TIMER10ms 2;
 
 uint8_t heartbeat;
-
-extern uint16_t g_tmr1Latency_max;
-extern uint16_t g_tmr1Latency_min;
 
 //ISR(TIMER1_OVF_vect)
 ISR(TIMER1_COMPA_vect) //2MHz pulse generation
@@ -1389,7 +1359,7 @@ int main(void)
 
   sei(); // interrupts needed for eeReadAll function (soon).
 
-  g_menuStack[0] =  menuProc0;
+  g_menuStack[0] =  menuMainView;
 
   lcdSetRefVolt(25);
   eeReadAll();
@@ -1459,4 +1429,26 @@ int main(void)
     t0 = getTmr16KHz() - t0;
     g_timeMain = max(g_timeMain,t0);
   }
+}
+
+void setStickCenter() // copy state of 3 primary to subtrim
+{
+  int16_t zero_chans512_before[NUM_CHNOUT];
+  int16_t zero_chans512_after[NUM_CHNOUT];
+
+  perOut(zero_chans512_before, NO_TRAINER + NO_INPUT); // do output loop - zero input channels
+  perOut(zero_chans512_after, NO_TRAINER); // do output loop - actual input channels
+
+  for (uint8_t i=0; i<NUM_CHNOUT; i++) {
+    int16_t v = g_model.limitData[i].offset;
+    v += g_model.limitData[i].revert ?
+         (zero_chans512_before[i] - zero_chans512_after[i]) :
+         (zero_chans512_after[i] - zero_chans512_before[i]);
+    g_model.limitData[i].offset = max(min(v, 1000), -1000); // make sure the offset doesn't go haywire
+  }
+
+  for (uint8_t i=0; i<4; i++)
+    if (!IS_THROTTLE(i)) g_model.trim[0][i] = 0;// set trims to zero.
+  STORE_MODELVARS;
+  beepWarn1();
 }

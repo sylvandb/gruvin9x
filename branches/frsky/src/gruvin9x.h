@@ -347,7 +347,6 @@ enum EnumKeys {
 #define PROT_STR "PPM   SILV_ASILV_BSILV_CTRAC09"
 #define PROT_STR_LEN     6
 
-typedef void (*MenuFuncP)(uint8_t event);
 typedef void (*getADCp)();
 
 /// stoppt alle events von dieser taste bis eine kurze Zeit abgelaufen ist
@@ -364,15 +363,6 @@ bool    keyState(EnumKeys enuk);
 uint8_t getEvent();
 void putEvent(uint8_t evt);
 
-/// goto given Menu, but substitute current menu in menuStack
-void    chainMenu(MenuFuncP newMenu);
-/// goto given Menu, store current menu in menuStack
-void    pushMenu(MenuFuncP newMenu);
-///deliver address of last menu which was popped from
-MenuFuncP lastPopMenu();
-/// return to last menu in menustack
-/// if uppermost is set true, thenmenu return to uppermost menu in menustack
-void    popMenu(bool uppermost=false);
 /// Gibt Alarm Maske auf lcd aus.
 /// Die Maske wird so lange angezeigt bis eine beliebige Taste gedrueckt wird.
 void alert(const prog_char * s, bool defaults=false);
@@ -408,7 +398,14 @@ bool    getSwitch(int8_t swtch, bool nc, uint8_t level=0);
 void putsDrSwitches(uint8_t x,uint8_t y,int8_t swtch,uint8_t att);
 void putsTmrMode(uint8_t x, uint8_t y, uint8_t attr);
 
+extern uint16_t s_timeCumTot;
+extern uint16_t s_timeCumAbs;  //laufzeit in 1/16 sec
+extern uint16_t s_timeCumSw;  //laufzeit in 1/16 sec
+extern uint16_t s_timeCumThr;  //gewichtete laufzeit in 1/16 sec
+extern uint16_t s_timeCum16ThrP; //gewichtete laufzeit in 1/16 sec
 extern uint8_t  s_timerState;
+extern int16_t  s_timerVal;
+
 #define TMR_OFF     0
 #define TMR_RUNNING 1
 #define TMR_BEEPING 2
@@ -419,6 +416,15 @@ extern uint8_t Timer2_running ;
 extern uint16_t timer2 ;
 void resetTimer2() ;
 
+extern uint16_t g_tmr1Latency_max;
+extern uint16_t g_tmr1Latency_min;
+extern uint16_t g_timeMain;
+extern uint16_t g_time_per10;
+
+#define MAXTRACE 120
+extern uint8_t s_traceBuf[MAXTRACE];
+extern uint16_t s_traceWr;
+extern uint16_t s_traceCnt;
 
 const prog_char *get_switches_string() ;
 
@@ -551,42 +557,6 @@ extern inline uint16_t get_tmr10ms()
 #define SUB_MODE_V     1
 #define SUB_MODE_H     2
 #define SUB_MODE_H_DBL 3
-//uint8_t checkSubGen(uint8_t event,uint8_t num, uint8_t sub, uint8_t mode);
-
-void menuProcLimits(uint8_t event);
-void menuProcMixOne(uint8_t event);
-void menuProcMix(uint8_t event);
-void menuProcCurve(uint8_t event);
-void menuProcTrim(uint8_t event);
-void menuProcExpoOne(uint8_t event);
-void menuProcExpoAll(uint8_t event);
-void menuProcModel(uint8_t event);
-#ifdef HELI
-void menuProcHeli(uint8_t event);
-#endif
-void menuProcDiagCalib(uint8_t event);
-void menuProcDiagAna(uint8_t event);
-void menuProcDiagKeys(uint8_t event);
-void menuProcDiagVers(uint8_t event);
-void menuProcTrainer(uint8_t event);
-void menuProcSetup(uint8_t event);
-void menuProcMain(uint8_t event);
-void menuProcModelSelect(uint8_t event);
-#ifdef TEMPLATES
-void menuProcTemplates(uint8_t event);
-#endif
-void menuProcCustomSwitches(uint8_t event);
-void menuProcSafetySwitches(uint8_t event);
-#ifdef FRSKY
-void menuProcTelemetry(uint8_t event);
-#endif
-#if defined(PCBV3)
-void menuProcFrskyTime(uint8_t event);
-#endif
-
-void menuProcStatistic2(uint8_t event);
-void menuProcStatistic(uint8_t event);
-void menuProc0(uint8_t event);
 
 void setupPulses();
 void setupPulsesPPM();
@@ -686,6 +656,16 @@ extern void disk_timerproc(void);
 extern time_t g_unixTime; // global unix timestamp -- hold current time in seconds since 1970-01-01 00:00:00 
 extern uint8_t g_ms100; // defined in drivers.cpp
 #endif
+
+#define GET_DR_STATE(x) (!getSwitch(g_model.expoData[x].drSw1,0) ?   \
+                          DR_HIGH :                                  \
+                          !getSwitch(g_model.expoData[x].drSw2,0)?   \
+                          DR_MID : DR_LOW);
+
+extern MixData *mixaddress( uint8_t idx );
+extern LimitData *limitaddress( uint8_t idx );
+
+extern void setStickCenter(); // copy state of 3 primary to subtrim
 
 #endif // gruvin9x_h
 /*eof*/
