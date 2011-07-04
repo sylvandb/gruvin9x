@@ -193,7 +193,7 @@ void menuProcSetup(uint8_t event)
 
   if(s_pgOfs<subN) {
       uint8_t b = g_eeGeneral.enableTelemetryWarning;
-      lcd_puts_P(0, y,PSTR("NO DATA Warning"));
+      lcd_puts_P(0, y,PSTR("NO DATA Alarm"));
       menu_lcd_onoff( PARAM_OFS, y, b, sub==subN ) ;
       if(sub==subN)
       {
