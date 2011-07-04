@@ -1166,9 +1166,9 @@ extern uint16_t g_timeMain;
 #else
   FUSES = 
   {
-    // G: Changed 2011-07-03. Tested OK on stock 9X
+    // G: Changed 2011-07-04 to include EESAVE. Tested OK on stock 9X
     0x1F, // LFUSE
-    0x19, // HFUSE
+    0x11, // HFUSE
     0xFF  // EFUSE
   };
 #endif

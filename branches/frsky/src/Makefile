@@ -506,7 +506,7 @@ stamp:
 	@echo
 	@echo "Generate Version-stamp:"
 	@echo "//Automatically generated file (Makefile) - do not edit" > stamp-gruvin9x.h
-	@echo "#define DATE_STR \"`date +%d.%m.%Y`\"" >> stamp-gruvin9x.h
+	@echo "#define DATE_STR \"`date +%Y-%m-%d`\"" >> stamp-gruvin9x.h
 	@echo "#define TIME_STR \"`date +%H:%I:%S`\"" >> stamp-gruvin9x.h
 	@echo "#define TAG_VERS $(SUB_VER)-$(THEUSER)" >> stamp-gruvin9x.h
 	@echo "#define SVN_VERS \"$(BUILD_DIR)-r$(REV)\"" >> stamp-gruvin9x.h

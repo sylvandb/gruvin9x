@@ -1,25 +1,32 @@
 The ATmega2561 uses quite different bit assignment for its option fuses
 
+
+Fuse defaults for ATmega64A
+
 Default values for ATmega64 are:
   hfuse = 0b10011001 (0x99)
   lfuse = 0b11100001 (0xE1)
   efuse = 0b11111101 (0xFD)
 
-These are set to ...
-  0x89
-  0xe
-  0xff
-  ... respectively.
+Preferred values for ATmega64A are:
+  hfuse = 0x11
+  lfuse = 0x1F
+  efuse = 0xff
 
-Defaults for ATmega2561 are:
+... which includes EESAVE feature, so that the EEPROM model data does NOT get
+erased during chip erase prior to re-programming  ... respectively.
+
+- - - - - - - - - - - - - - - - - - - - - -
+
+Fuse defaults for ATmega2560/1 are:
 
   hfuse = 0b10011001 (0x99)
   lfuse = 0b01100010 (0x62)
   efuse = 0b11111111 (0xFF)
 
-The bit assignments ae quite different in all cases. For the 2561 we want:
-(includes EESAVE bit programmed to protect EEPROM contents during chip erase)
+The bit assignments ae quite different from the AT'64A in all cases. 
 
+Preferred vale es for ATmega2560/1 are:
   hfuse = 0b10011001 (0x11) [OCD enabled, JTAG enabled, WDT disabled :(, 
                              EESAVE enabled, BOOT at 0x0000] 
   lfuse = 0b01101110 (0xd7) [CKDIV8 disabled, CKOUT disabled, 
