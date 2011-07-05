@@ -1497,7 +1497,7 @@ void menuProcTemplates(uint8_t event)
   }
   if(y>7*FH) return;
 
-  uint8_t attr = s_noHi ? 0 : ((sub==NUM_TEMPLATES+1) ? INVERS : 0);
+  uint8_t attr = s_noHi ? 0 : ((sub==NUM_TEMPLATES) ? INVERS : 0);
   lcd_putsAtt(  1*FW,y,PSTR("CLEAR MIXES [MENU]"),attr);
   y+=FH;
 }
