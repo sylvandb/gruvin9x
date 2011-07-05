@@ -13,6 +13,7 @@
   * [TurnigyV2 9X Reference Data]
    * [ReferenceImages Reference Images]
    * [SchematicV2 V2 Circuit Schematic]
+ * [KitAvailably Kit Availability]
  * [Telemetry]
   * [FrSky Fr-Sky Support]
   * [FrskyInterfacing Fr-Sky Interfacing]
