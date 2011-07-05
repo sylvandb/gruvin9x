@@ -1,5 +1,4 @@
 #include "menus.h"
-
 #include "templates.h"
 
 enum EnumTabModel {
@@ -624,11 +623,11 @@ void menuProcExpoAll(uint8_t event)
 uint8_t getMixerCount()
 {
   uint8_t mixerCount = 0;
-    uint8_t dch ;
+  uint8_t dch ;
 
   for(uint8_t i=0;i<MAX_MIXERS;i++)
   {
-        dch = g_model.mixData[i].destCh ;
+    dch = g_model.mixData[i].destCh ;
     if ((dch!=0) && (dch<=NUM_CHNOUT))
     {
       mixerCount++;
@@ -656,15 +655,11 @@ void menuMixersLimit(uint8_t event)
 bool reachMixerCountLimit()
 {
   // check mixers count limit
-  if (getMixerCount() >= MAX_MIXERS)
-  {
+  if (getMixerCount() >= MAX_MIXERS) {
     pushMenu(menuMixersLimit);
     return true;
   }
-  else
-  {
-    return false;
-  }
+  return false;
 }
 
 static void memswap( void *a, void *b, uint8_t size )
@@ -682,108 +677,41 @@ static void memswap( void *a, void *b, uint8_t size )
   }
 }
 
-void moveMix(uint8_t idx,uint8_t mcopy, uint8_t dir) //true=inc=down false=dec=up - Issue 49
-{
-  if(idx>MAX_MIXERS || (idx==0 && !dir) || (idx==MAX_MIXERS && dir)) return;
-  uint8_t tdx = dir ? idx+1 : idx-1;
-  MixData *src= mixaddress( idx ) ;
-  MixData *tgt= mixaddress( tdx ) ;
-
-  if((src->destCh==0) || (src->destCh>NUM_CHNOUT) || (tgt->destCh>NUM_CHNOUT)) return;
-
-  if (mcopy) {
-    if (reachMixerCountLimit()) return;
-    memmove(&g_model.mixData[idx+1],&g_model.mixData[idx], (MAX_MIXERS-(idx+1))*sizeof(MixData) );
-    return;
-  }
-
-  if(tgt->destCh!=src->destCh) {
-    if ((dir)  && (src->destCh<NUM_CHNOUT)) src->destCh++;
-    if ((!dir) && (src->destCh>0))          src->destCh--;
-    return;
-  }
-
-  //flip between idx and tgt
-  memswap( tgt, src, sizeof(MixData) ) ;
-  STORE_MODELVARS;
-}
-
-static int8_t s_currMixIdx;
-static int8_t s_currDestCh;
-static bool   s_currMixInsMode;
-
-struct MixTab{
-  bool   showCh:1;// show the dest chn
-  bool   hasDat:1;// show the data info
-  int8_t chId;    //:4  1..NUM_XCHNOUT  dst chn id
-  int8_t selCh;   //:5  1..MAX_MIXERS+NUM_XCHNOUT sel sequence
-  int8_t selDat;  //:5  1..MAX_MIXERS+NUM_XCHNOUT sel sequence
-  int8_t insIdx;  //:5  0..MAX_MIXERS-1        insert index into mix data tab
-  int8_t editIdx; //:5  0..MAX_MIXERS-1        edit   index into mix data tab
-} s_mixTab[MAX_MIXERS+NUM_XCHNOUT+1];
-int8_t s_mixMaxSel;
-
-void genMixTab()
-{
-  uint8_t maxDst  = 0;
-  uint8_t mtIdx   = 0;
-  uint8_t sel     = 1;
-  memset(s_mixTab,0,sizeof(s_mixTab));
-
-  MixData *md=g_model.mixData;
-
-  for(uint8_t i=0; i<MAX_MIXERS; i++)
-  {
-    uint8_t destCh = md[i].destCh;
-    if(destCh==0) destCh=NUM_XCHNOUT;
-    if(destCh > maxDst){
-      while(destCh > maxDst){ //ch-loop, hole alle channels auf
-        maxDst++;
-        s_mixTab[mtIdx].chId  = maxDst; //mark channel header
-        s_mixTab[mtIdx].showCh = true;
-        s_mixTab[mtIdx].selCh = sel++; //vorab vergeben, falls keine dat
-        s_mixTab[mtIdx].insIdx= i;     //
-        mtIdx++;
-      }
-      mtIdx--; //folding: letztes ch bekommt zusaetzlich dat
-      s_mixMaxSel =sel;
-      sel--; //letzte zeile hat dat, falls nicht ist selCh schon belegt
-    }
-    if(md[i].destCh==0) break; //letzter eintrag in mix data tab
-    s_mixTab[mtIdx].chId    = destCh; //mark channel header
-    s_mixTab[mtIdx].editIdx = i;
-    s_mixTab[mtIdx].hasDat  = true;
-    s_mixTab[mtIdx].selDat  = sel++;
-    if(md[i].destCh == md[i+1].destCh){
-      s_mixTab[mtIdx].selCh  = 0; //ueberschreibt letzte Zeile von ch-loop
-      s_mixTab[mtIdx].insIdx = 0; //
-    }
-    else{
-      s_mixTab[mtIdx].selCh  = sel++;
-      s_mixTab[mtIdx].insIdx = i+1; //
-    }
-    s_mixMaxSel =sel;
-    mtIdx++;
-  }
-}
-
 void deleteMix(uint8_t idx)
 {
-  memmove(&g_model.mixData[idx],&g_model.mixData[idx+1],
-            (MAX_MIXERS-(idx+1))*sizeof(MixData));
-  memset(&g_model.mixData[MAX_MIXERS-1],0,sizeof(MixData));
+  memmove(mixaddress(idx), mixaddress(idx+1), (MAX_MIXERS-(idx+1))*sizeof(MixData));
+  memset(mixaddress(MAX_MIXERS-1), 0, sizeof(MixData));
   STORE_MODELVARS;
 }
 
+static int8_t s_currDestCh;
 void insertMix(uint8_t idx)
 {
-  memmove(&g_model.mixData[idx+1],&g_model.mixData[idx],
-         (MAX_MIXERS-(idx+1))*sizeof(MixData) );
-  memset(&g_model.mixData[idx],0,sizeof(MixData));
-  g_model.mixData[idx].destCh      = s_currDestCh; //-s_mixTab[sub];
-  g_model.mixData[idx].srcRaw      = s_currDestCh; //1;   //
-  g_model.mixData[idx].weight      = 100;
+  MixData *mix = mixaddress(idx);
+  memmove(mixaddress(idx+1), mix, (MAX_MIXERS-(idx+1))*sizeof(MixData));
+  memset(mix,0,sizeof(MixData));
+  mix->destCh = s_currDestCh; //-s_mixTab[sub];
+  mix->srcRaw = s_currDestCh; //1;   //
+  mix->weight = 100;
   STORE_MODELVARS;
+}
+
+static uint8_t s_moveMode = 0;
+void copyMix(uint8_t tgt_idx, uint8_t src_idx)
+{
+  MixData copy = * mixaddress( src_idx ) ;
+  copy.destCh = s_currDestCh;
+
+  if (s_moveMode == 2) {
+    deleteMix(src_idx);
+    if (tgt_idx > src_idx)
+      tgt_idx--;
+  }
+
+  if (!reachMixerCountLimit()) {
+    insertMix(tgt_idx);
+    memcpy(mixaddress( tgt_idx ), &copy, sizeof(MixData));
+  }
 }
 
 static uint8_t s_curveChan;
@@ -885,11 +813,12 @@ void menuProcCurveOne(uint8_t event)
   lcd_vline(XD, Y0 - WCHART, WCHART * 2);
 }
 
+static int8_t s_currMixIdx; // TODO s_currentLine static here
 void menuProcMixOne(uint8_t event)
 {
   SIMPLE_SUBMENU_NOTITLE(13);
   // TODO BSS TITLE/TITLEP update lcd_lastPosition instead or returning something
-  uint8_t x = TITLEP(s_currMixInsMode ? PSTR("INSERT MIX ") : PSTR("EDIT MIX "));
+  uint8_t x = TITLEP(s_currDestCh ? PSTR("INSERT MIX ") : PSTR("EDIT MIX "));
   MixData *md2 = mixaddress( s_currMixIdx ) ;
   putsChn(x+1*FW,0,md2->destCh,0);
   int8_t  sub    = mstate2.m_posVert;
@@ -979,128 +908,190 @@ void menuProcMixOne(uint8_t event)
   }
 }
 
-void menuProcMix(uint8_t event)
+static uint8_t s_maxLines = 8;
+static int8_t s_sourceLine = -1; // TODO selectedLine
+static uint8_t s_destMixIndex = 0;
+static bool s_before;
+void menuProcMix(uint8_t _event)
 {
-  uint8_t sub = s_pgOfs; // keep the previous offset position
-  SIMPLE_MENU("MIXER", menuTabModel, e_Mix, s_mixMaxSel);
-  s_pgOfs = sub;
+  uint8_t event = _event;
+  if (s_moveMode > 0) {
+    uint8_t key = (event & 0x1f);
+    if (key == KEY_EXIT)
+      event -= KEY_EXIT;
+    if (event == EVT_KEY_FIRST(KEY_UP) || event == EVT_KEY_FIRST(KEY_DOWN)) {
+      killEvents(event);
+      if (s_sourceLine < 0) {
+        s_before = false;
+      }
+      else {
+        MixData *mix = mixaddress(s_destMixIndex);
+        if (key==KEY_UP) {
+          if (s_before == true) {
+            s_before = false;
+          }
+          else if ((mix-1)->destCh != s_currDestCh || (s_destMixIndex > 1 && s_currDestCh == (mix-2)->destCh)) {
+            s_before = false;
+          }
+          else {
+            s_before = true;
+            event -= key;
+            killEvents(_event);
+          }
+        }
+        if (key==KEY_DOWN) {
+          if (s_before == true) {
+            s_before = false;
+            event -= key;
+            killEvents(_event);
+          }
+          else if (s_currDestCh+1 == mix->destCh) { // TODO test max limit!!!
+            s_before = true;
+          }
+        }
+      }
+    }
+  }
 
-  sub    = mstate2.m_posVert;
-  static uint8_t s_moveMode;
-  static uint8_t s_sourceMoveMix;
-  static uint8_t s_copyMix;
-  if(sub==0) s_moveMode = false;
+  SIMPLE_MENU("MIXER", menuTabModel, e_Mix, s_maxLines);
 
-  MixData *md=g_model.mixData;
-  switch(event)
+  /*lcd_outdezAtt(7*FW, 0, s_destMixIndex, 0);
+  lcd_outdezAtt(11*FW, 0, s_currDestCh, 0);*/
+
+  uint8_t sub = mstate2.m_posVert;
+
+  if (sub == 0) {
+    s_moveMode = 0;
+    s_sourceLine = -1;
+  }
+
+  switch(_event)
   {
-    case EVT_ENTRY:
-      s_sourceMoveMix=0;
-      s_copyMix=true;
-      s_moveMode=false;
-    case EVT_ENTRY_UP:
-      genMixTab();
+    case EVT_KEY_BREAK(KEY_EXIT):
+      s_moveMode = 0;
+      s_sourceLine = -1;
       break;
-    case EVT_KEY_FIRST(KEY_MENU):
-      if(sub>=1) s_moveMode = !s_moveMode;
-      s_copyMix = s_moveMode;
-      if(s_currMixInsMode) s_moveMode = false; //cant have edit mode if mix not selected
-      break;
-    case EVT_KEY_REPT(KEY_UP):
-    case EVT_KEY_FIRST(KEY_UP):
-      s_copyMix = false;  //only copy if going down
-    case EVT_KEY_REPT(KEY_DOWN):
-    case EVT_KEY_FIRST(KEY_DOWN):
-      if(s_moveMode) {
-        //killEvents(event);
-        moveMix(s_currMixIdx,s_copyMix,event==EVT_KEY_FIRST(KEY_DOWN)); //true=inc=down false=dec=up
-        if(s_copyMix && event==EVT_KEY_FIRST(KEY_UP)) sub--;
-        s_copyMix = false;
-        genMixTab();
-      }
-      break;
-    case EVT_KEY_FIRST(KEY_EXIT):
-      if(s_moveMode) {
+    case EVT_KEY_LONG(KEY_EXIT):
+      if (s_moveMode && s_sourceLine < 0) {
         deleteMix(s_currMixIdx);
-        s_moveMode = false;
-        genMixTab();
-        killEvents(event);
       }
+      s_moveMode = 0;
+      s_sourceLine = -1;
+      killEvents(_event);
       break;
+    case EVT_KEY_BREAK(KEY_MENU):
+      if (!s_currDestCh) {
+        s_moveMode = (s_moveMode == 1 ? 2 : 1);
+        break;
+      }
+      // no break
     case EVT_KEY_LONG(KEY_MENU):
-      if(sub<1) break;
-      if(s_currMixInsMode && !reachMixerCountLimit())
+      if (s_moveMode > 0 && s_currDestCh) {
+        copyMix(s_destMixIndex, s_currMixIdx);
+        s_moveMode = 0;
+        s_sourceLine = -1;
+      }
+      else {
+        if (s_currDestCh && !reachMixerCountLimit())
+          insertMix(s_currMixIdx);
+        pushMenu(menuProcMixOne);
+        s_moveMode = 0;
+        s_sourceLine = -1;
+        return;
+      }
+      killEvents(_event);
+      break;
+    case EVT_KEY_LONG(KEY_LEFT):
+    case EVT_KEY_LONG(KEY_RIGHT):
+      if (s_moveMode > 0 && s_sourceLine < 0 && !reachMixerCountLimit()) {
+        s_currDestCh = mixaddress(s_currMixIdx)->destCh;
+        if (_event == EVT_KEY_LONG(KEY_RIGHT)) s_currMixIdx++;
         insertMix(s_currMixIdx);
-      s_moveMode=false;
-      pushMenu(menuProcMixOne);
+        pushMenu(menuProcMixOne);
+        s_moveMode = 0;
+        s_sourceLine = -1;
+        return;
+      }
+      break;
+    case EVT_KEY_FIRST(KEY_UP):
+      if (s_moveMode > 0 && s_sourceLine < 0)
+        s_sourceLine = sub+1;
+      break;
+    case EVT_KEY_FIRST(KEY_DOWN):
+      if (s_moveMode > 0 && s_sourceLine < 0)
+        s_sourceLine = sub-1;
       break;
   }
 
-  int8_t markedIdx=-1;
-  uint8_t i;
-  int8_t minSel=99;
-  int8_t maxSel=-1;
+  s_currDestCh = 0;
+  uint8_t cur = 1;
+  uint8_t i = 0;
 
-  for(i=0; i<7; i++){
-    uint8_t y = i * FH + FH;
-    uint8_t k = i + s_pgOfs;
-    if(!s_mixTab[k].showCh && !s_mixTab[k].hasDat ) break;
+  for (uint8_t ch=1; ch<=NUM_CHNOUT; ch++) {
+    MixData *md = mixaddress(i); // TODO i and md are duplicate, i can be >= MAX_MIXERS
+    if (md->destCh == ch) {
+      if (s_pgOfs < cur)
+        putsChn(0, (cur-s_pgOfs)*FH, ch, 0); // show CHx
+      uint8_t mixCnt = 0;
+      while (i<MAX_MIXERS && md->destCh == ch) {
+        uint8_t attr = 0;
+        int8_t l = (cur-s_pgOfs);
+        uint8_t y = l*FH;
+        if (s_sourceLine == cur || (s_sourceLine < 0 && sub == cur)) {
+          attr = INVERS;
+          s_currMixIdx = i;
+          if (s_moveMode > 0)
+            lcd_putsnAtt(20*FW, y, PSTR("+-")+s_moveMode-1, 1, INVERS); // TODO the +/- is in the same place than */S/D
+        }
+        if (s_pgOfs < cur) {
+          if (mixCnt > 0)
+            lcd_putsnAtt(3*FW, y, PSTR("+*R")+md->mltpx, 1, s_moveMode>0 ? attr : 0);
+          lcd_outdezAtt(7*FW+FW/2, y, md->weight, attr);
+          lcd_putcAtt(7*FW+FW/2, y, '%', attr);
+          putsChnRaw(9*FW, y, md->srcRaw, s_moveMode>0 ? attr : 0);
+          if (md->swtch) putsDrSwitches(13*FW-FW/2, y, md->swtch, s_moveMode>0 ? attr : 0);
+          if (md->curve) lcd_putsnAtt(17*FW, y, PSTR(CURV_STR)+md->curve*3, 3, s_moveMode>0 ? attr : 0);
 
-    if(s_mixTab[k].showCh){
-      putsChn(0,y,s_mixTab[k].chId, 0); // show CHx
-    }
-    if(sub>0 && sub==s_mixTab[k].selCh) { //handle CHx is selected (other line)
-      //if(BLINK_ON_PHASE)
-      lcd_hline(0,y+7,FW*4);
-      s_currMixIdx     = s_mixTab[k].insIdx;
-      s_currDestCh     = s_mixTab[k].chId;
-      s_currMixInsMode = true;
-      markedIdx        = i;
-    }
+          bool bs = (md->speedDown || md->speedUp);
+          bool bd = (md->delayUp || md->delayDown);
+          char cs = (bs && bd) ? '*' : (bs ? 'S' : 'D');
+          if(bs || bd) lcd_putcAtt(20*FW+1, y, cs, s_moveMode>0 ? attr : 0);
 
-    if(s_mixTab[k].hasDat){ //show data
-      MixData *md2=&md[s_mixTab[k].editIdx];
-      uint8_t attr = sub==s_mixTab[k].selDat ? INVERS : 0;
-      if(!s_mixTab[k].showCh)
-        lcd_putsnAtt(   3*FW, y, PSTR("+*R")+1*md2->mltpx,1,s_moveMode ? attr : 0);
-      lcd_outdezAtt(  7*FW+FW/2, y, md2->weight,attr);
-      lcd_putcAtt(    7*FW+FW/2, y, '%',s_moveMode ? attr : 0);
-      putsChnRaw(     9*FW, y, md2->srcRaw,s_moveMode ? attr : 0);
-      if(md2->swtch)putsDrSwitches( 13*FW, y, md2->swtch,s_moveMode ? attr : 0);
-      if(md2->curve)lcd_putsnAtt(   17*FW, y, PSTR(CURV_STR)+md2->curve*3,3,s_moveMode ? attr : 0);
-
-      bool bs = (md2->speedDown || md2->speedUp);
-      bool bd = (md2->delayUp || md2->delayDown);
-      char cs = (bs && bd) ? '*' : (bs ? 'S' : 'D');
-      if(bs || bd) lcd_putcAtt(20*FW+1, y, cs,s_editMode ? attr : 0);
-
-      if(attr == INVERS){ //handle dat is selected
-        CHECK_INCDEC_H_MODELVAR( event, md2->weight, -125,125);
-        s_currMixIdx     = s_mixTab[k].editIdx;
-        s_currDestCh     = s_mixTab[k].chId;
-        s_currMixInsMode = false;
-        markedIdx        = i;
-        if(!s_moveMode) s_sourceMoveMix = k;
+          if (s_sourceLine>=0) {
+            if (sub == cur) {
+              lcd_hline(0, y+6-s_before*6,FW*4);
+              s_currDestCh = ch;
+              s_destMixIndex = i+(!s_before);
+            }
+          }
+          else if (s_moveMode == 0 && attr != 0) {
+            CHECK_INCDEC_H_MODELVAR(event, md->weight, -125, 125);
+          }
+        }
+        cur++; mixCnt++; i++; md++;
       }
     }
-    //welche sub-indize liegen im sichtbaren bereich?
-    if(s_mixTab[k].selCh){
-      minSel = min(minSel,s_mixTab[k].selCh);
-      maxSel = max(maxSel,s_mixTab[k].selCh);
+    else {
+      uint8_t attr = 0;
+      if (sub == cur) {
+        if (s_sourceLine<0) {
+          attr = INVERS;
+          s_currMixIdx = i; // TODO i can be >= MAX_MIXERS!
+          s_currDestCh = ch;
+        }
+      }
+      if (s_pgOfs < cur) {
+        putsChn(0, (cur-s_pgOfs)*FH, ch, attr); // show CHx
+        if (sub == cur && s_sourceLine>=0) {
+          lcd_hline(0, (cur-s_pgOfs)*FH+6-s_before*6,FW*4);
+          s_currDestCh = ch;
+          s_destMixIndex = i; // TODO i can be >= MAX_MIXERS!
+        }
+      }
+      cur++;
     }
-    if(s_mixTab[k].selDat){
-      minSel = min(minSel,s_mixTab[k].selDat);
-      maxSel = max(maxSel,s_mixTab[k].selDat);
-    }
-
-  } //for 7
-  if( sub!=0 &&  markedIdx==-1) { //versuche die Marke zu finden
-    if(sub < minSel) s_pgOfs = max(0,s_pgOfs-1);
-    if(sub > maxSel) s_pgOfs++;
   }
-  else if(markedIdx<0)          s_pgOfs = max(0,s_pgOfs-1);
-  else if(markedIdx>=6 && i>=8) s_pgOfs++;
-
+  s_maxLines = cur;
 }
 
 void menuProcLimits(uint8_t event)
