@@ -1,5 +1,7 @@
 #include "menus.h"
 
+#include "templates.h"
+
 enum EnumTabModel {
   e_ModelSelect,
   e_Model,
