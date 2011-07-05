@@ -1,6 +1,4 @@
-EESchema Schematic File Version 2  date 15/05/2011 6:35:04 p.m.
-LIBS:conn_5
-LIBS:atmega64
+EESchema Schematic File Version 2  date Tue 05 Jul 2011 02:41:37 PM NZST
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -31,14 +29,14 @@ LIBS:opto
 LIBS:atmel
 LIBS:contrib
 LIBS:valves
-LIBS:trans-sot23
 LIBS:gruvin9x-cache
-EELAYER 24  0
+EELAYER 25  0
 EELAYER END
 $Descr A3 16535 11700
+encoding utf-8
 Sheet 1 1
 Title "Main Controller PCB (Stock)"
-Date "15 may 2011"
+Date "5 jul 2011"
 Rev "3.3"
 Comp ""
 Comment1 ""
