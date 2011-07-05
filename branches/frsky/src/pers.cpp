@@ -112,7 +112,7 @@ uint8_t Translate(EEGeneral *p)
         g_model.tmr2Dir = 0;
         g_model.tmr2Val = 0;
         for (uint8_t i=0; i<MAX_MIXERS; i++) {
-          memmove(&g_model.mixData[i], &v3->mixData[i], sizeof(MixData)); // MixerData size changed!
+          memmove(&g_model.mixData[i], &v3->mixData[i], sizeof(MixData)); // MixData size changed!
           g_model.mixData[i].mixWarn = g_model.mixData[i].flightPhase;
           g_model.mixData[i].flightPhase = 0;
         }
