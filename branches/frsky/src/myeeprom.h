@@ -108,8 +108,8 @@ typedef struct t_LimitData {
 } __attribute__((packed)) LimitData;
 
 typedef struct t_MixData {
-  uint8_t destCh:4;           // 1..NUM_CHNOUT
-  int8_t flightPhase:4;       // -4=!FP4, 0=normal, 4=FP4
+  uint8_t destCh:5;          // 0, 1..NUM_CHNOUT
+  uint8_t mixWarn:3;         // mixer warning
 #define MIX_P1    5
 #define MIX_P2    6
 #define MIX_P3    7
@@ -131,7 +131,7 @@ typedef struct t_MixData {
 #define MLTPX_MUL  1
 #define MLTPX_REP  2
   uint8_t mltpx:3;           // multiplex method 0=+ 1=* 2=replace
-  uint8_t mixWarn:4;         // mixer warning
+  int8_t  flightPhase:4;     // -4=!FP4, 0=normal, 4=FP4
   int8_t  sOffset;
 } __attribute__((packed)) MixData;
 
