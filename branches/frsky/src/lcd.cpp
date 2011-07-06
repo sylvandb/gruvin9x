@@ -294,19 +294,19 @@ void lcd_hline(uint8_t x,uint8_t y, int8_t w)
   lcd_hlineStip(x,y,w,0xff);
 }
 
-void lcd_vline(uint8_t x,uint8_t y, int8_t h)
+void lcd_vlineStip(uint8_t x, uint8_t y, int8_t h, uint8_t pat)
 {
   uint8_t *p  = &displayBuf[ y / 8 * DISPLAY_W + x ];
   y = y % 8;
   if (y) {
     assert(p < DISPLAY_END);
-    *p ^= ~(BITMASK(y)-1);
+    *p ^= ~(BITMASK(y)-1) & pat;
     p += DISPLAY_W;
     h -= 8-y;
   }
   while (h>0) {
     assert(p < DISPLAY_END);
-    *p ^= 0xff;
+    *p ^= pat;
     p += DISPLAY_W;
     h -= 8;
   }
@@ -314,8 +314,27 @@ void lcd_vline(uint8_t x,uint8_t y, int8_t h)
   if (h) {
     p -= DISPLAY_W;
     assert(p < DISPLAY_END);
-    *p ^= ~(BITMASK(h)-1);
+    *p ^= ~(BITMASK(h)-1) & pat;
   }
+}
+
+void lcd_vline(uint8_t x, uint8_t y, int8_t h)
+{
+  lcd_vlineStip(x, y, h, 0xff);
+}
+
+void lcd_rect(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_t pat)
+{
+  lcd_vlineStip(x, y, h, pat);
+  lcd_hlineStip(x, y+h-1, w, pat);
+  lcd_vlineStip(x+w-1, y, h, pat);
+  lcd_hlineStip(x, y, w, pat);
+}
+
+void lcd_filled_rect(uint8_t x, uint8_t y, uint8_t w, uint8_t h)
+{
+  for (uint8_t i=y+h-1; i>=y; i--)
+    lcd_hline(x, i, w);
 }
 
 void lcdSendCtl(uint8_t val)

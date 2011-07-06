@@ -61,8 +61,11 @@ extern void lcd_outdez(unsigned char x,unsigned char y,int16_t val);
 
 extern void lcd_plot(unsigned char x,unsigned char y);
 extern void lcd_hline(unsigned char x,unsigned char y, signed char w);
-extern void lcd_hlineStip(unsigned char x,unsigned char y, signed char w,uint8_t pat);
+extern void lcd_hlineStip(unsigned char x,unsigned char y, signed char w, uint8_t pat);
 extern void lcd_vline(uint8_t x,uint8_t y, int8_t h);
+extern void lcd_rect(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_t pat=0xff);
+void lcd_filled_rect(uint8_t x, uint8_t y, uint8_t w, uint8_t h);
+inline void lcd_square(uint8_t x, uint8_t y, uint8_t w) { lcd_rect(x, y, w, w); }
 
 extern void lcd_img_f(unsigned char x,unsigned char y);
 extern void lcd_img(uint8_t i_x,uint8_t i_y,const prog_uchar * imgdat,uint8_t idx,uint8_t mode);
@@ -73,5 +76,15 @@ extern void refreshDiplay();
 extern void lcdSetRefVolt(unsigned char val);
 #define BLINK_ON_PHASE (g_blinkTmr10ms & (1<<6))
 #define BLINK_SYNC      g_blinkTmr10ms = (3<<5)
+
+#define DO_CROSS(xx,yy,ww)          \
+    lcd_vline(xx,yy-ww/2,ww);  \
+    lcd_hline(xx-ww/2,yy,ww);
+
+#define V_BAR(xx,yy,ll)       \
+    lcd_vline(xx-1,yy-ll,ll); \
+    lcd_vline(xx  ,yy-ll,ll); \
+    lcd_vline(xx+1,yy-ll,ll);
+
 #endif
 /*eof*/

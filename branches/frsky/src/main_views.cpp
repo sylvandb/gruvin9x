@@ -1,21 +1,5 @@
 #include "menus.h"
 
-#define DO_SQUARE(xx,yy,ww)         \
-    {uint8_t x,y,w ; x = xx; y = yy; w = ww ; \
-    lcd_vline(x-w/2,y-w/2,w);  \
-    lcd_hline(x-w/2,y+w/2,w);  \
-    lcd_vline(x+w/2,y-w/2,w);  \
-    lcd_hline(x-w/2,y-w/2,w);}
-
-#define DO_CROSS(xx,yy,ww)          \
-    lcd_vline(xx,yy-ww/2,ww);  \
-    lcd_hline(xx-ww/2,yy,ww);
-
-#define V_BAR(xx,yy,ll)       \
-    lcd_vline(xx-1,yy-ll,ll); \
-    lcd_vline(xx  ,yy-ll,ll); \
-    lcd_vline(xx+1,yy-ll,ll);
-
 enum MainViews {
   e_outputValues,
   e_outputBars,
@@ -178,7 +162,7 @@ void menuMainView(uint8_t event)
         lcd_hline(xm-1, ym+1,  3);
         xm += val;
       }
-      DO_SQUARE(xm,ym,7)
+      lcd_square(xm-3, ym-3, 7);
     }
   }
   else {
@@ -349,13 +333,14 @@ void menuMainView(uint8_t event)
     #define RBOX_CENTERX  (3*SCREEN_WIDTH/4 - 10)
     #define RBOX_CENTERY  (SCREEN_HEIGHT-9-BOX_WIDTH/2)
 
-    DO_SQUARE(LBOX_CENTERX,LBOX_CENTERY,BOX_WIDTH);
-    DO_SQUARE(RBOX_CENTERX,RBOX_CENTERY,BOX_WIDTH);
+    lcd_square(LBOX_CENTERX-BOX_WIDTH/2, LBOX_CENTERY-BOX_WIDTH/2, BOX_WIDTH);
+    lcd_square(RBOX_CENTERX-BOX_WIDTH/2, RBOX_CENTERY-BOX_WIDTH/2, BOX_WIDTH);
 
     DO_CROSS(LBOX_CENTERX,LBOX_CENTERY,3)
     DO_CROSS(RBOX_CENTERX,RBOX_CENTERY,3)
-    DO_SQUARE(LBOX_CENTERX+(calibratedStick[0]*BOX_LIMIT/(2*RESX)), LBOX_CENTERY-(calibratedStick[1]*BOX_LIMIT/(2*RESX)), MARKER_WIDTH)
-    DO_SQUARE(RBOX_CENTERX+(calibratedStick[3]*BOX_LIMIT/(2*RESX)), RBOX_CENTERY-(calibratedStick[2]*BOX_LIMIT/(2*RESX)), MARKER_WIDTH)
+
+    lcd_square(LBOX_CENTERX+(calibratedStick[0]*BOX_LIMIT/(2*RESX))-MARKER_WIDTH/2, LBOX_CENTERY-(calibratedStick[1]*BOX_LIMIT/(2*RESX))-MARKER_WIDTH/2, MARKER_WIDTH);
+    lcd_square(RBOX_CENTERX+(calibratedStick[3]*BOX_LIMIT/(2*RESX))-MARKER_WIDTH/2, RBOX_CENTERY-(calibratedStick[2]*BOX_LIMIT/(2*RESX))-MARKER_WIDTH/2, MARKER_WIDTH);
 
     // Optimization by Mike Blandford
     {
