@@ -1,4 +1,4 @@
-update=03/07/2011 21:26:06
+update=4/07/2011 12:27:38 p.m.
 last_client=pcbnew
 [eeschema]
 version=1
@@ -74,6 +74,7 @@ PadDrlX=320
 PadDimH=600
 PadDimV=600
 BoardThickness=630
+SgPcb45=1
 TxtPcbV=800
 TxtPcbH=600
 TxtModV=600
