@@ -1,6 +1,6 @@
-update=Tue 05 Jul 2011 02:50:33 PM NZST
+update=6/07/2011 4:30:20 p.m.
 version=1
-last_client=eeschema
+last_client=pcbnew
 [cvpcb]
 version=1
 NetITyp=0
@@ -13,36 +13,6 @@ NetType=0
 EquName1=devcms
 [general]
 version=1
-[pcbnew]
-version=1
-PadDrlX=400
-PadDimH=600
-PadDimV=600
-BoardThickness=630
-SgPcb45=1
-TxtPcbV=800
-TxtPcbH=600
-TxtModV=600
-TxtModH=600
-TxtModW=120
-VEgarde=100
-DrawLar=150
-EdgeLar=197
-TxtLar=120
-MSegLar=50
-LastNetListRead=gruvin9x.net
-[pcbnew/libraries]
-LibDir=Custom Components
-LibName1=sockets
-LibName2=connect
-LibName3=discret
-LibName4=pin_array
-LibName5=divers
-LibName6=libcms
-LibName7=display
-LibName8=valves
-LibName9=led
-LibName10=dip_sockets
 [eeschema]
 version=1
 LibDir=Custom Components/library
@@ -108,3 +78,33 @@ LibName30=valves
 LibName31=atmega64
 LibName32=conn_5
 LibName33=trans-sot23
+[pcbnew]
+version=1
+PadDrlX=400
+PadDimH=600
+PadDimV=600
+BoardThickness=630
+SgPcb45=1
+TxtPcbV=800
+TxtPcbH=600
+TxtModV=600
+TxtModH=600
+TxtModW=120
+VEgarde=100
+DrawLar=150
+EdgeLar=197
+TxtLar=120
+MSegLar=50
+LastNetListRead=gruvin9x.net
+[pcbnew/libraries]
+LibDir=Custom Components
+LibName1=sockets
+LibName2=connect
+LibName3=discret
+LibName4=pin_array
+LibName5=divers
+LibName6=libcms
+LibName7=display
+LibName8=valves
+LibName9=led
+LibName10=dip_sockets

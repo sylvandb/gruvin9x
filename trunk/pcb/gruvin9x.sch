@@ -1,4 +1,4 @@
-EESchema Schematic File Version 2  date Tue 05 Jul 2011 02:41:37 PM NZST
+EESchema Schematic File Version 2  date 7/07/2011 11:04:16 p.m.
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -29,14 +29,16 @@ LIBS:opto
 LIBS:atmel
 LIBS:contrib
 LIBS:valves
-LIBS:gruvin9x-cache
+LIBS:atmega64
+LIBS:conn_5
+LIBS:trans-sot23
 EELAYER 25  0
 EELAYER END
 $Descr A3 16535 11700
 encoding utf-8
 Sheet 1 1
 Title "Main Controller PCB (Stock)"
-Date "5 jul 2011"
+Date "7 jul 2011"
 Rev "3.3"
 Comp ""
 Comment1 ""
@@ -1316,7 +1318,7 @@ F 0 "Q3" H 7850 950 50  0000 C CNN
 F 1 "BC857C" H 7950 1200 50  0000 C CNN
 F 2 "SOT23-BCE" H 7840 1050 30  0001 C CNN
 	1    7650 1050
-	1    0    0    1   
+	1    0    0    -1  
 $EndComp
 $Comp
 L BC847C Q2
