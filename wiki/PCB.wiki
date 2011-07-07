@@ -5,16 +5,20 @@
 
 == Why? ==
 
-The primary intention with this new main board is to provide a more powerful and flexible platform for the TH/ER/gruvin9x open source firmware to run on – because we can :p. The design is "open", so you can follow its progress as well as make requests and suggestions for additions and improvements – or, of course, get involved more directly and do those for yourself.
+The primary intention with this new main board is to provide a more powerful and flexible platform for the TH/ER/gruvin9x open source firmware to run on – basically, because we can :p. 
 
-Initial intentions are to ...
+The design is "open", so you can follow its progress in minute detail, as well as make requests and suggestions for additions or improvements – and, of course, you can get involved more directly and do those for yourself.
 
- * provide a programming header capable of supporting an onboard USB programming board. (For now, this header simply enables connection of an AVR ICP programmer.) 
- * add RS-232 and TTL level telemetry serial data send/receive ports
- * free up most of PORTB for use with an MM/SD card interface for mass storage
- * upgrade the processor for more program, RAM and EEPROM storage memory
+Initial intentions were to ...
 
-Many more ideas are swimming around in the author's head, as well as several suggestions from others. Just how far this design will go, well, it remains to be seen.
+ * provide a programming header capable of supporting an onboard USB programming board. (For now, this header simply enables connection of an AVR ISP programmer.) *done* 
+ * add RS-232 and TTL level telemetry serial data send/receive ports *done*
+ * free up most of PORTB for use with an MM/SD card interface for mass storage *done*
+ * upgrade the processor for more program, RAM and EEPROM storage memory *done*
+
+The image above (right) is a 3D projection from the computer aided design package we're using -- KiCAD, which is also free and fully open source. So there's no financial excuse for any not to get involved!
+
+There are many ideas coming along. Since Gruvin started the new PC board project, another contributor (Cam) has come along and has already got a nearly completed V4 design completed, with more features, to be announced (it keeps changing as things evolve! :-)
 
 == License ==
 
@@ -24,42 +28,46 @@ This logic board PCB design is licensed under the [http://www.tapr.org/TAPR_Open
 
 As a starting point, a PCB design was worked up from scratch in [http://kicad.sourceforge.net/ KiCAD] to closely replicate the wiring and functions of Turnigy V2 '9X logic board. See [http://code.google.com/p/gruvin9x/source/browse/#svn/trunk/pcb/original /trunk/pcb/original/] (as of r155). From there, numerous changes and additions were made -- and continue to be made, as features and versions progress.
 
-The first custom PCB actually built was, somewhat oddly, versioned v2.14. A few minor bugs were found, additions and changes made and a  second custom board design got underway. As of this writing, the v3.2 board is probably ready for production. But I want to wait until I've the mass storage interface working first, just in case some last minute bugs come to light during that process.
+The first custom PCB actually built was, somewhat oddly, version v2.14. A few minor bugs were found, additions and changes made and a  second custom board design got under way.
 
 Besides the bug-fixes, a few notable changes were made for V3 ...
 
  1. The speaker tone generator is now using waveform generator mode on Timer0, output on PB7, which produces much cleaner, smooth sounding tones. Previous internal timing from Timer0 has been moved to Timer2. 
 
- 2. PB7 used to be the LCD back-light control output. This has now been moved to PC0, and appears on a 3-pin break-out with pin spacing to accept the GND/SWITCH/VCC inputs of the [http://smartieparts.com/ SmartieParts.com] LCD back-light driver PCB. I did this to give the back-light driver board a proper home, rather than having to hot-glue it "somewhere".
+ 2. PB7 used to be the LCD back-light control output. This has now been moved to PC0, and appears on a 3-pin break-out with pin spacing to accept the GND/SWITCH/VCC inputs of the [http://smartieparts.com/ SmartieParts.com] LCD back-light driver PCB. This was done to give the back-light driver a convenient home, rather than having to hot-glue it somewhere.
+
+Since then, HobbyKing has come out with a much cheaper [http://www.hobbyking.com/hobbyking/store/uh_viewitem.asp?idproduct=16720 back-light kit] option. That information came to light just a little too late to for the first V3 board run. However, the V4 board design is already set up to use the new HK kit -- in a switchable manner, under firmware control. You will also be able to easily adapt the V3 board to work the same way -- probably by adding a single transistor. More info on that to come.
 
  3. The original, stock "buzzer" output is retained along with the, now separate speaker output. This make using a speaker optional, and also allows the buzzer output to be used independently for its own beeps and buzzes or to drive a vibrating alert motor. The program code will probably be adjusted such that both speaker and buzzer output work simultaneously. The idea for that being to simply cut one trace to disable the buzzer if you have a speaker, or install a vibrating motor in the buzzer's place.
 
- 4. Not a change, but the 5x2 ICP header pins remain for the programming interface. There is a plan to make a programmer interface board to sit permanently on this header, thus making a USB socket available. However, that plan is low priority.
+- - - -
 
-Of course, all of the above comes under conditional code build control, using make directives in the typical fashion. EG. `make PCBV2`. So, if you don't have a V3 PCB, you will still be able to build gruvin9x for the stock hardware, expecting things to work properly, albeit lacking certain features, of course.
+Most of the above comes under conditional code build control.In other words, the project will continue to support the stock (hacked or not) factory controller board, minus the features that require the new board, course. So the stock board, with the "usual hacks" will still be supported for basic Fr-Sky telemetry.
 
-It is planned to offer the "V3" PCB (possibly pre-constructed?) to whomever wants it. This will depend on demand. A DigiKey.com part no. kitset of parts will be available as well. Of course, anybody can have their own PCBs manufactured from the open design files. Though, I would suggest you wait until I've built the thing first and tested it out.
-
-Here's a (Photoshop'd) KiCAD 3D perspective of the present v3.2 design ...
+Here's a (Photoshop'd) KiCAD 3D perspective of the present v3.2 design (now outdated) ...
 
 [http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/pcb_v3.2_3d_top.gif]
 
 
 == Current Status ==
 
-As at July 7th, 2011, the fist 10 V3 boards for final testing have entered production. 
+As at July 7th, 2011, the fist ten V3 boards for final testing have entered physical production. 
 
-At this time we are looking for an organisation with the resources and the will to help us do a proper job of manufacturing and supplying these boards to interested parties. In the meantime, we have received several expressions of interest from people wanting to purchase a new controller board for themselves. But we are not currently accepting pre-orders. That must wait until, a) the board is tested to be without errors and b) a fair and proper mechanism for placing orders is available. We're working on it. Please be patient.
+At this time, we are looking for an organisation with the resources and the will to help us do a proper job of manufacturing and supplying these boards to interested parties. HobbyKing seems the obvious choice, if we can twist Andy's rubber arm, so to speak. 
+
+In the meantime, we have received several expressions of interest from people wanting to purchase a new controller board for themselves. *But we are not currently accepting pre-orders*. We want to wait until, a) the V3 board is tested to be without errors and b) a fair and proper mechanism for placing orders is available. We're working on it. Please be patient. And then there's the V4 board thing going on ...
 
 *V4 already in the pipeline*
 
-A V4 board is already under development, thanks to lots of work done by contributor Cam, in the UK. 
+A V4 board is already under development, thanks to lots of work done by contributor Cam, in the UK. It's _almost_ done -- but it seems just about every other day, something cool is still being added.
 
-The V4 board replaces the 64-pin ATmega2561 with its parent device, the full 100-pin ATmega2560. This gives us lots more analogue input and digital I/O ports to play with, as well as enabling JTAG in-circuit debugging <i>and</i> an additional serial port (just a spare at this stage.)
-
-Also included are pads for an on-board, "OMG I bricked my chip!" emergency 1MHz SMD oscillator part, for allowing resetting of AVR fuse bits without so much hassle. As a developer, having bricked my 9X three times now, this is going to be very useful! 
+The V4 board replaces the 64-pin ATmega2561 with its parent device, the full 100-pin ATmega2560. This gives us three more analogue inputs and eight(?) digital I/O ports to play with, as well as enabling JTAG in-circuit debugging <i>and</i> an additional to the standard ISP system most of us are using.
 
 *Past Milestones in descending date order ...*
+
+2011-07-07: First test run V3 PC boards confirmed in production.
+
+2011-07-04: New SD card board (smaller/better size) sent away for production. Also, Cam has made an alternative design for UK builders who, like him, cannot find local stock for the SD card socket used in the previous design.
 
 2011-06-25: SD card PCB assembled, installed and test OK. Physical size of board found to be 8mm too long for its decided installation position and the SD card socket should protrude beyond the board edge by 2.5mm also. Changes made to the design accordingly, awaiting ordering process. (Real Time Clock (RTC) on the same board also tested and working.)
 
