@@ -1,4 +1,4 @@
-EESchema Schematic File Version 2  date 15/02/2011 9:38:49 p.m.
+EESchema Schematic File Version 2  date 7/07/2011 10:51:04 p.m.
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -31,10 +31,10 @@ LIBS:contrib
 LIBS:valves
 LIBS:ds1338-rtc
 LIBS:sdc_mmc_socket
-LIBS:sdcard-cache
-EELAYER 24  0
+EELAYER 25  0
 EELAYER END
 $Descr A4 11700 8267
+encoding utf-8
 Sheet 1 1
 Title "sdcard.sch"
 Date "15 feb 2011"
