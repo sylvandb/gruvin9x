@@ -61,7 +61,7 @@ In the meantime, we have received several expressions of interest from people wa
 
 A V4 board is already under development, thanks to lots of work done by contributor Cam, in the UK. It's _almost_ done -- but it seems just about every other day, something cool is still being added.
 
-The V4 board replaces the 64-pin ATmega2561 with its parent device, the full 100-pin ATmega2560. This gives us three more analogue inputs and eight(?) digital I/O ports to play with, as well as enabling JTAG in-circuit debugging <i>and</i> an additional to the standard ISP system most of us are using.
+The V4 board replaces the 64-pin ATmega2561 with its parent device, the full 100-pin ATmega2560. This gives us four (plus four on JTAG port) more analogue inputs and sixteen digital I/O ports to play with, as well as enabling JTAG in-circuit debugging <i>and</i> an additional to the standard ISP system most of us are using. Oh and two 4-bit rotary encoder inputs for two additional continuously rotating input controls ... and not doubt more.
 
 *Past Milestones in descending date order ...*
 
