@@ -45,7 +45,11 @@ Here's a (Photoshop'd) KiCAD 3D perspective of the present v3.2 design ...
 [http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/pcb_v3.2_3d_top.gif]
 
 
-As at June 2011, the V3 board is about ready to go to production, just waiting on funds. 
+== Current Status ==
+
+As at July 7th, 2011, the fist 10 V3 boards for final testing have entered production. 
+
+At this time we are looking for an organisation with the resources and the will to help us do a proper job of manufacturing and supplying these boards to interested parties. In the meantime, we have received several expressions of interest from people wanting to purchase a new controller board for themselves. But we are not currently accepting pre-orders. That must wait until, a) the board is tested to be without errors and b) a fair and proper mechanism for placing orders is available. We're working on it. Please be patient.
 
 *V4 already in the pipeline*
 
