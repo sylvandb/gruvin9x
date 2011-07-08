@@ -331,6 +331,16 @@ void lcd_rect(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_t pat)
   lcd_hlineStip(x, y, w, pat);
 }
 
+void lcd_empty_rect(uint8_t x, uint8_t y, uint8_t w, uint8_t h)
+{
+  uint8_t *p  = &displayBuf[ y / 8 * DISPLAY_W + x ];
+  while (h>0) {
+    memset(p, 0, w);
+    p += DISPLAY_W;
+    h -= 8;
+  }
+}
+
 void lcd_filled_rect(uint8_t x, uint8_t y, uint8_t w, uint8_t h)
 {
   for (uint8_t i=y+h-1; i>=y; i--)
