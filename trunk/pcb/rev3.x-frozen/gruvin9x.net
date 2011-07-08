@@ -1,4 +1,4 @@
-# EESchema Netlist Version 1.1 created  7/07/2011 11:05:37 p.m.
+# EESchema Netlist Version 1.1 created  8/07/2011 10:33:36 a.m.
 (
  ( /4D3294E5 $noname  K3 CONN_3 {Lib=CONN_3}
   (    1 GND )
@@ -44,8 +44,8 @@
  )
  ( /4D04001D SOT23-BCE  Q3 BC857C {Lib=BC857C}
   (    B N-000049 )
-  (    C VCC )
-  (    E N-000136 )
+  (    C N-000136 )
+  (    E VCC )
  )
  ( /4D03FFF9 SOT23-BCE  Q2 BC847C {Lib=BC847C}
   (    B N-000143 )
@@ -1583,7 +1583,7 @@ Net 1 "VCC" "VCC"
  R25 1
  P3 1
  R69 1
- Q3 C
+ Q3 E
  U3 2
  K3 3
  C19 1
@@ -2102,8 +2102,8 @@ Net 135 "/Back_Light_TTL" "Back_Light_TTL"
  K3 2
  I1 35
 Net 136 "" ""
+ Q3 C
  R76 2
- Q3 E
  R75 2
 Net 137 "/PPM_OUT" "PPM_OUT"
  I1 10

@@ -1,4 +1,4 @@
-EESchema Schematic File Version 2  date 7/07/2011 11:04:16 p.m.
+EESchema Schematic File Version 2  date 8/07/2011 10:33:40 a.m.
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -32,6 +32,7 @@ LIBS:valves
 LIBS:atmega64
 LIBS:conn_5
 LIBS:trans-sot23
+LIBS:gruvin9x-cache
 EELAYER 25  0
 EELAYER END
 $Descr A3 16535 11700
@@ -39,7 +40,7 @@ encoding utf-8
 Sheet 1 1
 Title "Main Controller PCB (Stock)"
 Date "7 jul 2011"
-Rev "3.3"
+Rev "3.2"
 Comp ""
 Comment1 ""
 Comment2 "Copyright 2011 Bryan J. Rentoul (gruvin@gmail.com)"
@@ -1318,7 +1319,7 @@ F 0 "Q3" H 7850 950 50  0000 C CNN
 F 1 "BC857C" H 7950 1200 50  0000 C CNN
 F 2 "SOT23-BCE" H 7840 1050 30  0001 C CNN
 	1    7650 1050
-	1    0    0    -1  
+	1    0    0    1   
 $EndComp
 $Comp
 L BC847C Q2
