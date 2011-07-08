@@ -44,9 +44,15 @@ Since then, HobbyKing has come out with a much cheaper [http://www.hobbyking.com
 
 Most of the above comes under conditional code build control.In other words, the project will continue to support the stock (hacked or not) factory controller board, minus the features that require the new board, course. So the stock board, with the "usual hacks" will still be supported for basic Fr-Sky telemetry.
 
-Here's a (Photoshop'd) KiCAD 3D perspective of the present v3.2 design (now outdated) ...
+Here's a (Photoshop'd) KiCAD 3D perspective of the present v3.2 design (image now outdated) ...
 
 [http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/pcb_v3.2_3d_top.gif]
+
+And a recent V4 visualisation ...
+
+[http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/pcb_v4.x_3d_top.gif]
+
+... looks almost the same -- but looks are often deceiving. :D
 
 
 == Current Status ==
