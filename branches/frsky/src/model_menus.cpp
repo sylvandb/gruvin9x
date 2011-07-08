@@ -161,7 +161,7 @@ char idx2char(uint8_t idx)
   return ' ';
 }
 
-// TODO some guys do like the confirmation for duplicate
+// TODO reuse the displayWarning screen!
 void menuDeleteModel(uint8_t event)
 {
   lcd_putsAtt(0,1*FH,PSTR("DELETE MODEL"),0);
@@ -619,36 +619,36 @@ void menuProcExpoAll(uint8_t event)
   }
 }
 
-
 uint8_t getMixerCount()
 {
   uint8_t mixerCount = 0;
   uint8_t dch ;
 
-  for(uint8_t i=0;i<MAX_MIXERS;i++)
-  {
-    dch = g_model.mixData[i].destCh ;
-    if ((dch!=0) && (dch<=NUM_CHNOUT))
-    {
+  for(uint8_t i=0;i<MAX_MIXERS;i++) {
+    dch = mixaddress(i)->destCh ;
+    if ((dch!=0) && (dch<=NUM_CHNOUT)) {
       mixerCount++;
     }
   }
   return mixerCount;
 }
 
-void menuMixersLimit(uint8_t event)
+const prog_char * s_warning = 0;
+void displayWarning(uint8_t event)
 {
-  lcd_puts_P(0,2*FH, PSTR("Max mixers reach: "));
-  lcd_outdezAtt(20*FW, 2*FH, getMixerCount(),0);
+  if (s_warning) {
+    lcd_empty_rect(10, 16, 108, 40);
+    lcd_rect(10, 16, 108, 40);
+    lcd_puts_P(16, 3*FH, s_warning);
+    // could be a place for a s_warning_info
+    lcd_puts_P(16, 5*FH, PSTR("[EXIT]"));
 
-  lcd_puts_P(0,4*FH, PSTR("Press [EXIT] to abort"));
-  switch(event)
-  {
-    case  EVT_KEY_FIRST(KEY_EXIT):
-      killEvents(event);
-      popMenu(true);
-      pushMenu(menuProcMix);
-    break;
+    switch(event) {
+      case EVT_KEY_FIRST(KEY_EXIT):
+        killEvents(event);
+        s_warning = 0;
+        break;
+    }
   }
 }
 
@@ -656,25 +656,10 @@ bool reachMixerCountLimit()
 {
   // check mixers count limit
   if (getMixerCount() >= MAX_MIXERS) {
-    pushMenu(menuMixersLimit);
+    s_warning = PSTR("No free mixer!");
     return true;
   }
   return false;
-}
-
-static void memswap( void *a, void *b, uint8_t size )
-{
-  uint8_t *x ;
-  uint8_t *y ;
-  uint8_t temp ;
-
-  x = (unsigned char *) a ;
-  y = (unsigned char *) b ;
-  while ( size-- ) {
-    temp = *x ;
-    *x++ = *y ;
-    *y++ = temp ;
-  }
 }
 
 void deleteMix(uint8_t idx)
@@ -696,24 +681,63 @@ void insertMix(uint8_t idx)
   STORE_MODELVARS;
 }
 
-#define COPY_MODE 1
-#define MOVE_MODE 2
-static uint8_t s_copyMode = 0;
-void copyMix(uint8_t tgt_idx, uint8_t src_idx)
+void copyMix(uint8_t idx)
 {
-  MixData copy = * mixaddress(src_idx) ;
-  copy.destCh = s_currCh;
+  MixData *mix = mixaddress(idx);
+  memmove(mix+1, mix, (MAX_MIXERS-(idx+1))*sizeof(MixData));
+  STORE_MODELVARS;
+}
 
-  if (s_copyMode == MOVE_MODE) {
-    deleteMix(src_idx);
-    if (tgt_idx > src_idx)
-      tgt_idx--;
+void memswap(void *a, void *b, uint8_t size)
+{
+  uint8_t *x = (uint8_t*)a;
+  uint8_t *y = (uint8_t*)b;
+  uint8_t temp ;
+
+  while (size--) {
+    temp = *x;
+    *x++ = *y;
+    *y++ = temp;
+  }
+}
+
+bool swapMix(uint8_t &idx, uint8_t up)
+{
+  MixData *x = mixaddress(idx);
+  int8_t tgt_idx = (up ? idx-1 : idx+1);
+
+  if (tgt_idx < 0) {
+    if (x->destCh == 1)
+      return false;
+    x->destCh--;
+    return true;
   }
 
-  if (!reachMixerCountLimit()) {
-    insertMix(tgt_idx);
-    memcpy(mixaddress(tgt_idx), &copy, sizeof(MixData));
+  if (tgt_idx == MAX_MIXERS) {
+    if (x->destCh == NUM_CHNOUT)
+      return false;
+    x->destCh++;
+    return true;
   }
+
+  MixData *y = mixaddress(tgt_idx);
+  if(x->destCh != y->destCh) {
+    if (up) {
+      if (x->destCh>0) x->destCh--;
+      else return false;
+    }
+    else {
+      if (x->destCh<NUM_CHNOUT) x->destCh++;
+      else return false;
+    }
+    STORE_MODELVARS;
+    return true;
+  }
+
+  memswap(x, y, sizeof(MixData));
+  idx = tgt_idx;
+  STORE_MODELVARS;
+  return true;
 }
 
 #define XD X0-2
@@ -860,7 +884,7 @@ void menuProcMixOne(uint8_t event)
         break;
       case 5:
         lcd_puts_P(  2*FW,y,PSTR("Switch"));
-        putsDrSwitches(9*FW,  y,md2->swtch,attr);
+        putsDrSwitches(9*FW,  y,md2->swtch,attr);  // TODO remove the leading space char
         if(attr) CHECK_INCDEC_H_MODELVAR( event, md2->swtch, -MAX_DRSWITCH, MAX_DRSWITCH);
         break;
       case 6:
@@ -909,203 +933,240 @@ void menuProcMixOne(uint8_t event)
 }
 
 static uint8_t s_maxLines = 8;
-static uint8_t s_copySrcLine = 0;
-static uint8_t s_copyTgtIdx = 0;
-static uint8_t s_copyBefore;
-void menuProcMix(uint8_t _event)
+static int8_t s_copyTgtOfs;
+static uint8_t s_copySrcIdx;
+static uint8_t s_copySrcCh;
+static uint8_t s_copySrcRow;
+#define COPY_MODE 1
+#define MOVE_MODE 2
+static uint8_t s_copyMode = 0;
+
+#define FIRST 0x10
+void displayMixerLine(uint8_t row, uint8_t mix, uint8_t ch, uint8_t idx, uint8_t cur, uint8_t event)
 {
-  uint8_t event = _event;
+  uint8_t y = (row-s_pgOfs)*FH;
+  MixData *md = mixaddress(mix);
+  if (idx > 0)
+    lcd_putsnAtt(FW, y, PSTR("+=*=:=")+md->mltpx*2, 2, 0);
+
+  putsChnRaw(4*FW, y, md->srcRaw, 0);
+
+  uint8_t attr = ((s_copyMode || cur != row) ? 0 : INVERS);
+  lcd_outdezAtt(11*FW, y, md->weight, attr);
+  // lcd_putcAtt(11*FW+FW/2, y, '%', attr);
+  if (attr != 0)
+    CHECK_INCDEC_H_MODELVAR(event, md->weight, -125, 125);
+
+  if (md->curve) lcd_putsnAtt(12*FW, y, PSTR(CURV_STR)+md->curve*3, 3, 0);
+  if (md->swtch) putsDrSwitches(15*FW+FW/2, y, md->swtch, 0);
+
+  char cs = ' ';
+  if (md->speedDown || md->speedUp)
+    cs = 'S';
+  if ((md->delayUp || md->delayDown))
+    cs = (cs =='S' ? '*' : 'D');
+  lcd_putcAtt(20*FW+1, y, cs, 0);
+
   if (s_copyMode) {
-    uint8_t key = (event & 0x1f);
+    if ((s_copyMode==COPY_MODE || s_copyTgtOfs == 0) && s_copySrcCh == ch && mix == (s_copySrcIdx + (s_copyTgtOfs<0))) {
+      /* draw a border around the raw on selection mode (copy/move) */
+      lcd_rect(22, y-1, DISPLAY_W-1-21, min(9, 64-y), s_copyMode == COPY_MODE ? 0xff : 0x55);
+    }
+
+    if (row == cur) {
+      /* invert the raw when it's the current one */
+      lcd_filled_rect(23, y, DISPLAY_W-1-23, 7);
+    }
+  }
+}
+
+void menuProcMix(uint8_t __event)
+{
+  uint8_t _event = (s_warning ? 0 : __event);
+  uint8_t event = _event;
+  uint8_t key = (event & 0x1f);
+
+  if (s_copyMode) {
     if (key == KEY_EXIT)
       event -= KEY_EXIT;
-    if (event == EVT_KEY_FIRST(KEY_UP) || event == EVT_KEY_FIRST(KEY_DOWN)) {
-      killEvents(event);
-      if (!s_copySrcLine) {
-        s_copyBefore = false;
-      }
-      else {
-        MixData *mix = mixaddress(s_copyTgtIdx);
-        if (key==KEY_UP) {
-          if (s_copyBefore == true) {
-            s_copyBefore = false;
-          }
-          else if ((mix-1)->destCh != s_currCh || (s_copyTgtIdx > 1 && s_currCh == (mix-2)->destCh)) {
-            s_copyBefore = false;
-          }
-          else {
-            s_copyBefore = true;
-            event -= key;
-            killEvents(_event);
-          }
-        }
-        if (key==KEY_DOWN) {
-          if (s_copyBefore == true) {
-            s_copyBefore = false;
-            event -= key;
-            killEvents(_event);
-          }
-          else if (s_currCh+1 == mix->destCh) { // TODO test max limit!!!
-            s_copyBefore = true;
-          }
-        }
-      }
-    }
   }
 
   SIMPLE_MENU("MIXER", menuTabModel, e_Mix, s_maxLines);
 
-  /*lcd_outdezAtt(7*FW, 0, s_copyTgtIdx, 0);
-  lcd_outdezAtt(11*FW, 0, s_currCh, 0);*/
-
   uint8_t sub = mstate2.m_posVert;
-
-  if (sub == 0) {
-    s_copyMode = 0;
-    s_copySrcLine = 0;
-  }
 
   switch(_event)
   {
-    case EVT_KEY_BREAK(KEY_EXIT):
+    case EVT_ENTRY:
+    case EVT_ENTRY_UP:
       s_copyMode = 0;
-      s_copySrcLine = 0;
+      s_copyTgtOfs = 0;
       break;
     case EVT_KEY_LONG(KEY_EXIT):
-      if (s_copyMode && !s_copySrcLine) {
+      if (s_copyMode && s_copyTgtOfs == 0) {
         deleteMix(s_currIdx);
       }
-      s_copyMode = 0;
-      s_copySrcLine = 0;
       killEvents(_event);
+      // no break
+    case EVT_KEY_BREAK(KEY_EXIT):
+      if (s_copyTgtOfs) {
+        // cancel the current copy / move operation
+        if (s_copyMode == COPY_MODE) {
+          deleteMix(s_currIdx);
+        }
+        else {
+          do {
+            swapMix(s_currIdx, s_copyTgtOfs > 0);
+            if (s_copyTgtOfs < 0)
+              s_copyTgtOfs++;
+            else
+              s_copyTgtOfs--;
+          } while (s_copyTgtOfs != 0);
+        }
+        sub = mstate2.m_posVert = s_copySrcRow;
+      }
+      s_copyMode = 0;
+      s_copyTgtOfs = 0;
       break;
     case EVT_KEY_BREAK(KEY_MENU):
-      if (!s_currCh) {
+      if (!s_currCh || (s_copyMode && !s_copyTgtOfs)) {
         s_copyMode = (s_copyMode == COPY_MODE ? MOVE_MODE : COPY_MODE);
+        s_copySrcIdx = s_currIdx;
+        s_copySrcCh = mixaddress(s_currIdx)->destCh;
+        s_copySrcRow = sub;
         break;
       }
       // no break
     case EVT_KEY_LONG(KEY_MENU):
-      if (s_copyMode && s_currCh) {
-        copyMix(s_copyTgtIdx, s_currIdx);
+      if (s_copyTgtOfs) {
         s_copyMode = 0;
-        s_copySrcLine = 0;
+        s_copyTgtOfs = 0;
       }
       else {
-        if (s_currCh && !reachMixerCountLimit())
+        if (s_copyMode) s_currCh = 0;
+        if (s_currCh) {
+          if (reachMixerCountLimit())
+            break;
           insertMix(s_currIdx);
+        }
         pushMenu(menuProcMixOne);
         s_copyMode = 0;
-        s_copySrcLine = 0;
         return;
       }
       killEvents(_event);
       break;
     case EVT_KEY_LONG(KEY_LEFT):
     case EVT_KEY_LONG(KEY_RIGHT):
-      if (s_copyMode && !s_copySrcLine && !reachMixerCountLimit()) {
+      if (s_copyMode && !s_copyTgtOfs) {
+        if (reachMixerCountLimit())
+          break;
         s_currCh = mixaddress(s_currIdx)->destCh;
         if (_event == EVT_KEY_LONG(KEY_RIGHT)) s_currIdx++;
         insertMix(s_currIdx);
         pushMenu(menuProcMixOne);
         s_copyMode = 0;
-        s_copySrcLine = 0;
         return;
       }
       break;
+    case EVT_KEY_REPT(KEY_UP):
     case EVT_KEY_FIRST(KEY_UP):
-      if (s_copyMode && !s_copySrcLine)
-        s_copySrcLine = sub+1;
-      break;
+    case EVT_KEY_REPT(KEY_DOWN):
     case EVT_KEY_FIRST(KEY_DOWN):
-      if (s_copyMode && !s_copySrcLine)
-        s_copySrcLine = sub-1;
+      if (s_copyMode) {
+        uint8_t next_ofs = (key == KEY_UP ? s_copyTgtOfs - 1 : s_copyTgtOfs + 1);
+
+        if (s_copyTgtOfs==0 && s_copyMode==COPY_MODE) {
+          // insert a mix on the same channel (just above / just below)
+          if (reachMixerCountLimit())
+            break;
+          copyMix(s_currIdx);
+          if (key==KEY_DOWN) s_currIdx++;
+          else if (sub-s_pgOfs >= 6) s_pgOfs++;
+        }
+        else if (next_ofs==0 && s_copyMode==COPY_MODE) {
+          // delete the mix
+          deleteMix(s_currIdx);
+          if (key==KEY_UP) s_currIdx--;
+        }
+        else {
+          // only swap the mix with its neighbor
+          if (!swapMix(s_currIdx, key==KEY_UP))
+            break;
+        }
+
+        s_copyTgtOfs = next_ofs;
+      }
       break;
   }
+
+  /* debugging purpose!
+  lcd_outdezAtt(7*FW, 0, s_copySrcCh, 0);
+  lcd_outdezAtt(10*FW, 0, s_copySrcIdx, 0);
+  lcd_outdezAtt(13*FW, 0, s_currCh, 0);
+  lcd_outdezAtt(16*FW, 0, s_currIdx, 0); */
+
+  lcd_outdezAtt(8*FW, 0, getMixerCount(), 0);
+  lcd_puts_P(8*FW, 0, PSTR("/32"));
+
 
   s_currCh = 0;
   uint8_t cur = 1;
   uint8_t i = 0;
 
   for (uint8_t ch=1; ch<=NUM_CHNOUT; ch++) {
-    MixData *md = mixaddress(i); // TODO i and md are duplicate, i can be >= MAX_MIXERS
-    if (md->destCh == ch) {
-      if (s_pgOfs < cur)
+    MixData *md;
+    if (i<MAX_MIXERS && (md=mixaddress(i))->destCh == ch) {
+      if (s_pgOfs < cur && cur-s_pgOfs < 8)
         putsChn(0, (cur-s_pgOfs)*FH, ch, 0); // show CHx
       uint8_t mixCnt = 0;
-      while (i<MAX_MIXERS && md->destCh == ch) {
-        uint8_t attr = 0;
-        int8_t l = (cur-s_pgOfs);
-        uint8_t y = l*FH;
-        if (!s_copyMode && sub == cur) {
-          attr = INVERS;
+      do {
+        if (s_copyMode) {
+          if (s_copyMode == MOVE_MODE && s_pgOfs < cur && cur-s_pgOfs < 8 && s_copySrcCh == ch && s_copyTgtOfs != 0 && i == (s_copySrcIdx + (s_copyTgtOfs<0))) {
+            uint8_t y = (cur-s_pgOfs)*FH;
+            lcd_rect(22, y-1, DISPLAY_W-1-21, min(9, 64-y), 0x55);
+            cur++;
+          }
+          if (s_currIdx == i) {
+            sub = mstate2.m_posVert = cur;
+            s_currCh = ch;
+          }
+        }
+        else if (sub == cur) {
           s_currIdx = i;
         }
-        if (s_pgOfs < cur) {
-          if (mixCnt > 0)
-            lcd_putsnAtt(3*FW, y, PSTR("+*R")+md->mltpx, 1, 0);
-          lcd_outdezAtt(7*FW+FW/2, y, md->weight, attr);
-          lcd_putcAtt(7*FW+FW/2, y, '%', attr);
-          putsChnRaw(9*FW, y, md->srcRaw, 0);
-          if (md->swtch) putsDrSwitches(13*FW-FW/2, y, md->swtch, 0);
-          if (md->curve) lcd_putsnAtt(17*FW, y, PSTR(CURV_STR)+md->curve*3, 3, 0);
-
-          char cs = ' ';
-          if (md->speedDown || md->speedUp)
-            cs = 'S';
-          if ((md->delayUp || md->delayDown))
-            cs = (cs =='S' ? '*' : 'D');
-          lcd_putcAtt(20*FW+1, y, cs, 0);
-
-          /* invert the line on selection mode (copy/move) */
-          if (s_copyMode) {
-            if (s_copySrcLine == cur || (!s_copySrcLine && sub==cur)) {
-              lcd_putsnAtt(20*FW, y, PSTR("+-")+s_copyMode-1, 1, 0); // +/- will override */S/D if any
-              // TODO filled rectangle function
-              for (uint8_t j=8; j>0; j--) {
-                lcd_hline(0, y-j, DISPLAY_W);
-              }
-            }
-          }
-
-          /* display the cursor on the current line (before / after) */
-          if (s_copySrcLine) {
-            if (sub == cur) {
-              lcd_hline(0, y+6-s_copyBefore*6,FW*4);
-              s_currCh = ch;
-              s_copyTgtIdx = i+(!s_copyBefore);
-            }
-          }
-
-          if (attr != 0) {
-            CHECK_INCDEC_H_MODELVAR(event, md->weight, -125, 125);
-          }
-
+        if (s_pgOfs < cur && cur-s_pgOfs < 8) {
+          displayMixerLine(cur, i, ch, mixCnt, sub, _event);
         }
         cur++; mixCnt++; i++; md++;
+      } while (i<MAX_MIXERS && md->destCh == ch);
+      if (s_copyMode == MOVE_MODE && s_pgOfs < cur && cur-s_pgOfs < 8 && s_copySrcCh == ch && i == (s_copySrcIdx + (s_copyTgtOfs<0))) {
+        uint8_t y = (cur-s_pgOfs)*FH;
+        lcd_rect(22, y-1, DISPLAY_W-1-21, min(9, 64-y), 0x55);
+        cur++;
       }
     }
     else {
       uint8_t attr = 0;
       if (sub == cur) {
-        if (!s_copySrcLine) {
+        s_currIdx = i;
+        s_currCh = ch;
+        if (!s_copyMode) {
           attr = INVERS;
-          s_currIdx = i; // TODO i can be >= MAX_MIXERS!
-          s_currCh = ch;
         }
       }
-      if (s_pgOfs < cur) {
+      if (s_pgOfs < cur && cur-s_pgOfs < 8) {
         putsChn(0, (cur-s_pgOfs)*FH, ch, attr); // show CHx
-        if (sub == cur && s_copySrcLine) {
-          lcd_hline(0, (cur-s_pgOfs)*FH+6-s_copyBefore*6,FW*4);
-          s_currCh = ch;
-          s_copyTgtIdx = i; // TODO i can be >= MAX_MIXERS!
+        if (s_copyMode == MOVE_MODE && s_copySrcCh == ch) {
+          uint8_t y = (cur-s_pgOfs)*FH;
+          lcd_rect(22, y-1, DISPLAY_W-1-21, min(9, 64-y), 0x55);
         }
       }
       cur++;
     }
   }
   s_maxLines = cur;
+  if (sub >= s_maxLines-1) mstate2.m_posVert = s_maxLines-1;
+  displayWarning(__event);
 }
 
 void menuProcLimits(uint8_t event)
