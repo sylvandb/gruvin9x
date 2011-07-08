@@ -1,5 +1,5 @@
 M48
-;DRILL file {PCBnew (2011-07-04 BZR 3037)-stable} date 8/07/2011 12:03:57 a.m.
+;DRILL file {PCBnew (2011-07-04 BZR 3037)-stable} date 8/07/2011 2:08:14 p.m.
 ;FORMAT={-:-/ absolute / inch / decimal}
 FMAT,2
 INCH,TZ
@@ -383,8 +383,6 @@ X6.866Y-1.496
 X6.866Y-1.598
 X6.945Y-1.559
 X6.985Y-1.500
-X6.992Y-3.232
-X6.993Y-3.119
 X7.066Y-1.522
 X7.087Y-1.673
 X7.087Y-1.898
