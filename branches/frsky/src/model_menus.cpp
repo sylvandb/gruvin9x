@@ -190,7 +190,7 @@ void menuDeleteModel(uint8_t event)
       g_eeGeneral.currModel = i;
 
       eeLoadModel(g_eeGeneral.currModel); //load default values
-      chainMenu(menuProcModelSelect);
+      chainMenu(menuProcModelSelect); // TODO URGENT: by doing this we fill the stack with 3 model removals!!!
       break;
     case EVT_KEY_FIRST(KEY_EXIT):
       popMenu();
