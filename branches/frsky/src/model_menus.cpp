@@ -161,45 +161,75 @@ char idx2char(uint8_t idx)
   return ' ';
 }
 
-// TODO reuse the displayWarning screen!
-void menuDeleteModel(uint8_t event)
+const prog_char * s_warning = 0;
+const prog_char * s_warning_bss;
+uint8_t           s_warning_bss_len;
+uint8_t           s_confirmation = 0;
+
+void displayWarning(uint8_t event)
 {
-  lcd_putsAtt(0,1*FH,PSTR("DELETE MODEL"),0);
-  lcd_putsnAtt(1,2*FH, g_model.name,sizeof(g_model.name),BSS);
-  lcd_putcAtt(sizeof(g_model.name)*FW+FW,2*FH,'?',0);
-  lcd_puts_P(3*FW,5*FH,PSTR("YES     NO"));
-  lcd_puts_P(3*FW,6*FH,PSTR("[MENU]  [EXIT]"));
+  if (s_warning) {
+    lcd_empty_rect(10, 16, 108, 40);
+    lcd_rect(10, 16, 108, 40);
+    lcd_puts_P(16, 3*FH, s_warning);
+    // could be a place for a s_warning_bss
+    lcd_puts_P(16, 5*FH, PSTR("[EXIT]"));
 
-  uint8_t i;
-  switch(event){
-    case EVT_ENTRY:
-      beepWarn();
-      break;
-    case EVT_KEY_FIRST(KEY_MENU):
-      EFile::rm(FILE_MODEL(g_eeGeneral.currModel)); //delete file
-
-      i = g_eeGeneral.currModel;//loop to find next available model
-      while (!EFile::exists(FILE_MODEL(i))) {
-          i--;
-          if(i>MAX_MODELS) i=MAX_MODELS-1;
-          if(i==g_eeGeneral.currModel) {
-              i=0;
-              break;
-          }
-      }
-      g_eeGeneral.currModel = i;
-
-      eeLoadModel(g_eeGeneral.currModel); //load default values
-      chainMenu(menuProcModelSelect); // TODO URGENT: by doing this we fill the stack with 3 model removals!!!
-      break;
-    case EVT_KEY_FIRST(KEY_EXIT):
-      popMenu();
-      break;
+    switch(event) {
+      case EVT_KEY_FIRST(KEY_EXIT):
+        killEvents(event);
+        s_warning = 0;
+        break;
+    }
   }
 }
 
-void menuProcModel(uint8_t event)
+void displayConfirmation(uint8_t event)
 {
+  if (s_warning) {
+    s_confirmation = false;
+    lcd_empty_rect(10, 16, 108, 40);
+    lcd_rect(10, 16, 108, 40);
+    lcd_puts_P(16, 3*FH, s_warning);
+    if (s_warning_bss)
+      lcd_putsnAtt(16, 4*FH, s_warning_bss, s_warning_bss_len, BSS);
+    lcd_puts_P(16, 5*FH, PSTR("[MENU]    [EXIT]"));
+
+    switch(event) {
+      case EVT_KEY_FIRST(KEY_MENU):
+        s_confirmation = true;
+        // no break
+      case EVT_KEY_FIRST(KEY_EXIT):
+        killEvents(event);
+        s_warning = 0;
+        break;
+    }
+  }
+}
+
+void menuProcModel(uint8_t _event)
+{
+  uint8_t event = (s_warning ? 0 : _event);
+
+  if (s_confirmation) {
+    EFile::rm(FILE_MODEL(g_eeGeneral.currModel)); // delete file
+
+    uint8_t i = g_eeGeneral.currModel; // loop to find next available model
+    while (!EFile::exists(FILE_MODEL(i))) {
+      i--;
+      if (i>MAX_MODELS) i=MAX_MODELS-1;
+      if (i==g_eeGeneral.currModel) {
+        i=0;
+        break;
+      }
+    }
+    g_eeGeneral.currModel = i;
+    STORE_GENERALVARS;
+    eeLoadModel(i); // load default values
+    s_confirmation = 0;
+    chainMenu(menuProcModelSelect);
+  }
+
   MENU("SETUP", menuTabModel, e_Model, 15, {0,sizeof(g_model.name)-1,1,0,0,0,0,0,0,6,2,0/*repeated...*/});
 
   int8_t  sub    = mstate2.m_posVert;
@@ -368,14 +398,17 @@ void menuProcModel(uint8_t event)
 
   if(s_pgOfs<subN) {
     lcd_putsAtt(0*FW, y, PSTR("DELETE MODEL   [MENU]"),s_noHi ? 0 : (sub==subN?INVERS:0));
-    if(sub==subN && event==EVT_KEY_LONG(KEY_MENU)){
-        s_editMode = false;
-        s_noHi = NO_HI_LEN;
-        killEvents(event);
-        pushMenu(menuDeleteModel);
+    if(sub==subN && event==EVT_KEY_LONG(KEY_MENU)) {
+      s_editMode = false;
+      s_noHi = NO_HI_LEN;
+      killEvents(event);
+      s_warning = PSTR("DELETE MODEL");
+      s_warning_bss = g_model.name;
+      s_warning_bss_len = sizeof(g_model.name);
     }
-    if((y+=FH)>7*FH) return;
-  }subN++;
+  }
+
+  displayConfirmation(_event);
 }
 
 #ifdef HELI
@@ -631,25 +664,6 @@ uint8_t getMixerCount()
     }
   }
   return mixerCount;
-}
-
-const prog_char * s_warning = 0;
-void displayWarning(uint8_t event)
-{
-  if (s_warning) {
-    lcd_empty_rect(10, 16, 108, 40);
-    lcd_rect(10, 16, 108, 40);
-    lcd_puts_P(16, 3*FH, s_warning);
-    // could be a place for a s_warning_info
-    lcd_puts_P(16, 5*FH, PSTR("[EXIT]"));
-
-    switch(event) {
-      case EVT_KEY_FIRST(KEY_EXIT):
-        killEvents(event);
-        s_warning = 0;
-        break;
-    }
-  }
 }
 
 bool reachMixerCountLimit()
