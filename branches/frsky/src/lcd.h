@@ -47,7 +47,7 @@
 extern uint8_t lcd_lastPos;
 
 extern void lcd_putcAtt(unsigned char x,unsigned char y,const char c,uint8_t mode);
-extern unsigned char lcd_putsAtt(unsigned char x,unsigned char y,const prog_char * s,uint8_t mode);
+extern void lcd_putsAtt(unsigned char x,unsigned char y,const prog_char * s,uint8_t mode);
 extern void lcd_putsnAtt(unsigned char x,unsigned char y,const prog_char * s,unsigned char len,uint8_t mode);
 
 extern void lcd_putc(unsigned char x,unsigned char y,const char c);

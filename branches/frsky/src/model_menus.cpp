@@ -841,10 +841,9 @@ static uint8_t s_currIdx;
 void menuProcMixOne(uint8_t event)
 {
   SIMPLE_SUBMENU_NOTITLE(13);
-  // TODO BSS TITLE/TITLEP update lcd_lastPosition instead or returning something
-  uint8_t x = TITLEP(s_currCh ? PSTR("INSERT MIX ") : PSTR("EDIT MIX "));
+  TITLEP(s_currCh ? PSTR("INSERT MIX ") : PSTR("EDIT MIX "));
   MixData *md2 = mixaddress(s_currIdx) ;
-  putsChn(x+1*FW,0,md2->destCh,0);
+  putsChn(lcd_lastPos+1*FW,0,md2->destCh,0);
   int8_t  sub    = mstate2.m_posVert;
 
   for(uint8_t k=0; k<7; k++)
