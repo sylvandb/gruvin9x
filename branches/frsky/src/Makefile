@@ -65,7 +65,7 @@ DECIMALS = NO
 
 # TRANSLATIONS from previous EEPROM formats 
 # Values = YES, NO
-TRANSLATIONS = NO
+TRANSLATIONS = YES
 
 #------- END BUILD OPTIONS ---------------------------
 
