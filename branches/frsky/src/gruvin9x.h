@@ -595,6 +595,8 @@ extern uint16_t           pulses2MHz[120];
 extern int16_t            g_ppmIns[8];
 extern int16_t            g_chans512[NUM_CHNOUT];
 extern volatile uint8_t   tick10ms;
+extern int16_t            BandGap;
+
 extern int16_t intpol(int16_t, uint8_t);
 extern uint16_t anaIn(uint8_t chan);
 extern int16_t calibratedStick[7];

@@ -458,10 +458,10 @@ void perOut(int16_t *chanOut, uint8_t att)
 
   if(tick10ms) {
     if(s_noHi) s_noHi--;
-    if(g_eeGeneral.inactivityTimer && g_vbat100mV>49) {
+      if (g_eeGeneral.inactivityTimer && g_vbat100mV>49) {
       inacCounter++;
       uint16_t tsum = 0;
-      for(uint8_t i=0;i<4;i++) tsum += anas[i]/128;//div 8 -> reduce sensitivity
+      for(uint8_t i=0;i<4;i++) tsum += anaIn(i)/64;  // reduce sensitivity
       if(tsum!=inacSum){
         inacSum = tsum;
         inacCounter=0;
@@ -502,18 +502,18 @@ void perOut(int16_t *chanOut, uint8_t att)
       if (!(att&NO_TRAINER) && g_model.traineron) {
         // trainer mode
         TrainerMix* td = &g_eeGeneral.trainer.mix[i];
-      	if (td->mode && getSwitch(td->swtch, 1)) {
-      	  uint8_t chStud = td->srcChn;
-      	  int16_t vStud  = (g_ppmIns[chStud]- g_eeGeneral.trainer.calib[chStud]) /* *2 */ ;
-      	  vStud /= 2 ;		// Only 2, because no *2 above
-      	  vStud *= td->studWeight ;
-      	  vStud /= 31 ;
-      	  vStud *= 4 ;
-      	  switch (td->mode) {
-      	    case 1: v += vStud;   break; // add-mode
-      	    case 2: v  = vStud;   break; // subst-mode
-      	  }
-      	}
+        if (td->mode && getSwitch(td->swtch, 1)) {
+          uint8_t chStud = td->srcChn;
+          int16_t vStud  = (g_ppmIns[chStud]- g_eeGeneral.trainer.calib[chStud]) /* *2 */ ;
+          vStud /= 2 ;      // Only 2, because no *2 above
+          vStud *= td->studWeight ;
+          vStud /= 31 ;
+          vStud *= 4 ;
+          switch (td->mode) {
+            case 1: v += vStud;   break; // add-mode
+            case 2: v  = vStud;   break; // subst-mode
+          }
+        }
       }
 
 #ifdef HELI

@@ -371,16 +371,12 @@ void checkTHR()
 
   int thrchn=(2-(g_eeGeneral.stickMode&1));//stickMode=0123 -> thr=2121
 
-  int16_t lowLim = THRCHK_DEADBAND + g_eeGeneral.calibMid[thrchn] - g_eeGeneral.calibSpanNeg[thrchn] +
-    g_eeGeneral.calibSpanNeg[thrchn]/8;
+  int16_t lowLim = THRCHK_DEADBAND + g_eeGeneral.calibMid[thrchn] - g_eeGeneral.calibSpanNeg[thrchn];
 
   getADC_single();   // if thr is down - do not display warning at all
   int16_t v      = anaIn(thrchn);
-  if((v<=lowLim) ||
-     (keyDown()))
-  {
-      return;
-  }
+  if(v<=lowLim || keyDown())
+    return;
 
   // first - display warning
   alertMessages( PSTR("Throttle not idle"), PSTR("Reset throttle") ) ;
@@ -390,11 +386,8 @@ void checkTHR()
   {
       getADC_single();
       int16_t v      = anaIn(thrchn);
-      if((v<=lowLim) ||
-         (keyDown()))
-      {
-          return;
-      }
+      if(v<=lowLim || keyDown())
+        return;
 
       if(getSwitch(g_eeGeneral.lightSw,0) || g_eeGeneral.lightAutoOff)
           BACKLIGHT_ON;
@@ -672,7 +665,8 @@ public:
   };
 };
 
-#define STARTADCONV (ADCSRA  = (1<<ADEN) | (1<<ADPS0) | (1<<ADPS1) | (1<<ADPS2) | (1<<ADSC) | (1 << ADIE))
+// #define STARTADCONV (ADCSRA  = (1<<ADEN) | (1<<ADPS0) | (1<<ADPS1) | (1<<ADPS2) | (1<<ADSC) | (1 << ADIE))
+int16_t BandGap ;
 static uint16_t s_anaFilt[8];
 uint16_t anaIn(uint8_t chan)
 {
@@ -740,13 +734,30 @@ void getADC_single()
     }
 }
 
+void getADC_bandgap()
+{
+  ADMUX=0x1E|ADC_VREF_TYPE;
+  // Start the AD conversion
+  ADCSRA|=0x40;
+  // Wait for the AD conversion to complete
+  while ((ADCSRA & 0x10)==0);
+  ADCSRA|=0x10;
+  // Do it twice, first conversion may be wrong
+  ADCSRA|=0x40;
+  // Wait for the AD conversion to complete
+  while ((ADCSRA & 0x10)==0);
+  ADCSRA|=0x10;
+  BandGap = ADCW;
+  if(BandGap<256)
+      BandGap = 256;
+}
+
 getADCp getADC[3] = {
   getADC_single,
   getADC_osmp,
   getADC_filt
 };
 
-uint16_t abRunningAvg = 0;
 uint8_t  g_vbat100mV;
 volatile uint8_t tick10ms = 0;
 uint16_t g_LightOffCounter;
@@ -807,14 +818,12 @@ void perMain()
   perOut(g_chans512, 0);
   if(!tick10ms) return; //make sure the rest happen only every 10ms.
 
-  if ( Timer2_running )
-    {
-      if ( (Timer2_pre += 1 ) >= 100 )
-      {
-        Timer2_pre -= 100 ;
-        timer2 += 1 ;
-      }
+  if ( Timer2_running ) {
+    if ( (Timer2_pre += 1 ) >= 100 ) {
+      Timer2_pre -= 100 ;
+      timer2 += 1 ;
     }
+  }
 
   eeCheck();
 
@@ -826,9 +835,9 @@ void perMain()
   if(evt) g_LightOffCounter = g_eeGeneral.lightAutoOff*500; // on keypress turn the light on 5*100
 
   if( getSwitch(g_eeGeneral.lightSw,0) || g_LightOffCounter)
-      BACKLIGHT_ON;
+    BACKLIGHT_ON;
   else
-      BACKLIGHT_OFF;
+    BACKLIGHT_OFF;
 
   static int16_t p1valprev;
   p1valdiff = (p1val-calibratedStick[6])/32;
@@ -844,47 +853,26 @@ void perMain()
   // PPM signal on phono-jack. In or out? ...
   if(checkSlaveMode()) {
     PORTG &= ~(1<<OUT_G_SIM_CTL); // 0=ppm out
-  }else{
+  }
+  else{
     PORTG |=  (1<<OUT_G_SIM_CTL); // 1=ppm-in
-//    evalCaptures();
   }
 
   switch( get_tmr10ms() & 0x1f ) { //alle 10ms*32
-//    case 1:
-      //check light switch and timer
-//      if( getSwitch(g_eeGeneral.lightSw,0) || g_LightOffCounter)
-//        BACKLIGHT_ON;
-//      else
-//        BACKLIGHT_OFF;
-//      break;
 
     case 2:
       {
-/* 
-Gruvin:
-  Interesting fault with new unit. Sample is reading 0x06D0 (around 12.3V) but
-  we're only seeing around 0.2V displayed! (Calibrate = 0)
+        // Calculation By Mike Blandford
+        // Resistor divide on battery voltage is 5K1 and 2K7 giving a fraction of 2.7/7.8
+        // If battery voltage = 10V then A2D voltage = 3.462V
+        // 11 bit A2D count is 1417 (3.462/5*2048).
+        // 1417*18/256 = 99 (actually 99.6) to represent 9.9 volts.
+        // Erring on the side of low is probably best.
 
-  Long story short, the higher voltage of the new 8-pack of AA alkaline cells I put in the stock
-  '9X, plus just a tiny bit of calibration applied, were causing an overflow in the 16-bit math,
-  causing a wrap-around to a very small voltage.
-
-  See the wiki (VoltageAveraging) if you're interested in my long-winded analysis.
-*/
-
-        // initialize to first sample if on first averaging cycle
-        if (abRunningAvg == 0) abRunningAvg = anaIn(7);
-
-        // G: Running average (virtual 7 stored plus current sample) for batt volts to stablise display
-        // Average the raw samples so the calibrartion screen updates instantly
-        uint16_t ab = ((uint32_t)(abRunningAvg * 7) + anaIn(7)) / 8;
-        abRunningAvg = ab;
-
-#ifdef THBATVOLTS
-        g_vbat100mV = (ab*35 + ab / 4 * g_eeGeneral.vBatCalib) / 512; // G: Hmmm. See above.
-#else
-        g_vbat100mV = (ab + 4 * g_eeGeneral.vBatCalib) * 36 / 512; // G: Similar still, but no overflow now.
-#endif
+        int16_t ab = anaIn(7);
+        ab = ab*16 + (ab*(12+g_eeGeneral.vBatCalib))/8 ;
+        ab /= BandGap ;
+        g_vbat100mV = (ab + g_vbat100mV + 1) >> 1 ;  // Filter it a bit => more stable display
 
         static uint8_t s_batCheck;
         s_batCheck+=32;
@@ -894,6 +882,7 @@ Gruvin:
         }
       }
       break;
+
     case 3:
       {
         // The various "beep" tone lengths
@@ -1417,9 +1406,8 @@ int main(void)
 
   while(1){
     uint16_t t0 = getTmr16KHz();
-
     getADC[g_eeGeneral.filterInput]();
-
+    getADC_bandgap() ;
     perMain();
 
     if(heartbeat == 0x3)
