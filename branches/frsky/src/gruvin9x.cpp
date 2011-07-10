@@ -863,30 +863,6 @@ void perMain()
 
     case 2:
       {
-        /* Mike's code simply doesn't even come CLSOE to working right in our code, for some reason.
-           It also employs no running average, using insrtead a crude divide by 2, which makes for
-           very poor dispaly stability for AA alkaline dry cells, at the very least */
-
-        // Calculation By Mike Blandford
-        // Resistor divide on battery voltage is 5K1 and 2K7 giving a fraction of 2.7/7.8
-        // If battery voltage = 10V then A2D voltage = 3.462V
-        // 11 bit A2D count is 1417 (3.462/5*2048).
-        // 1417*18/256 = 99 (actually 99.6) to represent 9.9 volts.
-        // Erring on the side of low is probably best.
-/*
-        int16_t ab = anaIn(7);
-        ab = ab*16 + (ab*(12+g_eeGeneral.vBatCalib))/8 ;
-        ab /= BandGap ;
-        g_vbat100mV = (ab + g_vbat100mV + 1) >> 1 ;  // Filter it a bit => more stable display
-
-        static uint8_t s_batCheck;
-        s_batCheck+=32;
-        if(s_batCheck==0 && g_vbat100mV<g_eeGeneral.vBatWarn && g_vbat100mV>49) {
-          beepErr();
-          if (g_eeGeneral.flashBeep) g_LightOffCounter = FLASH_DURATION;
-        }
-*/
-
 /* 
 Gruvin:
   Interesting fault with new unit. Sample is reading 0x06D0 (around 12.3V) but

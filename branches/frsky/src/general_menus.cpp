@@ -461,6 +461,24 @@ void menuProcDiagAna(uint8_t event)
     if(i<7)  lcd_outdez(17*FW, y, (int32_t)calibratedStick[i]*100/1024);
     if(i==7)
     {
+      /* BS / G: This code allows direct setting of measured battery volts,
+         rather than only changing the background calibration figure and calculating
+         resulting bat volts from that. The latter method means multiple clicks on the
+         left/right button with no change in display. It is not good. The former (implemented)
+         method here allows much more precise calibration to be done.
+
+         This code also uses the far better running average, filtered sampling,
+         which is required for high-internal-resistance battery packs, such as
+         8x AA dry cells. Otherwise the voltage display will fly all over the
+         place and cause false alarms.
+
+         I have not studying Mike's code in detail, because it simply didn't work
+         right at all within this code base, for whatever reason. The lack of a
+         running average for appropriate display stability rendered it pretty much
+         useless under certain circumstances anyway, so I just ditched it.
+      */
+
+
       // Create a 2-decimal precision result just for the calibration screen
 #ifdef THBATVOLTS
       uint16_t vbat100mV = (uint32_t)((abRunningAvg*35 + ab / 4 * g_eeGeneral.vBatCalib)*10) / 512;
