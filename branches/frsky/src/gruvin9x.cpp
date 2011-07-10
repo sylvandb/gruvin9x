@@ -758,6 +758,7 @@ getADCp getADC[3] = {
   getADC_filt
 };
 
+uint16_t abRunningAvg = 0;
 uint8_t  g_vbat100mV;
 volatile uint8_t tick10ms = 0;
 uint16_t g_LightOffCounter;
@@ -862,13 +863,17 @@ void perMain()
 
     case 2:
       {
+        /* Mike's code simply doesn't even come CLSOE to working right in our code, for some reason.
+           It also employs no running average, using insrtead a crude divide by 2, which makes for
+           very poor dispaly stability for AA alkaline dry cells, at the very least */
+
         // Calculation By Mike Blandford
         // Resistor divide on battery voltage is 5K1 and 2K7 giving a fraction of 2.7/7.8
         // If battery voltage = 10V then A2D voltage = 3.462V
         // 11 bit A2D count is 1417 (3.462/5*2048).
         // 1417*18/256 = 99 (actually 99.6) to represent 9.9 volts.
         // Erring on the side of low is probably best.
-
+/*
         int16_t ab = anaIn(7);
         ab = ab*16 + (ab*(12+g_eeGeneral.vBatCalib))/8 ;
         ab /= BandGap ;
@@ -880,9 +885,47 @@ void perMain()
           beepErr();
           if (g_eeGeneral.flashBeep) g_LightOffCounter = FLASH_DURATION;
         }
+*/
+
+/* 
+Gruvin:
+  Interesting fault with new unit. Sample is reading 0x06D0 (around 12.3V) but
+  we're only seeing around 0.2V displayed! (Calibrate = 0)
+
+  Long story short, the higher voltage of the new 8-pack of AA alkaline cells I put in the stock
+  '9X, plus just a tiny bit of calibration applied, were causing an overflow in the 16-bit math,
+  causing a wrap-around to a very small voltage.
+
+  See the wiki (VoltageAveraging) if you're interested in my long-winded analysis.
+*/
+
+        // initialize to first sample if on first averaging cycle
+        if (abRunningAvg == 0) abRunningAvg = anaIn(7);
+
+        // G: Running average (virtual 7 stored plus current sample) for batt volts to stablise display
+        // Average the raw samples so the calibrartion screen updates instantly
+        uint16_t ab = ((uint32_t)(abRunningAvg * 7) + anaIn(7)) / 8;
+        abRunningAvg = ab;
+
+#ifdef THBATVOLTS
+        g_vbat100mV = (ab*35 + ab / 4 * g_eeGeneral.vBatCalib) / 512; // G: Hmmm. See above.
+#else
+        g_vbat100mV = (ab + 4 * g_eeGeneral.vBatCalib) * 36 / 512; // G: Similar still, but no overflow now.
+#endif
+
+        static uint8_t s_batCheck;
+        s_batCheck+=32;
+        if(s_batCheck==0 && g_vbat100mV<g_eeGeneral.vBatWarn && g_vbat100mV>49) {
+          beepErr();
+          if (g_eeGeneral.flashBeep) g_LightOffCounter = FLASH_DURATION;
+        }
+
+
       }
       break;
 
+
+      
     case 3:
       {
         // The various "beep" tone lengths

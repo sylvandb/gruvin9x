@@ -459,12 +459,19 @@ void menuProcDiagAna(uint8_t event)
     lcd_putsn_P( 4*FW, y,PSTR("A1A2A3A4A5A6A7A8")+2*i,2);
     lcd_outhex4( 8*FW, y,anaIn(i));
     if(i<7)  lcd_outdez(17*FW, y, (int32_t)calibratedStick[i]*100/1024);
-    if(i==7) putsVBat(17*FW,y,(sub==1 ? INVERS : 0));
+    if(i==7)
+    {
+      // Create a 2-decimal precision result just for the calibration screen
+#ifdef THBATVOLTS
+      uint16_t vbat100mV = (uint32_t)((abRunningAvg*35 + ab / 4 * g_eeGeneral.vBatCalib)*10) / 512;
+#else
+      uint16_t vbat100mV = (uint32_t)(abRunningAvg + 4 * g_eeGeneral.vBatCalib) * 360 / 512;
+#endif
+      putsVolts(17*FW,y,vbat100mV,(sub==1 ? INVERS : 0)|PREC2);
+    }
   }
-  lcd_putsn_P( 18*FW, 5*FH,PSTR("BG"),2) ;
-  lcd_outdezAtt(20*FW, 6*FH, BandGap, 0);
-  lcd_outdezAtt(20*FW, 7*FH, anaIn(7)*35/512, PREC1);
   if(sub==1) CHECK_INCDEC_H_GENVAR(event, g_eeGeneral.vBatCalib, -127, 127);
+
 }
 
 void menuProcDiagCalib(uint8_t event)
