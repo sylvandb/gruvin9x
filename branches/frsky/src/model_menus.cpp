@@ -230,7 +230,7 @@ void menuProcModel(uint8_t _event)
     chainMenu(menuProcModelSelect);
   }
 
-  MENU("SETUP", menuTabModel, e_Model, 15, {0,sizeof(g_model.name)-1,1,0,0,0,0,0,0,6,2,0/*repeated...*/});
+  MENU("SETUP", menuTabModel, e_Model, 18, {0,sizeof(g_model.name)-1,1,0,0,0,0,0,0,1,1,1,0,0,6,2,0/*,0*/});
 
   int8_t  sub    = mstate2.m_posVert;
   uint8_t subSub = mstate2.m_posHorz;
@@ -337,16 +337,42 @@ void menuProcModel(uint8_t _event)
     if((y+=FH)>7*FH) return;
   }subN++;
 
+  for (uint8_t i=0; i<MAX_PHASES-1; i++) {
+    if(s_pgOfs<subN) {
+      lcd_puts_P(    0,    y, PSTR("F.Phase"));
+      lcd_outdezAtt(lcd_lastPos+FW, y, 1+i, 0);
+      putsDrSwitches(9*FW,y,g_model.phaseData[i].swtch,(sub==subN && subSub==0) ? (s_editMode ? BLINK : INVERS):0);
+      if(sub==subN && subSub==0 && (s_editMode || p1valdiff)) CHECK_INCDEC_H_MODELVAR(event,g_model.phaseData[i].swtch,-MAX_DRSWITCH, MAX_DRSWITCH);
+      menu_lcd_onoff( 15*FW, y, g_model.phaseData[i].trims, (sub==subN && subSub==1)) ;
+      if(sub==subN && subSub==1 && (s_editMode || p1valdiff)) CHECK_INCDEC_H_MODELVAR(event,g_model.phaseData[i].trims,0, 1);
+      if((y+=FH)>7*FH) return;
+    }subN++;
+  }
+
+  if(s_pgOfs<subN) {
+    lcd_puts_P(    0,    y, PSTR("E. Limits"));
+    menu_lcd_onoff( 10*FW, y, g_model.extendedLimits, sub==subN ) ;
+    if(sub==subN) CHECK_INCDEC_H_MODELVAR(event,g_model.extendedLimits,0,1);
+    if((y+=FH)>7*FH) return;
+  }subN++;
+
+  if(s_pgOfs<subN) {
+    lcd_puts_P(    0,    y, PSTR("Trainer"));
+    menu_lcd_onoff( 10*FW, y, g_model.traineron, sub==subN ) ;
+    if(sub==subN) CHECK_INCDEC_H_MODELVAR(event,g_model.traineron,0,1);
+    if((y+=FH)>7*FH) return;
+  }subN++;
+
   if(s_pgOfs<subN) {
     lcd_puts_P(    0,    y, PSTR("Beep Ctr"));
     for(uint8_t i=0;i<7;i++) lcd_putsnAtt((10+i)*FW, y, PSTR("RETA123")+i,1, ((subSub==i) && (sub==subN)) ? BLINK : ((g_model.beepANACenter & (1<<i)) ? INVERS : 0 ) );
     if(sub==subN){
-        if((event==EVT_KEY_FIRST(KEY_MENU)) || p1valdiff) {
-            killEvents(event);
-            s_editMode = false;
-            g_model.beepANACenter ^= (1<<subSub);
-            STORE_MODELVARS;
-        }
+      if((event==EVT_KEY_FIRST(KEY_MENU)) || p1valdiff) {
+        killEvents(event);
+        s_editMode = false;
+        g_model.beepANACenter ^= (1<<subSub);
+        STORE_MODELVARS;
+      }
     }
     if((y+=FH)>7*FH) return;
   }subN++;
@@ -379,20 +405,6 @@ void menuProcModel(uint8_t _event)
     lcd_puts_P(    0,    y, PSTR("Shift Sel"));
     lcd_putsnAtt(  10*FW, y, PSTR("POSNEG")+3*g_model.pulsePol,3,(sub==subN ? INVERS:0));
     if(sub==subN) CHECK_INCDEC_H_MODELVAR(event,g_model.pulsePol,0,1);
-    if((y+=FH)>7*FH) return;
-  }subN++;
-
-  if(s_pgOfs<subN) {
-    lcd_puts_P(    0,    y, PSTR("E. Limits"));
-        menu_lcd_onoff( 10*FW, y, g_model.extendedLimits, sub==subN ) ;
-    if(sub==subN) CHECK_INCDEC_H_MODELVAR(event,g_model.extendedLimits,0,1);
-    if((y+=FH)>7*FH) return;
-  }subN++;
-
-  if(s_pgOfs<subN) {
-    lcd_puts_P(    0,    y, PSTR("Trainer"));
-        menu_lcd_onoff( 10*FW, y, g_model.traineron, sub==subN ) ;
-    if(sub==subN) CHECK_INCDEC_H_MODELVAR(event,g_model.traineron,0,1);
     if((y+=FH)>7*FH) return;
   }subN++;
 
@@ -854,7 +866,7 @@ void menuProcCurveOne(uint8_t event)
 static uint8_t s_currIdx;
 void menuProcMixOne(uint8_t event)
 {
-  SIMPLE_SUBMENU_NOTITLE(13);
+  SIMPLE_SUBMENU_NOTITLE(14);
   TITLEP(s_currCh ? PSTR("INSERT MIX ") : PSTR("EDIT MIX "));
   MixData *md2 = mixaddress(s_currIdx) ;
   putsChn(lcd_lastPos+1*FW,0,md2->destCh,0);
@@ -901,6 +913,11 @@ void menuProcMixOne(uint8_t event)
         if(attr) CHECK_INCDEC_H_MODELVAR( event, md2->swtch, -MAX_DRSWITCH, MAX_DRSWITCH);
         break;
       case 6:
+        lcd_puts_P(  2*FW,y,PSTR("F.Phase"));
+        putsFlightPhases(10*FW,  y,md2->flightPhase, attr);
+        if(attr) CHECK_INCDEC_H_MODELVAR( event, md2->flightPhase, -MAX_PHASES+1, MAX_PHASES-1);
+        break;
+      case 7:
         lcd_puts_P(  2*FW,y,PSTR("Warning"));
         if(md2->mixWarn)
           lcd_outdezAtt(FW*10,y,md2->mixWarn,attr|LEFT);
@@ -908,32 +925,32 @@ void menuProcMixOne(uint8_t event)
           lcd_putsAtt(  FW*10,y,PSTR("OFF"),attr);
         if(attr) CHECK_INCDEC_H_MODELVAR( event, md2->mixWarn, 0,3);
         break;
-      case 7:
+      case 8:
         lcd_puts_P(  2*FW,y,PSTR("Multpx"));
         lcd_putsnAtt(10*FW, y,PSTR("Add     MultiplyReplace ")+8*md2->mltpx,8,attr);
         if(attr) CHECK_INCDEC_H_MODELVAR( event, md2->mltpx, 0, 2);
         break;
-      case 8:
+      case 9:
         lcd_puts_P(  2*FW,y,PSTR("Delay Down"));
         lcd_outdezAtt(FW*16,y,md2->delayDown,attr);
         if(attr)  CHECK_INCDEC_H_MODELVAR( event, md2->delayDown, 0,15);
         break;
-      case 9:
+      case 10:
         lcd_puts_P(  2*FW,y,PSTR("Delay Up"));
         lcd_outdezAtt(FW*16,y,md2->delayUp,attr);
         if(attr)  CHECK_INCDEC_H_MODELVAR( event, md2->delayUp, 0,15);
         break;
-      case 10:
+      case 11:
         lcd_puts_P(  2*FW,y,PSTR("Slow  Down"));
         lcd_outdezAtt(FW*16,y,md2->speedDown,attr);
         if(attr)  CHECK_INCDEC_H_MODELVAR( event, md2->speedDown, 0,15);
         break;
-      case 11:
+      case 12:
         lcd_puts_P(  2*FW,y,PSTR("Slow  Up"));
         lcd_outdezAtt(FW*16,y,md2->speedUp,attr);
         if(attr)  CHECK_INCDEC_H_MODELVAR( event, md2->speedUp, 0,15);
         break;
-      case 12:   lcd_putsAtt(  2*FW,y,PSTR("DELETE MIX [MENU]"),attr);
+      case 13:   lcd_putsAtt(  2*FW,y,PSTR("DELETE MIX [MENU]"),attr);
         if(attr && event==EVT_KEY_LONG(KEY_MENU)){
           killEvents(event);
           deleteMix(s_currIdx);
