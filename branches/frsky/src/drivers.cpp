@@ -271,6 +271,7 @@ void per10ms()
 #define KEY_Y3 8 // RV_Trim_Up / Down / RH_Trim_Up / Down 
 
   uint8_t in, tin;
+/*
   PORTD = ~KEY_Y0; // select KEY_Y0 row (Bits 3:2 EXIT:MENU)
   _delay_us(1);
   tin = ~PIND & 0b11000000; // mask out non-applicable bits
@@ -282,6 +283,9 @@ void per10ms()
   in |= tin >> 1; // Put these keys into their old positions
 
   PORTD = 0xFF;
+  */
+
+  in = keyDown();
 
 #else
   uint8_t in = ~PINB;

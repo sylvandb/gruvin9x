@@ -290,10 +290,26 @@ bool getSwitch(int8_t swtch, bool nc, uint8_t level)
 //#define CS_EGREATER  12
 //#define CS_ELESS     13
 
+#if defined (PCBV3)
+// The ugly scanned keys thing should be gone for PCBV4+. In the meantime ...
+uint8_t keyDown()
+{
+  uint8_t in;
+  PORTD = ~1; // select KEY_Y0 row (Bits 3:2 EXIT:MENU)
+  _delay_us(1);
+  in = (~PIND & 0b11000000) >> 5;
+  PORTD = ~2; // select Y1 row. (Bits 3:0 Left/Right/Up/Down)
+  _delay_us(1);
+  in |= (~PIND & 0xf0) >> 1;
+  PORTD = 0xff;
+  return (in);
+}
+#else
 inline uint8_t keyDown()
 {
-    return (~PINB) & 0x7E;
+  return (~PINB) & 0x7E;
 }
+#endif
 
 void clearKeyEvents()
 {
@@ -374,9 +390,8 @@ void checkTHR()
   int16_t lowLim = THRCHK_DEADBAND + g_eeGeneral.calibMid[thrchn] - g_eeGeneral.calibSpanNeg[thrchn];
 
   getADC_single();   // if thr is down - do not display warning at all
-  int16_t v      = anaIn(thrchn);
-  if(v<=lowLim || keyDown())
-    return;
+  int16_t v = anaIn(thrchn);
+  if(v<=lowLim) return;
 
   // first - display warning
   alertMessages( PSTR("Throttle not idle"), PSTR("Reset throttle") ) ;
@@ -385,9 +400,12 @@ void checkTHR()
   while (1)
   {
       getADC_single();
-      int16_t v      = anaIn(thrchn);
-      if(v<=lowLim || keyDown())
+      int16_t v = anaIn(thrchn);
+      if(v<=lowLim || keyDown()) 
+      {
+        clearKeyEvents();
         return;
+      }
 
       if(getSwitch(g_eeGeneral.lightSw,0) || g_eeGeneral.lightAutoOff)
           BACKLIGHT_ON;
@@ -398,7 +416,7 @@ void checkTHR()
 
 void checkAlarm() // added by Gohst
 {
-    if(g_eeGeneral.disableAlarmWarning) return;
+  if(g_eeGeneral.disableAlarmWarning) return;
   if(!g_eeGeneral.beeperVal) alert(PSTR("Alarms Disabled"));
 }
 
@@ -742,9 +760,8 @@ void getADC_bandgap()
   ADCSRA|=0x40; while ((ADCSRA & 0x10)==0); ADCSRA|=0x10; // again becasue first one is usually inaccurate
   BandGap=ADCW;
 #else
-  BandGap=225; // gruvin: 1.1V internal Vref doesn't seem to work on the ATmega2561.
-               //         I get progressively lower and lower result on ever read. 
-               //         Not good :/
+  BandGap=225; // gruvin: 1.1V internal Vref doesn't seem to work on the ATmega2561. :/ Weird.
+               // See http://www.avrfreaks.net/index.php?name=PNphpBB2&file=viewtopic&p=847208#847208
 #endif
 }
 
@@ -1276,6 +1293,28 @@ unsigned int stack_free()
   return p - &__bss_end ;
 }
 
+void setStickCenter() // copy state of 3 primary to subtrim
+{
+  int16_t zero_chans512_before[NUM_CHNOUT];
+  int16_t zero_chans512_after[NUM_CHNOUT];
+
+  perOut(zero_chans512_before, NO_TRAINER + NO_INPUT); // do output loop - zero input channels
+  perOut(zero_chans512_after, NO_TRAINER); // do output loop - actual input channels
+
+  for (uint8_t i=0; i<NUM_CHNOUT; i++) {
+    int16_t v = g_model.limitData[i].offset;
+    v += g_model.limitData[i].revert ?
+         (zero_chans512_before[i] - zero_chans512_after[i]) :
+         (zero_chans512_after[i] - zero_chans512_before[i]);
+    g_model.limitData[i].offset = max(min(v, 1000), -1000); // make sure the offset doesn't go haywire
+  }
+
+  for (uint8_t i=0; i<4; i++)
+    if (!IS_THROTTLE(i)) g_model.trim[0][i] = 0;// set trims to zero.
+  STORE_MODELVARS;
+  beepWarn1();
+}
+
 int main(void)
 {
   // Set up I/O port data diretions and initial states
@@ -1437,24 +1476,3 @@ int main(void)
   }
 }
 
-void setStickCenter() // copy state of 3 primary to subtrim
-{
-  int16_t zero_chans512_before[NUM_CHNOUT];
-  int16_t zero_chans512_after[NUM_CHNOUT];
-
-  perOut(zero_chans512_before, NO_TRAINER + NO_INPUT); // do output loop - zero input channels
-  perOut(zero_chans512_after, NO_TRAINER); // do output loop - actual input channels
-
-  for (uint8_t i=0; i<NUM_CHNOUT; i++) {
-    int16_t v = g_model.limitData[i].offset;
-    v += g_model.limitData[i].revert ?
-         (zero_chans512_before[i] - zero_chans512_after[i]) :
-         (zero_chans512_after[i] - zero_chans512_before[i]);
-    g_model.limitData[i].offset = max(min(v, 1000), -1000); // make sure the offset doesn't go haywire
-  }
-
-  for (uint8_t i=0; i<4; i++)
-    if (!IS_THROTTLE(i)) g_model.trim[0][i] = 0;// set trims to zero.
-  STORE_MODELVARS;
-  beepWarn1();
-}

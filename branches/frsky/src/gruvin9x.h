@@ -362,6 +362,9 @@ bool    keyState(EnumKeys enuk);
 /// EVT_KEY_BREAK(key), EVT_KEY_FIRST(key), EVT_KEY_REPT(key) oder EVT_KEY_LONG(key)
 uint8_t getEvent();
 void putEvent(uint8_t evt);
+#if defined (PCBV3)
+extern uint8_t keyDown();
+#endif
 
 /// Gibt Alarm Maske auf lcd aus.
 /// Die Maske wird so lange angezeigt bis eine beliebige Taste gedrueckt wird.

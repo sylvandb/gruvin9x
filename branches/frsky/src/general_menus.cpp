@@ -15,7 +15,7 @@ enum EnumTabDiag {
 
 void menuProcSetup(uint8_t event);
 #if defined(PCBV3)
-void menuProcFrskyTime(uint8_t event);
+void menuProcTime(uint8_t event);
 #endif
 void menuProcTrainer(uint8_t event);
 void menuProcDiagVers(uint8_t event);
@@ -26,7 +26,7 @@ void menuProcDiagCalib(uint8_t event);
 MenuFuncP_PROGMEM APM menuTabDiag[] = {
   menuProcSetup,
 #if defined(PCBV3)
-  menuProcFrskyTime,
+  menuProcTime,
 #endif
   menuProcTrainer,
   menuProcDiagVers,
@@ -228,7 +228,8 @@ void menuProcSetup(uint8_t event)
 
 
 #if defined(PCBV3)
-void menuProcFrskyTime(uint8_t event)
+// SD card interface contains Real-Time-Clock chip
+void menuProcTime(uint8_t event)
 {
   MENU("DATE AND TIME", menuTabDiag, e_FrskyTime, 3, {0, 2/*, 2*/});
 
