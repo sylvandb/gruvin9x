@@ -137,6 +137,7 @@ void menuMainView(uint8_t event)
     lcd_putsnAtt(x+8*FW-FW/2,2*FH,PSTR("   TTm")+3*g_model.thrTrim,3, 0);
 
     //trim sliders
+    uint8_t flightPhase = getFlightPhase(true);
     for(uint8_t i=0; i<4; i++)
     {
 #define TL 27
@@ -145,7 +146,7 @@ void menuMainView(uint8_t event)
       static uint8_t vert[4] = {0,1,1,0};
       uint8_t xm,ym;
       xm=x[i];
-      int8_t val = max((int8_t)-(TL+1),min((int8_t)(TL+1),(int8_t)(g_model.trim[0][i]/4)));
+      int8_t val = max((int8_t)-(TL+1),min((int8_t)(TL+1),(int8_t)(g_model.trim[flightPhase][i]/4)));
       if(vert[i]){
         ym=31;
         lcd_vline(xm,   ym-TL, TL*2);

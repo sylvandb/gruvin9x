@@ -455,7 +455,6 @@ void perOut(int16_t *chanOut, uint8_t att)
   int16_t  trimA[4];
   uint8_t  anaCenter = 0;
 
-
   if(tick10ms) {
     if(s_noHi) s_noHi--;
       if (g_eeGeneral.inactivityTimer && g_vbat100mV>49) {
@@ -482,6 +481,8 @@ void perOut(int16_t *chanOut, uint8_t att)
       d = isqrt32(v);
   }
 #endif
+
+  uint8_t flightPhase = getFlightPhase(true);
 
   for(uint8_t i=0;i<7;i++){        // calc Sticks
 
@@ -538,11 +539,11 @@ void perOut(int16_t *chanOut, uint8_t att)
       //do trim -> throttle trim if applicable
       int32_t vv = 2*RESX;
       if(IS_THROTTLE(i) && g_model.thrTrim) vv = (g_eeGeneral.throttleReversed) ?
-                                 ((int32_t)g_model.trim[0][i]-125)*(RESX+v)/(2*RESX) :
-                                 ((int32_t)g_model.trim[0][i]+125)*(RESX-v)/(2*RESX);
+                                 ((int32_t)g_model.trim[flightPhase][i]-125)*(RESX+v)/(2*RESX) :
+                                 ((int32_t)g_model.trim[flightPhase][i]+125)*(RESX-v)/(2*RESX);
 
       //trim
-      trimA[i] = (vv==2*RESX) ? g_model.trim[0][i]*2 : (int16_t)vv*2; //    if throttle trim -> trim low end
+      trimA[i] = (vv==2*RESX) ? g_model.trim[flightPhase][i]*2 : (int16_t)vv*2; //    if throttle trim -> trim low end
     }
     anas[i] = v; //set values for mixer
   }
@@ -640,12 +641,25 @@ void perOut(int16_t *chanOut, uint8_t att)
 
   memset(chans,0,sizeof(chans));        // All outputs to 0
   
+  flightPhase = getFlightPhase(false);
+
     //========== MIXER LOOP ===============
     mixWarning = 0;
     for(uint8_t i=0;i<MAX_MIXERS;i++){
       MixData *md = mixaddress( i ) ;
 
       if((md->destCh==0) || (md->destCh>NUM_CHNOUT)) break;
+
+      if (md->flightPhase != 0) {
+        if (md->flightPhase > 0) {
+          if (flightPhase != md->flightPhase)
+            continue;
+        }
+        else {
+          if (flightPhase == md->flightPhase)
+            continue;
+        }
+      }
 
       //Notice 0 = NC switch means not used -> always on line
       int16_t v  = 0;

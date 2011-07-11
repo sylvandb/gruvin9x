@@ -398,7 +398,11 @@ bool    getSwitch(int8_t swtch, bool nc, uint8_t level=0);
 ///   \param swtch -MAX_DRSWITCH ..  MAX_DRSWITCH
 ///   \param att   NO_INV,INVERS,BLINK
 ///
+
+uint8_t getFlightPhase(uint8_t trimsonly);
+
 void putsDrSwitches(uint8_t x,uint8_t y,int8_t swtch,uint8_t att);
+void putsFlightPhases(uint8_t x, uint8_t y, int8_t idx, uint8_t att);
 void putsTmrMode(uint8_t x, uint8_t y, uint8_t attr);
 
 extern uint16_t s_timeCumTot;

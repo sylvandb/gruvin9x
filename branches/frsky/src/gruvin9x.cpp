@@ -110,15 +110,25 @@ void putsChn(uint8_t x,uint8_t y,uint8_t idx1,uint8_t att)
                         "CH17CH18CH19CH20CH21CH22CH23CH24CH25CH26CH27CH28CH29CH30")+4*idx1,4,att);
 }
 
-void putsDrSwitches(uint8_t x,uint8_t y,int8_t idx1,uint8_t att)//, bool nc)
+void putsDrSwitches(uint8_t x,uint8_t y,int8_t idx,uint8_t att)//, bool nc)
 {
-  switch(idx1){
+  switch(idx){
     case  0:            lcd_putsAtt(x+FW,y,PSTR("---"),att);return;
     case  MAX_DRSWITCH: lcd_putsAtt(x+FW,y,PSTR("ON "),att);return;
     case -MAX_DRSWITCH: lcd_putsAtt(x+FW,y,PSTR("OFF"),att);return;
   }
-  lcd_putcAtt(x,y, idx1<0 ? '!' : ' ',att);
-  lcd_putsnAtt(x+FW,y,get_switches_string()+3*(abs(idx1)-1),3,att);
+  lcd_putcAtt(x,y, idx<0 ? '!' : ' ',att);
+  lcd_putsnAtt(x+FW,y,get_switches_string()+3*(abs(idx)-1),3,att);
+}
+
+void putsFlightPhases(uint8_t x, uint8_t y, int8_t idx, uint8_t att)
+{
+  if (idx==0) { lcd_putsAtt(x,y,PSTR("---"),att); return; }
+  if (idx < 0) {
+    lcd_putcAtt(x, y, '!', att);
+    x += FW;
+  }
+  lcd_putsnAtt(x, y, PSTR("FP1FP2FP3")+3*(abs(idx)-1), 3, att);
 }
 
 const prog_char *get_switches_string()
@@ -167,6 +177,19 @@ inline int16_t getValue(uint8_t i)
     else if(i<CHOUT_BASE+NUM_CHNOUT+NUM_TELEMETRY) return frskyTelemetry[i-CHOUT_BASE-NUM_CHNOUT].value;
 #endif
     else return 0;
+}
+
+uint8_t getFlightPhase(uint8_t trimsonly)
+{
+  for (int8_t i=MAX_PHASES-2; i>=0; i--) {
+    FlightPhaseData *phase = &g_model.phaseData[i];
+    if (phase->swtch && getSwitch(phase->swtch, 0)) {
+      if (trimsonly && !phase->trims)
+        return 0;
+      return i+1;
+    }
+  }
+  return 0;
 }
 
 bool getSwitch(int8_t swtch, bool nc, uint8_t level)
@@ -518,18 +541,21 @@ uint8_t checkTrim(uint8_t event)
   int8_t  s = g_model.trimInc;
   if (s>1) s = 1 << (s-1);  // 1=>1  2=>2  3=>4  4=>8
 
+  uint8_t flightPhase = getFlightPhase(true);
+
   if((k>=0) && (k<8))// && (event & _MSK_KEY_REPT))
   {
     //LH_DWN LH_UP LV_DWN LV_UP RV_DWN RV_UP RH_DWN RH_UP
     uint8_t idx = k/2;
-    int8_t  v = (s==0) ? (abs(g_model.trim[0][idx])/4)+1 : s;
+    int8_t  t = g_model.trim[flightPhase][idx];
+    int8_t  v = (s==0) ? (abs(t)/4)+1 : s;
     bool thro = (((2-(g_eeGeneral.stickMode&1)) == idx) && (g_model.thrTrim));
     if (thro) v = 4; // if throttle trim and trim trottle then step=4
-    int16_t x = (k&1) ? g_model.trim[0][idx] + v : g_model.trim[0][idx] - v;   // positive = k&1
+    int16_t x = (k&1) ? t + v : t - v;   // positive = k&1
 
-    if(((x==0)  ||  ((x>=0) != (g_model.trim[0][idx]>=0))) && (!thro) && (g_model.trim[0][idx]!=0))
+    if(((x==0)  ||  ((x>=0) != (t>=0))) && (!thro) && (t!=0))
     {
-      g_model.trim[0][idx]=0;
+      g_model.trim[flightPhase][idx]=0;
       killEvents(event);
       warble = false;
 #if defined (BEEPSPKR)
@@ -539,7 +565,7 @@ uint8_t checkTrim(uint8_t event)
 #endif
     }
     else if(x>-125 && x<125){
-      g_model.trim[0][idx] = (int8_t)x;
+      g_model.trim[flightPhase][idx] = (int8_t)x;
       STORE_MODELVARS;
       if(event & _MSK_KEY_REPT) warble = true;
 #if defined (BEEPSPKR)
@@ -547,12 +573,12 @@ uint8_t checkTrim(uint8_t event)
       // beepTrimSpkr((x/3)+60);  // Range -125 to 125 = toneFreq: 19 to 101
       beepTrimSpkr((x/4)+60);  // Divide by 4 more efficient. Range -125 to 125 = toneFreq: 28 to 91
 #else
-      beepKey();
+      beepWarn1();
 #endif
     }
     else
     {
-      g_model.trim[0][idx] = (x>0) ? 125 : -125;
+      g_model.trim[flightPhase][idx] = (x>0) ? 125 : -125;
       STORE_MODELVARS;
       warble = false;
 #if defined (BEEPSPKR)
@@ -1309,8 +1335,13 @@ void setStickCenter() // copy state of 3 primary to subtrim
     g_model.limitData[i].offset = max(min(v, 1000), -1000); // make sure the offset doesn't go haywire
   }
 
+  // TODO discuss with bryan what should be done here.
+  // I choosed the easy way: use the current flight mode trims to compute the channels offsets => Instant trim will be ok (to be tested)
+  // But other flight modes will have their trims wrong after this function called
+  uint8_t flightPhase = getFlightPhase(true);
   for (uint8_t i=0; i<4; i++)
-    if (!IS_THROTTLE(i)) g_model.trim[0][i] = 0;// set trims to zero.
+    if (!IS_THROTTLE(i)) g_model.trim[flightPhase][i] = 0;// set trims to zero.
+
   STORE_MODELVARS;
   beepWarn1();
 }
