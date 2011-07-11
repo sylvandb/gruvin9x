@@ -1,4 +1,7 @@
 #summary Battery voltage averaging. (Losing the jitters.)
+
+*NOTE:* Much of this is no longer relevant since incorporating new code to work with self-calibrating band gap reference, which was done to prevent falsely high battery voltage levels when actually below 6v -- when the external ADC reference voltage also starts to fall.
+
 = Why =
 
 Whilst my own Lithium-Ion powered '9X seems fairly stable when taking ADC samples of battery voltage, I've come across several that have considerably more 'jitter' -- especially when powered by relatively high internal resistance cells, like alkaline AA-8-packs for example. 
