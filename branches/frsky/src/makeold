@@ -1,0 +1,5 @@
+#!/bin/sh
+# builds for Gruvin's old, regional hacked up 9X -- the one used for at field flying
+
+make clean TARGET=gruvin9x_old
+make TARGET=gruvin9x_old PCB=STD EXT=FRSKY BEEPER=SPEAKER USART1=FREED PPMIN=MOD1 TRANSLATIONS=YES

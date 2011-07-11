@@ -666,7 +666,7 @@ public:
 };
 
 // #define STARTADCONV (ADCSRA  = (1<<ADEN) | (1<<ADPS0) | (1<<ADPS1) | (1<<ADPS2) | (1<<ADSC) | (1 << ADIE))
-int16_t BandGap ;
+uint16_t BandGap ;
 static uint16_t s_anaFilt[8];
 uint16_t anaIn(uint8_t chan)
 {
@@ -736,20 +736,16 @@ void getADC_single()
 
 void getADC_bandgap()
 {
-  ADMUX=0x1E|ADC_VREF_TYPE;
-  // Start the AD conversion
-  ADCSRA|=0x40;
-  // Wait for the AD conversion to complete
-  while ((ADCSRA & 0x10)==0);
-  ADCSRA|=0x10;
-  // Do it twice, first conversion may be wrong
-  ADCSRA|=0x40;
-  // Wait for the AD conversion to complete
-  while ((ADCSRA & 0x10)==0);
-  ADCSRA|=0x10;
-  BandGap = ADCW;
-  if(BandGap<256)
-      BandGap = 256;
+#if defined(PCBSTD)
+  ADMUX=0x1E|ADC_VREF_TYPE; // Switch MUX to internal 1.1V reference
+  ADCSRA|=0x40; while ((ADCSRA & 0x10)==0); ADCSRA|=0x10; // grab a sample
+  ADCSRA|=0x40; while ((ADCSRA & 0x10)==0); ADCSRA|=0x10; // again becasue first one is usually inaccurate
+  BandGap=ADCW;
+#else
+  BandGap=225; // gruvin: 1.1V internal Vref doesn't seem to work on the ATmega2561.
+               //         I get progressively lower and lower result on ever read. 
+               //         Not good :/
+#endif
 }
 
 getADCp getADC[3] = {
@@ -880,14 +876,17 @@ Gruvin:
 
         // G: Running average (virtual 7 stored plus current sample) for batt volts to stablise display
         // Average the raw samples so the calibrartion screen updates instantly
-        uint16_t ab = ((uint32_t)(abRunningAvg * 7) + anaIn(7)) / 8;
-        abRunningAvg = ab;
+        int32_t ab = ((abRunningAvg * 7) + anaIn(7)) / 8;
+        abRunningAvg = (uint16_t)ab;
 
-#ifdef THBATVOLTS
-        g_vbat100mV = (ab*35 + ab / 4 * g_eeGeneral.vBatCalib) / 512; // G: Hmmm. See above.
-#else
-        g_vbat100mV = (ab + 4 * g_eeGeneral.vBatCalib) * 36 / 512; // G: Similar still, but no overflow now.
-#endif
+        // Calculation By Mike Blandford
+        // Resistor divide on battery voltage is 5K1 and 2K7 giving a fraction of 2.7/7.8
+        // If battery voltage = 10V then A2D voltage = 3.462V
+        // 11 bit A2D count is 1417 (3.462/5*2048).
+        // 1417*18/256 = 99 (actually 99.6) to represent 9.9 volts.
+        // Erring on the side of low is probably best.
+
+        g_vbat100mV = (ab*16 + (ab*g_eeGeneral.vBatCalib)/8)/BandGap;
 
         static uint8_t s_batCheck;
         s_batCheck+=32;
@@ -895,7 +894,6 @@ Gruvin:
           beepErr();
           if (g_eeGeneral.flashBeep) g_LightOffCounter = FLASH_DURATION;
         }
-
 
       }
       break;
