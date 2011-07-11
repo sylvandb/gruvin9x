@@ -131,7 +131,7 @@ typedef struct t_MixData {
 #define MLTPX_MUL  1
 #define MLTPX_REP  2
   uint8_t mltpx:3;           // multiplex method 0=+ 1=* 2=replace
-  int8_t  flightPhase:4;     // -4=!FP4, 0=normal, 4=FP4
+  int8_t  flightPhase:4;     // -3=!FP3, 0=normal, 3=FP3
   int8_t  sOffset;
 } __attribute__((packed)) MixData;
 
@@ -176,6 +176,11 @@ typedef struct t_SwashRingData { // Swash Ring data
   uint8_t chY; // 2 channels to limit */
 } __attribute__((packed)) SwashRingData;
 
+typedef struct t_FlightPhaseData {
+  int8_t swtch:7;
+  uint8_t trims:1;
+} __attribute__((packed)) FlightPhaseData;
+
 #define MAX_MODELS 16
 #define MAX_MIXERS 32
 #define MAX_CURVE5 8
@@ -208,7 +213,7 @@ typedef struct t_ModelData {
   MixData   mixData[MAX_MIXERS];
   LimitData limitData[NUM_CHNOUT];
   ExpoData  expoData[4];
-  int8_t    flightPhaseSw[MAX_PHASES-1];
+  FlightPhaseData phaseData[MAX_PHASES-1];
   int8_t    trim[MAX_PHASES][4];
   int8_t    curves5[MAX_CURVE5][5];
   int8_t    curves9[MAX_CURVE9][9];

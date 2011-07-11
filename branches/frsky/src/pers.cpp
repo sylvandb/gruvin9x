@@ -118,7 +118,7 @@ uint8_t Translate(EEGeneral *p)
         }
         memmove(&g_model.limitData[0], &v3->limitData[0], sizeof(LimitData)*NUM_CHNOUT);
         memmove(&g_model.expoData[0], &v3->expoData[0], sizeof(ExpoData)*4);
-        memset(&g_model.flightPhaseSw, 0, MAX_PHASES-1);
+        memset(&g_model.phaseData, 0, sizeof(g_model.phaseData));
         memmove(&g_model.trim[0][0], &v3->trim[0], 4);
         memset(&g_model.trim[1][0], 0, 4*(MAX_PHASES-1));
         memmove(&g_model.curves5[0][0], &v3->curves5[0][0], 5*MAX_CURVE5);
