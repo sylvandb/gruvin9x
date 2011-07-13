@@ -65,10 +65,11 @@ uint8_t Translate(EEGeneral *p)
     alert(p->myVers == EEPROM_VER_r584 ? PSTR("EEprom Data v3") : PSTR("EEprom Data Er9x v4"), true);
     message(PSTR("EEPROM Converting"));
     memset(&p->frskyRssiAlarms, 0 , sizeof(p->frskyRssiAlarms));
-    if (p->myVers == EEPROM_ER9X_VER) {
-      if (p->lightSw == MAX_DRSWITCH-6)
+    if (p->myVers == EEPROM_VER_r584) {
+      // previous version had only 6 custom switches, OFF and ON values have to be shifted 6
+      if (p->lightSw == MAX_SWITCH-6)
         p->lightSw += 6;
-      if (p->lightSw == -MAX_DRSWITCH+6)
+      if (p->lightSw == -MAX_SWITCH+6)
         p->lightSw -= 6;
     }
     EEPROM_V3::EEGeneral *old = (EEPROM_V3::EEGeneral *)p;

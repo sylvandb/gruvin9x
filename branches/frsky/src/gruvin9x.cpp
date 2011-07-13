@@ -110,12 +110,12 @@ void putsChn(uint8_t x,uint8_t y,uint8_t idx1,uint8_t att)
                         "CH17CH18CH19CH20CH21CH22CH23CH24CH25CH26CH27CH28CH29CH30")+4*idx1,4,att);
 }
 
-void putsDrSwitches(uint8_t x,uint8_t y,int8_t idx,uint8_t att)//, bool nc)
+void putsSwitches(uint8_t x,uint8_t y,int8_t idx,uint8_t att)//, bool nc)
 {
   switch(idx){
     case  0:            lcd_putsAtt(x+FW,y,PSTR("---"),att);return;
-    case  MAX_DRSWITCH: lcd_putsAtt(x+FW,y,PSTR("ON "),att);return;
-    case -MAX_DRSWITCH: lcd_putsAtt(x+FW,y,PSTR("OFF"),att);return;
+    case  MAX_SWITCH: lcd_putsAtt(x+FW,y,PSTR("ON "),att);return;
+    case -MAX_SWITCH: lcd_putsAtt(x+FW,y,PSTR("OFF"),att);return;
   }
   lcd_putcAtt(x,y, idx<0 ? '!' : ' ',att);
   lcd_putsnAtt(x+FW,y,get_switches_string()+3*(abs(idx)-1),3,att);
@@ -145,12 +145,12 @@ void putsTmrMode(uint8_t x, uint8_t y, uint8_t attr)
     return;
   }
 
-  if(abs(tm)<(TMR_VAROFS+MAX_DRSWITCH-1)) { //normal on-off
+  if(abs(tm)<(TMR_VAROFS+MAX_SWITCH-1)) { //normal on-off
     putsDrSwitches( x-1*FW,y,tm>0 ? tm-(TMR_VAROFS-1) : tm+(TMR_VAROFS-1),attr);
     return;
   }
 
-  putsDrSwitches( x-1*FW,y,tm>0 ? tm-(TMR_VAROFS+MAX_DRSWITCH-1-1) : tm+(TMR_VAROFS+MAX_DRSWITCH-1-1),attr);//momentary on-off
+  putsDrSwitches( x-1*FW,y,tm>0 ? tm-(TMR_VAROFS+MAX_SWITCH-1-1) : tm+(TMR_VAROFS+MAX_SWITCH-1-1),attr);//momentary on-off
   lcd_putcAtt(x+3*FW,  y,'m',attr);
 }
 
@@ -198,12 +198,12 @@ bool getSwitch(int8_t swtch, bool nc, uint8_t level)
 
   switch(swtch){
     case  0:            return  nc;
-    case  MAX_DRSWITCH: return  true;
-    case -MAX_DRSWITCH: return  false;
+    case  MAX_SWITCH: return  true;
+    case -MAX_SWITCH: return  false;
   }
 
   uint8_t dir = swtch>0;
-  if(abs(swtch)<(MAX_DRSWITCH-NUM_CSW)) {
+  if(abs(swtch)<(MAX_SWITCH-NUM_CSW)) {
     if(!dir) return ! keyState((EnumKeys)(SW_BASE-swtch-1));
     return            keyState((EnumKeys)(SW_BASE+swtch-1));
   }
@@ -213,7 +213,7 @@ bool getSwitch(int8_t swtch, bool nc, uint8_t level)
   //input -> 1..4 -> sticks,  5..8 pots
   //MAX,FULL - disregard
   //ppm
-  CustomSwData &cs = g_model.customSw[abs(swtch)-(MAX_DRSWITCH-NUM_CSW)];
+  CustomSwData &cs = g_model.customSw[abs(swtch)-(MAX_SWITCH-NUM_CSW)];
   if(!cs.func) return false;
 
 

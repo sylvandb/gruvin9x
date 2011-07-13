@@ -267,7 +267,9 @@ enum EnumKeys {
 #define SW_BASE      SW_ThrCt
 #define SW_BASE_DIAG SW_ThrCt
 //#define SWITCHES_STR "  NC  ON THR RUD ELE ID0 ID1 ID2 AILGEARTRNR"
-#define MAX_DRSWITCH (1+SW_Trainer-SW_ThrCt+1+NUM_CSW)
+#define MAX_PSWITCH   (SW_Trainer-SW_ThrCt+1)  // 9 physical switches
+#define MAX_SWITCH    (1+MAX_PSWITCH+NUM_CSW)  // 22(1+9+12) !switches + 0 + 22 switches: 6 bits needed
+#define MAX_DRSWITCH  (MAX_PSWITCH+NUM_CSW/2)  // 15(9+6) !switches + 0 + 9 switches: 5 bits needed
 
 #define NUM_STICKS      4
 #define NUM_POTS        3
@@ -388,14 +390,14 @@ void perOut(int16_t *chanOut, uint8_t att);
 ///
 ///   \param swtch
 ///     0                : not connected. Liefert den Wert 'nc'
-///     1.. MAX_DRSWITCH : SW_ON .. SW_Trainer
-///    -1..-MAX_DRSWITCH : negierte Werte
+///     1.. MAX_SWITCH : SW_ON .. SW_Trainer
+///    -1..-MAX_SWITCH : negierte Werte
 ///   \param nc Wert, der bei swtch==0 geliefert wird.
 bool    getSwitch(int8_t swtch, bool nc, uint8_t level=0);
 /// Zeigt den Namen des Switches 'swtch' im display an
 ///   \param x     x-koordinate 0..127
 ///   \param y     y-koordinate 0..63 (nur durch 8 teilbar)
-///   \param swtch -MAX_DRSWITCH ..  MAX_DRSWITCH
+///   \param swtch -MAX_SWITCH ..  MAX_SWITCH
 ///   \param att   NO_INV,INVERS,BLINK
 ///
 

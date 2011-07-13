@@ -272,10 +272,10 @@ void timer(uint8_t val)
   static uint16_t s_sum;
   static uint8_t sw_toggled;
 
-  if(abs(tm)>=(TMR_VAROFS+MAX_DRSWITCH-1)){ //toggeled switch//abs(g_model.tmrMode)<(10+MAX_DRSWITCH-1)
+  if(abs(tm)>=(TMR_VAROFS+MAX_SWITCH-1)){ //toggeled switch//abs(g_model.tmrMode)<(10+MAX_SWITCH-1)
     static uint8_t lastSwPos;
     if(!(sw_toggled | s_sum | s_cnt | s_time | lastSwPos)) lastSwPos = tm < 0;  // if initializing then init the lastSwPos
-    uint8_t swPos = getSwitch(tm>0 ? tm-(TMR_VAROFS+MAX_DRSWITCH-1-1) : tm+(TMR_VAROFS+MAX_DRSWITCH-1-1) ,0);
+    uint8_t swPos = getSwitch(tm>0 ? tm-(TMR_VAROFS+MAX_SWITCH-1-1) : tm+(TMR_VAROFS+MAX_SWITCH-1-1) ,0);
     if(swPos && !lastSwPos)  sw_toggled = !sw_toggled;  //if switcdh is flipped first time -> change counter state
     lastSwPos = swPos;
   }
@@ -289,7 +289,7 @@ void timer(uint8_t val)
   s_cnt   = 0;
 
   if(abs(tm)<TMR_VAROFS) sw_toggled = false; // not switch - sw timer off
-  else if(abs(tm)<(TMR_VAROFS+MAX_DRSWITCH-1)) sw_toggled = getSwitch((tm>0 ? tm-(TMR_VAROFS-1) : tm+(TMR_VAROFS-1)) ,0); //normal switch
+  else if(abs(tm)<(TMR_VAROFS+MAX_SWITCH-1)) sw_toggled = getSwitch((tm>0 ? tm-(TMR_VAROFS-1) : tm+(TMR_VAROFS-1)) ,0); //normal switch
 
   s_timeCumTot               += 1;
   s_timeCumAbs               += 1;

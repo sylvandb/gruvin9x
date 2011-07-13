@@ -119,7 +119,7 @@ void menuProcSetup(uint8_t event)
   if(s_pgOfs<subN) {
     lcd_puts_P(0, y,PSTR("Light switch"));
     putsDrSwitches(PARAM_OFS-FW,y,g_eeGeneral.lightSw,sub==subN ? INVERS : 0);
-    if(sub==subN) CHECK_INCDEC_H_GENVAR(event, g_eeGeneral.lightSw, -MAX_DRSWITCH, MAX_DRSWITCH);
+    if(sub==subN) CHECK_INCDEC_H_GENVAR(event, g_eeGeneral.lightSw, -MAX_SWITCH, MAX_SWITCH);
     if((y+=FH)>7*FH) return;
   }subN++;
 
@@ -369,7 +369,7 @@ void menuProcTrainer(uint8_t event)
     edit = (sub==i && subSub==3);
     putsDrSwitches(15*FW, y, td->swtch, edit ? blink : 0);
     if (edit && s_editMode)
-      CHECK_INCDEC_H_GENVAR(event, td->swtch, -MAX_DRSWITCH, MAX_DRSWITCH); // TODO swtch is only 5 bits, how can we go from -MAX_DRSWITCH to MAX_DRSWITCH
+      CHECK_INCDEC_H_GENVAR(event, td->swtch, -MAX_DRSWITCH, MAX_DRSWITCH);
 
     y += FH;
   }
