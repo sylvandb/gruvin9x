@@ -386,7 +386,7 @@ void perOut(int16_t *chanOut, uint8_t att);
 ///   Liefert den Zustand des Switches 'swtch'. Die Numerierung erfolgt ab 1
 ///   (1=SW_ON, 2=SW_ThrCt, 10=SW_Trainer). 0 Bedeutet not conected.
 ///   Negative Werte  erzeugen invertierte Ergebnisse.
-///   Die Funktion putsDrSwitches(..) erzeugt den passenden Ausdruck.
+///   Die Funktion putsSwitches(..) erzeugt den passenden Ausdruck.
 ///
 ///   \param swtch
 ///     0                : not connected. Liefert den Wert 'nc'
@@ -403,7 +403,7 @@ bool    getSwitch(int8_t swtch, bool nc, uint8_t level=0);
 
 uint8_t getFlightPhase(uint8_t trimsonly);
 
-void putsDrSwitches(uint8_t x,uint8_t y,int8_t swtch,uint8_t att);
+void putsSwitches(uint8_t x,uint8_t y,int8_t swtch,uint8_t att);
 void putsFlightPhases(uint8_t x, uint8_t y, int8_t idx, uint8_t att);
 void putsTmrMode(uint8_t x, uint8_t y, uint8_t attr);
 
