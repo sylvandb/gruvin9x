@@ -24,6 +24,7 @@ Major
 * Added a filter cap around Q1 to try and stop spurious switching when the buzzer sounds.
 * Added voltage dividers to the four spare ADC pins, these may be used for monitoring individual Tx cell voltages,
   or anything, thought it useful to provide voltage dividers onboard.  
+* Removed matrix for push buttons to make the board a true drop in replacement.  
 * Added JTAG header
 * Changed 10pin ISP header to 6pin
 * Added breakout headers for spare pins, the whole of port L, half of port F (4x ADCs), and port H (inc. a second 

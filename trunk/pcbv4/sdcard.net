@@ -1,6 +1,6 @@
-# EESchema Netlist Version 1.1 created  03/07/2011 21:25:04
+# EESchema Netlist Version 1.1 created  15/07/2011 17:23:11
 (
- ( /4D3E3E91 BAT_HLD_2032 BT1 CR2032
+ ( /4D3E3E91 BAT_2032_FARNELL BT1 CR2032
   ( 1 N-000015 )
   ( 2 GND )
  )

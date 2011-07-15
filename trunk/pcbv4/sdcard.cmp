@@ -1,10 +1,10 @@
-Cmp-Mod V01 Genere par PcbNew le 03/07/2011 21:25:22
+Cmp-Mod V01 Created by CvPCB (2011-07-08 BZR 3044)-stable date = 15/07/2011 17:23:11
 
 BeginCmp
 TimeStamp = /4D3E3E91;
 Reference = BT1;
 ValeurCmp = CR2032;
-IdModule  = BAT_HLD_2032;
+IdModule  = BAT_2032_FARNELL;
 EndCmp
 
 BeginCmp
