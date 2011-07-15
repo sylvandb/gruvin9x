@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPCB (2011-07-08 BZR 3044)-stable date = 15/07/2011 15:44:28
+Cmp-Mod V01 Created by CvPCB (2011-07-08 BZR 3044)-stable date = 15/07/2011 18:05:19
 
 BeginCmp
 TimeStamp = /4CE748AC;
@@ -843,7 +843,7 @@ EndCmp
 BeginCmp
 TimeStamp = /4E2031C6;
 Reference = Q6;
-ValeurCmp = MOSFET_P;
+ValeurCmp = Si2319DS;
 IdModule  = SOT23GDS;
 EndCmp
 
@@ -1558,6 +1558,20 @@ BeginCmp
 TimeStamp = /4E2033CE;
 Reference = R101;
 ValeurCmp = 5K1;
+IdModule  = SM0603_GRUVIN;
+EndCmp
+
+BeginCmp
+TimeStamp = /4E2072D1;
+Reference = R102;
+ValeurCmp = 100R;
+IdModule  = SM0603_GRUVIN;
+EndCmp
+
+BeginCmp
+TimeStamp = /4E207322;
+Reference = R103;
+ValeurCmp = 100R;
 IdModule  = SM0603_GRUVIN;
 EndCmp
 
