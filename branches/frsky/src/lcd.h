@@ -62,7 +62,7 @@ extern void lcd_outdez(unsigned char x,unsigned char y,int16_t val);
 extern void lcd_plot(unsigned char x,unsigned char y);
 extern void lcd_hline(unsigned char x,unsigned char y, signed char w);
 extern void lcd_hlineStip(unsigned char x,unsigned char y, signed char w, uint8_t pat);
-extern void lcd_vline(uint8_t x,uint8_t y, int8_t h);
+extern void lcd_vline(uint8_t x, int8_t y, int8_t h);
 extern void lcd_rect(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_t pat=0xff);
 extern void lcd_empty_rect(uint8_t x, uint8_t y, uint8_t w, uint8_t h);
 extern void lcd_filled_rect(uint8_t x, uint8_t y, uint8_t w, uint8_t h);

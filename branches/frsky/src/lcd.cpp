@@ -296,8 +296,16 @@ void lcd_hline(uint8_t x,uint8_t y, int8_t w)
   lcd_hlineStip(x,y,w,0xff);
 }
 
-void lcd_vlineStip(uint8_t x, uint8_t y, int8_t h, uint8_t pat)
+void lcd_vlineStip(uint8_t x, int8_t y, int8_t h, uint8_t pat)
 {
+  if (y<0) {
+    h += y;
+    y = 0;
+  }
+  if (y+h > DISPLAY_H) {
+    h = DISPLAY_H - y;
+  }
+
   uint8_t *p  = &displayBuf[ y / 8 * DISPLAY_W + x ];
   y = y % 8;
   if (y) {
@@ -320,7 +328,7 @@ void lcd_vlineStip(uint8_t x, uint8_t y, int8_t h, uint8_t pat)
   }
 }
 
-void lcd_vline(uint8_t x, uint8_t y, int8_t h)
+void lcd_vline(uint8_t x, int8_t y, int8_t h)
 {
   lcd_vlineStip(x, y, h, 0xff);
 }
