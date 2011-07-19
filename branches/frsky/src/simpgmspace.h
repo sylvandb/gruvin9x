@@ -42,10 +42,17 @@ typedef const int8_t prog_int8_t;
 #define PORTA dummyport
 #define PORTB portb
 #define PORTC dummyport
+#define PORTD dummyport
+#define PORTE dummyport
+#define PORTF dummyport
 #define PORTG dummyport
-#define DDRA   dummyport
-#define DDRB   dummyport
-#define DDRC   dummyport
+#define DDRA  dummyport
+#define DDRB  dummyport
+#define DDRC  dummyport
+#define DDRD  dummyport
+#define DDRE  dummyport
+#define DDRF  dummyport
+#define DDRG  dummyport
 #define PINB  ~pinb
 #define PIND  ~pind
 #define PINE  ~pine
@@ -54,12 +61,10 @@ typedef const int8_t prog_int8_t;
 
 extern unsigned char pinb,pind,pine,ping,portb;
 extern unsigned char dummyport;
-//extern uint16_t anaIn(uint8_t chan);
-//void eeprom_write_block (const void *pointer_ram,
-//                    void *pointer_eeprom,
-//                         size_t size);
+
 void eeprom_read_block (void *pointer_ram,
                    const void *pointer_eeprom,
                         size_t size);
+
 #define offsetof(st, m) ((size_t) ( (char *)&((st *)(0))->m - (char *)0 ))
 #define wdt_reset()
