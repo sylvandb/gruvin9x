@@ -119,10 +119,17 @@ void menuMainView(uint8_t event)
   trimSwLock = getSwitch(g_model.trimSw,0);
 
   if (g_eeGeneral.view < 0x10) {
+    // TODO x needed?
     uint8_t x=FW*2;
     uint8_t att = (g_vbat100mV < g_eeGeneral.vBatWarn ? BLINK : 0) | DBLSIZE;
     for(uint8_t i=0;i<sizeof(g_model.name);i++)
       lcd_putcAtt(x+i*2*FW-i-2, 0*FH, g_model.name[i],DBLSIZE);
+
+    uint8_t flightPhase = getFlightPhase(false);
+    if (flightPhase && BLINK_ON_PHASE) {
+      lcd_hline(x+flightPhase*2*FW-flightPhase-1-2*FW, 2*FH-4, 10, LCD_WHITE);
+      lcd_filled_rect(x+flightPhase*2*FW-flightPhase-1-2*FW, 2*FH-3, 10, 2, LCD_BLACK);
+    }
 
     putsVBat(x+4*FW+2, 2*FH, att|NO_UNIT);
     lcd_putc(x+4*FW+2, 3*FH, 'V');
@@ -137,7 +144,7 @@ void menuMainView(uint8_t event)
     lcd_putsnAtt(x+8*FW-FW/2,2*FH,PSTR("   TTm")+3*g_model.thrTrim,3, 0);
 
     //trim sliders
-    uint8_t flightPhase = getFlightPhase(true);
+    flightPhase = getFlightPhase(true);
     for(uint8_t i=0; i<4; i++)
     {
 #define TL 27
