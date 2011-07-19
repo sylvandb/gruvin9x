@@ -437,6 +437,42 @@ int16_t intpol(int16_t x, uint8_t idx) // -100, -75, -50, -25, 0 ,25 ,50, 75, 10
   return erg / 25; // 100*D5/RESX;
 }
 
+// TODO should be in gruvin9x.cpp
+int16_t applyCurve(int16_t x, uint8_t idx, uint8_t srcRaw)
+{
+  switch(idx) {
+  case 0:
+    return x;
+  case 1:
+    if (srcRaw == MIX_FULL) { //FULL
+      if (x<0 ) x=-RESX;   //x|x>0
+      else x=-RESX+2*x;
+    }
+    else {
+      if (x<0) x=0;   //x|x>0
+    }
+    return x;
+  case 2:
+    if (srcRaw == MIX_FULL) { //FULL
+      if (x>0) x=RESX;   //x|x<0
+      else x=RESX+2*x;
+    }
+    else {
+      if (x>0) x=0;   //x|x<0
+    }
+    return x;
+  case 3:       // x|abs(x)
+    return abs(x);
+  case 4:       //f|f>0
+    return x>0 ? RESX : 0;
+  case 5:       //f|f<0
+    return x<0 ? -RESX : 0;
+  case 6:       //f|abs(f)
+    return x>0 ? RESX : -RESX;
+  }
+  return intpol(x, idx-7);
+}
+
 // static variables used in perOut - moved here so they don't interfere with the stack
 // It's also easier to initialize them here.
 uint16_t pulses2MHz[120] = {0};
@@ -449,6 +485,45 @@ int16_t  sDelay[MAX_MIXERS] = {0};
 int32_t  act   [MAX_MIXERS] = {0};
 uint8_t  swOn  [MAX_MIXERS] = {0};
 uint8_t mixWarning;
+
+// TODO should be in gruvin9x.cpp
+void applyExpos(int16_t *anas)
+{
+  static int16_t anas2[4]; // values before expo, to ensure same expo base when multiple expo lines are used
+  memcpy(anas2, anas, sizeof(anas2));
+
+  uint8_t flightPhase = getFlightPhase(false);
+
+  for (uint8_t i=0; i<DIM(g_model.expoData); i++) {
+    ExpoData &ed = g_model.expoData[i];
+    if (ed.mode==0) break; // end of list
+    // TODO duplicate
+    if (ed.flightPhase != 0) {
+      if (ed.flightPhase > 0) {
+        if (flightPhase != ed.flightPhase)
+          continue;
+      }
+      else {
+        if (flightPhase == -ed.flightPhase)
+          continue;
+      }
+    }
+    if (getSwitch(ed.swtch, 1)) {
+      int16_t v = anas2[ed.chn];
+      if((v<0 && ed.mode&1) || (v>=0 && ed.mode&2)) {
+        int16_t k = ed.expo;
+        if (IS_THROTTLE(i) && g_model.thrExpo)
+          v = 2*expo((v+RESX)/2, k);
+        else
+          v = expo(v, k);
+        if (ed.curve) v = applyCurve(v, ed.curve, 0);
+        v = ((int32_t)v * ed.weight) / 100;
+        if (IS_THROTTLE(i) && g_model.thrExpo) v -= RESX;
+        anas[ed.chn] = v;
+      }
+    }
+  }
+}
 
 void perOut(int16_t *chanOut, uint8_t att)
 {
@@ -482,9 +557,10 @@ void perOut(int16_t *chanOut, uint8_t att)
   }
 #endif
 
-  uint8_t flightPhase = getFlightPhase(true);
+  uint8_t flightPhaseTrim = getFlightPhase(true);
+  uint8_t flightPhase = getFlightPhase(false);
 
-  for(uint8_t i=0;i<7;i++){        // calc Sticks
+  for(uint8_t i=0;i<7;i++){        // Sticks & Pots
 
     //Normalization  [0..2048] ->   [-1024..1024]
 
@@ -499,7 +575,7 @@ void perOut(int16_t *chanOut, uint8_t att)
     if(!(v/16)) anaCenter |= 1<<(CONVERT_MODE((i+1))-1);
 
 
-    if(i<4) { //only do this for sticks
+    if (i<4) { //only do this for sticks
       if (!(att&NO_TRAINER) && g_model.traineron) {
         // trainer mode
         TrainerMix* td = &g_eeGeneral.trainer.mix[i];
@@ -522,30 +598,24 @@ void perOut(int16_t *chanOut, uint8_t att)
         v = int32_t(v)*g_model.swashR.value*RESX/(int32_t(d)*100);
 #endif
       
-      uint8_t expoDrOn = GET_DR_STATE(i);
-      uint8_t stkDir = v>0 ? DR_RIGHT : DR_LEFT;
-
-      if(IS_THROTTLE(i) && g_model.thrExpo){
-        v  = 2*expo((v+RESX)/2,g_model.expoData[i].expo[expoDrOn][DR_EXPO][DR_RIGHT]);
-        stkDir = DR_RIGHT;
-      }
-      else
-        v  = expo(v,g_model.expoData[i].expo[expoDrOn][DR_EXPO][stkDir]);
-
-      int32_t x = (int32_t)v * (g_model.expoData[i].expo[expoDrOn][DR_WEIGHT][stkDir]+100)/100;
-      v = (int16_t)x;
-      if (IS_THROTTLE(i) && g_model.thrExpo) v -= RESX;
-
-      //do trim -> throttle trim if applicable
-      int32_t vv = 2*RESX;
-      if(IS_THROTTLE(i) && g_model.thrTrim) vv = (g_eeGeneral.throttleReversed) ?
-                                 ((int32_t)g_model.trim[flightPhase][i]-125)*(RESX+v)/(2*RESX) :
-                                 ((int32_t)g_model.trim[flightPhase][i]+125)*(RESX-v)/(2*RESX);
-
-      //trim
-      trimA[i] = (vv==2*RESX) ? g_model.trim[flightPhase][i]*2 : (int16_t)vv*2; //    if throttle trim -> trim low end
     }
     anas[i] = v; //set values for mixer
+  }
+
+  /* EXPOs */
+  applyExpos(anas);
+
+  /* TRIMs */
+  for(uint8_t i=0; i<4; i++) {
+      // do trim -> throttle trim if applicable
+      int16_t v = anas[i];
+      int32_t vv = 2*RESX;
+      if(IS_THROTTLE(i) && g_model.thrTrim) vv = (g_eeGeneral.throttleReversed) ?
+                                 ((int32_t)g_model.trim[flightPhaseTrim][i]-125)*(RESX+v)/(2*RESX) :
+                                 ((int32_t)g_model.trim[flightPhaseTrim][i]+125)*(RESX-v)/(2*RESX);
+
+      //trim
+      trimA[i] = (vv==2*RESX) ? g_model.trim[flightPhaseTrim][i]*2 : (int16_t)vv*2; //    if throttle trim -> trim low end
   }
 
   //===========BEEP CENTER================
@@ -640,8 +710,6 @@ void perOut(int16_t *chanOut, uint8_t att)
   if(tick10ms) trace(); //trace thr 0..32  (/32)
 
   memset(chans,0,sizeof(chans));        // All outputs to 0
-  
-  flightPhase = getFlightPhase(false);
 
     //========== MIXER LOOP ===============
     mixWarning = 0;
@@ -656,7 +724,7 @@ void perOut(int16_t *chanOut, uint8_t att)
             continue;
         }
         else {
-          if (flightPhase == md->flightPhase)
+          if (flightPhase == -md->flightPhase)
             continue;
         }
       }
@@ -734,42 +802,8 @@ void perOut(int16_t *chanOut, uint8_t att)
 
 
       //========== CURVES ===============
-      switch(md->curve){
-        case 0:
-          break;
-        case 1:
-          if(md->srcRaw == MIX_FULL) //FUL
-          {
-            if( v<0 ) v=-RESX;   //x|x>0
-            else      v=-RESX+2*v;
-          }else{
-            if( v<0 ) v=0;   //x|x>0
-          }
-          break;
-        case 2:
-          if(md->srcRaw == MIX_FULL) //FUL
-          {
-            if( v>0 ) v=RESX;   //x|x<0
-            else      v=RESX+2*v;
-          }else{
-            if( v>0 ) v=0;   //x|x<0
-          }
-          break;
-        case 3:       // x|abs(x)
-          v = abs(v);
-          break;
-        case 4:       //f|f>0
-          v = v>0 ? RESX : 0;
-          break;
-        case 5:       //f|f<0
-          v = v<0 ? -RESX : 0;
-          break;
-        case 6:       //f|abs(f)
-          v = v>0 ? RESX : -RESX;
-          break;
-        default: //c1..c16
-          v = intpol(v, md->curve - 7);
-      }
+      if (md->curve)
+        v = applyCurve(v, md->curve, md->srcRaw);
 
       //========== TRIM ===============
       if((md->carryTrim==0) && (md->srcRaw>0) && (md->srcRaw<=4)) v += trimA[md->srcRaw-1];  //  0 = Trim ON  =  Default
@@ -891,7 +925,7 @@ void setupPulsesPPM() // changed 10/05/2010 by dino Issue 128
     uint16_t rest=22500u*2-q; //Minimum Framelen=22.5 ms
     if(p>9) rest=p*(1720u*2 + q) + 4000u*2; //for more than 9 channels, frame must be longer
     for(uint8_t i=0;i<p;i++){ //NUM_CHNOUT
-        int16_t v = max(min(g_chans512[i],PPM_range),-PPM_range) + PPM_CENTER;
+        int16_t v = max(min(g_chans512[i],(int16_t)PPM_range),(int16_t)-PPM_range) + (int16_t)PPM_CENTER;
         rest-=(v+q);
         pulses2MHz[j++] = q;
         pulses2MHz[j++] = v - q + 600; /* as Pat MacKenzie suggests */

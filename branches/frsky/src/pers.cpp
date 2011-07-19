@@ -118,7 +118,7 @@ uint8_t Translate(EEGeneral *p)
           g_model.mixData[i].flightPhase = 0;
         }
         memmove(&g_model.limitData[0], &v3->limitData[0], sizeof(LimitData)*NUM_CHNOUT);
-        memmove(&g_model.expoData[0], &v3->expoData[0], sizeof(ExpoData)*4);
+        memmove(&g_model.expoData[0], &v3->expoData[0], sizeof(EEPROM_V3::ExpoData)*4);
         memset(&g_model.phaseData, 0, sizeof(g_model.phaseData));
         memmove(&g_model.trim[0][0], &v3->trim[0], 4);
         memset(&g_model.trim[1][0], 0, 4*(MAX_PHASES-1));
@@ -152,10 +152,51 @@ uint8_t Translate(EEGeneral *p)
         theFile.writeRlc(FILE_MODEL(id), FILE_TYP_MODEL, (uint8_t*)&g_model, sizeof(g_model), 200);
       }
     }
+    p->myVers = EEPROM_VER_r751;
+  }
+
+  if (p->myVers == EEPROM_VER_r751) {
+    EEPROM_V4::ExpoData old[4];
+    for (uint8_t id=0; id<MAX_MODELS; id++) {
+      theFile.openRd(FILE_MODEL(id));
+      uint16_t sz = theFile.readRlc((uint8_t*)&g_model, sizeof(ModelData));
+      if (sz == sizeof(ModelData)) {
+        memcpy(&old[0], &g_model.expoData[0], sizeof(old));
+        memset(&g_model.expoData[0], 0, sizeof(old));
+        uint8_t e = 0;
+        for (uint8_t ch=0; ch<4 && e<MAX_EXPOS; ch++) {
+          for (int8_t dr=2; dr>=0 && e<MAX_EXPOS; dr--) {
+            if ((dr==0 && !old[ch].drSw1) ||
+                (dr==1 && !old[ch].drSw2) ||
+                (dr==2 && !old[ch].expo[2][0][0] && !old[ch].expo[2][0][1] && !old[ch].expo[2][1][0] && !old[ch].expo[2][1][1])) continue;
+            g_model.expoData[e].swtch = (dr == 0 ? old[ch].drSw1 : (dr == 1 ? old[ch].drSw2 : 0));
+            g_model.expoData[e].chn = ch;
+            g_model.expoData[e].expo = old[ch].expo[dr][0][0];
+            g_model.expoData[e].weight = 100 + old[ch].expo[dr][1][0];
+            if (old[ch].expo[dr][0][0] == old[ch].expo[dr][0][1] && old[ch].expo[dr][1][0] == old[ch].expo[dr][1][1]) {
+              g_model.expoData[e++].mode = 3;
+            }
+            else {
+              g_model.expoData[e].mode = 1;
+              if (e < MAX_EXPOS-1) {
+                g_model.expoData[e+1].swtch = g_model.expoData[e].swtch;
+                g_model.expoData[++e].chn = ch;
+                g_model.expoData[e].mode = 2;
+                g_model.expoData[e].expo = old[ch].expo[dr][0][1];
+                g_model.expoData[e++].weight = 100 + old[ch].expo[dr][1][1];
+              }
+            }
+          }
+        }
+        theFile.writeRlc(FILE_MODEL(id), FILE_TYP_MODEL, (uint8_t*)&g_model, sizeof(g_model), 200);
+      }
+    }
     p->myVers = EEPROM_VER;
     theFile.writeRlc(FILE_GENERAL, FILE_TYP_GENERAL, (uint8_t*)p, sizeof(EEGeneral), 200);
     return 1;
   }
+
+
 
   return 0;
 }
@@ -181,7 +222,8 @@ bool eeLoadGeneral()
 void modelDefault(uint8_t id)
 {
   memset(&g_model, 0, sizeof(g_model));
-  strcpy_P(g_model.name,PSTR("MODEL     "));
+  // TODO was a strcpy_P with limit overflow (10+1 chars)
+  strncpy(g_model.name, "MODEL     ", 10);
   g_model.name[5]='0'+(id+1)/10;
   g_model.name[6]='0'+(id+1)%10;
 

@@ -58,6 +58,11 @@ const prog_char APM modi12x3[]=
   "AIL ELE THR RUD "
   "AIL THR ELE RUD ";
 
+ExpoData *expoaddress( uint8_t idx )
+{
+  return &g_model.expoData[idx] ;
+}
+
 MixData *mixaddress( uint8_t idx )
 {
   return &g_model.mixData[idx] ;
@@ -336,8 +341,11 @@ inline uint8_t keyDown()
 
 void clearKeyEvents()
 {
+// TODO check why it blocks everything
+#ifndef SIM
     while(keyDown());  // loop until all keys are up
     putEvent(0);
+#endif
 }
 
 void doSplash()
@@ -355,8 +363,10 @@ void doSplash()
       lcdSetRefVolt(g_eeGeneral.contrast);
       clearKeyEvents();
 
+#ifndef SIM
       for(uint8_t i=0; i<32; i++)
         getADC_filt(); // init ADC array
+#endif
 
 #define INAC_DEVISOR 256   // Bypass splash screen with stick movement
       uint16_t inacSum = 0;
@@ -366,7 +376,9 @@ void doSplash()
       uint16_t tgtime = get_tmr10ms() + SPLASH_TIMEOUT;  //2sec splash screen
       while(tgtime != get_tmr10ms())
       {
+#ifndef SIM
         getADC_filt();
+#endif
         uint16_t tsum = 0;
         for(uint8_t i=0; i<4; i++)
           tsum += anaIn(i)/INAC_DEVISOR;
@@ -412,7 +424,9 @@ void checkTHR()
 
   int16_t lowLim = THRCHK_DEADBAND + g_eeGeneral.calibMid[thrchn] - g_eeGeneral.calibSpanNeg[thrchn];
 
+#ifndef SIM
   getADC_single();   // if thr is down - do not display warning at all
+#endif
   int16_t v = anaIn(thrchn);
   if(v<=lowLim) return;
 
@@ -422,10 +436,12 @@ void checkTHR()
   //loop until all switches are reset
   while (1)
   {
+#ifndef SIM
       getADC_single();
+#endif
       int16_t v = anaIn(thrchn);
-      if(v<=lowLim || keyDown()) 
-      {
+
+      if(v<=lowLim || keyDown()) {
         clearKeyEvents();
         return;
       }
@@ -695,6 +711,7 @@ int8_t checkIncDec_hg(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max)
   return checkIncDec(event,i_val,i_min,i_max,EE_GENERAL);
 }
 
+#ifndef SIM
 class AutoLock
 {
   uint8_t m_saveFlags;
@@ -796,6 +813,9 @@ getADCp getADC[3] = {
   getADC_osmp,
   getADC_filt
 };
+#else
+uint16_t BandGap = 225;
+#endif
 
 uint16_t abRunningAvg = 0;
 uint8_t  g_vbat100mV;
@@ -964,8 +984,8 @@ Gruvin:
 int16_t g_ppmIns[8];
 uint8_t ppmInState = 0; //0=unsync 1..8= wait for value i-1
 
-#include <avr/interrupt.h>
-//#include <avr/wdt.h>
+#ifndef SIM
+
 #define HEART_TIMER2Mhz 1;
 #define HEART_TIMER10ms 2;
 
@@ -1272,8 +1292,6 @@ uint32_t get_fattime(void)
 
 extern uint16_t g_timeMain;
 
-#include <avr/io.h>
-
 /*
 // gruvin: Fuse declarations work if we use the .elf file for AVR Studio (v4)
 // instead of the Intel .hex files.  They should also work with AVRDUDE v5.10
@@ -1319,6 +1337,8 @@ unsigned int stack_free()
   return p - &__bss_end ;
 }
 
+#endif
+
 void setStickCenter() // copy state of 3 primary to subtrim
 {
   int16_t zero_chans512_before[NUM_CHNOUT];
@@ -1332,7 +1352,7 @@ void setStickCenter() // copy state of 3 primary to subtrim
     v += g_model.limitData[i].revert ?
          (zero_chans512_before[i] - zero_chans512_after[i]) :
          (zero_chans512_after[i] - zero_chans512_before[i]);
-    g_model.limitData[i].offset = max(min(v, 1000), -1000); // make sure the offset doesn't go haywire
+    g_model.limitData[i].offset = max(min(v, (int16_t)1000), (int16_t)-1000); // make sure the offset doesn't go haywire
   }
 
   // TODO discuss with bryan what should be done here.
@@ -1346,6 +1366,7 @@ void setStickCenter() // copy state of 3 primary to subtrim
   beepWarn1();
 }
 
+#ifndef SIM
 int main(void)
 {
   // Set up I/O port data diretions and initial states
@@ -1440,19 +1461,19 @@ int main(void)
 
   lcdSetRefVolt(25);
   eeReadAll();
-  
+
   uint8_t cModel = g_eeGeneral.currModel;
   checkQuickSelect();
-  
+
   doSplash();
   checkMem();
 
   getADC_single();
   checkTHR();
-  
+
   checkSwitches();
   checkAlarm();
-  
+
   clearKeyEvents(); //make sure no keys are down before proceeding
   
   setupPulses();
@@ -1506,4 +1527,4 @@ int main(void)
     g_timeMain = max(g_timeMain,t0);
   }
 }
-
+#endif

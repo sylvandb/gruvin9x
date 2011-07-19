@@ -18,13 +18,6 @@
 
 #include <inttypes.h>
 
-
-//eeprom data
-//#define EE_VERSION 2
-
-// eeprom ver <9 => mdvers == 1
-// eeprom ver >9 => mdvers ==2
-
 #define WARN_THR_BIT  0x01
 #define WARN_BEP_BIT  0x80
 #define WARN_SW_BIT   0x02
@@ -37,9 +30,12 @@
 #define WARN_MEM     (!(g_eeGeneral.warnOpts & WARN_MEM_BIT))
 #define BEEP_VAL     ( (g_eeGeneral.warnOpts & WARN_BVAL_BIT) >>3 )
 
-#define EEPROM_VER_r584  3
 #define EEPROM_ER9X_VER  4
-#define EEPROM_VER       5
+#define EEPROM_ER9X_r751 9
+
+#define EEPROM_VER_r584  3
+#define EEPROM_VER_r751  5
+#define EEPROM_VER       100
 
 typedef struct t_TrainerMix {
   uint8_t srcChn:3; //0-7 = ch1-8
@@ -95,9 +91,13 @@ typedef struct t_EEGeneral {
 // eeprom modelspec
 
 typedef struct t_ExpoData {
-  int8_t  expo[3][2][2]; //[Norm/Dr1/Dr2][expo/weight][R/L]
-  int8_t  drSw1;
-  int8_t  drSw2;
+  uint8_t mode:2;         // 0=end, 1=pos, 2=neg, 3=both
+  uint8_t chn:2;
+  uint8_t curve:4;        // 0=no curve, 1-6=std curves, 7-10=CV1-CV4, 11-15=CV9-CV13
+  int8_t  flightPhase:3;  // -3=!FP3, 0=normal, 3=FP3
+  int8_t  swtch:5;
+  int8_t  weight;
+  int8_t  expo;
 } __attribute__((packed)) ExpoData;
 
 typedef struct t_LimitData {
@@ -182,10 +182,11 @@ typedef struct t_FlightPhaseData {
 } __attribute__((packed)) FlightPhaseData;
 
 #define MAX_MODELS 16
+#define MAX_PHASES 4
 #define MAX_MIXERS 32
+#define MAX_EXPOS  14
 #define MAX_CURVE5 8
 #define MAX_CURVE9 8
-#define MAX_PHASES 4
 
 #define NUM_CHNOUT   16 // number of real output channels CH1-CH16
 #define NUM_CSW      12  // number of custom switches
@@ -212,7 +213,7 @@ typedef struct t_ModelData {
   uint16_t  tmr2Val;
   MixData   mixData[MAX_MIXERS];
   LimitData limitData[NUM_CHNOUT];
-  ExpoData  expoData[4];
+  ExpoData  expoData[MAX_EXPOS];
   FlightPhaseData phaseData[MAX_PHASES-1];
   int8_t    trim[MAX_PHASES][4];
   int8_t    curves5[MAX_CURVE5][5];

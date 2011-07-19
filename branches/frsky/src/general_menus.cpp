@@ -369,7 +369,7 @@ void menuProcTrainer(uint8_t event)
     edit = (sub==i && subSub==3);
     putsSwitches(15*FW, y, td->swtch, edit ? blink : 0);
     if (edit && s_editMode)
-      CHECK_INCDEC_H_GENVAR(event, td->swtch, -MAX_DRSWITCH, MAX_DRSWITCH);
+      CHECK_INCDEC_H_GENVAR(event, td->swtch, -MAX_TRNSWITCH, MAX_TRNSWITCH);
 
     y += FH;
   }

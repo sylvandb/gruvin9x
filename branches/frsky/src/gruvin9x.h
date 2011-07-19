@@ -28,6 +28,11 @@
 #include "time.h"
 #endif
 
+#ifdef SIM
+  #include "simpgmspace.h"
+  #define APM
+  #include "stdio.h"
+#else
 ///opt/cross/avr/include/avr/pgmspace.h
 #include <stddef.h>
 #include <avr/io.h>
@@ -57,6 +62,7 @@
 #include <util/delay.h>
 #define pgm_read_adr(address_short) pgm_read_word(address_short)
 #include <avr/wdt.h>
+#endif
 
 //#define eeprom_write_block eeWriteBlockCmp
 
@@ -269,7 +275,8 @@ enum EnumKeys {
 //#define SWITCHES_STR "  NC  ON THR RUD ELE ID0 ID1 ID2 AILGEARTRNR"
 #define MAX_PSWITCH   (SW_Trainer-SW_ThrCt+1)  // 9 physical switches
 #define MAX_SWITCH    (1+MAX_PSWITCH+NUM_CSW)  // 22(1+9+12) !switches + 0 + 22 switches: 6 bits needed
-#define MAX_DRSWITCH  (MAX_PSWITCH+NUM_CSW/2)  // 15(9+6) !switches + 0 + 9 switches: 5 bits needed
+#define MAX_DRSWITCH  (MAX_PSWITCH+NUM_CSW/2)  // 15(9+6) !switches + 0 + 15 switches: 5 bits needed
+#define MAX_TRNSWITCH (MAX_PSWITCH+NUM_CSW/2)  // 15(9+6) !switches + 0 + 15 switches: 5 bits needed
 
 #define NUM_STICKS      4
 #define NUM_POTS        3
@@ -285,16 +292,6 @@ enum EnumKeys {
 #define NUM_TELEMETRY 0
 #define TELEMETRY_CHANNELS ""
 #endif
-
-#define DR_HIGH   0
-#define DR_MID    1
-#define DR_LOW    2
-#define DR_EXPO   0
-#define DR_WEIGHT 1
-#define DR_RIGHT  0
-#define DR_LEFT   1
-#define DR_DRSW1  99
-#define DR_DRSW2  98
 
 #define DSW_THR  1
 #define DSW_RUD  2
@@ -606,7 +603,9 @@ extern int16_t            g_chans512[NUM_CHNOUT];
 extern volatile uint8_t   tick10ms;
 extern uint16_t            BandGap;
 
+// TODO these functions should be in gruvin9x.cpp
 extern int16_t intpol(int16_t, uint8_t);
+extern int16_t applyCurve(int16_t, uint8_t, uint8_t srcRaw);
 extern uint16_t anaIn(uint8_t chan);
 extern int16_t calibratedStick[7];
 extern int16_t ex_chans[NUM_CHNOUT];
@@ -668,11 +667,7 @@ extern time_t g_unixTime; // global unix timestamp -- hold current time in secon
 extern uint8_t g_ms100; // defined in drivers.cpp
 #endif
 
-#define GET_DR_STATE(x) (!getSwitch(g_model.expoData[x].drSw1,0) ?   \
-                          DR_HIGH :                                  \
-                          !getSwitch(g_model.expoData[x].drSw2,0)?   \
-                          DR_MID : DR_LOW);
-
+extern ExpoData *expoaddress( uint8_t idx );
 extern MixData *mixaddress( uint8_t idx );
 extern LimitData *limitaddress( uint8_t idx );
 
