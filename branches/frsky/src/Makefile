@@ -603,6 +603,20 @@ gdb-config:
 	endif
 	@echo break main >> $(GDBINIT_FILE)
 
+INC=-I/usr/local/include/fox-1.6 -I/usr/include/fox-1.6 \
+    -I$(FOXPATH)/include
+
+LIB=-L/usr/local/lib \
+    -L$(FOXPATH)/src/.libs \
+    -lFOX-1.6 \
+    -Wl,-rpath,$(FOXPATH)/src/.libs
+    
+simu: $(CPPSRC) Makefile simu.cpp $(CPPSRC) *.h *.lbm eeprom.bin
+	gcc simu.cpp $(CPPFLAGS) $(CPPSRC) -g -Wall -osimu $(INC) $(LIB) -MD -DSIM
+
+eeprom.bin:
+	dd if=/dev/zero of=$@ bs=1 count=2048
+
 debug: gdb-config $(TARGET).elf
 	ifeq ($(DEBUG_BACKEND), avarice)
 	@echo Starting AVaRICE - Press enter when "waiting to connect" message displays.
@@ -726,6 +740,7 @@ clean: begin clean_list end
 clean_list :
 	@echo
 	@echo $(MSG_CLEANING)
+	$(REMOVE) simu
 	$(REMOVE) $(TARGET).hex
 	$(REMOVE) $(TARGET).eep
 	$(REMOVE) $(TARGET).cof

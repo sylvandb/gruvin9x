@@ -54,13 +54,14 @@ typedef const int8_t prog_int8_t;
 #define DDRF  dummyport
 #define DDRG  dummyport
 #define PINB  ~pinb
+#define PINC  ~pinc
 #define PIND  ~pind
 #define PINE  ~pine
 #define PING  ~ping
 #define EEMEM
 
-extern unsigned char pinb,pind,pine,ping,portb;
-extern unsigned char dummyport;
+extern unsigned char pinb,pinc,pind,pine,ping;
+extern unsigned char portb,dummyport;
 
 void eeprom_read_block (void *pointer_ram,
                    const void *pointer_eeprom,
