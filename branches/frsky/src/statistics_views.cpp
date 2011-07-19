@@ -76,7 +76,9 @@ void menuProcStatistic2(uint8_t event)
   lcd_outdezAtt(14*FW , 4*FH, (g_timeMain*100)/16 ,PREC2);
   lcd_puts_P( 0*FW,  5*FH, PSTR("t10ms          us"));
   lcd_outdez(14*FW , 5*FH, g_time_per10/2 );
+#ifndef SIM
   lcd_puts_P( 0*FW,  6*FH, PSTR("Stack          b"));
   lcd_outhex4( 10*FW+3, 6*FH, stack_free() ) ;
+#endif
   lcd_puts_P( 3*FW,  7*FH, PSTR("[MENU] to reset"));
 }
