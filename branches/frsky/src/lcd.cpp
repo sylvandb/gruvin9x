@@ -268,22 +268,40 @@ void lcd_outdezNAtt(uint8_t x,uint8_t y,int16_t val,uint8_t mode,uint8_t len)
   if(val<0) lcd_putcAtt(x-fw,y,'-',mode);
 }
 
-void lcd_plot(uint8_t x,uint8_t y)
+void lcd_mask(uint8_t *p, uint8_t mask, uint8_t att)
+{
+  assert(p < DISPLAY_END);
+
+  if (att & LCD_BLACK)
+    *p |= mask;
+  else if (att & LCD_WHITE)
+    *p &= ~mask;
+  else
+    *p ^= mask;
+}
+
+void lcd_plot(uint8_t x,uint8_t y, uint8_t att)
 {
   uint8_t *p   = &displayBuf[ y / 8 * DISPLAY_W + x ];
-  if(p<DISPLAY_END) *p ^= BITMASK(y%8);
+  if (p<DISPLAY_END)
+    lcd_mask(p, BITMASK(y%8), att);
 }
-void lcd_hlineStip(unsigned char x,unsigned char y, signed char w,uint8_t pat)
+
+void lcd_hlineStip(int8_t x, uint8_t y, int8_t  w, uint8_t pat, uint8_t att)
 {
-  if(w<0) {x+=w; w=-w;}
+  if (y >= DISPLAY_H) return;
+  if (w<0) { x+=w; w=-w; }
+  if (x<0) { w+=x; x=0; }
+  if (x+w > DISPLAY_W) { w = DISPLAY_W - x; }
+
   uint8_t *p  = &displayBuf[ y / 8 * DISPLAY_W + x ];
   uint8_t msk = BITMASK(y%8);
-  while(w){
+  while(w) {
     if(pat&1) {
-      //lcd_plot(x,y);
-      *p ^= msk;
+      lcd_mask(p, msk, att);
       pat = (pat >> 1) | 0x80;
-    }else{
+    }
+    else {
       pat = pat >> 1;
     }
     w--;
@@ -291,20 +309,15 @@ void lcd_hlineStip(unsigned char x,unsigned char y, signed char w,uint8_t pat)
   }
 }
 
-void lcd_hline(uint8_t x,uint8_t y, int8_t w)
+void lcd_hline(uint8_t x,uint8_t y, int8_t w, uint8_t att)
 {
-  lcd_hlineStip(x,y,w,0xff);
+  lcd_hlineStip(x, y, w, 0xff, att);
 }
 
 void lcd_vlineStip(uint8_t x, int8_t y, int8_t h, uint8_t pat)
 {
-  if (y<0) {
-    h += y;
-    y = 0;
-  }
-  if (y+h > DISPLAY_H) {
-    h = DISPLAY_H - y;
-  }
+  if (y<0) { h+=y; y=0; }
+  if (y+h > DISPLAY_H) { h = DISPLAY_H - y; }
 
   uint8_t *p  = &displayBuf[ y / 8 * DISPLAY_W + x ];
   y = y % 8;
@@ -351,10 +364,10 @@ void lcd_empty_rect(uint8_t x, uint8_t y, uint8_t w, uint8_t h)
   }
 }
 
-void lcd_filled_rect(uint8_t x, uint8_t y, uint8_t w, uint8_t h)
+void lcd_filled_rect(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_t att)
 {
   for (uint8_t i=y+h-1; i>=y; i--)
-    lcd_hline(x, i, w);
+    lcd_hline(x, i, w, att);
 }
 
 void lcdSendCtl(uint8_t val)

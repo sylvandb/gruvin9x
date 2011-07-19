@@ -59,13 +59,17 @@ void lcd_outdezNAtt(uint8_t x,uint8_t y,int16_t val,uint8_t mode,uint8_t len);
 //extern void lcd_outdezAtt(unsigned char x,unsigned char y,int16_t val,uint8_t mode);
 extern void lcd_outdez(unsigned char x,unsigned char y,int16_t val);
 
-extern void lcd_plot(unsigned char x,unsigned char y);
-extern void lcd_hline(unsigned char x,unsigned char y, signed char w);
-extern void lcd_hlineStip(unsigned char x,unsigned char y, signed char w, uint8_t pat);
+#define LCD_XOR   0x00
+#define LCD_BLACK 0x01
+#define LCD_WHITE 0x02
+extern void lcd_plot(unsigned char x, unsigned char y, uint8_t att=LCD_XOR);
+extern void lcd_hline(unsigned char x,unsigned char y, signed char w, uint8_t att=LCD_XOR);
+extern void lcd_hlineStip(int8_t x, uint8_t y, int8_t  w, uint8_t pat, uint8_t att=LCD_XOR);
 extern void lcd_vline(uint8_t x, int8_t y, int8_t h);
+extern void lcd_vlineStip(uint8_t x, int8_t y, int8_t h, uint8_t pat);
 extern void lcd_rect(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_t pat=0xff);
-extern void lcd_empty_rect(uint8_t x, uint8_t y, uint8_t w, uint8_t h);
-extern void lcd_filled_rect(uint8_t x, uint8_t y, uint8_t w, uint8_t h);
+extern void lcd_empty_rect(uint8_t x, uint8_t y, uint8_t w, uint8_t h); // TODO = filled rect LCD_WHITE
+extern void lcd_filled_rect(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_t att=LCD_XOR);
 inline void lcd_square(uint8_t x, uint8_t y, uint8_t w) { lcd_rect(x, y, w, w); }
 
 extern void lcd_img_f(unsigned char x,unsigned char y);
