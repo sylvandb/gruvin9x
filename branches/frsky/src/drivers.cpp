@@ -19,7 +19,63 @@
 
 #include "gruvin9x.h"
 
-#include "avr/interrupt.h"
+#ifdef ASYNC_WRITE
+
+static uint16_t eeprom_pointer;
+static const char* eeprom_buffer_data;
+static size_t eeprom_buffer_size = 0;
+
+inline void eeprom_write_byte()
+{
+  EEAR = eeprom_pointer;
+  EEDR = *eeprom_buffer_data;
+#if defined (PCBV2) || defined (PCBV3)
+  EECR |= 1<<EEMPE;
+  EECR |= 1<<EEPE;
+#else
+  EECR |= 1<<EEMWE;
+  EECR |= 1<<EEWE;
+#endif
+  eeprom_pointer++;
+  eeprom_buffer_data++;
+  eeprom_buffer_size--;
+}
+
+ISR(EE_RDY_vect)
+{
+  eeprom_write_byte();
+  if (eeprom_buffer_size == 0) {
+#if defined (PCBV2) || defined (PCBV3)
+    // TODO
+#else
+    EECR &= ~(1<<EERIE);
+#endif
+  }
+}
+
+void eeWriteBlockCmp(const void *i_pointer_ram, void *i_pointer_eeprom, size_t size)
+{
+  while (eeprom_buffer_size);
+
+  // TODO while (eeprom_buffer_size > 0) ...
+  eeprom_pointer = (uint16_t)i_pointer_eeprom;
+  eeprom_buffer_data = (const char*)i_pointer_ram;
+  eeprom_buffer_size = size;
+
+#if defined (PCBV2) || defined (PCBV3)
+  // TODO
+#else
+  EECR |= (1<<EERIE);
+#endif
+
+  cli();
+  eeprom_write_byte();
+  sei();
+}
+
+#else
+
+#ifndef SIM
 
 ///opt/cross/avr/include/avr/eeprom.h
 static inline void __attribute__ ((always_inline))
@@ -60,6 +116,9 @@ void eeWriteBlockCmp(const void *i_pointer_ram, void *i_pointer_eeprom, size_t s
     size--;
   }
 }
+
+#endif
+#endif
 
 //inline uint16_t anaIn(uint8_t chan)
 //{
