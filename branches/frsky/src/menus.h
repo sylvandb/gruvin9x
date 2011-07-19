@@ -13,12 +13,6 @@
 
 #define NO_HI_LEN 25
 
-#define WCHART 32
-#define X0     (128-WCHART-2)
-#define Y0     32
-#define WCHARTl 32l
-#define X0l     (128l-WCHARTl-2)
-#define Y0l     32l
 #define RESX    1024
 #define RESXu   1024u
 #define RESXul  1024ul
@@ -79,10 +73,13 @@ static MState2 mstate2; \
 static prog_uint8_t APM mstate_tab[] = lines; \
 mstate2.check(event,menu,tab,DIM(tab),mstate_tab,DIM(mstate_tab)-1,lines_count-1)
 
-#define SIMPLE_MENU(title, tab, menu, lines_count) \
-TITLE(title); \
+#define SIMPLE_MENU_NOTITLE(tab, menu, lines_count) \
 static MState2 mstate2; \
 mstate2.check_simple(event,menu,tab,DIM(tab),lines_count-1)
+
+#define SIMPLE_MENU(title, tab, menu, lines_count) \
+TITLE(title); \
+SIMPLE_MENU_NOTITLE(tab, menu, lines_count)
 
 #define SUBMENU(title, lines_count, lines...) \
 TITLE(title); \
