@@ -560,8 +560,8 @@ void menuProcExpoOne(uint8_t event)
   for(int8_t xv=-WCHART; xv<WCHART; xv++) {
     anas[ed->chn] = xv*(RESX/WCHART);
     applyExpos(anas);
-    int16_t yv = anas[ed->chn];
-    yv = (DISPLAY_H-1) - (yv+RESX) * (DISPLAY_H-1) / (2*RESX);
+    uint16_t yv = (RESX + anas[ed->chn]) / 2;
+    yv = (DISPLAY_H-1) - yv * (DISPLAY_H-1) / RESX;
     lcd_plot(X0+xv, yv, LCD_BLACK);
   }
 
@@ -581,7 +581,7 @@ void menuProcExpoOne(uint8_t event)
   lcd_outdezAtt(14*FW, 1*FH, (y512*100+(y512>0 ? RESX/2 : -RESX/2))/RESX, 0);
 
   x512 = X0+x512/(RESXu/WCHART);
-  y512 = (DISPLAY_H-1) - (y512+RESX) * (DISPLAY_H-1) / (2*RESX);
+  y512 = (DISPLAY_H-1) - (uint16_t)((y512+RESX)/2) * (DISPLAY_H-1) / RESX;
 
   lcd_vline(x512, y512-3,3*2+1);
   lcd_hline(x512-3, y512,3*2+1);
