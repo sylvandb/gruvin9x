@@ -125,12 +125,6 @@ void menuMainView(uint8_t event)
     for(uint8_t i=0;i<sizeof(g_model.name);i++)
       lcd_putcAtt(x+i*2*FW-i-2, 0*FH, g_model.name[i],DBLSIZE);
 
-    uint8_t flightPhase = getFlightPhase(false);
-    if (flightPhase && BLINK_ON_PHASE) {
-      lcd_hline(x+flightPhase*2*FW-flightPhase-1-2*FW, 2*FH-4, 10, LCD_WHITE);
-      lcd_filled_rect(x+flightPhase*2*FW-flightPhase-1-2*FW, 2*FH-3, 10, 2, LCD_BLACK);
-    }
-
     putsVBat(x+4*FW+2, 2*FH, att|NO_UNIT);
     lcd_putc(x+4*FW+2, 3*FH, 'V');
 
@@ -140,11 +134,10 @@ void menuMainView(uint8_t event)
       putsTmrMode(s_timerVal >= 0 ? x+7*FW-FW/2+5 : x+7*FW-FW/2-2, FH*3, 0);
     }
 
-    // TODO I would see the flight phase here, Bryan?
-    // lcd_putsnAtt(x+4*FW+2,     2*FH,PSTR("ExpExFFneMedCrs")+3*g_model.trimInc,3, 0); // is it really needed?
-    // lcd_putsnAtt(x+8*FW-FW/2,2*FH,PSTR("   TTm")+3*g_model.thrTrim,3, 0); // is it really needed?
+    uint8_t flightPhase = getFlightPhase(false);
+    if (flightPhase) putsFlightPhases(x+4*FW+2, 2*FH, flightPhase, 0);
 
-    //trim sliders
+    // trim sliders
     flightPhase = getFlightPhase(true);
     for(uint8_t i=0; i<4; i++)
     {
