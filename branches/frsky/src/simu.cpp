@@ -381,7 +381,8 @@ void Gruvin9xSim::refreshDiplay()
 
 int state = 0;
 void *init_function(void *) {
-  g_menuStack[0] =  menuMainView;
+  g_menuStack[0] = menuMainView;
+  g_menuStack[1] = menuProcModelSelect;
   eeReadAll(); //load general setup and selected model
   checkMem();  //enough eeprom free?
   checkTHR();
