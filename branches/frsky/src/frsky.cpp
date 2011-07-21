@@ -37,6 +37,7 @@ uint8_t frskyTxBuffer[19];   // Ditto for transmit buffer
 uint8_t frskyTxBufferCount = 0;
 uint8_t FrskyRxBufferReady = 0;
 uint8_t frskyStreaming = 0;
+uint8_t frskyTxISRIndex = 0;
 
 FrskyData frskyTelemetry[2];
 FrskyData frskyRSSI[2];
@@ -118,6 +119,7 @@ void processFrskyPacket(uint8_t *packet)
    a second buffer to receive data while one buffer is being processed (slowly).
 */
 
+#ifndef SIM
 ISR(USART0_RX_vect)
 {
   uint8_t stat;
@@ -212,7 +214,7 @@ ISR(USART0_RX_vect)
       } // switch
     } // if (FrskyRxBufferReady == 0)
   }
-	cli() ;
+  cli() ;
   UCSR0B |= (1 << RXCIE0); // enable Interrupt
 }
 
@@ -220,16 +222,18 @@ ISR(USART0_RX_vect)
    USART0 (transmit) Data Register Emtpy ISR
    Usef to transmit FrSky data packets, which are buffered in frskyTXBuffer. 
 */
-uint8_t frskyTxISRIndex = 0;
+
 ISR(USART0_UDRE_vect)
 {
-  if (frskyTxBufferCount > 0) 
-  {
+  if (frskyTxBufferCount > 0) {
     UDR0 = frskyTxBuffer[frskyTxISRIndex++];
     frskyTxBufferCount--;
-  } else
+  }
+  else {
     UCSR0B &= ~(1 << UDRIE0); // disable UDRE0 interrupt
+  }
 }
+#endif
 
 /******************************************/
 
@@ -370,6 +374,7 @@ void FRSKY_Init(void)
 
 #undef BAUD
 #define BAUD 9600
+#ifndef SIM
 #include <util/setbaud.h>
 
   UBRR0H = UBRRH_VALUE;
@@ -382,6 +387,8 @@ void FRSKY_Init(void)
 
   
   while (UCSR0A & (1 << RXC0)) UDR0; // flush receive buffer
+
+#endif
 
   // These should be running right from power up on a FrSky enabled '9X.
   FRSKY_EnableTXD(); // enable FrSky-Telemetry reception

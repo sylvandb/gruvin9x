@@ -60,6 +60,14 @@ typedef const int8_t prog_int8_t;
 #define PING  ~ping
 #define EEMEM
 
+#define UCSR0B dummyport
+#define UDRIE0 dummyport
+#define TXEN0 dummyport
+#define RXEN0 dummyport
+#define DDE0 dummyport
+#define PORTE0 dummyport
+#define RXCIE0 dummyport
+
 extern unsigned char pinb,pinc,pind,pine,ping;
 extern unsigned char portb,dummyport;
 

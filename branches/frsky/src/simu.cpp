@@ -333,12 +333,17 @@ void Gruvin9xSim::refreshDiplay()
     }
     // /usr/local/include/fox-1.6/fxkeys.h
     static FXuint keys3[]={
+#if defined(JETI) || defined(FRSKY)
+      KEY_1, (FXuint)&pine,  INP_C_ThrCt,    0,
+      KEY_6, (FXuint)&pine,  INP_C_AileDR,   0,
+#else
       KEY_1, (FXuint)&pine,  INP_E_ThrCt,    0,
+      KEY_6, (FXuint)&pine,  INP_E_AileDR,   0,
+#endif
       KEY_2, (FXuint)&ping,  INP_G_RuddDR,   0,
       KEY_3, (FXuint)&pine,  INP_E_ElevDR,   0,
       //KEY_4, (FXuint)&ping,  INP_G_ID1,      0,
       //KEY_5, (FXuint)&pine,  INP_E_ID2,      0,
-      KEY_6, (FXuint)&pine,  INP_E_AileDR,   0,
       KEY_7, (FXuint)&pine,  INP_E_Gear,     0,
       KEY_8, (FXuint)&pine,  INP_E_Trainer,  0
     };
