@@ -144,7 +144,11 @@ uint8_t getEvent()
 class Key
 {
 #define FILTERBITS      4
+#ifdef SIM
+#define FFVAL 1
+#else
 #define FFVAL          ((1<<FILTERBITS)-1)
+#endif
 #define KSTATE_OFF      0
 #define KSTATE_RPTDELAY 95 // gruvin: delay state before key repeating starts
 //#define KSTATE_SHORT   96
