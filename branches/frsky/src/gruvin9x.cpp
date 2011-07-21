@@ -75,13 +75,12 @@ LimitData *limitaddress( uint8_t idx )
 
 void putsTime(uint8_t x,uint8_t y,int16_t tme,uint8_t att,uint8_t att2)
 {
-  /* TODO BSS
-    if ( tme<0 ) {
-      lcd_putcAtt(   x,    y, '-',att);
-      tme = abs(tme);
-    } */
+  if (tme<0) {
+    lcd_putcAtt(x - ((att&DBLSIZE) ? FWNUM*6-3 : FWNUM*3), y, '-', att);
+    tme = -tme;
+  }
 
-  lcd_putcAtt(x, y, ':',att&att2);
+  lcd_putcAtt(x, y, ':', att&att2);
   lcd_outdezNAtt((att&DBLSIZE) ? x + 2 : x, y, tme/60, LEADING0|att,2);
   x += (att&DBLSIZE) ? FWNUM*6-2 : FW*3-1;
   lcd_outdezNAtt(x, y, tme%60, LEADING0|att2,2);

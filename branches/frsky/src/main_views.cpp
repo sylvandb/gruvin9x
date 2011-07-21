@@ -137,11 +137,12 @@ void menuMainView(uint8_t event)
     if(s_timerState != TMR_OFF) {
       uint8_t att = DBLSIZE | (s_timerState==TMR_BEEPING ? BLINK : 0);
       putsTime(x+14*FW-2, FH*2, s_timerVal, att,att);
-      putsTmrMode(x+7*FW-FW/2,FH*3,0);
+      putsTmrMode(s_timerVal >= 0 ? x+7*FW-FW/2+5 : x+7*FW-FW/2-2, FH*3, 0);
     }
 
-    lcd_putsnAtt(x+4*FW+2,     2*FH,PSTR("ExpExFFneMedCrs")+3*g_model.trimInc,3, 0);
-    lcd_putsnAtt(x+8*FW-FW/2,2*FH,PSTR("   TTm")+3*g_model.thrTrim,3, 0);
+    // TODO I would see the flight phase here, Bryan?
+    // lcd_putsnAtt(x+4*FW+2,     2*FH,PSTR("ExpExFFneMedCrs")+3*g_model.trimInc,3, 0); // is it really needed?
+    // lcd_putsnAtt(x+8*FW-FW/2,2*FH,PSTR("   TTm")+3*g_model.thrTrim,3, 0); // is it really needed?
 
     //trim sliders
     flightPhase = getFlightPhase(true);
