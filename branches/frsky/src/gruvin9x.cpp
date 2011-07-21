@@ -115,24 +115,21 @@ void putsChn(uint8_t x,uint8_t y,uint8_t idx1,uint8_t att)
                         "CH17CH18CH19CH20CH21CH22CH23CH24CH25CH26CH27CH28CH29CH30")+4*idx1,4,att);
 }
 
-void putsSwitches(uint8_t x,uint8_t y,int8_t idx,uint8_t att)//, bool nc)
+void putsSwitches(uint8_t x,uint8_t y,int8_t idx,uint8_t att)
 {
   switch(idx){
-    case  0:            lcd_putsAtt(x+FW,y,PSTR("---"),att);return;
-    case  MAX_SWITCH: lcd_putsAtt(x+FW,y,PSTR("ON "),att);return;
-    case -MAX_SWITCH: lcd_putsAtt(x+FW,y,PSTR("OFF"),att);return;
+    case  0:          lcd_putsAtt(x,y,PSTR("---"),att);return;
+    case  MAX_SWITCH: lcd_putsAtt(x,y,PSTR("ON "),att);return;
+    case -MAX_SWITCH: lcd_putsAtt(x,y,PSTR("OFF"),att);return;
   }
-  lcd_putcAtt(x,y, idx<0 ? '!' : ' ',att);
-  lcd_putsnAtt(x+FW,y,get_switches_string()+3*(abs(idx)-1),3,att);
+  if (idx<0) lcd_putcAtt(x-FW, y, '!', att);
+  lcd_putsnAtt(x,y,get_switches_string()+3*(abs(idx)-1),3,att);
 }
 
 void putsFlightPhases(uint8_t x, uint8_t y, int8_t idx, uint8_t att)
 {
   if (idx==0) { lcd_putsAtt(x,y,PSTR("---"),att); return; }
-  if (idx < 0) {
-    lcd_putcAtt(x, y, '!', att);
-    x += FW;
-  }
+  if (idx < 0) lcd_putcAtt(x-FW, y, '!', att);
   lcd_putsnAtt(x, y, PSTR("FP1FP2FP3")+3*(abs(idx)-1), 3, att);
 }
 
@@ -151,11 +148,11 @@ void putsTmrMode(uint8_t x, uint8_t y, uint8_t attr)
   }
 
   if(abs(tm)<(TMR_VAROFS+MAX_SWITCH-1)) { //normal on-off
-    putsSwitches( x-1*FW,y,tm>0 ? tm-(TMR_VAROFS-1) : tm+(TMR_VAROFS-1),attr);
+    putsSwitches( x,y,tm>0 ? tm-(TMR_VAROFS-1) : tm+(TMR_VAROFS-1),attr);
     return;
   }
 
-  putsSwitches( x-1*FW,y,tm>0 ? tm-(TMR_VAROFS+MAX_SWITCH-1-1) : tm+(TMR_VAROFS+MAX_SWITCH-1-1),attr);//momentary on-off
+  putsSwitches( x,y,tm>0 ? tm-(TMR_VAROFS+MAX_SWITCH-1-1) : tm+(TMR_VAROFS+MAX_SWITCH-1-1),attr);//momentary on-off
   lcd_putcAtt(x+3*FW,  y,'m',attr);
 }
 
@@ -1482,9 +1479,9 @@ int main(void)
 
   perOut(g_chans512, 0);
 
+  // TODO why not g_menuStack[1] = menuProcModelSelect;
   pushMenu(menuProcModelSelect);
   popMenu(true);  // this is so the first instance of [MENU LONG] doesn't freak out!
-  //g_menuStack[g_menuStackPtr+1] =
 
   lcdSetRefVolt(g_eeGeneral.contrast);
   g_LightOffCounter = g_eeGeneral.lightAutoOff*500; //turn on light for x seconds - no need to press key Issue 152

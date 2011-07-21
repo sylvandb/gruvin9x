@@ -332,7 +332,7 @@ void menuProcModel(uint8_t _event)
 
   if(s_pgOfs<subN) {
     lcd_puts_P(    0,    y, PSTR("Trim Sw"));
-    putsSwitches(9*FW,y,g_model.trimSw,sub==subN ? INVERS:0);
+    putsSwitches(10*FW,y,g_model.trimSw,sub==subN ? INVERS:0);
     if(sub==subN) CHECK_INCDEC_H_MODELVAR(event,g_model.trimSw,-MAX_SWITCH, MAX_SWITCH);
     if((y+=FH)>7*FH) return;
   }subN++;
@@ -341,7 +341,7 @@ void menuProcModel(uint8_t _event)
     if(s_pgOfs<subN) {
       lcd_puts_P(    0,    y, PSTR("F.Phase"));
       lcd_outdezAtt(lcd_lastPos+FW, y, 1+i, 0);
-      putsSwitches(9*FW,y,g_model.phaseData[i].swtch,(sub==subN && subSub==0) ? (s_editMode ? BLINK : INVERS):0);
+      putsSwitches(10*FW,y,g_model.phaseData[i].swtch,(sub==subN && subSub==0) ? (s_editMode ? BLINK : INVERS):0);
       if(sub==subN && subSub==0 && (s_editMode || p1valdiff)) CHECK_INCDEC_H_MODELVAR(event,g_model.phaseData[i].swtch,-MAX_SWITCH, MAX_SWITCH);
       menu_lcd_onoff( 15*FW, y, g_model.phaseData[i].trims, (sub==subN && subSub==1)) ;
       if(sub==subN && subSub==1 && (s_editMode || p1valdiff)) CHECK_INCDEC_H_MODELVAR(event,g_model.phaseData[i].trims,0, 1);
@@ -502,7 +502,7 @@ void editExpoVals(uint8_t event, uint8_t which, bool edit, uint8_t y, uint8_t id
       if(edit) CHECK_INCDEC_H_MODELVAR(event, ed->flightPhase, -MAX_PHASES+1, MAX_PHASES-1);
       break;
     case 3:
-      putsSwitches(5*FW, y, ed->swtch, invBlk);
+      putsSwitches(6*FW, y, ed->swtch, invBlk);
       if(edit) CHECK_INCDEC_H_MODELVAR(event, ed->swtch, -MAX_DRSWITCH, MAX_DRSWITCH);
       break;
     case 4:
@@ -896,7 +896,7 @@ void menuProcMixOne(uint8_t event)
         break;
       case 5:
         lcd_puts_P(  2*FW,y,PSTR("Switch"));
-        putsSwitches(9*FW,  y,md2->swtch,attr);  // TODO remove the leading space char
+        putsSwitches(10*FW,  y,md2->swtch,attr);
         if(attr) CHECK_INCDEC_H_MODELVAR( event, md2->swtch, -MAX_SWITCH, MAX_SWITCH);
         break;
       case 6:
@@ -974,7 +974,7 @@ void displayMixerLine(uint8_t row, uint8_t mix, uint8_t ch, uint8_t idx, uint8_t
     CHECK_INCDEC_H_MODELVAR(event, md->weight, -125, 125);
 
   if (md->curve) lcd_putsnAtt(12*FW, y, PSTR(CURV_STR)+md->curve*3, 3, 0);
-  if (md->swtch) putsSwitches(15*FW+FW/2, y, md->swtch, 0);
+  if (md->swtch) putsSwitches(16*FW+FW/2, y, md->swtch, 0);
 
   char cs = ' ';
   if (md->speedDown || md->speedUp)
@@ -1008,7 +1008,7 @@ void displayExpoLine(uint8_t row, uint8_t expo, uint8_t ch, uint8_t idx, uint8_t
   if (attr != 0)
     CHECK_INCDEC_H_MODELVAR(event, ed->weight, 0, 100);
 
-  putsSwitches(10*FW+FW/2, y, ed->swtch, 0);
+  putsSwitches(11*FW+FW/2, y, ed->swtch, 0);
   if (ed->curve) lcd_putsnAtt(16*FW, y, PSTR(CURV_STR)+ed->curve*3, 3, 0);
   if (ed->mode!=3) lcd_putc(20*FW, y, ed->mode == 2 ? 127 : 126);//'|' : (stkVal[i] ? '<' : '>'),0);*/
 
@@ -1395,8 +1395,8 @@ void menuProcCustomSwitches(uint8_t event)
     }
     else if(cstate == CS_VBOOL)
     {
-        putsSwitches(12*FW, y, cs.v1  ,subSub==1 ? attr : 0);
-        putsSwitches(16*FW, y, cs.v2  ,subSub==2 ? attr : 0);
+        putsSwitches(13*FW, y, cs.v1  ,subSub==1 ? attr : 0);
+        putsSwitches(17*FW, y, cs.v2  ,subSub==2 ? attr : 0);
     }
     else // cstate == CS_COMP
     {
@@ -1467,15 +1467,15 @@ void menuProcSafetySwitches(uint8_t event)
       switch(j)
       {
       case 0:
-          putsSwitches(5*FW, y, sd->swtch  , attr);
+          putsSwitches(6*FW, y, sd->swtch  , attr);
           if(attr && (s_editMode || p1valdiff)) {
-              CHECK_INCDEC_H_MODELVAR( event, sd->swtch, -MAX_SWITCH,MAX_SWITCH);
+              CHECK_INCDEC_H_MODELVAR( event, sd->swtch, -MAX_SWITCH, MAX_SWITCH);
           }
           break;
       case 1:
-          lcd_outdezAtt(  16*FW, y, sd->val,   attr);
+          lcd_outdezAtt(16*FW, y, sd->val,   attr);
           if(attr && (s_editMode || p1valdiff)) {
-              CHECK_INCDEC_H_MODELVAR( event, sd->val, -125,125);
+              CHECK_INCDEC_H_MODELVAR( event, sd->val, -125, 125);
           }
           break;
       }

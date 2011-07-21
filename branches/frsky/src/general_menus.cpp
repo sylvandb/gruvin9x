@@ -118,7 +118,7 @@ void menuProcSetup(uint8_t event)
 
   if(s_pgOfs<subN) {
     lcd_puts_P(0, y,PSTR("Light switch"));
-    putsSwitches(PARAM_OFS-FW,y,g_eeGeneral.lightSw,sub==subN ? INVERS : 0);
+    putsSwitches(PARAM_OFS,y,g_eeGeneral.lightSw,sub==subN ? INVERS : 0);
     if(sub==subN) CHECK_INCDEC_H_GENVAR(event, g_eeGeneral.lightSw, -MAX_SWITCH, MAX_SWITCH);
     if((y+=FH)>7*FH) return;
   }subN++;
@@ -367,7 +367,7 @@ void menuProcTrainer(uint8_t event)
       CHECK_INCDEC_H_GENVAR(event, td->srcChn, 0, 3);
 
     edit = (sub==i && subSub==3);
-    putsSwitches(15*FW, y, td->swtch, edit ? blink : 0);
+    putsSwitches(16*FW, y, td->swtch, edit ? blink : 0);
     if (edit && s_editMode)
       CHECK_INCDEC_H_GENVAR(event, td->swtch, -MAX_TRNSWITCH, MAX_TRNSWITCH);
 
@@ -416,35 +416,32 @@ void menuProcDiagKeys(uint8_t event)
 {
   SIMPLE_MENU("DIAG", menuTabDiag, e_Keys, 1);
 
-  uint8_t x=7*FW;
   for(uint8_t i=0; i<9; i++)
   {
     uint8_t y=i*FH; //+FH;
     if(i>(SW_ID0-SW_BASE_DIAG)) y-=FH; //overwrite ID0
     bool t=keyState((EnumKeys)(SW_BASE_DIAG+i));
-    putsSwitches(x,y,i+1,0); //ohne off,on
-    lcd_putcAtt(x+FW*4+2,  y,t+'0',t ? INVERS : 0);
+    putsSwitches(6*FW, y, i+1, 0); //ohne off,on
+    lcd_putcAtt(11*FW+2, y, t+'0', t ? INVERS : 0);
   }
 
-  x=0;
   for(uint8_t i=0; i<6; i++)
   {
     uint8_t y=(5-i)*FH+2*FH;
     bool t=keyState((EnumKeys)(KEY_MENU+i));
-    lcd_putsn_P(x, y,PSTR(" Menu Exit Down   UpRight Left")+5*i,5);
-    lcd_putcAtt(x+FW*5+2,  y,t+'0',t);
+    lcd_putsn_P(0, y, PSTR(" Menu Exit Down   UpRight Left")+5*i, 5);
+    lcd_putcAtt(5*FW+2, y, t+'0', t);
   }
 
-  x=14*FW;
-  lcd_putsn_P(x, 3*FH,PSTR("Trim- +"),7);
+  lcd_putsn_P(14*FW, 3*FH, PSTR("Trim- +"), 7);
   for(uint8_t i=0; i<4; i++)
   {
     uint8_t y=i*FH+FH*4;
-    lcd_img(    x,       y, sticks,i,0);
+    lcd_img(14*FW, y, sticks,i,0);
     bool tm=keyState((EnumKeys)(TRM_BASE+2*i));
     bool tp=keyState((EnumKeys)(TRM_BASE+2*i+1));
-    lcd_putcAtt(x+FW*4,  y, tm+'0',tm ? INVERS : 0);
-    lcd_putcAtt(x+FW*6,  y, tp+'0',tp ? INVERS : 0);
+    lcd_putcAtt(18*FW,  y, tm+'0',tm ? INVERS : 0);
+    lcd_putcAtt(20*FW,  y, tp+'0',tp ? INVERS : 0);
   }
 }
 
