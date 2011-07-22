@@ -200,7 +200,7 @@ typedef struct t_ModelData {
   int8_t    ppmNCH:3;
   uint8_t   thrTrim:1;            // Enable Throttle Trim
   uint8_t   thrExpo:1;            // Enable Throttle Expo
-  int8_t    trimInc:3;            // Trim Increments
+  uint8_t   trimInc:3;            // Trim Increments
   uint8_t   traineron:1;          // 0 disable trainer, 1 allow trainer
   uint8_t   pulsePol:1;
   uint8_t   extendedLimits:1;
