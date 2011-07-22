@@ -97,21 +97,19 @@ void putsVBat(uint8_t x,uint8_t y,uint8_t att)
   putsVolts(x, y, g_vbat100mV, att);
 }
 
-void putsChnRaw(uint8_t x,uint8_t y,uint8_t idx,uint8_t att)
+void putsChnRaw(uint8_t x, uint8_t y, uint8_t idx, uint8_t att)
 {
-  if(idx==0)
+  if (idx==0)
     lcd_putsnAtt(x,y,PSTR("----"),4,att);
   else if(idx<=4)
     lcd_putsnAtt(x,y,modi12x3+g_eeGeneral.stickMode*16+4*(idx-1),4,att);
   else if(idx<=NUM_XCHNRAW)
     lcd_putsnAtt(x,y,PSTR("P1  P2  P3  MAX FULLCYC1CYC2CYC3PPM1PPM2PPM3PPM4PPM5PPM6PPM7PPM8CH1 CH2 CH3 CH4 CH5 CH6 CH7 CH8 CH9 CH10CH11CH12CH13CH14CH15CH16"TELEMETRY_CHANNELS)+4*(idx-5),4,att);
 }
-void putsChn(uint8_t x,uint8_t y,uint8_t idx1,uint8_t att)
+void putsChn(uint8_t x, uint8_t y, uint8_t idx, uint8_t att)
 {
-  // TODO why so many channels?
-  // !! todo NUM_CHN !!
-  lcd_putsnAtt(x,y,PSTR("--- CH1 CH2 CH3 CH4 CH5 CH6 CH7 CH8 CH9 CH10CH11CH12CH13CH14CH15CH16"
-                        "CH17CH18CH19CH20CH21CH22CH23CH24CH25CH26CH27CH28CH29CH30")+4*idx1,4,att);
+  if (idx > 0 && idx <= NUM_CHNOUT)
+    putsChnRaw(x, y, idx+20, att);
 }
 
 void putsSwitches(uint8_t x,uint8_t y,int8_t idx,uint8_t att)

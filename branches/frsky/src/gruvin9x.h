@@ -511,7 +511,7 @@ void eeLoadModel(uint8_t id);
 bool eeDuplicateModel(uint8_t id);
 
 ///number of real input channels (1-9) plus virtual input channels X1-X4
-#define NUM_XCHNRAW (NUM_CHNOUT+9+NUM_PPM) // NUMCH + P1P2P3+ AIL/RUD/ELE/THR + MAX/FULL
+#define NUM_XCHNRAW (NUM_STICKS+NUM_POTS+2/*MAX/FULL*/+3/*CYC1-CYC3*/+NUM_PPM+NUM_CHNOUT+NUM_TELEMETRY)
 ///number of real output channels (CH1-CH8) plus virtual output channels X1-X4
 #define NUM_XCHNOUT (NUM_CHNOUT) //(NUM_CHNOUT)//+NUM_VIRT)
 

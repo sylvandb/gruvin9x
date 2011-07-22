@@ -1387,7 +1387,7 @@ void menuProcCustomSwitches(uint8_t event)
     {
         putsChnRaw(    12*FW, y, cs.v1  ,subSub==1 ? attr : 0);
 #if defined(FRSKY)
-        if (cs.v1 > CHOUT_BASE+NUM_CHNOUT)
+        if (cs.v1 > NUM_XCHNRAW-NUM_TELEMETRY)
           lcd_outdezAtt( 20*FW, y, 125+cs.v2  ,subSub==2 ? attr : 0);
         else
 #endif
