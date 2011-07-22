@@ -549,8 +549,6 @@ uint8_t checkTrim(uint8_t event)
 {
   int8_t  k = (event & EVT_KEY_MASK) - TRM_BASE;
   int8_t  s = g_model.trimInc;
-  if (s>1) s = 1 << (s-1);  // 1=>1  2=>2  3=>4  4=>8
-
   uint8_t flightPhase = getFlightPhase(true);
 
   if((k>=0) && (k<8))// && (event & _MSK_KEY_REPT))
@@ -558,26 +556,41 @@ uint8_t checkTrim(uint8_t event)
     //LH_DWN LH_UP LV_DWN LV_UP RV_DWN RV_UP RH_DWN RH_UP
     uint8_t idx = k/2;
     int8_t  t = g_model.trim[flightPhase][idx];
-    int8_t  v = (s==0) ? (abs(t)/4)+1 : s;
-    bool thro = (((2-(g_eeGeneral.stickMode&1)) == idx) && (g_model.thrTrim));
+    int8_t  v = (s==0) ? (abs(t)/4)+1 : 1 << (s-1); // 1=>1  2=>2  3=>4  4=>8
+    bool thro = (((2-(g_eeGeneral.stickMode&1)) == idx) && g_model.thrTrim);
     if (thro) v = 4; // if throttle trim and trim trottle then step=4
     int16_t x = (k&1) ? t + v : t - v;   // positive = k&1
 
-    if(((x==0)  ||  ((x>=0) != (t>=0))) && (!thro) && (t!=0))
-    {
-      g_model.trim[flightPhase][idx]=0;
+    if (x <= -125) {
+      x = -125;
+      thro = true;
+    }
+    else if (x >= 125) {
+      x = 125;
+      thro = true;
+    }
+    else if ((!thro) && ((x>=0 && t<0) || (x<=0 && t>0))) {
+      x = 0;
+      thro = true;
+    }
+    else {
+      thro = false;
+    }
+
+    g_model.trim[flightPhase][idx] = (int8_t)x;
+    STORE_MODELVARS;
+
+    if (thro) {
       killEvents(event);
       warble = false;
 #if defined (BEEPSPKR)
-      beepWarn2Spkr(60);
+      beepWarn2Spkr((x/4)+60);
 #else
       beepWarn2();
 #endif
     }
-    else if(x>-125 && x<125){
-      g_model.trim[flightPhase][idx] = (int8_t)x;
-      STORE_MODELVARS;
-      if(event & _MSK_KEY_REPT) warble = true;
+    else if (event & _MSK_KEY_REPT) {
+      warble = true;
 #if defined (BEEPSPKR)
       // toneFreq higher/lower according to trim position
       // beepTrimSpkr((x/3)+60);  // Range -125 to 125 = toneFreq: 19 to 101
@@ -586,18 +599,6 @@ uint8_t checkTrim(uint8_t event)
       beepWarn1();
 #endif
     }
-    else
-    {
-      g_model.trim[flightPhase][idx] = (x>0) ? 125 : -125;
-      STORE_MODELVARS;
-      warble = false;
-#if defined (BEEPSPKR)
-      beepWarn2Spkr((x/4)+60);
-#else
-      beepWarn2();
-#endif
-    }
-
     return 0;
   }
   return event;
