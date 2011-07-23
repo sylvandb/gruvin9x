@@ -106,10 +106,16 @@ void putsChnRaw(uint8_t x, uint8_t y, uint8_t idx, uint8_t att)
   else if(idx<=NUM_XCHNRAW)
     lcd_putsnAtt(x,y,PSTR("P1  P2  P3  MAX FULLCYC1CYC2CYC3PPM1PPM2PPM3PPM4PPM5PPM6PPM7PPM8CH1 CH2 CH3 CH4 CH5 CH6 CH7 CH8 CH9 CH10CH11CH12CH13CH14CH15CH16"TELEMETRY_CHANNELS)+4*(idx-5),4,att);
 }
+
 void putsChn(uint8_t x, uint8_t y, uint8_t idx, uint8_t att)
 {
   if (idx > 0 && idx <= NUM_CHNOUT)
     putsChnRaw(x, y, idx+20, att);
+}
+
+void putsChnLetter(uint8_t x, uint8_t y, uint8_t idx, uint8_t attr)
+{
+  lcd_putsnAtt(x, y, PSTR("RETA")+CHANNEL_ORDER(idx)-1, 1, attr);
 }
 
 void putsSwitches(uint8_t x,uint8_t y,int8_t idx,uint8_t att)
@@ -178,17 +184,25 @@ inline int16_t getValue(uint8_t i)
     else return 0;
 }
 
-uint8_t getFlightPhase(uint8_t trimsonly)
+uint8_t getFlightPhase()
 {
-  for (int8_t i=MAX_PHASES-2; i>=0; i--) {
+  for (uint8_t i=0; i<MAX_PHASES-1; i++) {
     FlightPhaseData *phase = &g_model.phaseData[i];
     if (phase->swtch && getSwitch(phase->swtch, 0)) {
-      if (trimsonly && !phase->trims)
-        return 0;
       return i+1;
     }
   }
   return 0;
+}
+
+uint8_t getTrimFlightPhase(uint8_t idx, int8_t phase)
+{
+  if (phase == -1) phase = getFlightPhase();
+  int8_t trim = g_model.trim[phase][idx];
+  if (phase == 0 || trim >= -125) return phase;
+  uint8_t result = 128 + trim;
+  if (result == phase) result++;
+  return result;
 }
 
 bool getSwitch(int8_t swtch, bool nc, uint8_t level)
@@ -549,12 +563,12 @@ uint8_t checkTrim(uint8_t event)
 {
   int8_t  k = (event & EVT_KEY_MASK) - TRM_BASE;
   int8_t  s = g_model.trimInc;
-  uint8_t flightPhase = getFlightPhase(true);
 
   if((k>=0) && (k<8))// && (event & _MSK_KEY_REPT))
   {
     //LH_DWN LH_UP LV_DWN LV_UP RV_DWN RV_UP RH_DWN RH_UP
     uint8_t idx = k/2;
+    uint8_t flightPhase = getTrimFlightPhase(idx);
     int8_t  t = g_model.trim[flightPhase][idx];
     int8_t  v = (s==0) ? (abs(t)/4)+1 : 1 << (s-1); // 1=>1  2=>2  3=>4  4=>8
     bool thro = (((2-(g_eeGeneral.stickMode&1)) == idx) && g_model.thrTrim);
@@ -605,7 +619,7 @@ uint8_t checkTrim(uint8_t event)
 }
 
 //global helper vars
-bool    checkIncDec_Ret;
+int8_t  checkIncDec_Ret;
 int16_t p1val;
 int16_t p1valdiff;
 
@@ -683,15 +697,11 @@ int16_t checkIncDec(uint8_t event, int16_t val, int16_t i_min, int16_t i_max, ui
       beepKey();
 #endif
     }
-#if defined (FRSKY)
-    eeDirty(i_flags & (EE_GENERAL|EE_MODEL|EE_FRSKY));
-#else
     eeDirty(i_flags & (EE_GENERAL|EE_MODEL));
-#endif
-    checkIncDec_Ret = true;
+    checkIncDec_Ret = (newval > val ? 1 : -1);
   }
   else {
-    checkIncDec_Ret = false;
+    checkIncDec_Ret = 0;
   }
   return newval;
 }
@@ -1351,11 +1361,11 @@ void setStickCenter() // copy state of 3 primary to subtrim
   }
 
   // TODO discuss with bryan what should be done here.
-  // I choosed the easy way: use the current flight mode trims to compute the channels offsets => Instant trim will be ok (to be tested)
+  // I choosed the easy way: use the current trims to compute the channels offsets => Instant trim will be ok (to be tested)
   // But other flight modes will have their trims wrong after this function called
-  uint8_t flightPhase = getFlightPhase(true);
+  uint8_t flightPhase = getFlightPhase();
   for (uint8_t i=0; i<4; i++)
-    if (!IS_THROTTLE(i)) g_model.trim[flightPhase][i] = 0;// set trims to zero.
+    if (!IS_THROTTLE(i)) g_model.trim[getTrimFlightPhase(i, flightPhase)][i] = 0;// set trims to zero.
 
   STORE_MODELVARS;
   beepWarn1();

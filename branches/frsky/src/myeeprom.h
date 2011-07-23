@@ -177,8 +177,7 @@ typedef struct t_SwashRingData { // Swash Ring data
 } __attribute__((packed)) SwashRingData;
 
 typedef struct t_FlightPhaseData {
-  int8_t swtch:7;
-  uint8_t trims:1;
+  int8_t swtch;
 } __attribute__((packed)) FlightPhaseData;
 
 #define MAX_MODELS 16
@@ -215,7 +214,7 @@ typedef struct t_ModelData {
   LimitData limitData[NUM_CHNOUT];
   ExpoData  expoData[MAX_EXPOS];
   FlightPhaseData phaseData[MAX_PHASES-1];
-  int8_t    trim[MAX_PHASES][4];
+  int8_t    trim[MAX_PHASES][4];  // -125..125 => trim value, -128, -127, -126 => use trim of phase 0, [1], [2], [3] instead
   int8_t    curves5[MAX_CURVE5][5];
   int8_t    curves9[MAX_CURVE9][9];
   CustomSwData  customSw[NUM_CSW];

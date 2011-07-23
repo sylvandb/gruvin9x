@@ -398,7 +398,8 @@ bool    getSwitch(int8_t swtch, bool nc, uint8_t level=0);
 ///   \param att   NO_INV,INVERS,BLINK
 ///
 
-uint8_t getFlightPhase(uint8_t trimsonly);
+uint8_t getFlightPhase();
+uint8_t getTrimFlightPhase(uint8_t idx, int8_t phase=-1);
 
 void putsSwitches(uint8_t x,uint8_t y,int8_t swtch,uint8_t att);
 void putsFlightPhases(uint8_t x, uint8_t y, int8_t idx, uint8_t att);
@@ -452,14 +453,11 @@ void getADC_filt();
 // checkIncDec flags
 #define   EE_GENERAL 0x01
 #define   EE_MODEL   0x02
-#if defined (FRSKY)
-#define   EE_FRSKY   0x04
-#endif
 
 extern bool warble;
 extern int16_t p1valdiff;
 
-extern bool checkIncDec_Ret;  // global helper vars
+extern int8_t  checkIncDec_Ret;  // global helper vars
 extern uint8_t s_editMode;    // global editmode
 
 int16_t checkIncDec(uint8_t event, int16_t i_pval, int16_t i_min, int16_t i_max, uint8_t i_flags);
@@ -522,6 +520,8 @@ void putsChnRaw(uint8_t x,uint8_t y,uint8_t idx1,uint8_t att);
 
 /// Schreibt [CH1 CH2 CH3 CH4 CH5 CH6 CH7 CH8] aufs lcd
 void putsChn(uint8_t x,uint8_t y,uint8_t idx1,uint8_t att);
+void putsChnLetter(uint8_t x, uint8_t y, uint8_t idx, uint8_t attr);
+
 /// Schreibt die Batteriespannung aufs lcd
 void putsVolts(uint8_t x,uint8_t y, uint16_t volts, uint8_t att);
 void putsVBat(uint8_t x,uint8_t y,uint8_t att);

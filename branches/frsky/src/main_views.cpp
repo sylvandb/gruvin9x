@@ -134,11 +134,10 @@ void menuMainView(uint8_t event)
       putsTmrMode(s_timerVal >= 0 ? x+7*FW-FW/2+5 : x+7*FW-FW/2-2, FH*3, 0);
     }
 
-    uint8_t flightPhase = getFlightPhase(false);
+    uint8_t flightPhase = getFlightPhase();
     if (flightPhase) putsFlightPhases(x+4*FW+2, 2*FH, flightPhase, 0);
 
     // trim sliders
-    flightPhase = getFlightPhase(true);
     for(uint8_t i=0; i<4; i++)
     {
 #define TL 27
@@ -147,10 +146,10 @@ void menuMainView(uint8_t event)
       static uint8_t vert[4] = {0,1,1,0};
       uint8_t xm,ym;
       xm=x[i];
-      int8_t val = max((int8_t)-(TL+1),min((int8_t)(TL+1),(int8_t)(g_model.trim[flightPhase][i]/4)));
+      int8_t val = max((int8_t)-(TL+1),min((int8_t)(TL+1),(int8_t)(g_model.trim[getTrimFlightPhase(i, flightPhase)][i]/4)));
       if(vert[i]){
         ym=31;
-        lcd_vline(xm,   ym-TL, TL*2);
+        lcd_vline(xm, ym-TL, TL*2);
 
         if(((g_eeGeneral.stickMode&1) != (i&1)) || !(g_model.thrTrim)){
           lcd_vline(xm-1, ym-1,  3);
@@ -159,7 +158,7 @@ void menuMainView(uint8_t event)
         ym -= val;
       }else{
         ym=60;
-        lcd_hline(xm-TL,ym,    TL*2);
+        lcd_hline(xm-TL, ym, TL*2);
         lcd_hline(xm-1, ym-1,  3);
         lcd_hline(xm-1, ym+1,  3);
         xm += val;

@@ -492,7 +492,7 @@ void applyExpos(int16_t *anas)
   static int16_t anas2[4]; // values before expo, to ensure same expo base when multiple expo lines are used
   memcpy(anas2, anas, sizeof(anas2));
 
-  uint8_t flightPhase = getFlightPhase(false);
+  uint8_t flightPhase = getFlightPhase();
 
   for (uint8_t i=0; i<DIM(g_model.expoData); i++) {
     ExpoData &ed = g_model.expoData[i];
@@ -557,8 +557,7 @@ void perOut(int16_t *chanOut, uint8_t att)
   }
 #endif
 
-  uint8_t flightPhaseTrim = getFlightPhase(true);
-  uint8_t flightPhase = getFlightPhase(false);
+  uint8_t flightPhase = getFlightPhase();
 
   for(uint8_t i=0;i<7;i++){        // Sticks & Pots
 
@@ -610,12 +609,13 @@ void perOut(int16_t *chanOut, uint8_t att)
       // do trim -> throttle trim if applicable
       int16_t v = anas[i];
       int32_t vv = 2*RESX;
+      int8_t trim = g_model.trim[getTrimFlightPhase(i)][i];
       if(IS_THROTTLE(i) && g_model.thrTrim) vv = (g_eeGeneral.throttleReversed) ?
-                                 ((int32_t)g_model.trim[flightPhaseTrim][i]-125)*(RESX+v)/(2*RESX) :
-                                 ((int32_t)g_model.trim[flightPhaseTrim][i]+125)*(RESX-v)/(2*RESX);
+                                 ((int32_t)trim-125)*(RESX+v)/(2*RESX) :
+                                 ((int32_t)trim+125)*(RESX-v)/(2*RESX);
 
       //trim
-      trimA[i] = (vv==2*RESX) ? g_model.trim[flightPhaseTrim][i]*2 : (int16_t)vv*2; //    if throttle trim -> trim low end
+      trimA[i] = (vv==2*RESX) ? (int16_t)trim*2 : (int16_t)vv*2; //    if throttle trim -> trim low end
   }
 
   //===========BEEP CENTER================

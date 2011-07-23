@@ -230,7 +230,7 @@ void menuProcModel(uint8_t _event)
     chainMenu(menuProcModelSelect);
   }
 
-  MENU("SETUP", menuTabModel, e_Model, 18, {0,sizeof(g_model.name)-1,1,0,0,0,0,0,0,1,1,1,0,0,6,2,0/*,0*/});
+  MENU("SETUP", menuTabModel, e_Model, 18, {0,sizeof(g_model.name)-1,1,0,0,0,0,0,0,4,4,4,0,0,6,2,0/*,0*/});
 
   int8_t  sub    = mstate2.m_posVert;
   uint8_t subSub = mstate2.m_posHorz;
@@ -343,8 +343,26 @@ void menuProcModel(uint8_t _event)
       lcd_outdezAtt(lcd_lastPos+FW, y, 1+i, 0);
       putsSwitches(10*FW,y,g_model.phaseData[i].swtch,(sub==subN && subSub==0) ? (s_editMode ? BLINK : INVERS):0);
       if(sub==subN && subSub==0 && (s_editMode || p1valdiff)) CHECK_INCDEC_H_MODELVAR(event,g_model.phaseData[i].swtch,-MAX_SWITCH, MAX_SWITCH);
-      menu_lcd_onoff( 15*FW, y, g_model.phaseData[i].trims, (sub==subN && subSub==1)) ;
-      if(sub==subN && subSub==1 && (s_editMode || p1valdiff)) CHECK_INCDEC_H_MODELVAR(event,g_model.phaseData[i].trims,0, 1);
+      for (uint8_t t=0; t<NUM_STICKS; t++) {
+        int16_t v = g_model.trim[i+1][t];
+        if (v < -125) {
+          uint8_t c = 128 + v;
+          if (c >= i+1) c++;
+          lcd_putcAtt((14+t)*FW, y, '0'+c, (sub==subN && subSub==t+1) ? (s_editMode ? BLINK : INVERS) : 0);
+        }
+        else {
+          v = -129;
+          putsChnLetter((14+t)*FW, y, t+1, (sub==subN && subSub==t+1) ? (s_editMode ? BLINK : INVERS) : 0);
+        }
+        if (sub==subN && subSub==t+1 && (s_editMode || p1valdiff)) {
+          v = checkIncDec(event, v, -129, -126, 0);
+          if (checkIncDec_Ret) {
+            if (v == -125) v = 0;
+            g_model.trim[i+1][t] = (int8_t)v;
+            STORE_MODELVARS;
+          }
+        }
+      }
       if((y+=FH)>7*FH) return;
     }subN++;
   }
