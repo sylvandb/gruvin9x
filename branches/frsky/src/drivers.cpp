@@ -41,7 +41,7 @@ inline void eeprom_write_byte()
   eeprom_buffer_size--;
 }
 
-ISR(EE_RDY_vect)
+ISR(EE_READY_vect)
 {
   eeprom_write_byte();
   if (eeprom_buffer_size == 0) {
