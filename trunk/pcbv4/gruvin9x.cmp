@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPCB (2011-07-08 BZR 3044)-stable date = 23/07/2011 16:01:49
+Cmp-Mod V01 Created by CvPCB (2011-07-08 BZR 3044)-stable date = 24/07/2011 22:36:01
 
 BeginCmp
 TimeStamp = /4CE748AC;
@@ -473,42 +473,42 @@ BeginCmp
 TimeStamp = /4CEE07E6;
 Reference = D1;
 ValeurCmp = DIODESIL;
-IdModule  = SM0603_GRUVIN;
+IdModule  = SM0603_DIODE;
 EndCmp
 
 BeginCmp
 TimeStamp = /4E203397;
 Reference = D2;
 ValeurCmp = DIODESCH;
-IdModule  = SM0603_GRUVIN;
+IdModule  = SM0603_DIODE;
 EndCmp
 
 BeginCmp
 TimeStamp = /4E2AC5A2;
 Reference = D3;
-ValeurCmp = ZENER;
-IdModule  = SM0603_GRUVIN;
+ValeurCmp = 3.6v;
+IdModule  = sod523;
 EndCmp
 
 BeginCmp
 TimeStamp = /4E2AC5A9;
 Reference = D4;
-ValeurCmp = ZENER;
-IdModule  = SM0603_GRUVIN;
+ValeurCmp = 3.6v;
+IdModule  = sod523;
 EndCmp
 
 BeginCmp
 TimeStamp = /4DDD61E7;
 Reference = D16;
 ValeurCmp = DIODESCH;
-IdModule  = SM0603_GRUVIN;
+IdModule  = SM0603_DIODE;
 EndCmp
 
 BeginCmp
 TimeStamp = /4DFF927D;
 Reference = D17;
 ValeurCmp = DIODESCH;
-IdModule  = SM0603_GRUVIN;
+IdModule  = SM0603_DIODE;
 EndCmp
 
 BeginCmp

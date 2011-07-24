@@ -1,4 +1,4 @@
-EESchema Schematic File Version 2  date 23/07/2011 17:05:19
+EESchema Schematic File Version 2  date 24/07/2011 22:09:50
 LIBS:device
 LIBS:transistors
 LIBS:linear
@@ -37,7 +37,7 @@ $Descr A2 23400 16535
 encoding utf-8
 Sheet 1 1
 Title "Main Controller PCB for 100pin ATMega"
-Date "23 jul 2011"
+Date "24 jul 2011"
 Rev "4.0"
 Comp ""
 Comment1 ""
@@ -1570,7 +1570,7 @@ L R R110
 U 1 1 4E2AE1D6
 P 5850 6800
 F 0 "R110" V 5930 6800 50  0000 C CNN
-F 1 "1.5K" V 5850 6800 50  0000 C CNN
+F 1 "5.1K" V 5850 6800 50  0000 C CNN
 	1    5850 6800
 	1    0    0    -1  
 $EndComp
@@ -1579,7 +1579,7 @@ L R R108
 U 1 1 4E2AE1CC
 P 5700 6800
 F 0 "R108" V 5780 6800 50  0000 C CNN
-F 1 "1.5K" V 5700 6800 50  0000 C CNN
+F 1 "5.1K" V 5700 6800 50  0000 C CNN
 	1    5700 6800
 	1    0    0    -1  
 $EndComp
@@ -1588,7 +1588,7 @@ L R R109
 U 1 1 4E2AE1BD
 P 5850 5700
 F 0 "R109" V 5930 5700 50  0000 C CNN
-F 1 "1.5K" V 5850 5700 50  0000 C CNN
+F 1 "5.1K" V 5850 5700 50  0000 C CNN
 	1    5850 5700
 	1    0    0    -1  
 $EndComp
@@ -1597,7 +1597,7 @@ L R R107
 U 1 1 4E2AE19E
 P 5700 5700
 F 0 "R107" V 5780 5700 50  0000 C CNN
-F 1 "1.5K" V 5700 5700 50  0000 C CNN
+F 1 "5.1K" V 5700 5700 50  0000 C CNN
 	1    5700 5700
 	1    0    0    -1  
 $EndComp
