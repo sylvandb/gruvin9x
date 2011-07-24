@@ -44,7 +44,8 @@ void menuProcSetup(uint8_t event)
 
   int8_t  sub    = mstate2.m_posVert;
 
-  if(s_pgOfs==COUNT_ITEMS-7) s_pgOfs= sub<(COUNT_ITEMS-4) ? COUNT_ITEMS-8 : COUNT_ITEMS-6; // TODO BSS needed?
+  // last 2 lines (radio mode) are non break-able
+  if(s_pgOfs==COUNT_ITEMS-7) s_pgOfs= sub<(COUNT_ITEMS-4) ? COUNT_ITEMS-8 : COUNT_ITEMS-6;
 
   uint8_t y = 1*FH;
 
