@@ -119,23 +119,21 @@ void menuMainView(uint8_t event)
   trimSwLock = getSwitch(g_model.trimSw,0);
 
   if (g_eeGeneral.view < 0x10) {
-    // TODO x needed?
-    uint8_t x=FW*2;
     uint8_t att = (g_vbat100mV < g_eeGeneral.vBatWarn ? BLINK : 0) | DBLSIZE;
     for(uint8_t i=0;i<sizeof(g_model.name);i++)
-      lcd_putcAtt(x+i*2*FW-i-2, 0*FH, g_model.name[i],DBLSIZE);
+      lcd_putcAtt(2*FW+i*2*FW-i-2, 0*FH, g_model.name[i], DBLSIZE);
 
-    putsVBat(x+4*FW+2, 2*FH, att|NO_UNIT);
-    lcd_putc(x+4*FW+2, 3*FH, 'V');
+    putsVBat(6*FW+2, 2*FH, att|NO_UNIT);
+    lcd_putc(6*FW+2, 3*FH, 'V');
 
     if(s_timerState != TMR_OFF) {
       uint8_t att = DBLSIZE | (s_timerState==TMR_BEEPING ? BLINK : 0);
-      putsTime(x+14*FW-2, FH*2, s_timerVal, att,att);
-      putsTmrMode(s_timerVal >= 0 ? x+7*FW-FW/2+5 : x+7*FW-FW/2-2, FH*3, 0);
+      putsTime(16*FW-2, FH*2, s_timerVal, att,att);
+      putsTmrMode(s_timerVal >= 0 ? 9*FW-FW/2+5 : 9*FW-FW/2-2, FH*3, 0);
     }
 
     uint8_t flightPhase = getFlightPhase();
-    if (flightPhase) putsFlightPhases(x+4*FW+2, 2*FH, flightPhase, 0);
+    if (flightPhase) putsFlightPhases(6*FW+2, 2*FH, flightPhase, 0);
 
     // trim sliders
     for(uint8_t i=0; i<4; i++)
