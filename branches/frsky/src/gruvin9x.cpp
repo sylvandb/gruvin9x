@@ -349,11 +349,8 @@ inline uint8_t keyDown()
 
 void clearKeyEvents()
 {
-// TODO check why it blocks everything
-#ifndef SIM
     while(keyDown());  // loop until all keys are up
     putEvent(0);
-#endif
 }
 
 void doSplash()

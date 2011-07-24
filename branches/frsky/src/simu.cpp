@@ -24,7 +24,7 @@
 #include <time.h>
 #include <ctype.h>
 
-unsigned char pinb, pinc, pind, pine, ping;
+volatile unsigned char pinb, pinc, pind, pine, ping;
 unsigned char portb, dummyport;
 int g_snapshot_idx = 0;
 const char *eepromFile = "eeprom.bin";
@@ -322,8 +322,9 @@ void Gruvin9xSim::refreshDiplay()
     };
 
     pinb &= ~ 0x7e;
+    printf("ICI"); fflush(stdout);
     for(unsigned i=0; i<DIM(keys1);i+=2){
-      if(getApp()->getKeyState(keys1[i]))  pinb |= (1<<keys1[i+1]);
+      if(getApp()->getKeyState(keys1[i]))  { pinb |= (1<<keys1[i+1]); printf("key"); fflush(stdout); }
     }
 
     static FXuint keys2[]={KEY_F8, KEY_F7, KEY_F4, KEY_F3, KEY_F6, KEY_F5, KEY_F1, KEY_F2  };
