@@ -169,7 +169,7 @@ uint8_t           s_confirmation = 0;
 void displayWarning(uint8_t event)
 {
   if (s_warning) {
-    lcd_empty_rect(10, 16, 108, 40);
+    lcd_filled_rect(10, 16, 108, 40, LCD_WHITE);
     lcd_rect(10, 16, 108, 40);
     lcd_puts_P(16, 3*FH, s_warning);
     // could be a place for a s_warning_bss
@@ -188,7 +188,7 @@ void displayConfirmation(uint8_t event)
 {
   if (s_warning) {
     s_confirmation = false;
-    lcd_empty_rect(10, 16, 108, 40);
+    lcd_filled_rect(10, 16, 108, 40, LCD_WHITE);
     lcd_rect(10, 16, 108, 40);
     lcd_puts_P(16, 3*FH, s_warning);
     if (s_warning_bss)
