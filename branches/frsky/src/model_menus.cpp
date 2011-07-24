@@ -101,8 +101,8 @@ void menuProcModelSelect(uint8_t event)
         beepWarn1();
       }
       //case EXIT handled in checkExit
-      if(event==EVT_KEY_FIRST(KEY_LEFT))  {killEvents(event);popMenu(true);}
-      if(event==EVT_KEY_FIRST(KEY_RIGHT))  chainMenu(menuProcModel);
+      if(event==EVT_KEY_FIRST(KEY_LEFT))  chainMenu(menuTabModel[DIM(menuTabModel)-1]);
+      if(event==EVT_KEY_FIRST(KEY_RIGHT)) chainMenu(menuProcModel);
       break;
     case  EVT_KEY_FIRST(KEY_MENU):
         sel_editMode = true;

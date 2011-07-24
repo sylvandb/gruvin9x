@@ -67,14 +67,16 @@ void MState2::check(uint8_t event, uint8_t curr, MenuFuncP *menuTab, uint8_t men
       switch(event)
       {
         case EVT_KEY_FIRST(KEY_LEFT):
-          if(curr>0){
+          if(curr>0)
             chainMenu((MenuFuncP)pgm_read_adr(&menuTab[curr-1]));
-          }
+          else
+            chainMenu((MenuFuncP)pgm_read_adr(&menuTab[menuTabSize-1]));
           break;
         case EVT_KEY_FIRST(KEY_RIGHT):
-          if(curr < (menuTabSize-1)){
+          if(curr < (menuTabSize-1))
             chainMenu((MenuFuncP)pgm_read_adr(&menuTab[curr+1]));
-          }
+          else
+            chainMenu((MenuFuncP)pgm_read_adr(&menuTab[0]));
           break;
       }
     }
