@@ -28,7 +28,7 @@
 #include "time.h"
 #endif
 
-#ifdef SIM
+#ifdef SIMU
   #include "simpgmspace.h"
   #define APM
   #include "stdio.h"
@@ -379,7 +379,8 @@ void zeroVariables();
 
 #define NO_TRAINER 0x01
 #define NO_INPUT   0x02
-void perOut(int16_t *chanOut, uint8_t att);
+extern void perOut(int16_t *chanOut, uint8_t att);
+
 ///   Liefert den Zustand des Switches 'swtch'. Die Numerierung erfolgt ab 1
 ///   (1=SW_ON, 2=SW_ThrCt, 10=SW_Trainer). 0 Bedeutet not conected.
 ///   Negative Werte  erzeugen invertierte Ergebnisse.
@@ -401,10 +402,6 @@ bool    getSwitch(int8_t swtch, bool nc, uint8_t level=0);
 uint8_t getFlightPhase();
 uint8_t getTrimFlightPhase(uint8_t idx, int8_t phase=-1);
 
-void putsSwitches(uint8_t x,uint8_t y,int8_t swtch,uint8_t att);
-void putsFlightPhases(uint8_t x, uint8_t y, int8_t idx, uint8_t att);
-void putsTmrMode(uint8_t x, uint8_t y, uint8_t attr);
-
 extern uint16_t s_timeCumTot;
 extern uint16_t s_timeCumAbs;  //laufzeit in 1/16 sec
 extern uint16_t s_timeCumSw;  //laufzeit in 1/16 sec
@@ -417,7 +414,7 @@ extern int16_t  s_timerVal;
 #define TMR_RUNNING 1
 #define TMR_BEEPING 2
 #define TMR_STOPPED 3
-void resetTimer();
+void resetTimer1();
 
 extern uint8_t Timer2_running ;
 extern uint16_t timer2 ;
@@ -455,20 +452,6 @@ void getADC_filt();
 #define   EE_MODEL   0x02
 
 extern bool warble;
-extern int16_t p1valdiff;
-
-extern int8_t  checkIncDec_Ret;  // global helper vars
-extern uint8_t s_editMode;    // global editmode
-
-int16_t checkIncDec(uint8_t event, int16_t i_pval, int16_t i_min, int16_t i_max, uint8_t i_flags);
-int8_t checkIncDec_hm(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max);
-int8_t checkIncDec_hg(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max);
-
-#define CHECK_INCDEC_H_MODELVAR( event, var, min, max)     \
-  var = checkIncDec_hm(event,var,min,max)
-
-#define CHECK_INCDEC_H_GENVAR( event, var, min, max)     \
-  var = checkIncDec_hg(event,var,min,max)
 
 #define STORE_MODELVARS eeDirty(EE_MODEL)
 #define STORE_GENERALVARS eeDirty(EE_GENERAL)
@@ -512,24 +495,6 @@ bool eeDuplicateModel(uint8_t id);
 #define NUM_XCHNRAW (NUM_STICKS+NUM_POTS+2/*MAX/FULL*/+3/*CYC1-CYC3*/+NUM_PPM+NUM_CHNOUT+NUM_TELEMETRY)
 ///number of real output channels (CH1-CH8) plus virtual output channels X1-X4
 #define NUM_XCHNOUT (NUM_CHNOUT) //(NUM_CHNOUT)//+NUM_VIRT)
-
-//#define MAX_CHNRAW 8
-/// Schreibt [RUD ELE THR AIL P1 P2 P3 MAX] aufs lcd
-void putsChnRaw(uint8_t x,uint8_t y,uint8_t idx1,uint8_t att);
-//#define MAX_CHN 8
-
-/// Schreibt [CH1 CH2 CH3 CH4 CH5 CH6 CH7 CH8] aufs lcd
-void putsChn(uint8_t x,uint8_t y,uint8_t idx1,uint8_t att);
-void putsChnLetter(uint8_t x, uint8_t y, uint8_t idx, uint8_t attr);
-
-/// Schreibt die Batteriespannung aufs lcd
-void putsVolts(uint8_t x,uint8_t y, uint16_t volts, uint8_t att);
-void putsVBat(uint8_t x,uint8_t y,uint8_t att);
-void putsTime(uint8_t x,uint8_t y,int16_t tme,uint8_t att,uint8_t att2);
-
-#ifdef FRSKY
-void putsTelemetry(uint8_t x, uint8_t y, uint8_t val, uint8_t unit, uint8_t att);
-#endif
 
 extern inline int16_t calc100toRESX(int8_t x)
 {
@@ -603,9 +568,12 @@ extern int16_t            g_chans512[NUM_CHNOUT];
 extern volatile uint8_t   tick10ms;
 extern uint16_t            BandGap;
 
-// TODO these functions should be in gruvin9x.cpp
+extern uint16_t expou(uint16_t x, uint16_t k);
+extern int16_t expo(int16_t x, int16_t k);
 extern int16_t intpol(int16_t, uint8_t);
 extern int16_t applyCurve(int16_t, uint8_t, uint8_t srcRaw);
+extern void applyExpos(int16_t *anas);
+
 extern uint16_t anaIn(uint8_t chan);
 extern int16_t calibratedStick[7];
 extern int16_t ex_chans[NUM_CHNOUT];

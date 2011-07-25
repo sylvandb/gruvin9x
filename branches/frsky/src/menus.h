@@ -27,7 +27,7 @@ void DisplayScreenIndex(uint8_t index, uint8_t count, uint8_t attr);
 extern uint8_t s_pgOfs;
 extern uint8_t s_noHi;
 
-extern int16_t expo(int16_t x, int16_t k);
+// extern int16_t expo(int16_t x, int16_t k);
 
 void menu_lcd_onoff(uint8_t x, uint8_t y, uint8_t value, uint8_t mode);
 void menu_lcd_HYPHINV(uint8_t x, uint8_t y, uint8_t value, uint8_t mode);
@@ -50,6 +50,20 @@ void menuProcSetup(uint8_t event);
 void menuProcModelSelect(uint8_t event);
 void menuProcStatistic(uint8_t event);
 void menuProcStatistic2(uint8_t event);
+
+extern int16_t p1valdiff;
+extern int8_t  checkIncDec_Ret;  // global helper vars
+extern uint8_t s_editMode;    // global editmode
+
+int16_t checkIncDec(uint8_t event, int16_t i_pval, int16_t i_min, int16_t i_max, uint8_t i_flags);
+int8_t checkIncDec_hm(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max);
+int8_t checkIncDec_hg(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max);
+
+#define CHECK_INCDEC_H_MODELVAR( event, var, min, max)     \
+  var = checkIncDec_hm(event,var,min,max)
+
+#define CHECK_INCDEC_H_GENVAR( event, var, min, max)     \
+  var = checkIncDec_hg(event,var,min,max)
 
 // Menus related stuff ...
 struct MState2

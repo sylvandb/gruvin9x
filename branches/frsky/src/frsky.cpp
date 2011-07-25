@@ -119,7 +119,7 @@ void processFrskyPacket(uint8_t *packet)
    a second buffer to receive data while one buffer is being processed (slowly).
 */
 
-#ifndef SIM
+#ifndef SIMU
 ISR(USART0_RX_vect)
 {
   uint8_t stat;
@@ -374,7 +374,7 @@ void FRSKY_Init(void)
 
 #undef BAUD
 #define BAUD 9600
-#ifndef SIM
+#ifndef SIMU
 #include <util/setbaud.h>
 
   UBRR0H = UBRRH_VALUE;

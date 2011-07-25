@@ -227,11 +227,6 @@ void modelDefault(uint8_t id)
   g_model.name[5]='0'+(id+1)/10;
   g_model.name[6]='0'+(id+1)%10;
 
-  //for(uint8_t i= 0; i<4; i++){
-  //  g_model.mixData[i].destCh = i+1;
-  //  g_model.mixData[i].srcRaw = i+1;
-  //  g_model.mixData[i].weight = 100;
-  //}
   applyTemplate(0); //default 4 channel template
 }
 void eeLoadModelName(uint8_t id,char*buf,uint8_t len)
@@ -273,9 +268,10 @@ void eeLoadModel(uint8_t id)
     	modelDefault(id);
     }
 
+    resetTimer1();
     resetTimer2();
-
 #ifdef FRSKY
+    resetTelemetry();
     FRSKY_setModelAlarms();
 #endif
   }
@@ -307,7 +303,7 @@ bool eeDuplicateModel(uint8_t id)
     wdt_reset();
   }
   theFile2.closeTrunc();
-  //XXX: todo error handling
+  // TODO error handling
   return true;
 }
 void eeReadAll()

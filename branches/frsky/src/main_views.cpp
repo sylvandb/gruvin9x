@@ -86,9 +86,8 @@ void menuMainView(uint8_t event)
         s_timerState = TMR_STOPPED;
         beepKey();
       }
-      else if(view == e_timer2) {
+      else if (view == e_timer2) {
        resetTimer2();
-       // Timer2_running = !Timer2_running;
        beepKey();
       }
 #ifdef FRSKY
@@ -97,10 +96,12 @@ void menuMainView(uint8_t event)
         beepKey();
       }
 #endif
-      // TODO BSS else resetTimer1()
+      else {
+        resetTimer1();
+      }
       break;
     case EVT_KEY_LONG(KEY_EXIT):
-      resetTimer();
+      resetTimer1();
       resetTimer2();
 #ifdef FRSKY
       resetTelemetry();

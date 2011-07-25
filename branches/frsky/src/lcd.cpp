@@ -360,6 +360,99 @@ void lcd_filled_rect(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_t att)
     lcd_hline(x, i, w, att);
 }
 
+void putsTime(uint8_t x,uint8_t y,int16_t tme,uint8_t att,uint8_t att2)
+{
+  if (tme<0) {
+    lcd_putcAtt(x - ((att&DBLSIZE) ? FWNUM*6-3 : FWNUM*3), y, '-', att);
+    tme = -tme;
+  }
+
+  lcd_putcAtt(x, y, ':', att&att2);
+  lcd_outdezNAtt((att&DBLSIZE) ? x + 2 : x, y, tme/60, LEADING0|att,2);
+  x += (att&DBLSIZE) ? FWNUM*6-2 : FW*3-1;
+  lcd_outdezNAtt(x, y, tme%60, LEADING0|att2,2);
+}
+
+void putsVolts(uint8_t x,uint8_t y, uint16_t volts, uint8_t att)
+{
+  lcd_outdezAtt(x, y, volts, att|PREC1);
+  if(!(att&NO_UNIT)) lcd_putcAtt(lcd_lastPos, y, 'v', att);
+}
+
+void putsVBat(uint8_t x,uint8_t y,uint8_t att)
+{
+  putsVolts(x, y, g_vbat100mV, att);
+}
+
+void putsChnRaw(uint8_t x, uint8_t y, uint8_t idx, uint8_t att)
+{
+  if (idx==0)
+    lcd_putsnAtt(x,y,PSTR("----"),4,att);
+  else if(idx<=4)
+    lcd_putsnAtt(x,y,modi12x3+g_eeGeneral.stickMode*16+4*(idx-1),4,att);
+  else if(idx<=NUM_XCHNRAW)
+    lcd_putsnAtt(x,y,PSTR("P1  P2  P3  MAX FULLCYC1CYC2CYC3PPM1PPM2PPM3PPM4PPM5PPM6PPM7PPM8CH1 CH2 CH3 CH4 CH5 CH6 CH7 CH8 CH9 CH10CH11CH12CH13CH14CH15CH16"TELEMETRY_CHANNELS)+4*(idx-5),4,att);
+}
+
+void putsChn(uint8_t x, uint8_t y, uint8_t idx, uint8_t att)
+{
+  if (idx > 0 && idx <= NUM_CHNOUT)
+    putsChnRaw(x, y, idx+20, att);
+}
+
+void putsChnLetter(uint8_t x, uint8_t y, uint8_t idx, uint8_t attr)
+{
+  lcd_putsnAtt(x, y, PSTR("RETA")+CHANNEL_ORDER(idx)-1, 1, attr);
+}
+
+void putsSwitches(uint8_t x,uint8_t y,int8_t idx,uint8_t att)
+{
+  switch(idx){
+    case  0:          lcd_putsAtt(x,y,PSTR("---"),att);return;
+    case  MAX_SWITCH: lcd_putsAtt(x,y,PSTR("ON "),att);return;
+    case -MAX_SWITCH: lcd_putsAtt(x,y,PSTR("OFF"),att);return;
+  }
+  if (idx<0) lcd_putcAtt(x-FW, y, '!', att);
+  lcd_putsnAtt(x,y,get_switches_string()+3*(abs(idx)-1),3,att);
+}
+
+void putsFlightPhases(uint8_t x, uint8_t y, int8_t idx, uint8_t att)
+{
+  if (idx==0) { lcd_putsAtt(x,y,PSTR("---"),att); return; }
+  if (idx < 0) lcd_putcAtt(x-FW, y, '!', att);
+  lcd_putsnAtt(x, y, PSTR("FP1FP2FP3")+3*(abs(idx)-1), 3, att);
+}
+
+void putsTmrMode(uint8_t x, uint8_t y, uint8_t attr)
+{
+  int8_t tm = g_model.tmrMode;
+  if(abs(tm)<TMR_VAROFS) {
+    lcd_putsnAtt(  x, y, PSTR("OFFABSRUsRU%ELsEL%THsTH%ALsAL%P1 P1%P2 P2%P3 P3%")+3*abs(tm),3,attr);
+    if(tm<(-TMRMODE_ABS)) lcd_putcAtt(x-1*FW,  y,'!',attr);
+    return;
+  }
+
+  if(abs(tm)<(TMR_VAROFS+MAX_SWITCH-1)) { //normal on-off
+    putsSwitches( x,y,tm>0 ? tm-(TMR_VAROFS-1) : tm+(TMR_VAROFS-1),attr);
+    return;
+  }
+
+  putsSwitches( x,y,tm>0 ? tm-(TMR_VAROFS+MAX_SWITCH-1-1) : tm+(TMR_VAROFS+MAX_SWITCH-1-1),attr);//momentary on-off
+  lcd_putcAtt(x+3*FW,  y,'m',attr);
+}
+
+#ifdef FRSKY
+void putsTelemetry(uint8_t x, uint8_t y, uint8_t val, uint8_t unit, uint8_t att)
+{
+  if (unit == 0/*v*/) {
+    putsVolts(x, y, val, att);
+  }
+  else {
+    lcd_outdezAtt(x, y, val, att);
+  }
+}
+#endif
+
 void lcdSendCtl(uint8_t val)
 {
   PORTC_LCD_CTRL &= ~(1<<OUT_C_LCD_CS1);
@@ -410,6 +503,7 @@ void lcd_init()
   lcdSendCtl(0xAF); //DON = 1: display ON
   g_eeGeneral.contrast = 0x22;
 }
+
 void lcdSetRefVolt(uint8_t val)
 {
   lcdSendCtl(0x81);

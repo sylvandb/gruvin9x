@@ -75,7 +75,7 @@ void eeWriteBlockCmp(const void *i_pointer_ram, void *i_pointer_eeprom, size_t s
 
 #else
 
-#ifndef SIM
+#ifndef SIMU
 
 ///opt/cross/avr/include/avr/eeprom.h
 static inline void __attribute__ ((always_inline))
@@ -144,7 +144,7 @@ uint8_t getEvent()
 class Key
 {
 #define FILTERBITS      4
-#ifdef SIM
+#ifdef SIMU
 #define FFVAL 1
 #else
 #define FFVAL          ((1<<FILTERBITS)-1)

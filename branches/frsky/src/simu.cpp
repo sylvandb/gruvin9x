@@ -24,7 +24,7 @@
 #include <time.h>
 #include <ctype.h>
 
-volatile unsigned char pinb, pinc, pind, pine, ping;
+volatile unsigned char pinb=0, pinc=0xff, pind, pine=0xff, ping=0xff;
 unsigned char portb, dummyport;
 int g_snapshot_idx = 0;
 const char *eepromFile = "eeprom.bin";
@@ -334,8 +334,8 @@ void Gruvin9xSim::refreshDiplay()
     // /usr/local/include/fox-1.6/fxkeys.h
     static FXuint keys3[]={
 #if defined(JETI) || defined(FRSKY)
-      KEY_1, (FXuint)&pine,  INP_C_ThrCt,    0,
-      KEY_6, (FXuint)&pine,  INP_C_AileDR,   0,
+      KEY_1, (FXuint)&pinc,  INP_C_ThrCt,    0,
+      KEY_6, (FXuint)&pinc,  INP_C_AileDR,   0,
 #else
       KEY_1, (FXuint)&pine,  INP_E_ThrCt,    0,
       KEY_6, (FXuint)&pine,  INP_E_AileDR,   0,
@@ -421,14 +421,11 @@ void doFxEvents()
 
 int main(int argc,char **argv)
 {
-  
   if(argc>=2){
     eepromFile = argv[1];
   }
   printf("eeprom = %s\n",eepromFile);
 
-  pine = 0xff & ~(1<<INP_E_ID2);// & ~(1<<INP_E_ElevDR);
-  ping = 0xff ^ ( 1<<INP_G_RuddDR);
   // Each FOX GUI program needs one, and only one, application object.
   // The application objects coordinates some common stuff shared between
   // all the widgets; for example, it dispatches events, keeps track of
@@ -436,7 +433,7 @@ int main(int argc,char **argv)
   // We pass the "name" of the application, and its "vendor", the name
   // and vendor are used to search the registry database (which stores
   // persistent information e.g. fonts and colors).
-  FXApp application("Gruvin9xSim","thus");
+  FXApp application("Gruvin9xSim", "thus");
 
   // Here we initialize the application.  We pass the command line arguments
   // because FOX may sometimes need to filter out some of the arguments.

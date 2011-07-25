@@ -1,6 +1,10 @@
 #include "menus.h"
 #include "templates.h"
 
+#define WCHART 32
+#define X0     (128-WCHART-2)
+#define Y0     32
+
 enum EnumTabModel {
   e_ModelSelect,
   e_Model,
@@ -83,7 +87,6 @@ void menuProcModelSelect(uint8_t event)
         beepKey();
         killEvents(event);
         eeLoadModel(g_eeGeneral.currModel = mstate2.m_posVert);
-        resetTimer(); // TODO BSS ResetAll ?
         STORE_GENERALVARS;
         STORE_MODELVARS;
         break;
@@ -96,7 +99,6 @@ void menuProcModelSelect(uint8_t event)
         killEvents(event);
         g_eeGeneral.currModel = mstate2.m_posVert;
         eeLoadModel(g_eeGeneral.currModel);
-        resetTimer(); // TODO BSS ResetAll ?
         STORE_GENERALVARS;
         beepWarn1();
       }
@@ -496,113 +498,101 @@ void menuProcHeli(uint8_t event)
 
 static uint8_t s_currIdx;
 static uint8_t s_curveChan;
-void menuProcCurveOne(uint8_t event); // TODO plus haut
-void deleteExpoMix(uint8_t expo, uint8_t idx);
-void editExpoVals(uint8_t event, uint8_t which, bool edit, uint8_t y, uint8_t idt)
+
+void menuProcCurveOne(uint8_t event)
 {
-  uint8_t invBlk = edit ? INVERS : 0;
-  // if(edit && stopBlink) invBlk = INVERS;
+#define XD X0-2
+  bool    cv9 = s_curveChan >= MAX_CURVE5;
 
-  ExpoData *ed = expoaddress(idt);
+  SUBMENU("CURVE", 2+(cv9 ? 9 : 5), { 9,0/*repeated...*/});
+  lcd_outdezAtt(6*FW, 0, s_curveChan+1, INVERS);
 
-  switch(which)
-  {
-    case 0:
-      lcd_outdezAtt(9*FW, y, ed->expo, invBlk);
-      if(edit) CHECK_INCDEC_H_MODELVAR(event, ed->expo,-100, 100);
-      break;
-    case 1:
-      lcd_outdezAtt(9*FW, y, ed->weight, invBlk);
-      if(edit) CHECK_INCDEC_H_MODELVAR(event, ed->weight, 0, 100);
-      break;
-    case 2:
-      putsFlightPhases(6*FW, y, ed->flightPhase, invBlk);
-      if(edit) CHECK_INCDEC_H_MODELVAR(event, ed->flightPhase, -MAX_PHASES+1, MAX_PHASES-1);
-      break;
-    case 3:
-      putsSwitches(6*FW, y, ed->swtch, invBlk);
-      if(edit) CHECK_INCDEC_H_MODELVAR(event, ed->swtch, -MAX_DRSWITCH, MAX_DRSWITCH);
-      break;
-    case 4:
-      lcd_putsnAtt(6*FW, y, PSTR(CURV_STR)+3*(ed->curve+(ed->curve >= CURVE_BASE+4 ? 4 : 0)), 3, invBlk);
-      if(invBlk) CHECK_INCDEC_H_MODELVAR(event, ed->curve, 0, 15);
-      if(invBlk && ed->curve>=CURVE_BASE && event==EVT_KEY_FIRST(KEY_MENU)) {
-        s_curveChan = ed->curve - (ed->curve >= CURVE_BASE+4 ? CURVE_BASE-4 : CURVE_BASE);
-        pushMenu(menuProcCurveOne);
-      }
-      break;
-    case 5:
-      lcd_putsnAtt(6*FW, y, PSTR("---PosNeg")+9-3*ed->mode, 3, invBlk);
-      if(edit) ed->mode = 4 - checkIncDec_hm(event, 4-ed->mode, 1, 3);
-      break;
-    case 6:
-      lcd_putsAtt(0*FW, y, PSTR("Delete"), invBlk);
-      if(edit && event==EVT_KEY_FIRST(KEY_MENU)) {
-        deleteExpoMix(1, idt);
+  int8_t *crv = cv9 ? g_model.curves9[s_curveChan-MAX_CURVE5] : g_model.curves5[s_curveChan];
+
+  int8_t  sub    = mstate2.m_posVert-1;
+  int8_t  subSub = mstate2.m_posHorz;
+
+  switch(event){
+    case EVT_KEY_FIRST(KEY_EXIT):
+      if(subSub!=0) {
+        subSub = mstate2.m_posHorz = 0;
         killEvents(event);
-        popMenu();
       }
       break;
-  }
-}
-
-// TODO in gruvin9x.cpp
-extern void applyExpos(int16_t *anas);
-void menuProcExpoOne(uint8_t event)
-{
-  SUBMENU("EXPO/DR", 7, {0});
-
-  ExpoData *ed = expoaddress(s_currIdx);
-
-  putsChnRaw(lcd_lastPos+FW/2,0,ed->chn+1,0);
-
-  int8_t  sub    = mstate2.m_posVert;
-
-  uint8_t  y = FH;
-
-  for (uint8_t i=0; i<7; i++) {
-    // TODO optim ?
-    lcd_putsnAtt(0, y, PSTR("Expo  WeightPhase Swtch Curve Mode        ")+6*i, 6, 0);
-    editExpoVals(event, i, sub==i, y, s_currIdx);
-    y+=FH;
+    case EVT_KEY_REPT(KEY_LEFT):
+    case EVT_KEY_FIRST(KEY_LEFT):
+      if(s_editMode && subSub>0) mstate2.m_posHorz--;
+      break;
+    case EVT_KEY_REPT(KEY_RIGHT):
+    case EVT_KEY_FIRST(KEY_RIGHT):
+      if(s_editMode && subSub<(cv9 ? 9 : 5)) mstate2.m_posHorz++;
+      break;
   }
 
-#define WCHART 32
-#define X0     (128-WCHART-2)
-#define Y0     32
+  s_editMode = mstate2.m_posHorz;
 
-  lcd_vlineStip(X0, 0, DISPLAY_H, 0xee);
-  lcd_hlineStip(X0-WCHART, Y0, WCHART*2, 0xee);
+  for (uint8_t i = 0; i < 5; i++) {
+    uint8_t y = i * FH + 16;
+    uint8_t attr = sub == i ? INVERS : 0;
+    lcd_outdezAtt(4 * FW, y, crv[i], attr);
+  }
+  if(cv9)
+    for (uint8_t i = 0; i < 4; i++) {
+      uint8_t y = i * FH + 16;
+      uint8_t attr = sub == i + 5 ? INVERS : 0;
+      lcd_outdezAtt(8 * FW, y, crv[i + 5], attr);
+    }
+  lcd_putsAtt( 2*FW, 1*FH,PSTR("EDIT->"),((sub == -1) && (subSub == 0)) ? INVERS : 0);
+  lcd_putsAtt( 2*FW, 7*FH,PSTR("PRESET"),sub == (cv9 ? 9 : 5) ? INVERS : 0);
 
-  int16_t anas[NUM_STICKS] = {0};
-  for(int8_t xv=-WCHART; xv<WCHART; xv++) {
-    anas[ed->chn] = xv*(RESX/WCHART);
-    applyExpos(anas);
-    uint16_t yv = (RESX + anas[ed->chn]) / 2;
-    yv = (DISPLAY_H-1) - yv * (DISPLAY_H-1) / RESX;
-    lcd_plot(X0+xv, yv, LCD_BLACK);
+  static int8_t dfltCrv;
+  if((sub<(cv9 ? 9 : 5)) && (sub>-1))  CHECK_INCDEC_H_MODELVAR( event, crv[sub], -100,100);
+  else  if(sub>0){ //make sure we're not on "EDIT"
+    dfltCrv = checkIncDec(event, dfltCrv, -4, 4, 0);
+    if (checkIncDec_Ret) {
+      if(cv9) for (uint8_t i = 0; i < 9; i++) crv[i] = (i-4)*dfltCrv* 100 / 16;
+      else    for (uint8_t i = 0; i < 5; i++) crv[i] = (i-2)*dfltCrv* 100 /  8;
+      eeDirty(EE_MODEL);
+    }
   }
 
-  // TODO optimization
-  int16_t x512  = calibratedStick[ed->chn];
-  anas[ed->chn] = x512;
-  applyExpos(anas);
-  int16_t y512  = anas[ed->chn];
+  if(s_editMode)
+  {
+    for(uint8_t i=0; i<(cv9 ? 9 : 5); i++)
+    {
+      uint8_t xx = XD-1-WCHART+i*WCHART/(cv9 ? 4 : 2);
+      uint8_t yy = Y0-crv[i]*WCHART/100;
 
-  //dy/dx
-  // TODO really needed?
-  // int16_t dy  = x512>0 ? y512-expo(x512-20,kView) : expo(x512+20,kView)-y512;
-  // lcd_outdezNAtt(14*FW, 2*FH,   dy*(100/20), LEADING0|PREC2,3);
-  // lcd_outdezNAtt(14*FW, 2*FH,   dy*(100/20), 0,3);
 
-  lcd_outdezAtt(20*FW, 6*FH, x512*100/RESX, 0);
-  lcd_outdezAtt(14*FW, 1*FH, (y512*100+(y512>0 ? RESX/2 : -RESX/2))/RESX, 0);
+      if(subSub==(i+1))
+      {
+        if((yy-2)<WCHART*2) lcd_hline( xx-1, yy-2, 5); //do selection square
+        if((yy-1)<WCHART*2) lcd_hline( xx-1, yy-1, 5);
+        if(yy<WCHART*2)     lcd_hline( xx-1, yy  , 5);
+        if((yy+1)<WCHART*2) lcd_hline( xx-1, yy+1, 5);
+        if((yy+2)<WCHART*2) lcd_hline( xx-1, yy+2, 5);
 
-  x512 = X0+x512/(RESXu/WCHART);
-  y512 = (DISPLAY_H-1) - (uint16_t)((y512+RESX)/2) * (DISPLAY_H-1) / RESX;
+        if(p1valdiff || event==EVT_KEY_FIRST(KEY_DOWN) || event==EVT_KEY_FIRST(KEY_UP) || event==EVT_KEY_REPT(KEY_DOWN) || event==EVT_KEY_REPT(KEY_UP))
+           CHECK_INCDEC_H_MODELVAR( event, crv[i], -100,100);  // edit on up/down
+      }
+      else
+      {
+          if((yy-1)<WCHART*2) lcd_hline( xx, yy-1, 3); // do markup square
+          if(yy<WCHART*2)     lcd_hline( xx, yy  , 3);
+          if((yy+1)<WCHART*2) lcd_hline( xx, yy+1, 3);
+      }
+    }
+  }
 
-  lcd_vline(x512, y512-3,3*2+1);
-  lcd_hline(x512-3, y512,3*2+1);
+  for (uint8_t xv = 0; xv < WCHART * 2; xv++) {
+    uint16_t yv = intpol(xv * (RESXu / WCHART) - RESXu, s_curveChan) / (RESXu
+                                                                      / WCHART);
+    lcd_plot(XD + xv - WCHART, Y0 - yv);
+    if ((xv & 3) == 0) {
+      lcd_plot(XD + xv - WCHART, Y0 + 0);
+    }
+  }
+  lcd_vline(XD, Y0 - WCHART, WCHART * 2);
 }
 
 uint8_t getExpoMixCount(uint8_t expo)
@@ -772,101 +762,103 @@ bool swapExpoMix(uint8_t expo, uint8_t &idx, uint8_t up)
   return result;
 }
 
-#define XD X0-2
-// static uint8_t s_curveChan;
-void menuProcCurveOne(uint8_t event)
+void editExpoVals(uint8_t event, uint8_t which, bool edit, uint8_t y, uint8_t idt)
 {
-  bool    cv9 = s_curveChan >= MAX_CURVE5;
+  uint8_t invBlk = edit ? INVERS : 0;
+  // if(edit && stopBlink) invBlk = INVERS;
 
-  SUBMENU("CURVE", 2+(cv9 ? 9 : 5), { 9,0/*repeated...*/});
-  lcd_outdezAtt(6*FW, 0, s_curveChan+1, INVERS);
+  ExpoData *ed = expoaddress(idt);
 
-  int8_t *crv = cv9 ? g_model.curves9[s_curveChan-MAX_CURVE5] : g_model.curves5[s_curveChan];
-
-  int8_t  sub    = mstate2.m_posVert-1;
-  int8_t  subSub = mstate2.m_posHorz;
-
-  switch(event){
-    case EVT_KEY_FIRST(KEY_EXIT):
-      if(subSub!=0) {
-        subSub = mstate2.m_posHorz = 0;
-        killEvents(event);
-      }
-      break;
-    case EVT_KEY_REPT(KEY_LEFT):
-    case EVT_KEY_FIRST(KEY_LEFT):
-      if(s_editMode && subSub>0) mstate2.m_posHorz--;
-      break;
-    case EVT_KEY_REPT(KEY_RIGHT):
-    case EVT_KEY_FIRST(KEY_RIGHT):
-      if(s_editMode && subSub<(cv9 ? 9 : 5)) mstate2.m_posHorz++;
-      break;
-  }
-
-  s_editMode = mstate2.m_posHorz;
-
-  for (uint8_t i = 0; i < 5; i++) {
-    uint8_t y = i * FH + 16;
-    uint8_t attr = sub == i ? INVERS : 0;
-    lcd_outdezAtt(4 * FW, y, crv[i], attr);
-  }
-  if(cv9)
-    for (uint8_t i = 0; i < 4; i++) {
-      uint8_t y = i * FH + 16;
-      uint8_t attr = sub == i + 5 ? INVERS : 0;
-      lcd_outdezAtt(8 * FW, y, crv[i + 5], attr);
-    }
-  lcd_putsAtt( 2*FW, 1*FH,PSTR("EDIT->"),((sub == -1) && (subSub == 0)) ? INVERS : 0);
-  lcd_putsAtt( 2*FW, 7*FH,PSTR("PRESET"),sub == (cv9 ? 9 : 5) ? INVERS : 0);
-
-  static int8_t dfltCrv;
-  if((sub<(cv9 ? 9 : 5)) && (sub>-1))  CHECK_INCDEC_H_MODELVAR( event, crv[sub], -100,100);
-  else  if(sub>0){ //make sure we're not on "EDIT"
-    dfltCrv = checkIncDec(event, dfltCrv, -4, 4, 0);
-    if (checkIncDec_Ret) {
-      if(cv9) for (uint8_t i = 0; i < 9; i++) crv[i] = (i-4)*dfltCrv* 100 / 16;
-      else    for (uint8_t i = 0; i < 5; i++) crv[i] = (i-2)*dfltCrv* 100 /  8;
-      eeDirty(EE_MODEL);
-    }
-  }
-
-  if(s_editMode)
+  switch(which)
   {
-    for(uint8_t i=0; i<(cv9 ? 9 : 5); i++)
-    {
-      uint8_t xx = XD-1-WCHART+i*WCHART/(cv9 ? 4 : 2);
-      uint8_t yy = Y0-crv[i]*WCHART/100;
-
-
-      if(subSub==(i+1))
-      {
-        if((yy-2)<WCHART*2) lcd_hline( xx-1, yy-2, 5); //do selection square
-        if((yy-1)<WCHART*2) lcd_hline( xx-1, yy-1, 5);
-        if(yy<WCHART*2)     lcd_hline( xx-1, yy  , 5);
-        if((yy+1)<WCHART*2) lcd_hline( xx-1, yy+1, 5);
-        if((yy+2)<WCHART*2) lcd_hline( xx-1, yy+2, 5);
-
-        if(p1valdiff || event==EVT_KEY_FIRST(KEY_DOWN) || event==EVT_KEY_FIRST(KEY_UP) || event==EVT_KEY_REPT(KEY_DOWN) || event==EVT_KEY_REPT(KEY_UP))
-           CHECK_INCDEC_H_MODELVAR( event, crv[i], -100,100);  // edit on up/down
+    case 0:
+      lcd_outdezAtt(9*FW, y, ed->expo, invBlk);
+      if(edit) CHECK_INCDEC_H_MODELVAR(event, ed->expo,-100, 100);
+      break;
+    case 1:
+      lcd_outdezAtt(9*FW, y, ed->weight, invBlk);
+      if(edit) CHECK_INCDEC_H_MODELVAR(event, ed->weight, 0, 100);
+      break;
+    case 2:
+      putsFlightPhases(6*FW, y, ed->flightPhase, invBlk);
+      if(edit) CHECK_INCDEC_H_MODELVAR(event, ed->flightPhase, -MAX_PHASES+1, MAX_PHASES-1);
+      break;
+    case 3:
+      putsSwitches(6*FW, y, ed->swtch, invBlk);
+      if(edit) CHECK_INCDEC_H_MODELVAR(event, ed->swtch, -MAX_DRSWITCH, MAX_DRSWITCH);
+      break;
+    case 4:
+      lcd_putsnAtt(6*FW, y, PSTR(CURV_STR)+3*(ed->curve+(ed->curve >= CURVE_BASE+4 ? 4 : 0)), 3, invBlk);
+      if(invBlk) CHECK_INCDEC_H_MODELVAR(event, ed->curve, 0, 15);
+      if(invBlk && ed->curve>=CURVE_BASE && event==EVT_KEY_FIRST(KEY_MENU)) {
+        s_curveChan = ed->curve - (ed->curve >= CURVE_BASE+4 ? CURVE_BASE-4 : CURVE_BASE);
+        pushMenu(menuProcCurveOne);
       }
-      else
-      {
-          if((yy-1)<WCHART*2) lcd_hline( xx, yy-1, 3); // do markup square
-          if(yy<WCHART*2)     lcd_hline( xx, yy  , 3);
-          if((yy+1)<WCHART*2) lcd_hline( xx, yy+1, 3);
+      break;
+    case 5:
+      lcd_putsnAtt(6*FW, y, PSTR("---PosNeg")+9-3*ed->mode, 3, invBlk);
+      if(edit) ed->mode = 4 - checkIncDec_hm(event, 4-ed->mode, 1, 3);
+      break;
+    case 6:
+      lcd_putsAtt(0*FW, y, PSTR("Delete"), invBlk);
+      if(edit && event==EVT_KEY_FIRST(KEY_MENU)) {
+        deleteExpoMix(1, idt);
+        killEvents(event);
+        popMenu();
       }
-    }
+      break;
+  }
+}
+
+void menuProcExpoOne(uint8_t event)
+{
+  SUBMENU("EXPO/DR", 7, {0});
+
+  ExpoData *ed = expoaddress(s_currIdx);
+
+  putsChnRaw(lcd_lastPos+FW/2,0,ed->chn+1,0);
+
+  int8_t  sub    = mstate2.m_posVert;
+
+  uint8_t  y = FH;
+
+  for (uint8_t i=0; i<7; i++) {
+    lcd_putsnAtt(0, y, PSTR("Expo  WeightPhase Swtch Curve Mode        ")+6*i, 6, 0);
+    editExpoVals(event, i, sub==i, y, s_currIdx);
+    y+=FH;
   }
 
-  for (uint8_t xv = 0; xv < WCHART * 2; xv++) {
-    uint16_t yv = intpol(xv * (RESXu / WCHART) - RESXu, s_curveChan) / (RESXu
-                                                                      / WCHART);
-    lcd_plot(XD + xv - WCHART, Y0 - yv);
-    if ((xv & 3) == 0) {
-      lcd_plot(XD + xv - WCHART, Y0 + 0);
-    }
+  lcd_vlineStip(X0, 0, DISPLAY_H, 0xee);
+  lcd_hlineStip(X0-WCHART, Y0, WCHART*2, 0xee);
+
+  int16_t anas[NUM_STICKS] = {0};
+  for(int8_t xv=-WCHART; xv<WCHART; xv++) {
+    anas[ed->chn] = xv*(RESX/WCHART);
+    applyExpos(anas);
+    uint16_t yv = (RESX + anas[ed->chn]) / 2;
+    yv = (DISPLAY_H-1) - yv * (DISPLAY_H-1) / RESX;
+    lcd_plot(X0+xv, yv, LCD_BLACK);
   }
-  lcd_vline(XD, Y0 - WCHART, WCHART * 2);
+
+  int16_t x512  = calibratedStick[ed->chn];
+  anas[ed->chn] = x512;
+  applyExpos(anas);
+  int16_t y512  = anas[ed->chn];
+
+  //dy/dx
+  // TODO really needed?
+  // int16_t dy  = x512>0 ? y512-expo(x512-20,kView) : expo(x512+20,kView)-y512;
+  // lcd_outdezNAtt(14*FW, 2*FH,   dy*(100/20), LEADING0|PREC2,3);
+  // lcd_outdezNAtt(14*FW, 2*FH,   dy*(100/20), 0,3);
+
+  lcd_outdezAtt(20*FW, 6*FH, x512*100/RESX, 0);
+  lcd_outdezAtt(14*FW, 1*FH, (y512*100+(y512>0 ? RESX/2 : -RESX/2))/RESX, 0);
+
+  x512 = X0+x512/(RESXu/WCHART);
+  y512 = (DISPLAY_H-1) - (uint16_t)((y512+RESX)/2) * (DISPLAY_H-1) / RESX;
+
+  lcd_vline(x512, y512-3,3*2+1);
+  lcd_hline(x512-3, y512,3*2+1);
 }
 
 void menuProcMixOne(uint8_t event)
