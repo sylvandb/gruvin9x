@@ -211,7 +211,7 @@ void Gruvin9xSim::makeSnapshot(const FXDrawable* drawable)
      // Save recovered pixels to a file
      FXFileStream stream;
      char buf[100];
-     sprintf(buf,"snapshot-%02d.png", g_snapshot_idx);
+     sprintf(buf,"snapshot-%02d.png", ++g_snapshot_idx);
      for(unsigned i=4; i<strlen(buf); i++)
      {
        if(!isalnum(buf[i]) && buf[i]!='.' ) buf[i]='_';
