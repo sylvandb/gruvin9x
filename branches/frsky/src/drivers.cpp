@@ -332,23 +332,18 @@ void per10ms()
 #define KEY_Y1 2 // LEFT / RIGHT / UP / DOWN
 #define KEY_Y2 4 // LV_Trim_Up / Down / LH_Trim_Up / Down 
 #define KEY_Y3 8 // RV_Trim_Up / Down / RH_Trim_Up / Down 
+#define TRIM_M_LH_DWN 0
+#define TRIM_M_LH_UP  1
+#define TRIM_M_LV_DWN 2
+#define TRIM_M_LV_UP  3
+#define TRIM_M_RV_DWN 4
+#define TRIM_M_RV_UP  5
+#define TRIM_M_RH_DWN 6
+#define TRIM_M_RH_UP  7 
 
   uint8_t in, tin;
-/*
-  PORTD = ~KEY_Y0; // select KEY_Y0 row (Bits 3:2 EXIT:MENU)
-  _delay_us(1);
-  tin = ~PIND & 0b11000000; // mask out non-applicable bits
-  in = tin >> 5; // Put EXIT and MENU into their old positions
 
-  PORTD = ~KEY_Y1; // select Y1 row. (Bits 3:0 Left/Right/Up/Down)
-  _delay_us(1);
-  tin = ~PIND & 0xf0; // mask out non-applicable bits
-  in |= tin >> 1; // Put these keys into their old positions
-
-  PORTD = 0xFF;
-  */
-
-  in = keyDown();
+  in = keyDown(); // in gruvin9x.cpp
 
 #else
   uint8_t in = ~PINB;
@@ -360,41 +355,40 @@ void per10ms()
     keys[enuk].input(in & (1<<i),(EnumKeys)enuk);
     ++enuk;
   }
+
+#if defined (PCBV3)
   static  prog_uchar  APM crossTrim[]={
-    1<<INP_D_TRM_LH_DWN,
+    1<<TRIM_M_RV_DWN,
+    1<<TRIM_M_RV_UP,
+    1<<TRIM_M_RH_DWN,
+    1<<TRIM_M_RH_UP,
+    1<<TRIM_M_LH_DWN,
+    1<<TRIM_M_LH_UP,
+    1<<TRIM_M_LV_DWN,
+    1<<TRIM_M_LV_UP
+  };
+#else
+  static  prog_uchar  APM crossTrim[]={
+    1<<INP_D_TRM_LH_DWN,  // bit 7
     1<<INP_D_TRM_LH_UP,
     1<<INP_D_TRM_LV_DWN,
     1<<INP_D_TRM_LV_UP,
     1<<INP_D_TRM_RV_DWN,
     1<<INP_D_TRM_RV_UP,
     1<<INP_D_TRM_RH_DWN,
-    1<<INP_D_TRM_RH_UP
+    1<<INP_D_TRM_RH_UP    // bit 0
   };
+#endif
 
 #if defined (PCBV3)
-  /*** Original Trims were all on PORTD as follows
-
-    Bit Switch
-     7  LH_Trim_Up
-     6  LH_Trim_Dwn
-     5  RV_Trim_Dwn
-     4  RV_Trim_Up
-     3  LV_Trim_Dwn
-     2  LV_Trim_Up
-     1  RH_Trim_Dwn
-     0  RH_Trim_Up
-
-  */
 
   PORTD = ~KEY_Y2; // select Y2 row. (Bits 3:0 LVD / LVU / LHU / LHD)
   _delay_us(1);
-  tin = ~PIND & 0xf0; // mask out outputs
-  in = ((tin & 0b10000000) >> 5) | ((tin & 0b01000000) >> 3) | ((tin & 0b00110000) << 2);
+  in = ~PIND & 0xf0; // mask out outputs
 
   PORTD = ~KEY_Y3; // select Y3 row. (Bits 3:0 RHU / RHD / RVD / RVU)
   _delay_us(1);
-  tin = ~PIND & 0xf0; // mask out outputs
-  in |= ((tin & 0b10000000) >> 7) | ((tin & 0b01000000) >> 5) | ((tin & 0b00100000) >> 1) | ((tin & 0b00010000) << 1);
+  in |= ((~PIND & 0xf0) >> 4); 
 
   PORTD = 0xFF;
 
