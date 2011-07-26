@@ -107,6 +107,6 @@ mstate2.check_submenu_simple(event,lines_count-1)
 
 #define SIMPLE_SUBMENU(title, lines_count) \
 TITLE(title); \
-SIMPLE_SUBMENU_NOTITLE(lines_count-1)
+SIMPLE_SUBMENU_NOTITLE(lines_count)
 
 #endif
