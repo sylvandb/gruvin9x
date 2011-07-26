@@ -421,7 +421,7 @@ void menuProcDiagKeys(uint8_t event)
     uint8_t y=i*FH; //+FH;
     if(i>(SW_ID0-SW_BASE_DIAG)) y-=FH; //overwrite ID0
     bool t=keyState((EnumKeys)(SW_BASE_DIAG+i));
-    putsSwitches(6*FW, y, i+1, 0); //ohne off,on
+    putsSwitches(7*FW, y, i+1, 0); //ohne off,on
     lcd_putcAtt(11*FW+2, y, t+'0', t ? INVERS : 0);
   }
 
