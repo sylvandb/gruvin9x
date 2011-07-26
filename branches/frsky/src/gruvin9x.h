@@ -24,7 +24,7 @@
 #include <inttypes.h>
 #include <string.h>
 
-#if defined(PCBV2) || defined(PCBV3)
+#if defined(PCBV3)
 #include "time.h"
 #endif
 
@@ -110,7 +110,7 @@
 
 #define PORTA_LCD_DAT  PORTA
 
-#if defined (PCBV2) || defined (PCBV3)
+#if defined (PCBV3)
 #define OUT_C_LIGHT   0
 #else
 #define OUT_B_LIGHT   7
@@ -456,7 +456,7 @@ extern bool warble;
 #define STORE_MODELVARS eeDirty(EE_MODEL)
 #define STORE_GENERALVARS eeDirty(EE_GENERAL)
 
-#if defined (PCBV2) || defined (PCBV3)
+#if defined (PCBV3)
 #define BACKLIGHT_ON    PORTC |=  (1<<OUT_C_LIGHT)
 #define BACKLIGHT_OFF   PORTC &= ~(1<<OUT_C_LIGHT)
 #else
@@ -590,7 +590,7 @@ inline void _beep(uint8_t b) {
 }
 
 extern uint8_t toneFreq;
-#if defined (PCBV2) || defined (PCBV3)
+#if defined (PCBV3)
 inline void _beepSpkr(uint8_t d, uint8_t f)
 {
   g_beepCnt=d;
@@ -628,7 +628,7 @@ inline void _beepSpkr(uint8_t d, uint8_t f)
 #endif
 
 // MM/SD card Disk IO Support
-#if defined (PCBV2) || defined (PCBV3)
+#if defined (PCBV3)
 #include "rtc.h"
 extern void disk_timerproc(void);
 extern time_t g_unixTime; // global unix timestamp -- hold current time in seconds since 1970-01-01 00:00:00 

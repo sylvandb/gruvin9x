@@ -21,7 +21,7 @@
 #include "menus.h"
 
 // MM/SD card Disk IO Support
-#if defined (PCBV2) || defined (PCBV3)
+#if defined (PCBV3)
 #include "integer.h"
 #include "time.h"
 #include "rtc.h"
@@ -1510,7 +1510,7 @@ ISR(TIMER1_COMPA_vect) //2MHz pulse generation
     pulsePol = g_model.pulsePol;//0;
 
     cli(); // sei();
-#if defined (PCBV2) || defined (PCBV3)
+#if defined (PCBV3)
     TIMSK1 &= ~(1<<OCIE1A); //stop reentrance
 #else
     TIMSK &= ~(1<<OCIE1A); //stop reentrance
@@ -1518,7 +1518,7 @@ ISR(TIMER1_COMPA_vect) //2MHz pulse generation
     sei();    
     setupPulses();
     cli();
-#if defined (PCBV2) || defined (PCBV3)
+#if defined (PCBV3)
     TIMSK1 |= (1<<OCIE1A);
 #else
     TIMSK |= (1<<OCIE1A);
@@ -1529,7 +1529,7 @@ ISR(TIMER1_COMPA_vect) //2MHz pulse generation
 }
 
 volatile uint8_t g_tmr16KHz; //continuous timer 16ms (16MHz/1024/256) -- 8-bit counter overflow 
-#if defined (PCBV2) || defined (PCBV3)
+#if defined (PCBV3)
 ISR(TIMER2_OVF_vect) 
 #else
 ISR(TIMER0_OVF_vect)
@@ -1545,7 +1545,7 @@ uint16_t getTmr16KHz()
 {
   while(1){
     uint8_t hb  = g_tmr16KHz;
-#if defined (PCBV2) || defined (PCBV3)
+#if defined (PCBV3)
     uint8_t lb  = TCNT2;
 #else
     uint8_t lb  = TCNT0;
@@ -1556,7 +1556,7 @@ uint16_t getTmr16KHz()
 
 extern uint16_t g_time_per10; // instantiated in menus.cpp
 
-#if defined (PCBV2) || defined (PCBV3)
+#if defined (PCBV3)
 ISR(TIMER2_COMPA_vect, ISR_NOBLOCK) //10ms timer
 #else
 ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
@@ -1566,7 +1566,7 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
   static uint8_t accuracyWarble = 4; // becasue 16M / 1024 / 100 = 156.25. So bump every 4.
   uint8_t bump;
   bump = (!(accuracyWarble++ & 0x03)) ? 157 : 156; 
-#if defined (PCBV2) || defined (PCBV3)
+#if defined (PCBV3)
   TIMSK2 &= ~(1<<OCIE2A); //stop reentrance
   OCR2A += bump;
 #else
@@ -1633,7 +1633,7 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
         }
     }
 
-#if defined (PCBV2) || defined (PCBV3)
+#if defined (PCBV3)
     // G: use timer0 WGM mode tone generator for beeps
     if(beepOn)
     {
@@ -1674,11 +1674,11 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
       PORTE &= ~(1<<OUT_E_BUZZER);
     }
 #endif // BEEPSPKR
-#endif // PCBV2 || PCBV3
+#endif // PCBV3
 
     per10ms();
 
-#if defined (PCBV2) || defined (PCBV3)
+#if defined (PCBV3)
     disk_timerproc();
 #endif
 
@@ -1695,7 +1695,7 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
 #endif
 
   cli();
-#if defined (PCBV2) || defined (PCBV3)
+#if defined (PCBV3)
   TIMSK2 |= (1<<OCIE2A);
 #else
   TIMSK |= (1<<OCIE0);
@@ -1717,7 +1717,7 @@ ISR(TIMER3_CAPT_vect, ISR_NOBLOCK) //capture ppm in 16MHz / 8 = 2MHz
   uint16_t capture=ICR3;
 
   cli(); // gruvin: are these global int disables really needed? Consult data sheet.
-#if defined (PCBV2) || defined (PCBV3)
+#if defined (PCBV3)
   TIMSK3 &= ~(1<<ICIE3);
 #else
   ETIMSK &= ~(1<<TICIE3);
@@ -1747,7 +1747,7 @@ ISR(TIMER3_CAPT_vect, ISR_NOBLOCK) //capture ppm in 16MHz / 8 = 2MHz
   lastCapt = capture;
 
   cli();
-#if defined (PCBV2) || defined (PCBV3)
+#if defined (PCBV3)
   TIMSK3 |= (1<<ICIE3);
 #else
   ETIMSK |= (1<<TICIE3);
@@ -1755,7 +1755,7 @@ ISR(TIMER3_CAPT_vect, ISR_NOBLOCK) //capture ppm in 16MHz / 8 = 2MHz
   sei();
 }
 
-#if defined (PCBV2) || defined (PCBV3)
+#if defined (PCBV3)
 /*---------------------------------------------------------*/
 /* User Provided Date/Time Function for FatFs module       */
 /*---------------------------------------------------------*/
@@ -1787,7 +1787,7 @@ extern uint16_t g_timeMain;
 // (reading from the .hex file), since a bug relating to Intel HEX file record
 // interpretation was fixed. However, I leave these commented out, just in case
 // it causes trouble for others.
-#if defined (PCBV2) || defined (PCBV3)
+#if defined (PCBV3)
 // See fuses_2561.txt
   FUSES = 
   {
@@ -1861,7 +1861,7 @@ int main(void)
   // Set up I/O port data diretions and initial states
 
   DDRA = 0xff;  PORTA = 0x00;
-#if defined (PCBV2) || defined (PCBV3)
+#if defined (PCBV3)
   DDRB = 0x97;  PORTB = 0x1e; // 7:AUDIO, SD_CARD[6:SDA 5:SCL 4:CS 3:MISO 2:MOSI 1:SCK], 0:PPM_OUT
   DDRC = 0x3f;  PORTC = 0xc0; // PC0 used for LCD back light control
   DDRD = 0x0F;  PORTD = 0xff; // 7:4=inputs (keys/trims, pull-ups on), 3:0=outputs (keyscan row select)
@@ -1888,7 +1888,7 @@ int main(void)
   ADCSRA=0x85; // ADC enabled, pre-scaler division=32 (no interrupt, no auto-triggering)
 
   /**** Set up timer/counter 0 ****/
-#if defined (PCBV2) || defined (PCBV3)
+#if defined (PCBV3)
   /** Move old 64A Timer0 functions to Timer2 and use WGM on OC0(A) (PB7) for spkear tone output **/
 
   // TCNT0  10ms = 16MHz/1024/156(.25) periodic timer (100ms interval)
@@ -1930,7 +1930,7 @@ int main(void)
   // not here ... TIMSK1 |= (1<<OCIE1A); ... enable immediately before mainloop
 
   // TCNT3 (2MHz) used for PPM_IN pulse width capture
-#if defined (PPMIN_MOD1) || defined (PCBV2) || defined (PCBV3)
+#if defined (PPMIN_MOD1) || defined (PCBV3)
   // Noise Canceller enabled, pos. edge, clock at 16MHz / 8 (2MHz)
   TCCR3B  = (1<<ICNC3) | (1<<ICES3) | (0b010 << CS30); 
 #else
@@ -1938,7 +1938,7 @@ int main(void)
   TCCR3B  = (1<<ICNC3) | (0b010 << CS30);
 #endif
 
-#if defined (PCBV2) || defined (PCBV3)
+#if defined (PCBV3)
   TIMSK3 |= (1<<ICIE3);         // Enable capture event interrupt
 #else
   ETIMSK |= (1<<TICIE3);
@@ -1977,13 +1977,13 @@ int main(void)
 
   if(cModel!=g_eeGeneral.currModel) eeDirty(EE_GENERAL); // if model was quick-selected, make sure it sticks
   
-#if defined (PCBV2) || defined (PCBV3)
+#if defined (PCBV3)
   TIMSK1 |= (1<<OCIE1A); // Pulse generator enable immediately before mainloop
 #else
   TIMSK |= (1<<OCIE1A); // Pulse generator enable immediately before mainloop
 #endif
 
-#if defined (PCBV2) || defined (PCBV3)
+#if defined (PCBV3)
 // Initialise global unix timestamp with current time from RTC chip on SD card interface
   RTC rtc;
   struct tm utm;
