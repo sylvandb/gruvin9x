@@ -29,7 +29,7 @@ inline void eeprom_write_byte()
 {
   EEAR = eeprom_pointer;
   EEDR = *eeprom_buffer_data;
-#if defined (PCBV2) || defined (PCBV3)
+#if defined (PCBV3)
   EECR |= 1<<EEMPE;
   EECR |= 1<<EEPE;
 #else
@@ -45,7 +45,7 @@ ISR(EE_READY_vect)
 {
   eeprom_write_byte();
   if (eeprom_buffer_size == 0) {
-#if defined (PCBV2) || defined (PCBV3)
+#if defined (PCBV3)
     // TODO
 #else
     EECR &= ~(1<<EERIE);
@@ -62,7 +62,7 @@ void eeWriteBlockCmp(const void *i_pointer_ram, void *i_pointer_eeprom, size_t s
   eeprom_buffer_data = (const char*)i_pointer_ram;
   eeprom_buffer_size = size;
 
-#if defined (PCBV2) || defined (PCBV3)
+#if defined (PCBV3)
   // TODO
 #else
   EECR |= (1<<EERIE);
@@ -82,7 +82,7 @@ static inline void __attribute__ ((always_inline))
 eeprom_write_byte_cmp (uint8_t dat, uint16_t pointer_eeprom)
 {
   //see /home/thus/work/avr/avrsdk4/avr-libc-1.4.4/libc/misc/eeprom.S:98 143
-#if defined (PCBV2) || defined (PCBV3)
+#if defined (PCBV3)
   while(EECR & (1<<EEPE))
 #else
   while(EECR & (1<<EEWE))
@@ -96,7 +96,7 @@ eeprom_write_byte_cmp (uint8_t dat, uint16_t pointer_eeprom)
   EEDR  = dat;
   uint8_t flags=SREG;
   cli();
-#if defined (PCBV2) || defined (PCBV3)
+#if defined (PCBV3)
   EECR |= 1<<EEMPE;
   EECR |= 1<<EEPE;
 #else
@@ -293,7 +293,7 @@ volatile uint16_t g_tmr10ms;
 volatile uint8_t  g_blinkTmr10ms;
 
 
-#if defined (PCBV2) || defined (PCBV3)
+#if defined (PCBV3)
 uint8_t g_ms100 = 0; // global to allow time set function to reset to zero
 #endif
 void per10ms()
@@ -301,7 +301,7 @@ void per10ms()
     g_tmr10ms++;
     g_blinkTmr10ms++;
 
-#if defined (PCBV2) || defined (PCBV3)
+#if defined (PCBV3)
     /* Update gloabal Date/Time every 100 per10ms cycles */
     if (++g_ms100 == 100)
     {
@@ -313,7 +313,7 @@ void per10ms()
 /**** BEGIN KEY STATE READ ****/
   uint8_t enuk = KEY_MENU;
 
-#if defined (PCBV2) || defined (PCBV3)
+#if defined (PCBV3)
 
   /* Original keys were connected to PORTB as follows:
 
@@ -371,7 +371,7 @@ void per10ms()
     1<<INP_D_TRM_RH_UP
   };
 
-#if defined (PCBV2) || defined (PCBV3)
+#if defined (PCBV3)
   /*** Original Trims were all on PORTD as follows
 
     Bit Switch
@@ -389,12 +389,12 @@ void per10ms()
   PORTD = ~KEY_Y2; // select Y2 row. (Bits 3:0 LVD / LVU / LHU / LHD)
   _delay_us(1);
   tin = ~PIND & 0xf0; // mask out outputs
-  in = ((tin & 0b11000000) >> 4) | ((tin & 0b00110000) << 2);
+  in = ((tin & 0b10000000) >> 5) | ((tin & 0b01000000) >> 3) | ((tin & 0b00110000) << 2);
 
   PORTD = ~KEY_Y3; // select Y3 row. (Bits 3:0 RHU / RHD / RVD / RVU)
   _delay_us(1);
   tin = ~PIND & 0xf0; // mask out outputs
-  in |= ((tin & 0b10000000) >> 7) | ((tin & 0b01000000) >> 5) | (tin & 0b00110000);
+  in |= ((tin & 0b10000000) >> 7) | ((tin & 0b01000000) >> 5) | ((tin & 0b00100000) >> 1) | ((tin & 0b00010000) << 1);
 
   PORTD = 0xFF;
 
