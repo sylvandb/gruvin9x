@@ -332,14 +332,14 @@ void per10ms()
 #define KEY_Y1 2 // LEFT / RIGHT / UP / DOWN
 #define KEY_Y2 4 // LV_Trim_Up / Down / LH_Trim_Up / Down 
 #define KEY_Y3 8 // RV_Trim_Up / Down / RH_Trim_Up / Down 
-#define TRIM_M_LH_DWN 0
-#define TRIM_M_LH_UP  1
-#define TRIM_M_LV_DWN 2
-#define TRIM_M_LV_UP  3
-#define TRIM_M_RV_DWN 4
-#define TRIM_M_RV_UP  5
-#define TRIM_M_RH_DWN 6
-#define TRIM_M_RH_UP  7 
+#define TRIM_M_LH_DWN 0 // KEY_X0
+#define TRIM_M_LH_UP  1 // KEY_X1
+#define TRIM_M_LV_DWN 2 // KEY_X2
+#define TRIM_M_LV_UP  3 // KEY_X3
+#define TRIM_M_RV_DWN 4 // KEY_X0
+#define TRIM_M_RV_UP  5 // KEY_X1
+#define TRIM_M_RH_DWN 6 // KEY_X2
+#define TRIM_M_RH_UP  7 // KEY_3X
 
   uint8_t in, tin;
 
