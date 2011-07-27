@@ -622,8 +622,15 @@ LIB=-L/usr/local/lib \
     -lFOX-1.6 \
     -Wl,-rpath,$(FOXPATH)/src/.libs
 
+LBITS := $(shell getconf LONG_BIT)
+ifeq ($(LBITS),64)
+   ARCH=-arch x86_64
+else
+   ARCH=
+endif
+
 simu: $(CPPSRC) Makefile simu.cpp $(CPPSRC) *.h *.lbm eeprom.bin
-	g++ simu.cpp $(CPPFLAGS) $(CPPSRC) -arch x86_64 -o simu $(INC) $(LIB) -MD -DSIMU
+	g++ simu.cpp $(CPPFLAGS) $(CPPSRC) $(ARCH)  -o simu $(INC) $(LIB) -MD -DSIMU
 
 eeprom.bin:
 	dd if=/dev/zero of=$@ bs=1 count=2048
