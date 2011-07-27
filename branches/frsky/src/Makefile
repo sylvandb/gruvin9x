@@ -610,7 +610,7 @@ LIB=-L/usr/local/lib \
     -Wl,-rpath,$(FOXPATH)/src/.libs
     
 simu: $(CPPSRC) Makefile simu.cpp $(CPPSRC) *.h *.lbm eeprom.bin
-	gcc simu.cpp $(CPPFLAGS) $(CPPSRC) -g -Wall -osimu $(INC) $(LIB) -MD -DSIM
+	gcc simu.cpp $(CPPFLAGS) $(CPPSRC) -g -Wall -osimu $(INC) $(LIB) -MD -DSIMU
 
 eeprom.bin:
 	dd if=/dev/zero of=$@ bs=1 count=2048
