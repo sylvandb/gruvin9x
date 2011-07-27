@@ -88,6 +88,9 @@ uint8_t Translate(EEGeneral *p)
         swashR.type = v4->swashType;
         swashR.collectiveSource = v4->swashCollectiveSource;
         swashR.value = v4->swashRingValue;
+        int8_t trims[4];
+        memcpy(&trims[0], &v3->trim[0], 4);
+        int8_t trimSw = v3->trimSw;
         g_model.tmrMode = v3->tmrMode;
         g_model.tmrDir = v3->tmrDir;
         g_model.tmrVal = v3->tmrVal;
@@ -107,37 +110,64 @@ uint8_t Translate(EEGeneral *p)
           g_model.traineron = 0;
         }
         g_model.ppmDelay = v3->ppmDelay;
-        g_model.trimSw = v3->trimSw;
         g_model.beepANACenter = v3->beepANACenter;
         g_model.tmr2Mode = 0;
         g_model.tmr2Dir = 0;
         g_model.tmr2Val = 0;
         for (uint8_t i=0; i<MAX_MIXERS; i++) {
           memmove(&g_model.mixData[i], &v3->mixData[i], sizeof(MixData)); // MixData size changed!
-          g_model.mixData[i].mixWarn = g_model.mixData[i].flightPhase;
-          g_model.mixData[i].flightPhase = 0;
+          g_model.mixData[i].mixWarn = g_model.mixData[i].phase;
+          g_model.mixData[i].phase = 0;
         }
+        assert((char *)&g_model.expoData[0] < (char *)v4->expoData);
+        EEPROM_V4::ExpoData expo4[4];
+        memcpy(&expo4[0], v4->expoData, sizeof(expo4));
+        memset(&g_model.expoData[0], 0, sizeof(expo4));
+        uint8_t e = 0;
+        for (uint8_t ch=0; ch<4 && e<MAX_EXPOS; ch++) {
+          for (int8_t dr=2; dr>=0 && e<MAX_EXPOS; dr--) {
+            if ((dr==0 && !expo4[ch].drSw1) ||
+                (dr==1 && !expo4[ch].drSw2) ||
+                (dr==2 && !expo4[ch].expo[2][0][0] && !expo4[ch].expo[2][0][1] && !expo4[ch].expo[2][1][0] && !expo4[ch].expo[2][1][1])) continue;
+            g_model.expoData[e].swtch = (dr == 0 ? expo4[ch].drSw1 : (dr == 1 ? expo4[ch].drSw2 : 0));
+            g_model.expoData[e].chn = ch;
+            g_model.expoData[e].expo = expo4[ch].expo[dr][0][0];
+            g_model.expoData[e].weight = 100 + expo4[ch].expo[dr][1][0];
+            if (expo4[ch].expo[dr][0][0] == expo4[ch].expo[dr][0][1] && expo4[ch].expo[dr][1][0] == expo4[ch].expo[dr][1][1]) {
+              g_model.expoData[e++].mode = 3;
+            }
+            else {
+              g_model.expoData[e].mode = 1;
+              if (e < MAX_EXPOS-1) {
+                g_model.expoData[e+1].swtch = g_model.expoData[e].swtch;
+                g_model.expoData[++e].chn = ch;
+                g_model.expoData[e].mode = 2;
+                g_model.expoData[e].expo = expo4[ch].expo[dr][0][1];
+                g_model.expoData[e++].weight = 100 + expo4[ch].expo[dr][1][1];
+              }
+            }
+          }
+        }
+        assert((char *)&g_model.limitData[0] < (char *)&v3->limitData[0]);
         memmove(&g_model.limitData[0], &v3->limitData[0], sizeof(LimitData)*NUM_CHNOUT);
-        memmove(&g_model.expoData[0], &v3->expoData[0], sizeof(EEPROM_V3::ExpoData)*4);
-        memset(&g_model.phaseData, 0, sizeof(g_model.phaseData));
-        memmove(&g_model.trim[0][0], &v3->trim[0], 4);
-        memset(&g_model.trim[1][0], 0, 4*(MAX_PHASES-1));
+        assert((char *)&g_model.curves5[0][0] < (char *)&v3->curves5[0][0]);
         memmove(&g_model.curves5[0][0], &v3->curves5[0][0], 5*MAX_CURVE5);
+        assert((char *)&g_model.curves9[0][0] < (char *)&v3->curves9[0][0]);
         memmove(&g_model.curves9[0][0], &v3->curves9[0][0], 9*MAX_CURVE9);
         if (p->myVers == EEPROM_VER_r584) {
           memmove(&g_model.customSw[0], &v3->customSw[0], sizeof(CustomSwData)*6);
           memset(&g_model.customSw[6], 0, sizeof(CustomSwData)*6);
-        }
-        else {
-          memmove(&g_model.customSw[0], &v4->customSw[0], sizeof(CustomSwData)*12);
-        }
-        if (p->myVers == EEPROM_VER_r584) {
           memset(&g_model.safetySw[0], 0, sizeof(SafetySwData)*NUM_CHNOUT + sizeof(SwashRingData) + sizeof(FrSkyData));
         }
         else {
+          assert((char *)&g_model.customSw[0] < (char *)&v4->customSw[0]);
+          memmove(&g_model.customSw[0], &v4->customSw[0], sizeof(CustomSwData)*12);
+          assert((char *)&g_model.safetySw[0] < (char *)&v4->safetySw[0]);
           memmove(&g_model.safetySw[0], &v4->safetySw[0], sizeof(SafetySwData)*NUM_CHNOUT);
           memcpy(&g_model.swashR, &swashR, sizeof(SwashRingData));
           for (uint8_t i=0; i<2; i++) {
+            // TODO this conversion is bad
+            // assert(&g_model.frsky.channels[i].ratio < &v4->frsky.channels[i].ratio);
             g_model.frsky.channels[i].ratio = v4->frsky.channels[i].ratio;
             g_model.frsky.channels[i].type = v4->frsky.channels[i].type;
             g_model.frsky.channels[i].offset = 0;
@@ -149,45 +179,9 @@ uint8_t Translate(EEGeneral *p)
             g_model.frsky.channels[i].barMax = 0;
           }
         }
-        theFile.writeRlc(FILE_MODEL(id), FILE_TYP_MODEL, (uint8_t*)&g_model, sizeof(g_model), 200);
-      }
-    }
-    p->myVers = EEPROM_VER_r751;
-  }
-
-  if (p->myVers == EEPROM_VER_r751) {
-    EEPROM_V4::ExpoData old[4];
-    for (uint8_t id=0; id<MAX_MODELS; id++) {
-      theFile.openRd(FILE_MODEL(id));
-      uint16_t sz = theFile.readRlc((uint8_t*)&g_model, sizeof(ModelData));
-      if (sz == sizeof(ModelData)) {
-        memcpy(&old[0], &g_model.expoData[0], sizeof(old));
-        memset(&g_model.expoData[0], 0, sizeof(old));
-        uint8_t e = 0;
-        for (uint8_t ch=0; ch<4 && e<MAX_EXPOS; ch++) {
-          for (int8_t dr=2; dr>=0 && e<MAX_EXPOS; dr--) {
-            if ((dr==0 && !old[ch].drSw1) ||
-                (dr==1 && !old[ch].drSw2) ||
-                (dr==2 && !old[ch].expo[2][0][0] && !old[ch].expo[2][0][1] && !old[ch].expo[2][1][0] && !old[ch].expo[2][1][1])) continue;
-            g_model.expoData[e].swtch = (dr == 0 ? old[ch].drSw1 : (dr == 1 ? old[ch].drSw2 : 0));
-            g_model.expoData[e].chn = ch;
-            g_model.expoData[e].expo = old[ch].expo[dr][0][0];
-            g_model.expoData[e].weight = 100 + old[ch].expo[dr][1][0];
-            if (old[ch].expo[dr][0][0] == old[ch].expo[dr][0][1] && old[ch].expo[dr][1][0] == old[ch].expo[dr][1][1]) {
-              g_model.expoData[e++].mode = 3;
-            }
-            else {
-              g_model.expoData[e].mode = 1;
-              if (e < MAX_EXPOS-1) {
-                g_model.expoData[e+1].swtch = g_model.expoData[e].swtch;
-                g_model.expoData[++e].chn = ch;
-                g_model.expoData[e].mode = 2;
-                g_model.expoData[e].expo = old[ch].expo[dr][0][1];
-                g_model.expoData[e++].weight = 100 + old[ch].expo[dr][1][1];
-              }
-            }
-          }
-        }
+        memset(&g_model.phaseData[0], 0, sizeof(g_model.phaseData));
+        g_model.phaseData[0].swtch = trimSw;
+        memcpy(&g_model.phaseData[0].trim[0], &trims[0], 4);
         theFile.writeRlc(FILE_MODEL(id), FILE_TYP_MODEL, (uint8_t*)&g_model, sizeof(g_model), 200);
       }
     }
@@ -195,8 +189,6 @@ uint8_t Translate(EEGeneral *p)
     theFile.writeRlc(FILE_GENERAL, FILE_TYP_GENERAL, (uint8_t*)p, sizeof(EEGeneral), 200);
     return 1;
   }
-
-
 
   return 0;
 }
@@ -245,6 +237,7 @@ void eeLoadModelName(uint8_t id,char*buf,uint8_t len)
   }
 }
 
+// TODO to be removed if not used
 uint16_t eeFileSize(uint8_t id)
 {
     theFile.openRd(FILE_MODEL(id));

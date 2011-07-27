@@ -35,7 +35,7 @@
 
 #define EEPROM_VER_r584  3
 #define EEPROM_VER_r751  5
-#define EEPROM_VER       100
+#define EEPROM_VER       101
 
 typedef struct t_TrainerMix {
   uint8_t srcChn:3; //0-7 = ch1-8
@@ -94,9 +94,10 @@ typedef struct t_ExpoData {
   uint8_t mode:2;         // 0=end, 1=pos, 2=neg, 3=both
   uint8_t chn:2;
   uint8_t curve:4;        // 0=no curve, 1-6=std curves, 7-10=CV1-CV4, 11-15=CV9-CV13
-  int8_t  flightPhase:3;  // -3=!FP3, 0=normal, 3=FP3
   int8_t  swtch:5;
-  int8_t  weight;
+  uint8_t phase:3;        // if negPhase is 0: 0=normal, 5=FP4    if negPhase is 1: 5=!FP4
+  uint8_t negPhase:1;
+  uint8_t weight:7;
   int8_t  expo;
 } __attribute__((packed)) ExpoData;
 
@@ -131,7 +132,7 @@ typedef struct t_MixData {
 #define MLTPX_MUL  1
 #define MLTPX_REP  2
   uint8_t mltpx:3;           // multiplex method 0=+ 1=* 2=replace
-  int8_t  flightPhase:4;     // -3=!FP3, 0=normal, 3=FP3
+  int8_t  phase:4;           // -5=!FP4, 0=normal, 5=FP4
   int8_t  sOffset;
 } __attribute__((packed)) MixData;
 
@@ -176,12 +177,16 @@ typedef struct t_SwashRingData { // Swash Ring data
   uint8_t chY; // 2 channels to limit */
 } __attribute__((packed)) SwashRingData;
 
-typedef struct t_FlightPhaseData {
-  int8_t swtch;
-} __attribute__((packed)) FlightPhaseData;
+typedef struct t_PhaseData {
+  int8_t trim[4];     // -125..125 => trim value, 127 => use trim of phase 0, -128, -127, -126 => use trim of phases 1|2|3|4 instead
+  int8_t swtch;       // swtch of phase[0] is the trimSw
+  char name[6];
+  uint8_t speedUp:4;
+  uint8_t speedDown:4;
+} __attribute__((packed)) PhaseData;
 
 #define MAX_MODELS 16
-#define MAX_PHASES 4
+#define MAX_PHASES 5
 #define MAX_MIXERS 32
 #define MAX_EXPOS  14
 #define MAX_CURVE5 8
@@ -205,7 +210,6 @@ typedef struct t_ModelData {
   uint8_t   extendedLimits:1;
   uint8_t   spare:2;
   int8_t    ppmDelay;
-  int8_t    trimSw;
   uint8_t   beepANACenter;        // 1<<0->A1.. 1<<6->A7
   int8_t    tmr2Mode:7;           // timer trigger source -> off, abs, stk, stk%, sw/!sw, !m_sw/!m_sw
   uint8_t   tmr2Dir:1;            // 0=>Count Down, 1=>Count Up
@@ -213,13 +217,12 @@ typedef struct t_ModelData {
   MixData   mixData[MAX_MIXERS];
   LimitData limitData[NUM_CHNOUT];
   ExpoData  expoData[MAX_EXPOS];
-  FlightPhaseData phaseData[MAX_PHASES-1];
-  int8_t    trim[MAX_PHASES][4];  // -125..125 => trim value, -128, -127, -126 => use trim of phase 0, [1], [2], [3] instead
   int8_t    curves5[MAX_CURVE5][5];
   int8_t    curves9[MAX_CURVE9][9];
   CustomSwData  customSw[NUM_CSW];
   SafetySwData  safetySw[NUM_CHNOUT];
   SwashRingData swashR;
+  PhaseData phaseData[MAX_PHASES];
   FrSkyData     frsky;
 } __attribute__((packed)) ModelData;
 

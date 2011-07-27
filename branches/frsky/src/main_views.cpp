@@ -116,8 +116,8 @@ void menuMainView(uint8_t event)
       break;
   }
 
-  if(getSwitch(g_model.trimSw,0) && !trimSwLock) setStickCenter();
-  trimSwLock = getSwitch(g_model.trimSw,0);
+  if(getSwitch(g_model.phaseData[0].swtch, 0) && !trimSwLock) setStickCenter();
+  trimSwLock = getSwitch(g_model.phaseData[0].swtch,0);
 
   if (g_eeGeneral.view < 0x10) {
     uint8_t att = (g_vbat100mV < g_eeGeneral.vBatWarn ? BLINK : 0) | DBLSIZE;
@@ -133,8 +133,8 @@ void menuMainView(uint8_t event)
       putsTmrMode(s_timerVal >= 0 ? 9*FW-FW/2+5 : 9*FW-FW/2-2, FH*3, 0);
     }
 
-    uint8_t flightPhase = getFlightPhase();
-    if (flightPhase) putsFlightPhases(6*FW+2, 2*FH, flightPhase, 0);
+    uint8_t phase = getFlightPhase();
+    putsFlightPhase(6*FW+2, 2*FH, phase+1, 0);
 
     // trim sliders
     for(uint8_t i=0; i<4; i++)
@@ -145,7 +145,7 @@ void menuMainView(uint8_t event)
       static uint8_t vert[4] = {0,1,1,0};
       uint8_t xm,ym;
       xm=x[i];
-      int8_t val = max((int8_t)-(TL+1),min((int8_t)(TL+1),(int8_t)(g_model.trim[getTrimFlightPhase(i, flightPhase)][i]/4)));
+      int8_t val = max((int8_t)-(TL+1),min((int8_t)(TL+1),(int8_t)(phaseaddress(getTrimFlightPhase(i, phase))->trim[i]/4)));
       if(vert[i]){
         ym=31;
         lcd_vline(xm, ym-TL, TL*2);

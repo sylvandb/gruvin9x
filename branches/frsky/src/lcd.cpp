@@ -16,8 +16,7 @@
  *
  */
 
-#include "gruvin9x.h"
-
+#include "lcd.h"
 
 uint8_t displayBuf[DISPLAY_W*DISPLAY_H/8];
 #define DISPLAY_END (displayBuf+sizeof(displayBuf))
@@ -31,7 +30,6 @@ void lcd_clear()
 {
   memset(displayBuf, 0, sizeof(displayBuf));
 }
-
 
 void lcd_img(uint8_t i_x,uint8_t i_y,const prog_uchar * imgdat,uint8_t idx,uint8_t mode)
 {
@@ -416,11 +414,19 @@ void putsSwitches(uint8_t x,uint8_t y,int8_t idx,uint8_t att)
   lcd_putsnAtt(x,y,get_switches_string()+3*(abs(idx)-1),3,att);
 }
 
-void putsFlightPhases(uint8_t x, uint8_t y, int8_t idx, uint8_t att)
+void putsFlightPhase(uint8_t x, uint8_t y, int8_t idx, uint8_t att)
 {
   if (idx==0) { lcd_putsAtt(x,y,PSTR("---"),att); return; }
-  if (idx < 0) lcd_putcAtt(x-FW, y, '!', att);
-  lcd_putsnAtt(x, y, PSTR("FP1FP2FP3")+3*(abs(idx)-1), 3, att);
+  if (idx < 0) { lcd_putcAtt(x-FW, y, '!', att); idx = -idx; }
+  if (att & FP_ONLY) {
+    att -= FP_ONLY;
+    lcd_putsAtt(x, y, PSTR("FP"), att);
+    lcd_putcAtt(x+2*FW, y, '0'+idx-1, att);
+  }
+  else {
+    for (uint8_t i=0; i<6; i++)
+      lcd_putcAtt(x+i*FW, y, idx2char(g_model.phaseData[idx-1].name[i]), att);
+  }
 }
 
 void putsTmrMode(uint8_t x, uint8_t y, uint8_t attr)

@@ -58,17 +58,40 @@ const prog_char APM modi12x3[]=
   "AIL ELE THR RUD "
   "AIL THR ELE RUD ";
 
-ExpoData *expoaddress( uint8_t idx )
+const prog_char APM s_charTab[NUMCHARS+1]=" ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-.";
+
+uint8_t char2idx(char c)
 {
-  return &g_model.expoData[idx] ;
+  for(int8_t ret=0;;ret++)
+  {
+    char cc= pgm_read_byte(s_charTab+ret);
+    if(cc==c) return ret;
+    if(cc==0) return 0;
+  }
 }
 
-MixData *mixaddress( uint8_t idx )
+char idx2char(uint8_t idx)
 {
-  return &g_model.mixData[idx] ;
+  if(idx < NUMCHARS) return pgm_read_byte(s_charTab+idx);
+  return ' ';
 }
 
-LimitData *limitaddress( uint8_t idx )
+PhaseData *phaseaddress(uint8_t idx)
+{
+  return &g_model.phaseData[idx];
+}
+
+ExpoData *expoaddress(uint8_t idx )
+{
+  return &g_model.expoData[idx];
+}
+
+MixData *mixaddress(uint8_t idx)
+{
+  return &g_model.mixData[idx];
+}
+
+LimitData *limitaddress(uint8_t idx)
 {
   return &g_model.limitData[idx];
 }
@@ -205,18 +228,18 @@ void applyExpos(int16_t *anas)
   static int16_t anas2[4]; // values before expo, to ensure same expo base when multiple expo lines are used
   memcpy(anas2, anas, sizeof(anas2));
 
-  uint8_t flightPhase = getFlightPhase();
+  uint8_t phase = getFlightPhase();
 
   for (uint8_t i=0; i<DIM(g_model.expoData); i++) {
     ExpoData &ed = g_model.expoData[i];
     if (ed.mode==0) break; // end of list
-    if (ed.flightPhase != 0) {
-      if (ed.flightPhase > 0) {
-        if (flightPhase != ed.flightPhase)
+    if (ed.phase != 0) {
+      if (ed.negPhase) {
+        if (phase+1 == -ed.phase)
           continue;
       }
       else {
-        if (flightPhase == -ed.flightPhase)
+        if (phase+1 != ed.phase)
           continue;
       }
     }
@@ -257,10 +280,10 @@ inline int16_t getValue(uint8_t i)
 
 uint8_t getFlightPhase()
 {
-  for (uint8_t i=0; i<MAX_PHASES-1; i++) {
-    FlightPhaseData *phase = &g_model.phaseData[i];
+  for (uint8_t i=1; i<MAX_PHASES; i++) {
+    PhaseData *phase = &g_model.phaseData[i];
     if (phase->swtch && getSwitch(phase->swtch, 0)) {
-      return i+1;
+      return i;
     }
   }
   return 0;
@@ -269,9 +292,11 @@ uint8_t getFlightPhase()
 uint8_t getTrimFlightPhase(uint8_t idx, int8_t phase)
 {
   if (phase == -1) phase = getFlightPhase();
-  int8_t trim = g_model.trim[phase][idx];
-  if (phase == 0 || trim >= -125) return phase;
-  uint8_t result = 128 + trim;
+  if (phase == 0) return phase;
+  int8_t trim = g_model.phaseData[phase].trim[idx];
+  if (trim > 125) return 0;
+  if (trim >= -125) return phase;
+  uint8_t result = 129 + trim;
   if (result == phase) result++;
   return result;
 }
@@ -635,8 +660,8 @@ uint8_t checkTrim(uint8_t event)
   {
     //LH_DWN LH_UP LV_DWN LV_UP RV_DWN RV_UP RH_DWN RH_UP
     uint8_t idx = k/2;
-    uint8_t flightPhase = getTrimFlightPhase(idx);
-    int8_t  t = g_model.trim[flightPhase][idx];
+    uint8_t phase = getTrimFlightPhase(idx);
+    int8_t  t = g_model.phaseData[phase].trim[idx];
     int8_t  v = (s==0) ? (abs(t)/4)+1 : 1 << (s-1); // 1=>1  2=>2  3=>4  4=>8
     bool thro = (((2-(g_eeGeneral.stickMode&1)) == idx) && g_model.thrTrim);
     if (thro) v = 4; // if throttle trim and trim trottle then step=4
@@ -658,7 +683,7 @@ uint8_t checkTrim(uint8_t event)
       thro = false;
     }
 
-    g_model.trim[flightPhase][idx] = (int8_t)x;
+    g_model.phaseData[phase].trim[idx] = (int8_t)x;
     STORE_MODELVARS;
 
     if (thro) {
@@ -1035,7 +1060,7 @@ void perOut(int16_t *chanOut, uint8_t att)
   }
 #endif
 
-  uint8_t flightPhase = getFlightPhase();
+  uint8_t phase = getFlightPhase();
 
   for(uint8_t i=0;i<7;i++){        // Sticks & Pots
 
@@ -1087,7 +1112,7 @@ void perOut(int16_t *chanOut, uint8_t att)
       // do trim -> throttle trim if applicable
       int16_t v = anas[i];
       int32_t vv = 2*RESX;
-      int8_t trim = g_model.trim[getTrimFlightPhase(i)][i];
+      int8_t trim = g_model.phaseData[getTrimFlightPhase(i)].trim[i];
       if(IS_THROTTLE(i) && g_model.thrTrim) vv = (g_eeGeneral.throttleReversed) ?
                                  ((int32_t)trim-125)*(RESX+v)/(2*RESX) :
                                  ((int32_t)trim+125)*(RESX-v)/(2*RESX);
@@ -1196,13 +1221,13 @@ void perOut(int16_t *chanOut, uint8_t att)
 
       if((md->destCh==0) || (md->destCh>NUM_CHNOUT)) break;
 
-      if (md->flightPhase != 0) {
-        if (md->flightPhase > 0) {
-          if (flightPhase != md->flightPhase)
+      if (md->phase != 0) {
+        if (md->phase > 0) {
+          if (phase+1 != md->phase)
             continue;
         }
         else {
-          if (flightPhase == -md->flightPhase)
+          if (phase+1 == -md->phase)
             continue;
         }
       }
@@ -1848,9 +1873,9 @@ void setStickCenter() // copy state of 3 primary to subtrim
   // TODO discuss with bryan what should be done here.
   // I choosed the easy way: use the current trims to compute the channels offsets => Instant trim will be ok (to be tested)
   // But other flight modes will have their trims wrong after this function called
-  uint8_t flightPhase = getFlightPhase();
+  uint8_t phase = getFlightPhase();
   for (uint8_t i=0; i<4; i++)
-    if (!IS_THROTTLE(i)) g_model.trim[getTrimFlightPhase(i, flightPhase)][i] = 0;// set trims to zero.
+    if (!IS_THROTTLE(i)) g_model.phaseData[getTrimFlightPhase(i, phase)].trim[i] = 0;// set trims to zero.
 
   STORE_MODELVARS;
   beepWarn1();

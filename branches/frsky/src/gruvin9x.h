@@ -348,6 +348,10 @@ enum EnumKeys {
 
 typedef void (*getADCp)();
 
+#define NUMCHARS 66
+extern uint8_t char2idx(char c);
+extern char idx2char(uint8_t idx);
+
 /// stoppt alle events von dieser taste bis eine kurze Zeit abgelaufen ist
 void pauseEvents(uint8_t enuk);
 /// liefert die Zahl der schnellen Wiederholungen dieser Taste
@@ -635,9 +639,10 @@ extern time_t g_unixTime; // global unix timestamp -- hold current time in secon
 extern uint8_t g_ms100; // defined in drivers.cpp
 #endif
 
-extern ExpoData *expoaddress( uint8_t idx );
-extern MixData *mixaddress( uint8_t idx );
-extern LimitData *limitaddress( uint8_t idx );
+extern PhaseData *phaseaddress(uint8_t idx);
+extern ExpoData *expoaddress(uint8_t idx);
+extern MixData *mixaddress(uint8_t idx);
+extern LimitData *limitaddress(uint8_t idx);
 
 extern void setStickCenter(); // copy state of 3 primary to subtrim
 
