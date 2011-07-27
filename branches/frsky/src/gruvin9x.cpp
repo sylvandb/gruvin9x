@@ -979,8 +979,10 @@ inline void trace()   // called in perOut - once envery 0.01sec
   }
   timer(v);
 
-  uint16_t val = calibratedStick[CONVERT_MODE(3)-1]; //Get throttle channel value
-  val = (g_eeGeneral.throttleReversed ? RESX-val : val+RESX) / (RESX/16); //calibrate it
+  uint16_t val = calibratedStick[CONVERT_MODE(3)-1]; // get throttle channel value
+  val = (g_eeGeneral.throttleReversed ? RESX-val : val+RESX);
+  val /= (RESX/16); // calibrate it
+
   static uint16_t s_time;
   static uint16_t s_cnt;
   static uint16_t s_sum;
