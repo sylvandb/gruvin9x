@@ -634,7 +634,7 @@ void alert(const prog_char * s, bool defaults)
 {
   lcd_clear();
   lcd_putsAtt(64-5*FW,0*FH,PSTR("ALERT"),DBLSIZE);
-  lcd_puts_P(0,4*FW,s);
+  lcd_puts_P(0,4*FH,s);
   lcd_puts_P(64-6*FW,7*FH,PSTR("press any Key"));
   refreshDiplay();
   lcdSetRefVolt(defaults ? 25 : g_eeGeneral.contrast);
