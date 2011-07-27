@@ -326,32 +326,56 @@ void Gruvin9xSim::refreshDiplay()
       if(getApp()->getKeyState(keys1[i])) pinb |= (1<<keys1[i+1]);
     }
 
-    static FXuint keys2[]={KEY_F8, KEY_F7, KEY_F4, KEY_F3, KEY_F6, KEY_F5, KEY_F1, KEY_F2  };
+    // static FXuint keys2[]={KEY_F8, KEY_F7, KEY_F4, KEY_F3, KEY_F6, KEY_F5, KEY_F1, KEY_F2  };
+    // gruvin: Can't use Functionkeys on the Mac -- too many other app conflicts.
+    //         The ordering of these keys, Q/W,E/R,T/Y,U/I matches the on screen 
+    //         order of trim sliders
+    static FXuint keys2[]={KEY_Y, KEY_T, KEY_W, KEY_Q, KEY_I, KEY_U, KEY_E, KEY_R  };
     pind  = 0;
     for(unsigned i=0; i<DIM(keys2);i++){
       if(getApp()->getKeyState(keys2[i])) pind |= (1<<i);
     }
+
     // /usr/local/include/fox-1.6/fxkeys.h
+    
+    
+    // gruvin: Had to add this to get g++ to work.
+    // NOTE: pinc/e/g in keys3[] are left in place as dummy place-holders.
+    volatile unsigned char* keys3_ports[]={
+#if defined(JETI) || defined(FRSKY)
+      &pinc,
+      &pinc,
+#else
+      &pine,
+      &pine,
+#endif
+      &ping,
+      &pine,
+      &pine,
+      &pine
+    };
+
     static FXuint keys3[]={
 #if defined(JETI) || defined(FRSKY)
-      KEY_1, (FXuint)&pinc,  INP_C_ThrCt,    0,
-      KEY_6, (FXuint)&pinc,  INP_C_AileDR,   0,
+      KEY_1, pinc,  INP_C_ThrCt,    0,
+      KEY_6, pinc,  INP_C_AileDR,   0,
 #else
-      KEY_1, (FXuint)&pine,  INP_E_ThrCt,    0,
-      KEY_6, (FXuint)&pine,  INP_E_AileDR,   0,
+      KEY_1, pine,  INP_E_ThrCt,    0,
+      KEY_6, pine,  INP_E_AileDR,   0,
 #endif
-      KEY_2, (FXuint)&ping,  INP_G_RuddDR,   0,
-      KEY_3, (FXuint)&pine,  INP_E_ElevDR,   0,
+      KEY_2, ping,  INP_G_RuddDR,   0,
+      KEY_3, pine,  INP_E_ElevDR,   0,
       //KEY_4, (FXuint)&ping,  INP_G_ID1,      0,
       //KEY_5, (FXuint)&pine,  INP_E_ID2,      0,
-      KEY_7, (FXuint)&pine,  INP_E_Gear,     0,
-      KEY_8, (FXuint)&pine,  INP_E_Trainer,  0
+      KEY_7, pine,  INP_E_Gear,     0,
+      KEY_8, pine,  INP_E_Trainer,  0
     };
     for(unsigned i=0; i<DIM(keys3)/4;i+=1){ int j=i*4;
       bool ks=getApp()->getKeyState(keys3[j]);
       if(ks != keys3[j+3]){
         if(ks){
-          *(unsigned char*)keys3[j+1] ^=  (1<<keys3[j+2]);
+          // *(unsigned char*)keys3[j+1] ^=  (1<<keys3[j+2]);
+          *(unsigned char*)keys3_ports[i] ^=  (1<<keys3[j+2]);
         }
         keys3[j+3] = ks;
       }

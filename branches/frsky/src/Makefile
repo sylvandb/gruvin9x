@@ -601,16 +601,18 @@ gdb-config:
 	endif
 	@echo break main >> $(GDBINIT_FILE)
 
+# gruvin: added extra include and lib paths to get simu working on my Mac
 INC=-I/usr/local/include/fox-1.6 -I/usr/include/fox-1.6 \
-    -I$(FOXPATH)/include
-
+    -I$(FOXPATH)/include \
+    -I/opt/local/include/fox-1.6
 LIB=-L/usr/local/lib \
     -L$(FOXPATH)/src/.libs \
+    -L/opt/local/lib \
     -lFOX-1.6 \
     -Wl,-rpath,$(FOXPATH)/src/.libs
     
 simu: $(CPPSRC) Makefile simu.cpp $(CPPSRC) *.h *.lbm eeprom.bin
-	gcc simu.cpp $(CPPFLAGS) $(CPPSRC) -g -Wall -osimu $(INC) $(LIB) -MD -DSIMU
+	g++ simu.cpp $(CPPFLAGS) $(CPPSRC) -arch x86_64 -o simu $(INC) $(LIB) -MD -DSIMU
 
 eeprom.bin:
 	dd if=/dev/zero of=$@ bs=1 count=2048
