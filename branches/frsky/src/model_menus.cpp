@@ -934,14 +934,8 @@ void menuProcExpoOne(uint8_t event)
   applyExpos(anas);
   int16_t y512  = anas[ed->chn];
 
-  //dy/dx
-  // TODO really needed?
-  // int16_t dy  = x512>0 ? y512-expo(x512-20,kView) : expo(x512+20,kView)-y512;
-  // lcd_outdezNAtt(14*FW, 2*FH,   dy*(100/20), LEADING0|PREC2,3);
-  // lcd_outdezNAtt(14*FW, 2*FH,   dy*(100/20), 0,3);
-
-  lcd_outdezAtt(20*FW, 6*FH, x512*100/RESX, 0);
-  lcd_outdezAtt(14*FW, 1*FH, (y512*100+(y512>0 ? RESX/2 : -RESX/2))/RESX, 0); // TODO overflow
+  lcd_outdezAtt(20*FW, 6*FH, x512*25/256, 0);
+  lcd_outdezAtt(14*FW, 1*FH, y512*25/256, 0);
 
   x512 = X0+x512/(RESXu/WCHART);
   y512 = (DISPLAY_H-1) - (uint16_t)((y512+RESX)/2) * (DISPLAY_H-1) / RESX;
