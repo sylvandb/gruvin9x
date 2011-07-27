@@ -1,4 +1,4 @@
-PCBNEW-BOARD Version 1 date 15/07/2011 17:53:57
+PCBNEW-BOARD Version 1 date 27/07/2011 21:08:44
 
 # Created by Pcbnew(2011-07-08 BZR 3044)-stable
 
@@ -10,7 +10,7 @@ EnabledLayers 1FFF8001
 Links 45
 NoConn 0
 Di 23437 20035 44975 33702
-Ndraw 4
+Ndraw 5
 Ntrack 301
 Nzone 0
 BoardThickness 630
@@ -20,13 +20,13 @@ $EndGENERAL
 
 $SHEETDESCR
 Sheet A4 11700 8267
-Title "SD_CARD & RTC Interface"
-Date "15 jul 2011"
-Rev "3.4"
+Title "SD CARD & RTC Interface (Farnell BOM)"
+Date "27 jul 2011"
+Rev "4.0"
 Comp "gruvin9x"
-Comment1 "http://code.google.com/p/gruvin9x/"
-Comment2 ""
-Comment3 ""
+Comment1 "Licensed under the TAPR Open Hardware License (see file,  LICENSE)"
+Comment2 "http://code.google.com/p/gruvin9x/"
+Comment3 "Copyright 2011 th9xer"
 Comment4 ""
 $EndSHEETDESCR
 
@@ -35,7 +35,7 @@ InternalUnit 0.000100 INCH
 Layers 2
 Layer[0] Back signal
 Layer[15] Front signal
-TrackWidth 177
+TrackWidth 80
 TrackWidthList 83
 TrackWidthList 98
 TrackWidthList 138
@@ -66,7 +66,7 @@ PadSize 600 600
 PadDrill 320
 Pad2MaskClearance 100
 AuxiliaryAxisOrg 0 0
-PcbPlotParams (pcbplotparams (layerselection 3178497) (usegerberextensions true) (excludeedgelayer true) (linewidth 60) (plotframeref false) (viasonmask false) (mode 1) (useauxorigin false) (hpglpennumber 1) (hpglpenspeed 20) (hpglpendiameter 15) (hpglpenoverlay 0) (pscolor true) (psnegative false) (psa4output false) (plotreference true) (plotvalue true) (plotothertext true) (plotinvisibletext false) (padsonsilk false) (subtractmaskfromsilk false) (outputformat 1) (mirror false) (drillshape 1) (scaleselection 1) (outputdirectory ""))
+PcbPlotParams (pcbplotparams (layerselection 284983297) (usegerberextensions true) (excludeedgelayer true) (linewidth 60) (plotframeref false) (viasonmask false) (mode 1) (useauxorigin false) (hpglpennumber 1) (hpglpenspeed 20) (hpglpendiameter 15) (hpglpenoverlay 0) (pscolor true) (psnegative false) (psa4output false) (plotreference true) (plotvalue false) (plotothertext true) (plotinvisibletext false) (padsonsilk false) (subtractmaskfromsilk false) (outputformat 1) (mirror false) (drillshape 1) (scaleselection 1) (outputdirectory production/))
 $EndSETUP
 
 $EQUIPOT
@@ -990,6 +990,13 @@ Ne 13 "N-000015"
 Po 0 3937
 $EndPAD
 $EndMODULE  BAT_2032_FARNELL
+$TEXTPCB
+Te "Gruvin9x"
+nl "SD+RTC"
+nl "V4.0 (Farnell BOM)"
+Po 41315 26728 472 472 59 2700
+De 20 0 0 Normal C
+$EndTEXTPCB
 $DRAWSEGMENT
 Po 0 43307 33111 43307 20552 150
 De 28 0 900 0 0
@@ -1025,6 +1032,8 @@ Po 0 27480 22390 27480 22501 138 -1
 De 15 0 2 0 0
 Po 0 27480 21933 27480 22390 138 -1
 De 15 0 2 0 400000
+Po 0 27067 25595 27067 25063 138 -1
+De 15 0 3 0 0
 Po 0 27885 26260 27732 26260 138 -1
 De 15 0 3 0 400000
 Po 0 27732 26260 27067 25595 138 -1
@@ -1032,8 +1041,6 @@ De 15 0 3 0 0
 Po 0 25991 23987 25217 23987 138 -1
 De 15 0 3 0 800000
 Po 0 27067 25063 25991 23987 138 -1
-De 15 0 3 0 0
-Po 0 27067 25595 27067 25063 138 -1
 De 15 0 3 0 0
 Po 0 24988 29224 24311 28547 138 -1
 De 15 0 4 0 0
@@ -1053,6 +1060,8 @@ Po 0 24311 25004 24540 24775 138 -1
 De 15 0 4 0 0
 Po 0 24311 28547 24311 25004 138 -1
 De 15 0 4 0 0
+Po 0 26709 26925 26709 26240 138 -1
+De 15 0 5 0 0
 Po 0 26031 25562 25217 25562 138 -1
 De 15 0 5 0 800000
 Po 0 27528 27744 26709 26925 138 -1
@@ -1060,8 +1069,6 @@ De 15 0 5 0 0
 Po 0 29889 27744 27528 27744 177 -1
 De 15 0 5 0 400000
 Po 0 26709 26240 26031 25562 138 -1
-De 15 0 5 0 0
-Po 0 26709 26925 26709 26240 138 -1
 De 15 0 5 0 0
 Po 0 26136 26349 25217 26349 138 -1
 De 15 0 6 0 800000
@@ -1597,6 +1604,10 @@ Po 0 33325 30805 38339 30805 177 -1
 De 15 0 15 0 800000
 Po 0 29068 30409 32929 30409 177 -1
 De 15 0 15 0 400000
+Po 0 30560 28634 30572 28622 177 -1
+De 15 0 16 0 400000
+Po 0 30572 28622 36099 28622 177 -1
+De 15 0 16 0 0
 Po 0 36524 28197 36099 28622 177 -1
 De 15 0 16 0 0
 Po 0 36099 28622 36092 28629 177 -1
@@ -1605,10 +1616,6 @@ Po 0 38339 28197 36524 28197 177 -1
 De 15 0 16 0 400000
 Po 0 30560 29394 30560 28634 177 -1
 De 15 0 16 0 C00000
-Po 0 30560 28634 30572 28622 177 -1
-De 15 0 16 0 400000
-Po 0 30572 28622 36099 28622 177 -1
-De 15 0 16 0 0
 $EndTRACK
 $ZONE
 $EndZONE
