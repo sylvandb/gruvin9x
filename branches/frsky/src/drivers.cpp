@@ -424,20 +424,14 @@ void per10ms()
   
   if (frskyStreaming > 0)
     frskyStreaming--;
-  else if (g_eeGeneral.enableTelemetryWarning) {
+  else if (g_eeGeneral.enableTelemetryWarning && (g_model.frsky.channels[0].ratio || g_model.frsky.channels[1].ratio)) {
 #if defined (BEEPSPKR)
     if (!(g_tmr10ms % 30)) beepWarn2Spkr((g_tmr10ms % 60) ? 25 : 20);
 #else
     if (!(g_tmr10ms % 30)) 
     {
-      if (g_tmr10ms % 60) 
-      { 
-        warble=false; beepWarn2(); 
-      } 
-      else
-      { 
-        warble=true; beepWarn2(); 
-      }
+      warble = !(g_tmr10ms % 60);
+      beepWarn2();
     }
 #endif
   }
