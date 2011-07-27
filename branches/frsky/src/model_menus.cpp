@@ -217,7 +217,7 @@ void menuProcModel(uint8_t _event)
     chainMenu(menuProcModelSelect);
   }
 
-  MENU("SETUP", menuTabModel, e_Model, 15, {0,sizeof(g_model.name)-1,1,0,0,0,0,0,0,0,0,6,2,0/*,0*/});
+  MENU("SETUP", menuTabModel, e_Model, 15, {0,sizeof(g_model.name)-1,1,0,0,0,0,0,0,0,0,6,2/*,0, 0*/});
 
   int8_t  sub    = mstate2.m_posVert;
   uint8_t subSub = mstate2.m_posHorz;
@@ -531,7 +531,7 @@ void menuProcPhasesAll(uint8_t event)
 #ifdef HELI
 void menuProcHeli(uint8_t event)
 {
-  MENU("HELI SETUP", menuTabModel, e_Heli, 7, {0 /*repeated*/});
+  SIMPLE_MENU("HELI SETUP", menuTabModel, e_Heli, 7);
 
   int8_t  sub    = mstate2.m_posVert;
   uint8_t y = 1*FH;
@@ -588,7 +588,7 @@ void menuProcCurveOne(uint8_t event)
 #define XD X0-2
   bool    cv9 = s_curveChan >= MAX_CURVE5;
 
-  SUBMENU("CURVE", 2+(cv9 ? 9 : 5), { 9,0/*repeated...*/});
+  SUBMENU("CURVE", 2+(cv9 ? 9 : 5), { 9/*,0 repeated...*/});
   lcd_outdezAtt(6*FW, 0, s_curveChan+1, INVERS);
 
   int8_t *crv = cv9 ? g_model.curves9[s_curveChan-MAX_CURVE5] : g_model.curves5[s_curveChan];
@@ -898,7 +898,7 @@ void editExpoVals(uint8_t event, uint8_t which, bool edit, uint8_t y, uint8_t id
 
 void menuProcExpoOne(uint8_t event)
 {
-  SUBMENU("EXPO/DR", 7, {0});
+  SIMPLE_SUBMENU("EXPO/DR", 7);
 
   ExpoData *ed = expoaddress(s_currIdx);
 
@@ -1316,7 +1316,7 @@ void menuProcMixAll(uint8_t event)
 
 void menuProcLimits(uint8_t event)
 {
-  MENU("LIMITS", menuTabModel, e_Limits, NUM_CHNOUT+2, {0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 0});
+  MENU("LIMITS", menuTabModel, e_Limits, NUM_CHNOUT+2, {0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3/*, 0*/});
 
   static bool swVal[NUM_CHNOUT];
 
