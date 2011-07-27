@@ -56,14 +56,14 @@ extern int8_t  checkIncDec_Ret;  // global helper vars
 extern uint8_t s_editMode;    // global editmode
 
 int16_t checkIncDec(uint8_t event, int16_t i_pval, int16_t i_min, int16_t i_max, uint8_t i_flags);
-int8_t checkIncDec_hm(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max);
-int8_t checkIncDec_hg(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max);
+int8_t checkIncDecModel(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max);
+int8_t checkIncDecGen(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max);
 
-#define CHECK_INCDEC_H_MODELVAR( event, var, min, max)     \
-  var = checkIncDec_hm(event,var,min,max)
+#define CHECK_INCDEC_MODELVAR( event, var, min, max)     \
+  var = checkIncDecModel(event,var,min,max)
 
-#define CHECK_INCDEC_H_GENVAR( event, var, min, max)     \
-  var = checkIncDec_hg(event,var,min,max)
+#define CHECK_INCDEC_GENVAR( event, var, min, max)     \
+  var = checkIncDecGen(event,var,min,max)
 
 // Menus related stuff ...
 struct MState2
