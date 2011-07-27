@@ -31,6 +31,7 @@ const char *eepromFile = "eeprom.bin";
 
 extern unsigned char displayBuf[DISPLAY_W*DISPLAY_H/8+DISPLAY_W];
 
+
 void eeWriteBlockCmp(const void *i_pointer_ram, void *pointer_eeprom, size_t size)
 {
   FILE *fp = fopen(eepromFile, "r+");
@@ -326,11 +327,14 @@ void Gruvin9xSim::refreshDiplay()
       if(getApp()->getKeyState(keys1[i])) pinb |= (1<<keys1[i+1]);
     }
 
-    // static FXuint keys2[]={KEY_F8, KEY_F7, KEY_F4, KEY_F3, KEY_F6, KEY_F5, KEY_F1, KEY_F2  };
-    // gruvin: Can't use Functionkeys on the Mac -- too many other app conflicts.
+#ifdef __APPLE__
+    // gruvin: Can't use Function keys on the Mac -- too many other app conflicts.
     //         The ordering of these keys, Q/W,E/R,T/Y,U/I matches the on screen 
     //         order of trim sliders
     static FXuint keys2[]={KEY_Y, KEY_T, KEY_W, KEY_Q, KEY_I, KEY_U, KEY_E, KEY_R  };
+#else
+    static FXuint keys2[]={KEY_F8, KEY_F7, KEY_F4, KEY_F3, KEY_F6, KEY_F5, KEY_F1, KEY_F2  };
+#endif
     pind  = 0;
     for(unsigned i=0; i<DIM(keys2);i++){
       if(getApp()->getKeyState(keys2[i])) pind |= (1<<i);
