@@ -28,7 +28,7 @@
 #----------- BUILD OPTIONS ---------------------------
 
 #gruvin: PCB version -- OVERRIDES the following settings if not STD
-# Values: STD, V2, V3 (includes PPMIN mod for JR compatibility)
+# Values: STD, V3, V4
 PCB = V3
 
 # Following options for PCB=STD only (ignored otherwise) ...
@@ -72,8 +72,12 @@ TRANSLATIONS = YES
 # MCU name
 ifeq ($(PCB), STD)
 MCU = atmega64
-else
+endif
+ifeq ($(PCB), V3)
 MCU = atmega2561
+endif
+ifeq ($(PCB), V4)
+MCU = atmega2560
 endif
 
 # Processor frequency.
@@ -154,7 +158,8 @@ CPPDEFS = -DF_CPU=$(F_CPU)UL
 #CPPDEFS += -D__STDC_LIMIT_MACROS
 #CPPDEFS += -D__STDC_CONSTANT_MACROS
 
-#PCB version overrides all the earlier individual settings
+# NOTE: PCB version now overrides all the earlier individual settings
+#       These individual settings work only for PCB=STD
 
 ifeq ($(PCB), STD)
 # STD PCB, so ...
@@ -192,11 +197,17 @@ ifeq ($(PCB), STD)
   endif
 
 else
-# not STD PCB, so ...
+# not PCB=STD, so ...
   ifeq ($(PCB), V3)
     CPPDEFS += -DPCBV3 -DFRSKY -DBEEPSPKR
   endif
+  ifeq ($(PCB), V4)
+    CPPDEFS += -DPCBV4 -DFRSKY -DBEEPSPKR
+  endif
 endif
+
+
+### Global Build-Option Directives ###
 
 ifeq ($(DECIMALS), YES)
   CPPDEFS += -DDECIMALS_DISPLAYED
@@ -596,9 +607,9 @@ gdb-config:
 	@echo end >> $(GDBINIT_FILE)
 	@echo file $(TARGET).elf >> $(GDBINIT_FILE)
 	@echo target remote $(DEBUG_HOST):$(DEBUG_PORT)  >> $(GDBINIT_FILE)
-	ifeq ($(DEBUG_BACKEND),simulavr)
+ifeq ($(DEBUG_BACKEND),simulavr)
 	@echo load  >> $(GDBINIT_FILE)
-	endif
+endif
 	@echo break main >> $(GDBINIT_FILE)
 
 # gruvin: added extra include and lib paths to get simu working on my Mac
@@ -610,7 +621,7 @@ LIB=-L/usr/local/lib \
     -L/opt/local/lib \
     -lFOX-1.6 \
     -Wl,-rpath,$(FOXPATH)/src/.libs
-    
+
 simu: $(CPPSRC) Makefile simu.cpp $(CPPSRC) *.h *.lbm eeprom.bin
 	g++ simu.cpp $(CPPFLAGS) $(CPPSRC) -arch x86_64 -o simu $(INC) $(LIB) -MD -DSIMU
 
@@ -618,16 +629,15 @@ eeprom.bin:
 	dd if=/dev/zero of=$@ bs=1 count=2048
 
 debug: gdb-config $(TARGET).elf
-	ifeq ($(DEBUG_BACKEND), avarice)
+ifeq ($(DEBUG_BACKEND),avarice)
 	@echo Starting AVaRICE - Press enter when "waiting to connect" message displays.
 	@$(WINSHELL) /c start avarice --jtag $(JTAG_DEV) --erase --program --file \
-$(TARGET).elf $(DEBUG_HOST):$(DEBUG_PORT)
+	  $(TARGET).elf $(DEBUG_HOST):$(DEBUG_PORT)
 	@$(WINSHELL) /c pause
-
-	else
+else
 	@$(WINSHELL) /c start simulavr --gdbserver --device $(MCU) --clock-freq \
-	$(DEBUG_MFREQ) --port $(DEBUG_PORT)
-	endif
+	  $(DEBUG_MFREQ) --port $(DEBUG_PORT)
+endif
 	@$(WINSHELL) /c start avr-$(DEBUG_UI) --command=$(GDBINIT_FILE)
 
 
