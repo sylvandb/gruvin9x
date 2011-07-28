@@ -246,9 +246,11 @@ void menuProcModel(uint8_t _event)
             || event==EVT_KEY_REPT(KEY_DOWN) || event==EVT_KEY_REPT(KEY_UP))
            CHECK_INCDEC_MODELVAR( event,v ,0,NUMCHARS-1);
 
-        if ((v>0 && v<53) && (event==EVT_KEY_LONG(KEY_RIGHT) || event==EVT_KEY_LONG(KEY_LEFT)))
+        if ((v>0 && v<53) && (event==EVT_KEY_LONG(KEY_RIGHT) || event==EVT_KEY_LONG(KEY_LEFT))) {
             v = idx2char(v) ^ 0x20; // toggle case
-        else
+            if (event==EVT_KEY_LONG(KEY_LEFT))
+              killEvents(KEY_LEFT);
+        } else
           v = idx2char(v);
         g_model.name[subSub]=v;
         lcd_putcAtt((10+subSub)*FW, y, v,INVERS);
