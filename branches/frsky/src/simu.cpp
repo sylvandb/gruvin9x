@@ -122,7 +122,7 @@ FXIMPLEMENT(Gruvin9xSim,FXMainWindow,Gruvin9xSimMap,ARRAYNUMBER(Gruvin9xSimMap))
 
 
 Gruvin9xSim::Gruvin9xSim(FXApp* a)
-:FXMainWindow(a,"Gruvin9xSim",NULL,NULL,DECOR_ALL,0,0,0,0)
+:FXMainWindow(a,"Gruvin9xSim",NULL,NULL,DECOR_ALL,20,90,0,0)
 {
 
   firstTime=true;
