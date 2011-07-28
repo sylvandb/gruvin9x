@@ -726,6 +726,9 @@ public:
 };
 
 // #define STARTADCONV (ADCSRA  = (1<<ADEN) | (1<<ADPS0) | (1<<ADPS1) | (1<<ADPS2) | (1<<ADSC) | (1 << ADIE))
+// G: Note that the above would have set the ADC prescaler to 128, equating to
+// 125KHz sample rate. We now sample at 500KHz, with oversampling and other
+// filtering options to produce 11-bit results.
 uint16_t BandGap ;
 static uint16_t s_anaFilt[8];
 uint16_t anaIn(uint8_t chan)
@@ -739,7 +742,7 @@ uint16_t anaIn(uint8_t chan)
   return *p;
 }
 
-#define ADC_VREF_TYPE 0x40
+#define ADC_VREF_TYPE 0x40 // AVCC with external capacitor at AREF pin
 void getADC_filt()
 {
   static uint16_t t_ana[3][8];
