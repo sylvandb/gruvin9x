@@ -465,7 +465,11 @@ int main(int argc,char **argv)
 
   // Pretty self-explanatory:- this shows the window, and places it in the
   // middle of the screen.
+#ifndef __APPLE__
   th9xSim->show(PLACEMENT_SCREEN);
+#else
+  th9xSim->show(); // Otherwise the main window gets centred across my two monitors, split down the middle.
+#endif
 
   return application.run();
 }
