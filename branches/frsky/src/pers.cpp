@@ -30,12 +30,6 @@ EFile theFile2; //sometimes we need two files
 #define FILE_TYP_GENERAL 1
 #define FILE_TYP_MODEL   2
 
-#define partCopy(sizeDst,sizeSrc)                         \
-      pSrc -= (sizeSrc);                                  \
-      pDst -= (sizeDst);                                  \
-      memmove(pDst, pSrc, (sizeSrc));                     \
-      memset (pDst+(sizeSrc), 0,  (sizeDst)-(sizeSrc));
-#define fullCopy(size) partCopy(size,size)
 void generalDefault()
 {
   memset(&g_eeGeneral,0,sizeof(g_eeGeneral));
@@ -99,7 +93,6 @@ uint8_t Translate(EEGeneral *p)
         g_model.thrTrim = v3->thrTrim;
         g_model.thrExpo = v3->thrExpo;
         g_model.trimInc = v3->trimInc;
-
         g_model.pulsePol = v3->pulsePol;
         if (p->myVers == EEPROM_ER9X_VER) {
           g_model.extendedLimits = v4->extendedLimits;
@@ -119,16 +112,18 @@ uint8_t Translate(EEGeneral *p)
           g_model.mixData[i].mixWarn = g_model.mixData[i].phase;
           g_model.mixData[i].phase = 0;
         }
-        assert((char *)&g_model.expoData[0] < (char *)v4->expoData);
+        assert((char *)&g_model.limitData[0] < (char *)&v3->limitData[0]);
+        memmove(&g_model.limitData[0], &v3->limitData[0], sizeof(LimitData)*NUM_CHNOUT);
+        assert((char *)&g_model.expoData[0] < (char *)v3->expoData);
         EEPROM_V4::ExpoData expo4[4];
-        memcpy(&expo4[0], v4->expoData, sizeof(expo4));
+        memcpy(&expo4[0], &v4->expoData[0], sizeof(expo4));
         memset(&g_model.expoData[0], 0, sizeof(expo4));
         uint8_t e = 0;
         for (uint8_t ch=0; ch<4 && e<MAX_EXPOS; ch++) {
           for (int8_t dr=2; dr>=0 && e<MAX_EXPOS; dr--) {
-            if ((dr==0 && !expo4[ch].drSw1) ||
+            if ((dr==2 && !expo4[ch].drSw1) ||
                 (dr==1 && !expo4[ch].drSw2) ||
-                (dr==2 && !expo4[ch].expo[2][0][0] && !expo4[ch].expo[2][0][1] && !expo4[ch].expo[2][1][0] && !expo4[ch].expo[2][1][1])) continue;
+                (dr==0 && !expo4[ch].expo[0][0][0] && !expo4[ch].expo[0][0][1] && !expo4[ch].expo[0][1][0] && !expo4[ch].expo[2][1][1])) continue;
             g_model.expoData[e].swtch = (dr == 0 ? expo4[ch].drSw1 : (dr == 1 ? expo4[ch].drSw2 : 0));
             g_model.expoData[e].chn = ch;
             g_model.expoData[e].expo = expo4[ch].expo[dr][0][0];
@@ -148,8 +143,6 @@ uint8_t Translate(EEGeneral *p)
             }
           }
         }
-        assert((char *)&g_model.limitData[0] < (char *)&v3->limitData[0]);
-        memmove(&g_model.limitData[0], &v3->limitData[0], sizeof(LimitData)*NUM_CHNOUT);
         assert((char *)&g_model.curves5[0][0] < (char *)&v3->curves5[0][0]);
         memmove(&g_model.curves5[0][0], &v3->curves5[0][0], 5*MAX_CURVE5);
         assert((char *)&g_model.curves9[0][0] < (char *)&v3->curves9[0][0]);
