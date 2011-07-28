@@ -226,12 +226,12 @@ void menuProcModel(uint8_t _event)
   lcd_outdezNAtt(7*FW,0,g_eeGeneral.currModel+1,INVERS+LEADING0,2);
 
   switch(event){
-    case EVT_KEY_REPT(KEY_LEFT):
-    case EVT_KEY_FIRST(KEY_LEFT):
+    // case EVT_KEY_REPT(KEY_LEFT):
+    case EVT_KEY_BREAK(KEY_LEFT):
       if(sub==1 && subSub>0 && s_editMode) mstate2.m_posHorz--;
       break;
-    case EVT_KEY_REPT(KEY_RIGHT):
-    case EVT_KEY_FIRST(KEY_RIGHT):
+    // case EVT_KEY_REPT(KEY_RIGHT):
+    case EVT_KEY_BREAK(KEY_RIGHT):
       if(sub==1 && subSub<sizeof(g_model.name)-1 && s_editMode) mstate2.m_posHorz++;
       break;
   }
@@ -245,7 +245,11 @@ void menuProcModel(uint8_t _event)
         if(p1valdiff || event==EVT_KEY_FIRST(KEY_DOWN) || event==EVT_KEY_FIRST(KEY_UP)
             || event==EVT_KEY_REPT(KEY_DOWN) || event==EVT_KEY_REPT(KEY_UP))
            CHECK_INCDEC_MODELVAR( event,v ,0,NUMCHARS-1);
-        v = idx2char(v);
+
+        if ((v>0 && v<53) && (event==EVT_KEY_LONG(KEY_RIGHT) || event==EVT_KEY_LONG(KEY_LEFT)))
+            v = idx2char(v) ^ 0x20; // toggle case
+        else
+          v = idx2char(v);
         g_model.name[subSub]=v;
         lcd_putcAtt((10+subSub)*FW, y, v,INVERS);
     }
