@@ -1,11 +1,11 @@
 #include "menus.h"
 
+#define ALTERNATE 0x10
+
 enum MainViews {
   e_outputValues,
   e_outputBars,
-  e_inputs1,
-  e_inputs2,
-  e_inputs3,
+  e_inputs,
   e_timer2,
 #ifdef FRSKY
   e_telemetry,
@@ -13,10 +13,20 @@ enum MainViews {
   MAX_VIEWS
 };
 
+uint8_t tabViews[] = {
+  1, /*e_outputValues*/
+  1, /*e_outputBars*/
+  3, /*e_inputs*/
+  1, /*e_timer2*/
+#ifdef FRSKY
+  2, /*e_telemetry*/
+#endif
+};
+
 void menuMainView(uint8_t event)
 {
   static uint8_t trimSwLock;
-  uint8_t view = g_eeGeneral.view & 0xf;
+  uint8_t view = g_eeGeneral.view & 0x0f;
 
   switch(event)
   {
@@ -30,24 +40,14 @@ void menuMainView(uint8_t event)
       pushMenu(lastPopMenu());
       killEvents(event);
       break;
-#ifdef FRSKY
     case EVT_KEY_BREAK(KEY_RIGHT):
-      if(view == e_telemetry) {
-        g_eeGeneral.view = (g_eeGeneral.view + 0x10) % 0x20;
-        eeDirty(EE_GENERAL);
-        beepKey();
-      }
-      break;
     case EVT_KEY_BREAK(KEY_LEFT):
-      if(view == e_telemetry) {
-        g_eeGeneral.view = (g_eeGeneral.view - 0x10) % 0x20;
-        eeDirty(EE_GENERAL);
-        beepKey();
-      }
+      g_eeGeneral.view = (g_eeGeneral.view + (event == EVT_KEY_BREAK(KEY_RIGHT) ? ALTERNATE : tabViews[view]*ALTERNATE-ALTERNATE)) % (tabViews[view]*ALTERNATE);
+      eeDirty(EE_GENERAL);
+      beepKey();
       break;
-#endif
     case EVT_KEY_LONG(KEY_RIGHT):
-      pushMenu(menuProcModelSelect);//menuProcExpoAll);
+      pushMenu(menuProcModelSelect);
       killEvents(event);
       break;
     case EVT_KEY_LONG(KEY_LEFT):
@@ -119,7 +119,16 @@ void menuMainView(uint8_t event)
   if(getSwitch(g_model.phaseData[0].swtch, 0) && !trimSwLock) setStickCenter();
   trimSwLock = getSwitch(g_model.phaseData[0].swtch,0);
 
-  if (g_eeGeneral.view < 0x10) {
+  if (g_eeGeneral.view == e_telemetry+ALTERNATE) {
+    lcd_putsnAtt(0, 0, g_model.name, sizeof(g_model.name), BSS|INVERS);
+    uint8_t att = (g_vbat100mV < g_eeGeneral.vBatWarn ? INVERS|BLINK : INVERS);
+    putsVBat(14*FW,0,att);
+    if(s_timerState != TMR_OFF){
+      att = (s_timerState==TMR_BEEPING ? INVERS|BLINK : INVERS);
+      putsTime(18*FW+3, 0, s_timerVal, att, att);
+    }
+  }
+  else {
     uint8_t att = (g_vbat100mV < g_eeGeneral.vBatWarn ? BLINK : 0) | DBLSIZE;
     for(uint8_t i=0;i<sizeof(g_model.name);i++)
       lcd_putcAtt(2*FW+i*2*FW-i-2, 0*FH, g_model.name[i], DBLSIZE);
@@ -165,17 +174,8 @@ void menuMainView(uint8_t event)
       lcd_square(xm-3, ym-3, 7);
     }
   }
-  else {
-    lcd_putsnAtt(0, 0, g_model.name, sizeof(g_model.name), BSS|INVERS);
-    uint8_t att = (g_vbat100mV < g_eeGeneral.vBatWarn ? INVERS|BLINK : INVERS);
-    putsVBat(14*FW,0,att);
-    if(s_timerState != TMR_OFF){
-      att = (s_timerState==TMR_BEEPING ? INVERS|BLINK : INVERS);
-      putsTime(18*FW+3, 0, s_timerVal, att, att);
-    }
-  }
 
-  if(view<e_inputs1) {
+  if(view<e_inputs) {
     for(uint8_t i=0; i<8; i++)
     {
       uint8_t x0,y0;
@@ -230,7 +230,7 @@ void menuMainView(uint8_t event)
         }
       }
       displayCount = (displayCount+1) % 50;
-      if (g_eeGeneral.view & 0x10) {
+      if (g_eeGeneral.view & ALTERNATE) {
         if (g_model.frsky.channels[0].ratio || g_model.frsky.channels[1].ratio) {
           x0 = 0;
           for (int i=0; i<2; i++) {
@@ -352,8 +352,8 @@ void menuMainView(uint8_t event)
         }
     }
 
-    int8_t a = (view == e_inputs1) ? 0 : 9+(view-3)*6;
-    int8_t b = (view == e_inputs1) ? 6 : 12+(view-3)*6;
+    int8_t a = (g_eeGeneral.view == e_inputs) ? 0 : 3+(g_eeGeneral.view/ALTERNATE)*6;
+    int8_t b = (g_eeGeneral.view == e_inputs) ? 6 : 6+(g_eeGeneral.view/ALTERNATE)*6;
     for(int8_t i=a; i<(a+3); i++) lcd_putsnAtt(2*FW-2 ,(i-a)*FH+4*FH,get_switches_string()+3*i,3,getSwitch(i+1, 0) ? INVERS : 0);
     for(int8_t i=b; i<(b+3); i++) lcd_putsnAtt(17*FW-1,(i-b)*FH+4*FH,get_switches_string()+3*i,3,getSwitch(i+1, 0) ? INVERS : 0);
   }
