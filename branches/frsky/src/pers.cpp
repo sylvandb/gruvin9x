@@ -240,13 +240,6 @@ void eeLoadModelName(uint8_t id,char*buf,uint8_t len)
   }
 }
 
-// TODO to be removed if not used
-uint16_t eeFileSize(uint8_t id)
-{
-    theFile.openRd(FILE_MODEL(id));
-    return theFile.size();
-}
-
 bool eeModelExists(uint8_t id)
 {
     return EFile::exists(FILE_MODEL(id));
