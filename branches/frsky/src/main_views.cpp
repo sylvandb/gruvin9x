@@ -120,7 +120,7 @@ void menuMainView(uint8_t event)
   trimSwLock = getSwitch(g_model.phaseData[0].swtch,0);
 
   if (g_eeGeneral.view == e_telemetry+ALTERNATE) {
-    lcd_putsnAtt(0, 0, g_model.name, sizeof(g_model.name), BSS|INVERS);
+    lcd_putsnAtt(0, 0, g_model.name, sizeof(g_model.name), ZCHAR|INVERS);
     uint8_t att = (g_vbat100mV < g_eeGeneral.vBatWarn ? INVERS|BLINK : INVERS);
     putsVBat(14*FW,0,att);
     if(s_timerState != TMR_OFF){
