@@ -58,21 +58,33 @@ const prog_char APM modi12x3[]=
   "AIL ELE THR RUD "
   "AIL THR ELE RUD ";
 
-const prog_char APM s_charTab[NUMCHARS+1]=" ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-.";
+const prog_char APM s_charTab[] = "_-.,";
 
-uint8_t char2idx(char c)
+#ifdef TRANSLATIONS
+int8_t char2idx(char c)
 {
-  for(int8_t ret=0;;ret++)
-  {
-    char cc= pgm_read_byte(s_charTab+ret);
-    if(cc==c) return ret;
+  if (c==' ') return 0;
+  if (c>='A' && c<='Z') return 1+c-'A';
+  if (c>='a' && c<='z') return -1-c+'a';
+  if (c>='0' && c<='9') return 27+c-'0';
+  for (int8_t i=0;;i++) {
+    char cc = pgm_read_byte(s_charTab+i);
+    if(cc==c) return 37+i;
     if(cc==0) return 0;
   }
 }
+#endif
 
-char idx2char(uint8_t idx)
+char idx2char(int8_t idx)
 {
-  if(idx < NUMCHARS) return pgm_read_byte(s_charTab+idx);
+  if (idx == 0) return ' ';
+  if (idx < 0) {
+    if (idx > -27) return 'a' - idx - 1;
+    idx = -idx;
+  }
+  if (idx < 27) return 'A' + idx - 1;
+  if (idx < 37) return '0' + idx - 27;
+  if (idx <= ZCHAR_MAX) return pgm_read_byte(s_charTab+idx-37);
   return ' ';
 }
 

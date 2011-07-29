@@ -348,9 +348,12 @@ enum EnumKeys {
 
 typedef void (*getADCp)();
 
-#define NUMCHARS 66
-extern uint8_t char2idx(char c);
-extern char idx2char(uint8_t idx);
+#define ZCHAR_MAX 40
+
+#ifdef TRANSLATIONS
+extern int8_t char2idx(char c);
+#endif
+extern char idx2char(int8_t idx);
 
 /// stoppt alle events von dieser taste bis eine kurze Zeit abgelaufen ist
 void pauseEvents(uint8_t enuk);

@@ -143,8 +143,8 @@ void menuProcModelSelect(uint8_t event)
     lcd_outdezNAtt(  3*FW, y, k+1, ((sub==k) ? INVERS : 0) + LEADING0,2);
     static char buf[sizeof(g_model.name)+5];
     if(k==g_eeGeneral.currModel) lcd_putc(1,  y,'*');
-    eeLoadModelName(k,buf,sizeof(buf));
-    lcd_putsnAtt(  4*FW, y, buf,sizeof(buf),BSS|((sub==k) ? (sel_editMode ? INVERS : 0 ) : 0));
+    eeLoadModelName(k, buf, sizeof(buf));
+    lcd_putsnAtt(4*FW, y, buf, sizeof(buf), ZCHAR|((sub==k) ? (sel_editMode ? INVERS : 0 ) : 0));
   }
 }
 
@@ -194,6 +194,41 @@ void displayConfirmation(uint8_t event)
   }
 }
 
+void EditName(uint8_t x, uint8_t y, char *name, uint8_t size, uint8_t event, bool active, uint8_t & cur)
+{
+  if (active && s_editMode) {
+    switch(event) {
+      case EVT_KEY_BREAK(KEY_LEFT):
+        if (cur>0) cur--;
+        break;
+      case EVT_KEY_BREAK(KEY_RIGHT):
+        if (cur<size-1) cur++;
+        break;
+    }
+  }
+
+  lcd_putsnAtt(x, y, name, size, ZCHAR | (active ? (s_editMode ? 0 : INVERS) : 0));
+  if (active && s_editMode) {
+    char c = name[cur];
+    char v = c;
+    if (p1valdiff || event==EVT_KEY_FIRST(KEY_DOWN) || event==EVT_KEY_FIRST(KEY_UP)
+        || event==EVT_KEY_REPT(KEY_DOWN) || event==EVT_KEY_REPT(KEY_UP)) {
+       v = checkIncDec(event, abs(v), 0, ZCHAR_MAX, 0);
+       if (c < 0) v = -v;
+       STORE_MODELVARS;
+    }
+
+    if (v>=-26 && v<=26 && (event==EVT_KEY_LONG(KEY_RIGHT) || event==EVT_KEY_LONG(KEY_LEFT))) {
+        v = -v; // toggle case
+        STORE_MODELVARS;
+        if (event==EVT_KEY_LONG(KEY_LEFT))
+          killEvents(KEY_LEFT);
+    }
+    name[cur] = v;
+    lcd_putcAtt(x+cur*FW, y, idx2char(v), INVERS);
+  }
+}
+
 void menuProcModel(uint8_t _event)
 {
   uint8_t event = (s_warning ? 0 : _event);
@@ -225,41 +260,15 @@ void menuProcModel(uint8_t _event)
 
   lcd_outdezNAtt(7*FW,0,g_eeGeneral.currModel+1,INVERS+LEADING0,2);
 
-  switch(event){
-    // case EVT_KEY_REPT(KEY_LEFT):
-    case EVT_KEY_BREAK(KEY_LEFT):
-      if(sub==1 && subSub>0 && s_editMode) mstate2.m_posHorz--;
-      break;
-    // case EVT_KEY_REPT(KEY_RIGHT):
-    case EVT_KEY_BREAK(KEY_RIGHT):
-      if(sub==1 && subSub<sizeof(g_model.name)-1 && s_editMode) mstate2.m_posHorz++;
-      break;
-  }
-
   uint8_t subN = 1;
   if(s_pgOfs<subN) {
-    lcd_puts_P(    0,    y, PSTR("Name"));
-    lcd_putsnAtt(10*FW,   y, g_model.name ,sizeof(g_model.name),BSS | (sub==subN ? (s_editMode ? 0 : INVERS) : 0));
-    if(sub==subN && s_editMode){
-        char v = char2idx(g_model.name[subSub]);
-        if(p1valdiff || event==EVT_KEY_FIRST(KEY_DOWN) || event==EVT_KEY_FIRST(KEY_UP)
-            || event==EVT_KEY_REPT(KEY_DOWN) || event==EVT_KEY_REPT(KEY_UP))
-           CHECK_INCDEC_MODELVAR( event,v ,0,NUMCHARS-1);
-
-        if ((v>0 && v<53) && (event==EVT_KEY_LONG(KEY_RIGHT) || event==EVT_KEY_LONG(KEY_LEFT))) {
-            v = idx2char(v) ^ 0x20; // toggle case
-            if (event==EVT_KEY_LONG(KEY_LEFT))
-              killEvents(KEY_LEFT);
-        } else
-          v = idx2char(v);
-        g_model.name[subSub]=v;
-        lcd_putcAtt((10+subSub)*FW, y, v,INVERS);
-    }
+    lcd_puts_P(0*FW, y, PSTR("Name"));
+    EditName(10*FW, y, g_model.name, sizeof(g_model.name), event, sub==subN, mstate2.m_posHorz);
     if((y+=FH)>7*FH) return;
   }subN++;
 
   if(s_pgOfs<subN) {
-    lcd_puts_P(    0,    y, PSTR("Timer"));
+    lcd_puts_P(0*FW, y, PSTR("Timer"));
     putsTime(12*FW-1, y, g_model.tmrVal,
         (sub==subN && subSub==0 ? (s_editMode ? BLINK : INVERS):0),
         (sub==subN && subSub==1 ? (s_editMode ? BLINK : INVERS):0) );
@@ -415,20 +424,7 @@ void menuProcPhaseOne(uint8_t event)
   int8_t subSub = mstate2.m_posHorz;
   PhaseData *p = phaseaddress(s_currIdx);
 
-  putsFlightPhase(18*FW, 0, s_currIdx+1, FP_ONLY);
-
-  if (sub==0 && s_editMode) {
-    switch (event) {
-      case EVT_KEY_REPT(KEY_LEFT):
-      case EVT_KEY_FIRST(KEY_LEFT):
-        if(subSub>0) mstate2.m_posHorz--;
-        break;
-      case EVT_KEY_REPT(KEY_RIGHT):
-      case EVT_KEY_FIRST(KEY_RIGHT):
-        if(subSub<5) mstate2.m_posHorz++;
-        break;
-    }
-  }
+  putsFlightPhase(18*FW, 0, s_currIdx+1, 0);
 
   for (uint8_t i=0, k=0, y=2*FH; i<5; i++, k++, y+=FH) {
     if (s_currIdx == 0 && i==1) i = 3;
@@ -436,15 +432,7 @@ void menuProcPhaseOne(uint8_t event)
     switch(i) {
       case 0:
         lcd_puts_P(0, y, PSTR("Name"));
-        // TODO this code is duplicated
-        putsFlightPhase(10*FW, y, s_currIdx+1, s_editMode ? 0 : attr);
-        if (attr && s_editMode) {
-          if (p1valdiff || event==EVT_KEY_FIRST(KEY_DOWN) || event==EVT_KEY_FIRST(KEY_UP)
-              || event==EVT_KEY_REPT(KEY_DOWN) || event==EVT_KEY_REPT(KEY_UP))
-            CHECK_INCDEC_MODELVAR(event, p->name[subSub], 0, NUMCHARS-1);
-          // TODO reduce test length
-          lcd_putcAtt((10+subSub)*FW, y, idx2char(p->name[subSub]), INVERS); // TODO BLINK?
-        }
+        EditName(10*FW, y, p->name, sizeof(p->name), event, attr, mstate2.m_posHorz);
         break;
       case 1:
         lcd_puts_P(0, y, PSTR("Switch"));
@@ -504,12 +492,12 @@ void menuProcPhasesAll(uint8_t event)
       break;
   }
 
-  for(uint8_t i=0; i<MAX_PHASES; i++) {
+  for (uint8_t i=0; i<MAX_PHASES; i++) {
     uint8_t y=(i+1)*FH;
     uint8_t att = i==sub ? INVERS : 0;
     PhaseData *p = phaseaddress(i);
-    putsFlightPhase(0, y, i+1, att|FP_ONLY);
-    putsFlightPhase(4*FW, y, i+1, 0);
+    putsFlightPhase(0, y, i+1, att);
+    lcd_putsnAtt(4*FW, y, p->name, 6, ZCHAR);
     if (i == 0) {
       lcd_puts_P(11*FW+FW/2, y, PSTR("(default)"));
     }
@@ -871,7 +859,7 @@ void editExpoVals(uint8_t event, uint8_t which, bool edit, uint8_t y, uint8_t id
     case 2:
       {
         int8_t phase = ed->negPhase ? -ed->phase : +ed->phase;
-        putsFlightPhase(6*FW, y, phase, invBlk|FP_ONLY);
+        putsFlightPhase(6*FW, y, phase, invBlk);
         if(edit) { phase = checkIncDecModel(event, phase, -MAX_PHASES, MAX_PHASES); ed->negPhase = (phase < 0); ed->phase = abs(phase); }
       }
       break;
@@ -997,7 +985,7 @@ void menuProcMixOne(uint8_t event)
         break;
       case 6:
         lcd_puts_P(  2*FW,y,PSTR("F.Phase"));
-        putsFlightPhase(10*FW, y, md2->phase, attr|FP_ONLY);
+        putsFlightPhase(10*FW, y, md2->phase, attr);
         if(attr) CHECK_INCDEC_MODELVAR( event, md2->phase, -MAX_PHASES, MAX_PHASES);
         break;
       case 7:

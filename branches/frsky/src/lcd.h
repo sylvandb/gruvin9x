@@ -32,6 +32,7 @@
 
 /* lcd puts flags */
 #define BSS           0x10
+#define ZCHAR         0x20
 
 /* lcd outdez flags */
 #define LEADING0      0x10
@@ -59,7 +60,6 @@ extern void lcd_outdezNAtt(uint8_t x,uint8_t y,int16_t val,uint8_t mode,uint8_t 
 extern void lcd_outdez(unsigned char x,unsigned char y,int16_t val);
 
 extern void putsSwitches(uint8_t x,uint8_t y,int8_t swtch,uint8_t att);
-#define FP_ONLY 0x80 // will display FP0..FP4 instead of the flight phase name
 extern void putsFlightPhase(uint8_t x, uint8_t y, int8_t idx, uint8_t att);
 extern void putsTmrMode(uint8_t x, uint8_t y, uint8_t attr);
 

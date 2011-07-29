@@ -85,6 +85,8 @@ uint8_t Translate(EEGeneral *p)
         int8_t trims[4];
         memcpy(&trims[0], &v3->trim[0], 4);
         int8_t trimSw = v3->trimSw;
+        for (uint8_t i=0; i<10; i++)
+          g_model.name[i] = char2idx(g_model.name[i]);
         g_model.tmrMode = v3->tmrMode;
         g_model.tmrDir = v3->tmrDir;
         g_model.tmrVal = v3->tmrVal;
@@ -207,25 +209,23 @@ bool eeLoadGeneral()
 void modelDefault(uint8_t id)
 {
   memset(&g_model, 0, sizeof(g_model));
-  // TODO was a strcpy_P with limit overflow (10+1 chars)
-  strncpy(g_model.name, "MODEL     ", 10);
-  g_model.name[5]='0'+(id+1)/10;
-  g_model.name[6]='0'+(id+1)%10;
-
+  memcpy(g_model.name, "\x0d\x0f\x04\x05\x0c\0\0\0\0\0"/*MODEL     */, 10);
+  g_model.name[5]=27/*0 char*/+(id+1)/10;
+  g_model.name[6]=27/*0 char*/+(id+1)%10;
   applyTemplate(0); //default 4 channel template
 }
+
 void eeLoadModelName(uint8_t id,char*buf,uint8_t len)
 {
   if(id<MAX_MODELS)
   {
-    //eeprom_read_block(buf,(void*)modelEeOfs(id),sizeof(g_model.name));
     theFile.openRd(FILE_MODEL(id));
-    memset(buf,' ',len);
-    if(theFile.readRlc((uint8_t*)buf,sizeof(g_model.name)) == sizeof(g_model.name) )
+    memset(buf, 0, len);
+    if (theFile.readRlc((uint8_t*)buf, sizeof(g_model.name)) == sizeof(g_model.name) )
     {
       uint16_t sz=theFile.size();
       buf+=len;
-      while(sz){ --buf; *buf='0'+sz%10; sz/=10;}
+      while(sz){ --buf; *buf=27/*0 char*/+sz%10; sz/=10;}
     }
   }
 }

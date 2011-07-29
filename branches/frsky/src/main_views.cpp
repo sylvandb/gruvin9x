@@ -130,9 +130,7 @@ void menuMainView(uint8_t event)
   }
   else {
     uint8_t att = (g_vbat100mV < g_eeGeneral.vBatWarn ? BLINK : 0) | DBLSIZE;
-    for(uint8_t i=0;i<sizeof(g_model.name);i++)
-      lcd_putcAtt(2*FW+i*2*FW-i-2, 0*FH, g_model.name[i], DBLSIZE);
-
+    lcd_putsnAtt(2*FW-2, 0*FH, g_model.name, sizeof(g_model.name), ZCHAR|DBLSIZE);
     putsVBat(6*FW+2, 2*FH, att|NO_UNIT);
     lcd_putc(6*FW+2, 3*FH, 'V');
 
@@ -143,7 +141,7 @@ void menuMainView(uint8_t event)
     }
 
     uint8_t phase = getFlightPhase();
-    putsFlightPhase(6*FW+2, 2*FH, phase+1, 0);
+    lcd_putsnAtt(6*FW+2, 2*FH, g_model.phaseData[phase].name, sizeof(g_model.phaseData[phase].name), ZCHAR);
 
     // trim sliders
     for(uint8_t i=0; i<4; i++)

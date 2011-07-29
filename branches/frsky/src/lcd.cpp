@@ -127,9 +127,22 @@ void lcd_putc(uint8_t x,uint8_t y,const char c)
 void lcd_putsnAtt(uint8_t x,uint8_t y,const prog_char * s,uint8_t len,uint8_t mode)
 {
   while(len!=0) {
-    char c = (mode & BSS) ? *s++ : pgm_read_byte(s++);
+    char c;
+    switch (mode & (BSS+ZCHAR)) {
+      case BSS:
+        c = *s;
+        break;
+      case ZCHAR:
+        c = idx2char(*s);
+        break;
+      default:
+        c = pgm_read_byte(s);
+        break;
+    }
     lcd_putcAtt(x,y,c,mode);
     x+=FW;
+    if (mode&DBLSIZE) x+=FW-1;
+    s++;
     len--;
   }
 }
@@ -418,15 +431,8 @@ void putsFlightPhase(uint8_t x, uint8_t y, int8_t idx, uint8_t att)
 {
   if (idx==0) { lcd_putsAtt(x,y,PSTR("---"),att); return; }
   if (idx < 0) { lcd_putcAtt(x-FW, y, '!', att); idx = -idx; }
-  if (att & FP_ONLY) {
-    att -= FP_ONLY;
-    lcd_putsAtt(x, y, PSTR("FP"), att);
-    lcd_putcAtt(x+2*FW, y, '0'+idx-1, att);
-  }
-  else {
-    for (uint8_t i=0; i<6; i++)
-      lcd_putcAtt(x+i*FW, y, idx2char(g_model.phaseData[idx-1].name[i]), att);
-  }
+  lcd_putsAtt(x, y, PSTR("FP"), att);
+  lcd_putcAtt(x+2*FW, y, '0'+idx-1, att);
 }
 
 void putsTmrMode(uint8_t x, uint8_t y, uint8_t attr)
