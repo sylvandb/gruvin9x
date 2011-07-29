@@ -149,8 +149,9 @@ void menuProcModelSelect(uint8_t event)
 }
 
 const prog_char * s_warning = 0;
-const prog_char * s_warning_bss;
-uint8_t           s_warning_bss_len;
+const prog_char * s_warning_info;
+uint8_t           s_warning_info_len;
+// uint8_t s_warning_info_att not needed now
 uint8_t           s_confirmation = 0;
 
 void displayWarning(uint8_t event)
@@ -159,7 +160,7 @@ void displayWarning(uint8_t event)
     lcd_filled_rect(10, 16, 108, 40, LCD_WHITE);
     lcd_rect(10, 16, 108, 40);
     lcd_puts_P(16, 3*FH, s_warning);
-    // could be a place for a s_warning_bss
+    // could be a place for a s_warning_info
     lcd_puts_P(16, 5*FH, PSTR("[EXIT]"));
 
     switch(event) {
@@ -178,8 +179,8 @@ void displayConfirmation(uint8_t event)
     lcd_filled_rect(10, 16, 108, 40, LCD_WHITE);
     lcd_rect(10, 16, 108, 40);
     lcd_puts_P(16, 3*FH, s_warning);
-    if (s_warning_bss)
-      lcd_putsnAtt(16, 4*FH, s_warning_bss, s_warning_bss_len, BSS);
+    if (s_warning_info)
+      lcd_putsnAtt(16, 4*FH, s_warning_info, s_warning_info_len, ZCHAR);
     lcd_puts_P(16, 5*FH, PSTR("[MENU]    [EXIT]"));
 
     switch(event) {
@@ -405,8 +406,8 @@ void menuProcModel(uint8_t _event)
       s_noHi = NO_HI_LEN;
       killEvents(event);
       s_warning = PSTR("DELETE MODEL");
-      s_warning_bss = g_model.name;
-      s_warning_bss_len = sizeof(g_model.name);
+      s_warning_info = g_model.name;
+      s_warning_info_len = sizeof(g_model.name);
     }
   }
 
