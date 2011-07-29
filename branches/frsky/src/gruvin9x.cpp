@@ -707,8 +707,8 @@ uint8_t checkTrim(uint8_t event)
       beepWarn2();
 #endif
     }
-    else if (event & _MSK_KEY_REPT) {
-      warble = true;
+    else {
+      if (event & _MSK_KEY_REPT) warble = true;
 #if defined (BEEPSPKR)
       // toneFreq higher/lower according to trim position
       // beepTrimSpkr((x/3)+60);  // Range -125 to 125 = toneFreq: 19 to 101
