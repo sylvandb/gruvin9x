@@ -53,25 +53,26 @@ void generalDefault()
 }
 
 #ifdef TRANSLATIONS
-uint8_t Translate(EEGeneral *p)
+uint8_t Translate()
 {
-  if (p->myVers == EEPROM_VER_r584 || p->myVers == EEPROM_ER9X_VER) {
-    alert(p->myVers == EEPROM_VER_r584 ? PSTR("EEprom Data v3") : PSTR("EEprom Data Er9x v4"), true);
+  if (g_eeGeneral.myVers == EEPROM_VER_r584 || g_eeGeneral.myVers == EEPROM_ER9X_VER) {
+    alert(g_eeGeneral.myVers == EEPROM_VER_r584 ? PSTR("EEprom Data v3") : PSTR("EEprom Data Er9x v4"), true);
     message(PSTR("EEPROM Converting"));
-    memset(&p->frskyRssiAlarms, 0 , sizeof(p->frskyRssiAlarms));
-    if (p->myVers == EEPROM_VER_r584) {
+    theFile.readRlc1((uint8_t*)&g_eeGeneral, sizeof(g_eeGeneral));
+    memset(&g_eeGeneral.frskyRssiAlarms, 0 , sizeof(g_eeGeneral.frskyRssiAlarms));
+    if (g_eeGeneral.myVers == EEPROM_VER_r584) {
       // previous version had only 6 custom switches, OFF and ON values have to be shifted 6
-      if (p->lightSw == MAX_SWITCH-6)
-        p->lightSw += 6;
-      if (p->lightSw == -MAX_SWITCH+6)
-        p->lightSw -= 6;
+      if (g_eeGeneral.lightSw == MAX_SWITCH-6)
+        g_eeGeneral.lightSw += 6;
+      if (g_eeGeneral.lightSw == -MAX_SWITCH+6)
+        g_eeGeneral.lightSw -= 6;
     }
-    EEPROM_V3::EEGeneral *old = (EEPROM_V3::EEGeneral *)p;
-    p->disableMemoryWarning = old->disableMemoryWarning;
-    p->switchWarning = old->disableSwitchWarning ? 0 : -1;
+    EEPROM_V3::EEGeneral *old = (EEPROM_V3::EEGeneral *)&g_eeGeneral;
+    g_eeGeneral.disableMemoryWarning = old->disableMemoryWarning;
+    g_eeGeneral.switchWarning = old->disableSwitchWarning ? 0 : -1;
     for (uint8_t id=0; id<MAX_MODELS; id++) {
       theFile.openRd(FILE_MODEL(id));
-      uint16_t sz = theFile.readRlc((uint8_t*)&g_model, sizeof(EEPROM_V4::ModelData));
+      uint16_t sz = theFile.readRlc1((uint8_t*)&g_model, sizeof(EEPROM_V4::ModelData));
       if(sz > 0) {
         EEPROM_V4::ModelData *v4 = (EEPROM_V4::ModelData *)&g_model;
         EEPROM_V3::ModelData *v3 = (EEPROM_V3::ModelData *)&g_model;
@@ -96,7 +97,7 @@ uint8_t Translate(EEGeneral *p)
         g_model.thrExpo = v3->thrExpo;
         g_model.trimInc = v3->trimInc;
         g_model.pulsePol = v3->pulsePol;
-        if (p->myVers == EEPROM_ER9X_VER) {
+        if (g_eeGeneral.myVers == EEPROM_ER9X_VER) {
           g_model.extendedLimits = v4->extendedLimits;
           g_model.traineron = v4->traineron;
         }
@@ -149,7 +150,7 @@ uint8_t Translate(EEGeneral *p)
         memmove(&g_model.curves5[0][0], &v3->curves5[0][0], 5*MAX_CURVE5);
         assert((char *)&g_model.curves9[0][0] < (char *)&v3->curves9[0][0]);
         memmove(&g_model.curves9[0][0], &v3->curves9[0][0], 9*MAX_CURVE9);
-        if (p->myVers == EEPROM_VER_r584) {
+        if (g_eeGeneral.myVers == EEPROM_VER_r584) {
           memmove(&g_model.customSw[0], &v3->customSw[0], sizeof(CustomSwData)*6);
           memset(&g_model.customSw[6], 0, sizeof(CustomSwData)*6);
           memset(&g_model.safetySw[0], 0, sizeof(SafetySwData)*NUM_CHNOUT + sizeof(SwashRingData) + sizeof(FrSkyData));
@@ -180,9 +181,9 @@ uint8_t Translate(EEGeneral *p)
         theFile.writeRlc(FILE_MODEL(id), FILE_TYP_MODEL, (uint8_t*)&g_model, sizeof(g_model), 200);
       }
     }
-    p->myVers = EEPROM_VER;
-    theFile.writeRlc(FILE_GENERAL, FILE_TYP_GENERAL, (uint8_t*)p, sizeof(EEGeneral), 200);
-    return 1;
+    g_eeGeneral.myVers = EEPROM_VER;
+    theFile.writeRlc(FILE_GENERAL, FILE_TYP_GENERAL, (uint8_t*)&g_eeGeneral, sizeof(EEGeneral), 200);
+    return sizeof(EEGeneral);
   }
 
   return 0;
@@ -193,12 +194,21 @@ uint8_t Translate(EEGeneral *p)
 bool eeLoadGeneral()
 {
   theFile.openRd(FILE_GENERAL);
-  uint8_t sz = theFile.readRlc((uint8_t*)&g_eeGeneral, sizeof(EEGeneral));
-  if((sz == sizeof(EEGeneral) && g_eeGeneral.myVers==EEPROM_VER)
+  uint8_t sz = 0;
+
+  if (theFile.readRlc((uint8_t*)&g_eeGeneral, 1) == 1) {
+    theFile.openRd(FILE_GENERAL);
+    if (g_eeGeneral.myVers == EEPROM_VER) {
+      sz = theFile.readRlc((uint8_t*)&g_eeGeneral, sizeof(g_eeGeneral));
+    }
 #ifdef TRANSLATIONS
-  || Translate(&g_eeGeneral)
+    else {
+      sz = Translate();
+    }
 #endif
-  ) {
+  }
+
+  if (sz == sizeof(EEGeneral)) {
     uint16_t sum=0;
     for(int i=0; i<12;i++) sum+=g_eeGeneral.calibMid[i];
     return g_eeGeneral.chkSum == sum;
@@ -249,9 +259,9 @@ void eeLoadModel(uint8_t id)
     theFile.openRd(FILE_MODEL(id));
     uint16_t sz = theFile.readRlc((uint8_t*)&g_model, sizeof(g_model));
 
-    if(sz != sizeof(ModelData)) {
-    	//alert("Error Loading Model");
-    	modelDefault(id);
+    if (sz != sizeof(ModelData)) {
+      // alert("Error Loading Model");
+      modelDefault(id);
     }
 
     resetTimer1();

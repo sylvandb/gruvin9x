@@ -629,8 +629,11 @@ else
    ARCH=
 endif
 
+rletest: file.cpp
+	g++ file.cpp $(CPPFLAGS) $(ARCH) -o $@ -DTEST -DSIMU
+
 simu: $(CPPSRC) Makefile simu.cpp $(CPPSRC) *.h *.lbm eeprom.bin
-	g++ simu.cpp $(CPPFLAGS) $(CPPSRC) $(ARCH)  -o simu $(INC) $(LIB) -MD -DSIMU
+	g++ simu.cpp $(CPPFLAGS) $(CPPSRC) $(ARCH) -o simu $(INC) $(LIB) -MD -DSIMU
 
 eeprom.bin:
 	dd if=/dev/zero of=$@ bs=1 count=2048
