@@ -280,7 +280,7 @@ enum EnumKeys {
 
 #define NUM_STICKS      4
 #define NUM_POTS        3
-#define PPM_BASE        (MIX_FULL) // because srcRaw is shifted +1!
+#define PPM_BASE        (MIX_FULL+3/*CYC1-CYC3*/) // because srcRaw is shifted +1!
 #define NUM_CAL_PPM     4
 #define NUM_PPM         8
 #define CHOUT_BASE      (PPM_BASE+NUM_PPM)
