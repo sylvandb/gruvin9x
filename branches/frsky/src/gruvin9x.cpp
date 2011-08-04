@@ -259,13 +259,13 @@ void applyExpos(int16_t *anas)
       int16_t v = anas2[ed.chn];
       if((v<0 && ed.mode&1) || (v>=0 && ed.mode&2)) {
         int16_t k = ed.expo;
-        if (IS_THROTTLE(i) && g_model.thrExpo)
+        if (IS_THROTTLE(ed.chn) && g_model.thrExpo)
           v = 2*expo((v+RESX)/2, k);
         else
           v = expo(v, k);
         if (ed.curve) v = applyCurve(v, ed.curve, 0);
         v = ((int32_t)v * ed.weight) / 100;
-        if (IS_THROTTLE(i) && g_model.thrExpo) v -= RESX;
+        if (IS_THROTTLE(ed.chn) && g_model.thrExpo) v -= RESX;
         anas[ed.chn] = v;
       }
     }
@@ -577,7 +577,7 @@ void checkSwitches()
 
   // first - display warning
   alertMessages( PSTR("Switches not off"), PSTR("Please reset them") ) ;
-  
+
   bool state = (g_eeGeneral.switchWarning > 0);
 
   //loop until all switches are reset
@@ -590,7 +590,7 @@ void checkSwitches()
         if(getSwitch(i-SW_BASE+1,0) != state) break;
     }
     if(i==SW_Trainer || keyDown()) return;
-    
+
     if(getSwitch(g_eeGeneral.lightSw,0) || g_eeGeneral.lightAutoOff)
       BACKLIGHT_ON;
     else
@@ -682,7 +682,7 @@ uint8_t checkTrim(uint8_t event)
     if (x <= -125) {
       x = -125;
       thro = true;
-    }
+      }
     else if (x >= 125) {
       x = 125;
       thro = true;
@@ -1134,17 +1134,17 @@ void perOut(int16_t *chanOut, uint8_t att)
 
   /* TRIMs */
   for(uint8_t i=0; i<4; i++) {
-      // do trim -> throttle trim if applicable
-      int16_t v = anas[i];
-      int32_t vv = 2*RESX;
+    // do trim -> throttle trim if applicable
+    int16_t v = anas[i];
+    int32_t vv = 2*RESX;
       int8_t trim = g_model.phaseData[getTrimFlightPhase(i)].trim[i];
-      if(IS_THROTTLE(i) && g_model.thrTrim) vv = (g_eeGeneral.throttleReversed) ?
-                                 ((int32_t)trim-125)*(RESX+v)/(2*RESX) :
-                                 ((int32_t)trim+125)*(RESX-v)/(2*RESX);
+    if (IS_THROTTLE(i) && g_model.thrTrim) vv = (g_eeGeneral.throttleReversed) ?
+                               ((int32_t)trim-125)*(RESX+v)/(2*RESX) :
+                               ((int32_t)trim+125)*(RESX-v)/(2*RESX);
 
       //trim
       trimA[i] = (vv==2*RESX) ? (int16_t)trim*2 : (int16_t)vv*2; //    if throttle trim -> trim low end
-  }
+}
 
   //===========BEEP CENTER================
   anaCenter &= g_model.beepANACenter;
@@ -1229,8 +1229,8 @@ void perOut(int16_t *chanOut, uint8_t att)
     for(uint8_t i=0;i<NUM_PPM;i++) anas[i+PPM_BASE] = 0;
   }
   else {
-    for(uint8_t i=0;i<NUM_CAL_PPM;i++)       anas[i+PPM_BASE]   = (g_ppmIns[i] - g_eeGeneral.trainer.calib[i])*2; //add ppm channels
-    for(uint8_t i=NUM_CAL_PPM;i<NUM_PPM;i++) anas[i+PPM_BASE]   = g_ppmIns[i]*2; //add ppm channels
+  for(uint8_t i=0;i<NUM_CAL_PPM;i++)       anas[i+PPM_BASE]   = (g_ppmIns[i] - g_eeGeneral.trainer.calib[i])*2; //add ppm channels
+  for(uint8_t i=NUM_CAL_PPM;i<NUM_PPM;i++) anas[i+PPM_BASE]   = g_ppmIns[i]*2; //add ppm channels
   }
 
   for(uint8_t i=CHOUT_BASE;i<NUM_XCHNRAW;i++) anas[i] = chans[i-CHOUT_BASE]; //other mixes previous outputs
@@ -1327,7 +1327,6 @@ void perOut(int16_t *chanOut, uint8_t att)
           v = act[i]/DEL_MULT;
         }
       }
-
 
       //========== CURVES ===============
       if (md->curve)
@@ -1462,7 +1461,7 @@ void perMain()
 
     case 2:
       {
-/* 
+/*
 Gruvin:
   Interesting fault with new unit. Sample is reading 0x06D0 (around 12.3V) but
   we're only seeing around 0.2V displayed! (Calibrate = 0)
@@ -1502,7 +1501,7 @@ Gruvin:
       break;
 
 
-      
+
     case 3:
       {
         // The various "beep" tone lengths
@@ -1566,7 +1565,7 @@ ISR(TIMER1_COMPA_vect) //2MHz pulse generation
 #else
     TIMSK &= ~(1<<OCIE1A); //stop reentrance
 #endif
-    sei();    
+    sei();
     setupPulses();
     cli();
 #if defined (PCBV3)
@@ -1579,14 +1578,14 @@ ISR(TIMER1_COMPA_vect) //2MHz pulse generation
   heartbeat |= HEART_TIMER2Mhz;
 }
 
-volatile uint8_t g_tmr16KHz; //continuous timer 16ms (16MHz/1024/256) -- 8-bit counter overflow 
+volatile uint8_t g_tmr16KHz; //continuous timer 16ms (16MHz/1024/256) -- 8-bit counter overflow
 #if defined (PCBV3)
-ISR(TIMER2_OVF_vect) 
+ISR(TIMER2_OVF_vect)
 #else
 ISR(TIMER0_OVF_vect)
 #endif
 {
-  g_tmr16KHz++; // gruvin: Not 16KHz. Overflows occur at 61.035Hz (1/256th of 15.625KHz) 
+  g_tmr16KHz++; // gruvin: Not 16KHz. Overflows occur at 61.035Hz (1/256th of 15.625KHz)
                 // to give *16.384ms* intervals. Kind of matters for accuracy elsewhere. ;)
                 // g_tmr16KHz is used to software-construct a 16-bit timer
                 // from TIMER-0 (8-bit). See getTmr16KHz, below.
@@ -1616,7 +1615,7 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
   cli();
   static uint8_t accuracyWarble = 4; // becasue 16M / 1024 / 100 = 156.25. So bump every 4.
   uint8_t bump;
-  bump = (!(accuracyWarble++ & 0x03)) ? 157 : 156; 
+  bump = (!(accuracyWarble++ & 0x03)) ? 157 : 156;
 #if defined (PCBV3)
   TIMSK2 &= ~(1<<OCIE2A); //stop reentrance
   OCR2A += bump;
@@ -1624,7 +1623,7 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
   TIMSK &= ~(1<<OCIE0); //stop reentrance
 #if defined (BEEPSPKR)
   OCR0 += 2; // run much faster, to generate speaker tones
-#else  
+#else
   OCR0 += bump;
 #endif
 #endif
@@ -1642,7 +1641,7 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
       PORTE |=  (1<<OUT_E_BUZZER); // speaker output 'high'
     else
       PORTE &=  ~(1<<OUT_E_BUZZER); // speaker output 'low'
-  } 
+  }
   else
       PORTE &=  ~(1<<OUT_E_BUZZER); // speaker output 'low'
   // gruvin: END Tone Generator
@@ -1651,10 +1650,10 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
   if (cnt10ms-- == 0) // BEGIN { ... every 10ms ... }
   {
     // Begin 10ms event
-    cnt10ms = 77; 
-    
+    cnt10ms = 77;
+
 #endif
-    
+
     // Record start time from TCNT1 to record excution time
     cli();
     uint16_t dt=TCNT1;// TCNT1 (used for PPM out pulse generation) is running at 2MHz
@@ -1670,7 +1669,7 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
         }
         g_beepCnt--;
     }
-    else 
+    else
     {
         if(beepAgain && beepAgainOrig) {
             beepOn = !beepOn;
@@ -1774,27 +1773,27 @@ ISR(TIMER3_CAPT_vect, ISR_NOBLOCK) //capture ppm in 16MHz / 8 = 2MHz
   ETIMSK &= ~(1<<TICIE3);
 #endif
   sei();
-  
+
   uint16_t val = (capture - lastCapt) / 2;
-  
+
   // G: We prcoess g_ppmInsright here to make servo movement as smooth as possible
   //    while under trainee control
   if (val>4000 && val < 16000) // G: Priorotise reset pulse. (Needed when less than 8 incoming pulses)
     ppmInState = 1; // triggered
-  else 
+  else
   {
-    if (ppmInState && ppmInState<=8) 
+    if (ppmInState && ppmInState<=8)
     {
       if (val>800 && val<2200) // if valid pulse-width range
-      { 
-        g_ppmIns[ppmInState++ - 1] = 
+      {
+        g_ppmIns[ppmInState++ - 1] =
           (int16_t)(val - 1500)*(g_eeGeneral.PPM_Multiplier+10)/10; //+-500 != 512, but close enough.
-      } 
-      else 
+      }
+      else
         ppmInState = 0; // not triggered
     }
   }
-  
+
   lastCapt = capture;
 
   cli();
@@ -1840,7 +1839,7 @@ extern uint16_t g_timeMain;
 // it causes trouble for others.
 #if defined (PCBV3)
 // See fuses_2561.txt
-  FUSES = 
+  FUSES =
   {
     // BOD=4.3V, WDT OFF (enabled in code), Boot Flash 4096 bytes at 0x1F000,
     // JTAG and OCD enabled, EESAVE enabled, BOOTRST/CKDIV8/CKOUT disabled,
@@ -1850,7 +1849,7 @@ extern uint16_t g_timeMain;
     0xFC  // .extended
   };
 #else
-  FUSES = 
+  FUSES =
   {
     // G: Changed 2011-07-04 to include EESAVE. Tested OK on stock 9X
     0x1F, // LFUSE
@@ -1893,7 +1892,7 @@ void setStickCenter() // copy state of 3 primary to subtrim
          (zero_chans512_before[i] - zero_chans512_after[i]) :
          (zero_chans512_after[i] - zero_chans512_before[i]);
     g_model.limitData[i].offset = max(min(v, (int16_t)1000), (int16_t)-1000); // make sure the offset doesn't go haywire
-  }
+      }
 
   // TODO discuss with bryan what should be done here.
   // I choosed the easy way: use the current trims to compute the channels offsets => Instant trim will be ok (to be tested)
@@ -1958,12 +1957,12 @@ int main(void)
 
 # if defined (BEEPSPKR)
   // TCNT0  10ms = 16MHz/1024/2(/78) periodic timer (for speaker tone generation)
-  //        Capture ISR 7812.5/second -- runs per-10ms code segment once every 78 
+  //        Capture ISR 7812.5/second -- runs per-10ms code segment once every 78
   //        cycles (9.984ms). Timer overflows at about 61Hz or once every 16ms.
   TCCR0  = (0b111 << CS00);//  Norm mode, clk/1024
   OCR0 = 2;
 # else
-  // TCNT0  10ms = 16MHz/1024/156 periodic timer (9.984ms) 
+  // TCNT0  10ms = 16MHz/1024/156 periodic timer (9.984ms)
   // (with 1:4 duty at 157 to average 10.0ms)
   // Timer overflows at about 61Hz or once every 16ms.
   TCCR0  = (0b111 << CS00);//  Norm mode, clk/1024
@@ -1975,7 +1974,7 @@ int main(void)
 
 #endif
 
-  // TCNT1 2MHz counter (auto-cleared) plus Capture Compare int. 
+  // TCNT1 2MHz counter (auto-cleared) plus Capture Compare int.
   //       Used for PPM pulse generator
   TCCR1B = (1 << WGM12) | (2<<CS10); // CTC OCR1A, 16MHz / 8
   // not here ... TIMSK1 |= (1<<OCIE1A); ... enable immediately before mainloop
@@ -1983,7 +1982,7 @@ int main(void)
   // TCNT3 (2MHz) used for PPM_IN pulse width capture
 #if defined (PPMIN_MOD1) || defined (PCBV3)
   // Noise Canceller enabled, pos. edge, clock at 16MHz / 8 (2MHz)
-  TCCR3B  = (1<<ICNC3) | (1<<ICES3) | (0b010 << CS30); 
+  TCCR3B  = (1<<ICNC3) | (1<<ICES3) | (0b010 << CS30);
 #else
   // Noise Canceller enabled, neg. edge, clock at 16MHz / 8 (2MHz)
   TCCR3B  = (1<<ICNC3) | (0b010 << CS30);
@@ -2016,7 +2015,7 @@ int main(void)
   checkAlarm();
 
   clearKeyEvents(); //make sure no keys are down before proceeding
-  
+
   setupPulses();
 
   wdt_enable(WDTO_500MS);
@@ -2027,7 +2026,7 @@ int main(void)
   g_LightOffCounter = g_eeGeneral.lightAutoOff*500; //turn on light for x seconds - no need to press key Issue 152
 
   if(cModel!=g_eeGeneral.currModel) eeDirty(EE_GENERAL); // if model was quick-selected, make sure it sticks
-  
+
 #if defined (PCBV3)
   TIMSK1 |= (1<<OCIE1A); // Pulse generator enable immediately before mainloop
 #else
@@ -2065,3 +2064,4 @@ int main(void)
   }
 }
 #endif
+
