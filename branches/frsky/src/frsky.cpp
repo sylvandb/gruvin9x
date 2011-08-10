@@ -113,7 +113,7 @@ void processFrskyPacket(uint8_t *packet)
    the buffer being checked in the perMain function (because per10ms
    isn't quite often enough for data streaming at 9600baud) but alas
    that scheme lost packets also. So each packet is parsed as it arrives,
-   directly at the ISR function (through a call to frskyProcessPacket).
+   directly at the ISR function (through a call to processFrskyPacket).
    
    If this proves a problem in the future, then I'll just have to implement
    a second buffer to receive data while one buffer is being processed (slowly).
@@ -128,7 +128,7 @@ ISR(USART0_RX_vect)
   static uint8_t numPktBytes = 0;
   static uint8_t dataState = frskyDataIdle;
   
-	UCSR0B &= ~(1 << RXCIE0); // disable Interrupt
+	UCSR0B &= ~(1 << RXCIE0); // disable USART RX interrupt
 //	sei() ; // G: this should NOT be here! It's VERY bad to disable ALL interrupts for no good reason.
 
   stat = UCSR0A; // USART control and Status Register 0 A
@@ -191,7 +191,10 @@ ISR(USART0_RX_vect)
           }
           if (data == START_STOP) // end of frame detected
           {
-            processFrskyPacket(frskyRxBuffer); // FrskyRxBufferReady = 1;
+            // G: This is not good. We take a long time out with USART RX interrupt is disabled.
+            // TODO: Need to implement double buffering so USRAT reception can continue while
+            //       previous frsky packet is being processed
+            processFrskyPacket(frskyRxBuffer);
             dataState = frskyDataIdle;
             break;
           }
@@ -216,7 +219,7 @@ ISR(USART0_RX_vect)
     } // if (FrskyRxBufferReady == 0)
   }
 //  cli() ; // G: this should NOT be here! It's VERY bad to disable ALL interrupts for no good reason.
-  UCSR0B |= (1 << RXCIE0); // enable Interrupt
+  UCSR0B |= (1 << RXCIE0); // enable USART RX interrupt
 }
 
 /*
