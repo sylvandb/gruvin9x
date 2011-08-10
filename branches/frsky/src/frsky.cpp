@@ -39,6 +39,12 @@ uint8_t FrskyRxBufferReady = 0;
 uint8_t frskyStreaming = 0;
 uint8_t frskyTxISRIndex = 0;
 
+// Implement circular buffer for user data storage ('keep one slot empty' method)
+#define FRSKY_USER_DATA_SIZE 12
+char frskyUserData[FRSKY_USER_DATA_SIZE]; 
+uint8_t frskyUserDataIn = 0;  // circular FIFO buffer (IN)
+uint8_t frskyUserDataOut = 0; // circular FIFO buffer (OUT)
+
 FrskyData frskyTelemetry[2];
 FrskyData frskyRSSI[2];
 
@@ -52,22 +58,9 @@ struct FrskyAlarm frskyAlarms[4];
 void frskyPushValue(uint8_t & i, uint8_t value);
 
 /*
-   Called from somewhere in the main loop or a low prioirty interrupt
-   routine perhaps. This funtcion processes Fr-Sky telemetry data packets
-   assembled byt he USART0_RX_vect) ISR function (below) and stores
-   extracted data in global variables for use by other parts of the program.
-
-   Packets can be any of the following:
-
-    - A1/A2/RSSI telemtry data
-    - Alarm level/mode/threshold settings for Ch1A, Ch1B, Ch2A, Ch2B
-    - User Data packets
-
-   User Data packets are not yet implementedi (they are simply ignored), 
-   but will likely one day contain the likes of GPS long/lat/alt/speed, 
-   AoA, airspeed, etc.
+WARNING:  This function is called between individual USART RX characters.
+          It must therefore be keep SHORT.
 */
-
 void processFrskyPacket(uint8_t *packet)
 {
   // What type of packet?
@@ -92,7 +85,18 @@ void processFrskyPacket(uint8_t *packet)
       frskyRSSI[1].set(packet[4] / 2);
       break;
 
-    case USRPKT: // User Data packet -- not yet implemented
+    case USRPKT: // User Data packet
+      uint8_t numBytes = packet[1];
+      if (numBytes > 6) numBytes = 6; // sanitize in case of data corruption leading to buffer overflow
+      for(uint8_t i=0; i < numBytes; i++)
+      {
+        if (((frskyUserDataIn + 1) % FRSKY_USER_DATA_SIZE) != frskyUserDataOut) // skip if full buffer
+        {
+          frskyUserData[frskyUserDataIn] = packet[3+i];
+          frskyUserDataIn = (frskyUserDataIn++ % FRSKY_USER_DATA_SIZE); // increment buffer input index
+        }
+      }
+
       break;
   }
 
@@ -100,11 +104,20 @@ void processFrskyPacket(uint8_t *packet)
   frskyStreaming = FRSKY_TIMEOUT10ms; // reset counter only if valid frsky packets are being detected
 }
 
-// Receive buffer state machine state defs
-#define frskyDataIdle    0
-#define frskyDataStart   1
-#define frskyDataInFrame 2
-#define frskyDataXOR     3
+// Copies all available bytes (up to max bufszie) from frskyUserData circular buffer into supplie *buffer
+// Returns number of bytes copied into  supplied buffer. Zero if none
+int frskyGetUserData(char *buffer, uint8_t bufsize)
+{
+  uint8_t i = 0;
+  while ((frskyUserDataOut != frskyUserDataIn) && (i < bufsize)) // while not empty buffer
+  {
+    buffer[i] = frskyUserData[frskyUserDataOut];
+    frskyUserDataOut = (frskyUserDataOut++ % FRSKY_USER_DATA_SIZE);
+    i++;
+  }
+  return i;
+}
+
 /*
    Receive serial (RS-232) characters, detecting and storing each Fr-Sky 
    0x7e-framed packet as it arrives.  When a complete packet has been 
@@ -119,6 +132,12 @@ void processFrskyPacket(uint8_t *packet)
    a second buffer to receive data while one buffer is being processed (slowly).
 */
 
+// Receive buffer state machine state defs
+#define frskyDataIdle    0
+#define frskyDataStart   1
+#define frskyDataInFrame 2
+#define frskyDataXOR     3
+
 #ifndef SIMU
 ISR(USART0_RX_vect)
 {
@@ -132,35 +151,6 @@ ISR(USART0_RX_vect)
 //	sei() ; // G: this should NOT be here! It's VERY bad to disable ALL interrupts for no good reason.
 
   stat = UCSR0A; // USART control and Status Register 0 A
-
-    /*
-              bit      7      6      5      4      3      2      1      0
-                      RxC0  TxC0  UDRE0    FE0   DOR0   UPE0   U2X0  MPCM0
-             
-              RxC0:   Receive complete
-              TXC0:   Transmit Complete
-              UDRE0:  USART Data Register Empty
-              FE0:    Frame Error
-              DOR0:   Data OverRun
-              UPE0:   USART Parity Error
-              U2X0:   Double Tx Speed
-              PCM0:   MultiProcessor Comms Mode
-    */
-    // rh = UCSR0B; //USART control and Status Register 0 B
-
-    /*
-              bit      7      6      5      4      3      2      1      0
-                   RXCIE0 TxCIE0 UDRIE0  RXEN0  TXEN0 UCSZ02  RXB80  TXB80
-             
-              RxCIE0:   Receive Complete int enable
-              TXCIE0:   Transmit Complete int enable
-              UDRIE0:   USART Data Register Empty int enable
-              RXEN0:    Rx Enable
-              TXEN0:    Tx Enable
-              UCSZ02:   Character Size bit 2
-              RXB80:    Rx data bit 8
-              TXB80:    Tx data bit 8
-    */
 
   data = UDR0; // USART data register 0
 
@@ -191,9 +181,6 @@ ISR(USART0_RX_vect)
           }
           if (data == START_STOP) // end of frame detected
           {
-            // G: This is not good. We take a long time out with USART RX interrupt is disabled.
-            // TODO: Need to implement double buffering so USRAT reception can continue while
-            //       previous frsky packet is being processed
             processFrskyPacket(frskyRxBuffer);
             dataState = frskyDataIdle;
             break;
