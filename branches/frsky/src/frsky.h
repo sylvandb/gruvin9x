@@ -45,6 +45,9 @@ extern uint8_t frskyStreaming; // >0 (true) == data is streaming in. 0 = nodata 
 extern uint8_t FrskyAlarmSendState;
 extern FrskyData frskyTelemetry[2];
 extern FrskyData frskyRSSI[2];
+extern uint8_t frskyUserDataIn;
+extern uint8_t frskyUserDataOut;
+
 
 void FRSKY_Init(void);
 void FRSKY10mspoll(void);

@@ -32,15 +32,18 @@
 #define BYTESTUFF       0x7d
 #define STUFF_MASK      0x20
 
-uint8_t frskyRxBuffer[19];   // Receive buffer. 9 bytes (full packet), worst case 18 bytes with byte-stuffing (+1)
-uint8_t frskyTxBuffer[19];   // Ditto for transmit buffer
+// Receive buffer. 9 bytes (full packet), worst case 18 bytes with byte-stuffing (+1). Ditto for tx buffer
+#define FRSKY_RX_BUFFER_SIZE 19
+#define FRSKY_TX_BUFFER_SIZE 19
+uint8_t frskyRxBuffer[FRSKY_RX_BUFFER_SIZE];
+uint8_t frskyTxBuffer[FRSKY_TX_BUFFER_SIZE];
 uint8_t frskyTxBufferCount = 0;
 uint8_t FrskyRxBufferReady = 0;
 uint8_t frskyStreaming = 0;
 uint8_t frskyTxISRIndex = 0;
 
 // Implement circular buffer for user data storage ('keep one slot empty' method)
-#define FRSKY_USER_DATA_SIZE 12
+#define FRSKY_USER_DATA_SIZE 20
 char frskyUserData[FRSKY_USER_DATA_SIZE]; 
 uint8_t frskyUserDataIn = 0;  // circular FIFO buffer (IN)
 uint8_t frskyUserDataOut = 0; // circular FIFO buffer (OUT)
@@ -88,13 +91,12 @@ void processFrskyPacket(uint8_t *packet)
     case USRPKT: // User Data packet
       uint8_t numBytes = packet[1];
       if (numBytes > 6) numBytes = 6; // sanitize in case of data corruption leading to buffer overflow
-      for(uint8_t i=0; i < numBytes; i++)
+      for(uint8_t i=0; (i < numBytes) 
+          && (((frskyUserDataIn + 1) % FRSKY_USER_DATA_SIZE) != frskyUserDataOut); i++)
       {
-        if (((frskyUserDataIn + 1) % FRSKY_USER_DATA_SIZE) != frskyUserDataOut) // skip if full buffer
-        {
           frskyUserData[frskyUserDataIn] = packet[3+i];
-          frskyUserDataIn = (frskyUserDataIn++ % FRSKY_USER_DATA_SIZE); // increment buffer input index
-        }
+          frskyUserDataIn++; // increment buffer input index
+          if (frskyUserDataIn == FRSKY_USER_DATA_SIZE) frskyUserDataIn = 0;
       }
 
       break;
@@ -112,7 +114,8 @@ int frskyGetUserData(char *buffer, uint8_t bufsize)
   while ((frskyUserDataOut != frskyUserDataIn) && (i < bufsize)) // while not empty buffer
   {
     buffer[i] = frskyUserData[frskyUserDataOut];
-    frskyUserDataOut = (frskyUserDataOut++ % FRSKY_USER_DATA_SIZE);
+    frskyUserDataOut++;
+    if (frskyUserDataOut == FRSKY_USER_DATA_SIZE) frskyUserDataOut = 0;
     i++;
   }
   return i;
