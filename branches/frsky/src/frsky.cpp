@@ -129,7 +129,8 @@ ISR(USART0_RX_vect)
   static uint8_t dataState = frskyDataIdle;
   
 	UCSR0B &= ~(1 << RXCIE0); // disable Interrupt
-	sei() ;
+//	sei() ; // G: this should NOT be here! It's VERY bad to disable ALL interrupts for no good reason.
+
   stat = UCSR0A; // USART control and Status Register 0 A
 
     /*
@@ -214,7 +215,7 @@ ISR(USART0_RX_vect)
       } // switch
     } // if (FrskyRxBufferReady == 0)
   }
-  cli() ;
+//  cli() ; // G: this should NOT be here! It's VERY bad to disable ALL interrupts for no good reason.
   UCSR0B |= (1 << RXCIE0); // enable Interrupt
 }
 
