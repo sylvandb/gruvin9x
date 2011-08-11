@@ -84,6 +84,7 @@ void processFrskyPacket(uint8_t *packet)
         alarmptr->level = packet[3] & 0x03;
       }
       break;
+
     case LINKPKT: // A1/A2/RSSI values
       frskyTelemetry[0].set(packet[1]);
       frskyTelemetry[1].set(packet[2]);
@@ -92,17 +93,15 @@ void processFrskyPacket(uint8_t *packet)
       break;
 
     case USRPKT: // User Data packet
-      uint8_t numBytes = packet[1];
-      if (numBytes > 6) numBytes = 6; // sanitize in case of data corruption leading to buffer overflow
+      uint8_t numBytes = packet[1] & 0x07; // sanitize in case of data corruption leading to buffer overflow
       for(uint8_t i=0; (i < numBytes) 
           && (((frskyUserDataIn + 1) % FRSKY_USER_DATA_SIZE) != frskyUserDataOut); // skip if buffer full
             i++)
       {
           frskyUserData[frskyUserDataIn] = packet[3+i];
           frskyUserDataIn++; // increment buffer input index
-          if (frskyUserDataIn == FRSKY_USER_DATA_SIZE) frskyUserDataIn = 0;
+          frskyUserDataIn %= FRSKY_USER_DATA_SIZE;
       }
-
       break;
   }
 
@@ -176,7 +175,6 @@ void frskyParseOneByte(char data)
   Copies all available bytes (up to max bufsize) from frskyUserData circular 
   buffer into supplied *buffer. Returns number of bytes copied (or zero)
 */
-// XXX TODO: Should use memcpy here
 int frskyGetUserData(char *buffer, uint8_t bufsize)
 {
   uint8_t i = 0;
@@ -184,63 +182,58 @@ int frskyGetUserData(char *buffer, uint8_t bufsize)
   {
     buffer[i] = frskyUserData[frskyUserDataOut];
     frskyUserDataOut++;
-    if (frskyUserDataOut == FRSKY_USER_DATA_SIZE) frskyUserDataOut = 0;
+    frskyUserDataOut %= FRSKY_USER_DATA_SIZE;
     i++;
   }
   return i;
 }
 
 /*
-  Copies all available bytes (up to max bufsize) from frskyRxBuffer circular 
-  buffer into supplied *buffer. Returns number of bytes copied (or zero)
+  Empties any current USART0 receiver buffer content into the Fr-Sky packet
+  parser state machine  
 */
-// XXX TODO: Should use memcpy here
-int frskyGetRxData(char *buffer, uint8_t bufsize)
+char telemRxByteBuf[FRSKY_RX_BUFFER_SIZE];
+int frskyParseRxData()
 {
-  uint8_t i = 0;
-  while ((frskyRxBufferOut != frskyRxBufferIn) && (i < bufsize)) // while not empty buffer
+  UCSR0B &= ~(1 << RXCIE0); // disable USART RX interrupt
+
+  while ((frskyRxBufferOut != frskyRxBufferIn)) // while not empty buffer
   {
-    buffer[i] = frskyRxBuffer[frskyRxBufferOut];
+    frskyParseOneByte(frskyRxBuffer[frskyRxBufferOut]);
     frskyRxBufferOut++;
-    if (frskyRxBufferOut == FRSKY_RX_BUFFER_SIZE) frskyRxBufferOut = 0;
-    i++;
+    frskyRxBufferOut %= FRSKY_RX_BUFFER_SIZE;
   }
-  return i;
+  UCSR0B |= (1 << RXCIE0); // enable USART RX interrupt
 }
 
 /*
-   Receive serial (RS-232) bytes, loading them into circular buffer 'frskyUserData'.
-   (Simply ignores incoming bytes if buffer is full.)
+   Receive USART0 data bytes, loading them into circular buffer
+   'frskyRxBuffer'. Swallows incoming bytes if buffer is full.
 */
 #ifndef SIMU
 ISR(USART0_RX_vect)
 {
-  uint8_t stat;
-  
   UCSR0B &= ~(1 << RXCIE0); // disable (ONLY) USART RX interrupt
 
-  stat = UCSR0A; // USART control and Status Register 0 A
+  // Must read data byte regardless, to clear interrupt flag
+  char data = UDR0;  // USART0 received byte register
 
-  if (stat & ((1 << FE0) | (1 << DOR0) | (1 << UPE0)))
-  { 
-    // Comms error. Do nothing. Ignore data.
-  } 
-  else
+  // Ignore this byte if frame | overrun | partiy error
+  if ((UCSR0A & ((1 << FE0) | (1 << DOR0) | (1 << UPE0))) == 0)
   {
     if (((frskyRxBufferIn + 1) % FRSKY_RX_BUFFER_SIZE) != frskyRxBufferOut) // skip if buffer full
     {
-      frskyRxBuffer[frskyRxBufferIn] = UDR0; // USART0 received byte register
+      frskyRxBuffer[frskyRxBufferIn] = data;
       frskyRxBufferIn++; // increment buffer input index
-      if (frskyRxBufferIn == FRSKY_RX_BUFFER_SIZE) frskyRxBufferIn = 0;
+      frskyRxBufferIn %= FRSKY_RX_BUFFER_SIZE;
     }
   }
-
   UCSR0B |= (1 << RXCIE0); // enable (ONLY) USART RX interrupt
 }
 
 /*
-   USART0 (transmit) Data Register Emtpy ISR
-   Usef to transmit FrSky data packets, which are buffered in frskyTXBuffer. 
+   USART0 Transmit Data Register Emtpy ISR
+   Used to transmit FrSky data packets
 */
 ISR(USART0_UDRE_vect)
 {
@@ -264,21 +257,12 @@ void frskyTransmitBuffer()
 
 
 uint8_t FrskyAlarmSendState = 0 ;
-uint8_t FrskyDelay = 0 ;
-
 
 void FRSKY10mspoll(void)
 {
-  if (FrskyDelay)
-  {
-    FrskyDelay -= 1 ;
-    return ;
-  }
 
   if (frskyTxPacketCount)
-  {
     return; // we only have one buffer. If it's in use, then we can't send yet.
-  }
 
   // Now send a packet
   {
@@ -303,16 +287,15 @@ void FRSKY10mspoll(void)
       *ptr++ = START_STOP;        // End of packet
       i += 8 ;
     }
-    FrskyDelay = 5 ; // 50mS
     frskyTxPacketCount = i;
     frskyTransmitBuffer(); 
   }
 }
 
-// Send packet requesting all alarm settings be sent back to us
 void FRSKY_setRSSIAlarms(void)
 {
-  if (frskyTxPacketCount) return; // we only have one buffer. If it's in use, then we can't send. Sorry.
+  if (frskyTxPacketCount) 
+    return; // we only have one buffer. If it's in use, then we can't send yet.
 
   uint8_t i = 0;
 

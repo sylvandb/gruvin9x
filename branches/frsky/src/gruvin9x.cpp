@@ -1407,7 +1407,7 @@ void perOut(int16_t *chanOut, uint8_t att)
   }
 }
 
-char telemDataBuffer[TELEM_SCREEN_BUFFER_SIZE];
+char userDataDisplayBuf[TELEM_SCREEN_BUFFER_SIZE];
 void perMain()
 {
   static uint16_t lastTMR;
@@ -1427,36 +1427,28 @@ void perMain()
 
   eeCheck();
 
-/**** Fr-Sky Incoming Packet Parsing ****/
-
-  char telemRxByteBuf[FRSKY_RX_BUFFER_SIZE];
-
-  // retrieve as many USART0 serial coms bytes as are available and send them to
-  // the Fr-Sky packet parsing state machine
-  uint8_t numbytes = frskyGetRxData(telemRxByteBuf, FRSKY_RX_BUFFER_SIZE); // Get as many bytes as we can
-  for (uint8_t byt=0; byt < numbytes; byt++) 
-    frskyParseOneByte(telemRxByteBuf[byt]);
-
-/****************************************/
+  // parse whatever USART0 rx bytes are currently available in receive buffer
+  frskyParseRxData();
 
 /***** TEST CODE - Fr-Sky User Dat experiments *****/
 
-  char userDataByteBuf[21];
-  static uint8_t telemBufferIndex;
+  char userDataRxBuffer[21]; // The buffer used for on-screen display
 
-  // retrieve bytes from user data receive buffer and insert into display string,
+  // retrieve bytes from user data buffer and insert into display string,
   // scrolling at the 21 character mark (edge of screen)
-  numbytes = frskyGetUserData(userDataByteBuf, 21); // Get as many bytes as we can
+  uint8_t numbytes = frskyGetUserData(userDataRxBuffer, 21); // Get as many bytes as we can
+
+  static uint8_t displayBufferIndex;
   for (uint8_t byt=0; byt < numbytes; byt++) 
   {
-    telemBufferIndex++;
-    if (telemBufferIndex > 20)
+    displayBufferIndex++;
+    if (displayBufferIndex > 20)
     {
       for (int xx=0; xx<20; xx++) // scroll one char left
-        telemDataBuffer[xx] = telemDataBuffer[xx+1];
-      telemBufferIndex = 20;
+        userDataDisplayBuf[xx] = userDataDisplayBuf[xx+1];
+      displayBufferIndex = 20;
     }
-    telemDataBuffer[telemBufferIndex] = userDataByteBuf[byt];
+    userDataDisplayBuf[displayBufferIndex] = userDataRxBuffer[byt];
   }
 
 /***************************************************/
@@ -1581,13 +1573,12 @@ ISR(TIMER1_COMPA_vect) //2MHz pulse generation
     pulsePtr = pulses2MHz;
     pulsePol = g_model.pulsePol;//0;
 
-    cli(); // sei();
 #if defined (PCBV3)
     TIMSK1 &= ~(1<<OCIE1A); //stop reentrance
 #else
     TIMSK &= ~(1<<OCIE1A); //stop reentrance
 #endif
-    sei();
+    sei(); // G: th//er9x both have this. But shouldn't cli() be here?)
     setupPulses();
     cli();
 #if defined (PCBV3)
@@ -1595,7 +1586,6 @@ ISR(TIMER1_COMPA_vect) //2MHz pulse generation
 #else
     TIMSK |= (1<<OCIE1A);
 #endif
-    sei();
   }
   heartbeat |= HEART_TIMER2Mhz;
 }
@@ -1636,8 +1626,7 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
 {
   cli();
   static uint8_t accuracyWarble = 4; // becasue 16M / 1024 / 100 = 156.25. So bump every 4.
-  uint8_t bump;
-  bump = (!(accuracyWarble++ & 0x03)) ? 157 : 156;
+  uint8_t bump = (!(accuracyWarble++ & 0x03)) ? 157 : 156;
 #if defined (PCBV3)
   TIMSK2 &= ~(1<<OCIE2A); //stop reentrance
   OCR2A += bump;
@@ -1650,7 +1639,6 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
 #endif
 #endif
   sei();
-
 
 #if defined (PCBSTD) && defined (BEEPSPKR)
   // gruvin: Begin Tone Generator

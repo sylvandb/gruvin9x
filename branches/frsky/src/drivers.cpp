@@ -46,7 +46,7 @@ ISR(EE_READY_vect)
   eeprom_write_byte();
   if (eeprom_buffer_size == 0) {
 #if defined (PCBV3)
-    // TODO
+    EECR &= ~(1<<EERIE);
 #else
     EECR &= ~(1<<EERIE);
 #endif
@@ -63,7 +63,7 @@ void eeWriteBlockCmp(const void *i_pointer_ram, void *i_pointer_eeprom, size_t s
   eeprom_buffer_size = size;
 
 #if defined (PCBV3)
-  // TODO
+  EECR |= (1<<EERIE);
 #else
   EECR |= (1<<EERIE);
 #endif
@@ -417,10 +417,13 @@ void per10ms()
 /**** END KEY STATE READ ****/
 
 #if defined (FRSKY)
-  // Used to detect presence of valid FrSky telemetry packets inside the 
-  // last <FRSKY_TIMEOUT10ms> 10ms intervals
-  if ( FrskyAlarmSendState )
-    FRSKY10mspoll() ;
+
+  // Transmit Fr-Sky data request packets every 250ms
+  static uint8_t FrskyDelay = 25;
+  if (!(--FrskyDelay) && FrskyAlarmSendState )
+    FRSKY10mspoll();
+  else
+    FrskyDelay = 25; // 250ms - G: 50ms was way to frequent IMO
   
   if (frskyStreaming > 0)
     frskyStreaming--;

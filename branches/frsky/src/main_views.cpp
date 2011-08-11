@@ -235,7 +235,7 @@ void menuMainView(uint8_t event)
         // Write user data characters along line, scrolling horizontally once at end
         for (uint8_t ii=0; ii < TELEM_SCREEN_BUFFER_SIZE; ii++)
         {
-          char c = telemDataBuffer[ii];
+          char c = userDataDisplayBuf[ii];
           if (c) lcd_putc(ii*FW, 1*FH, c);
         }
 
