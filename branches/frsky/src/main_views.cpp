@@ -239,6 +239,10 @@ void menuMainView(uint8_t event)
           if (c) lcd_putc(ii*FW, 1*FH, c);
         }
 
+//        lcd_outdezAtt(20*FW, 2*FH, (frskyRxBufferIn - frskyRxBufferOut), 0);
+//        lcd_outdezAtt(15*FW, 3*FH, frskyUserDataIn, 0);
+//        lcd_outdezAtt(20*FW, 3*FH, frskyUserDataOut, 0);
+
 // G: DEBUG XXX END
 
         if (g_model.frsky.channels[0].ratio || g_model.frsky.channels[1].ratio) {

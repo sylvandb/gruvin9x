@@ -23,6 +23,10 @@
 // .20 seconds
 #define FRSKY_TIMEOUT10ms 20
 
+#define FRSKY_RX_BUFFER_SIZE 80
+#define FRSKY_RX_PACKET_SIZE 19
+#define FRSKY_TX_PACKET_SIZE 19
+
 enum AlarmLevel {
   alarm_off = 0,
   alarm_yellow = 1,
@@ -45,6 +49,8 @@ extern uint8_t frskyStreaming; // >0 (true) == data is streaming in. 0 = nodata 
 extern uint8_t FrskyAlarmSendState;
 extern FrskyData frskyTelemetry[2];
 extern FrskyData frskyRSSI[2];
+extern uint8_t frskyRxBufferIn;
+extern uint8_t frskyRxBufferOut;
 extern uint8_t frskyUserDataIn;
 extern uint8_t frskyUserDataOut;
 
@@ -61,7 +67,9 @@ bool FRSKY_alarmRaised(uint8_t idx);
 
 void resetTelemetry();
 
+int frskyGetRxData(char *buffer, uint8_t bufsize);
 int frskyGetUserData(char *buffer, uint8_t bufsize);
+void frskyParseOneByte(char data);
 
 #endif
 

@@ -1427,28 +1427,39 @@ void perMain()
 
   eeCheck();
 
+/**** Fr-Sky Incoming Packet Parsing ****/
+
+  char telemRxByteBuf[FRSKY_RX_BUFFER_SIZE];
+
+  // retrieve as many USART0 serial coms bytes as are available and send them to
+  // the Fr-Sky packet parsing state machine
+  uint8_t numbytes = frskyGetRxData(telemRxByteBuf, FRSKY_RX_BUFFER_SIZE); // Get as many bytes as we can
+  for (uint8_t byt=0; byt < numbytes; byt++) 
+    frskyParseOneByte(telemRxByteBuf[byt]);
+
+/****************************************/
 
 /***** TEST CODE - Fr-Sky User Dat experiments *****/
 
-  char telemRxByteBuf[21];
-  static uint8_t telemDataIndex;
+  char userDataByteBuf[21];
+  static uint8_t telemBufferIndex;
 
-  // retrieve one more byte from telem receive buffer and insert into display string
-  uint8_t numbytes = frskyGetUserData(telemRxByteBuf, 21); // Get as many bytes as we can
+  // retrieve bytes from user data receive buffer and insert into display string,
+  // scrolling at the 21 character mark (edge of screen)
+  numbytes = frskyGetUserData(userDataByteBuf, 21); // Get as many bytes as we can
   for (uint8_t byt=0; byt < numbytes; byt++) 
   {
-    telemDataIndex++;
-    if (telemDataIndex > 20)
+    telemBufferIndex++;
+    if (telemBufferIndex > 20)
     {
       for (int xx=0; xx<20; xx++) // scroll one char left
         telemDataBuffer[xx] = telemDataBuffer[xx+1];
-      telemDataIndex = 20;
+      telemBufferIndex = 20;
     }
-    telemDataBuffer[telemDataIndex] = telemRxByteBuf[byt];
+    telemDataBuffer[telemBufferIndex] = userDataByteBuf[byt];
   }
 
-/***** END TEST CODE - Fr-Sky User Dat experiments *****/
-
+/***************************************************/
 
   lcd_clear();
   uint8_t evt=getEvent();
