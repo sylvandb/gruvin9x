@@ -40,8 +40,8 @@ mode4 ail thr ele rud
 EEGeneral  g_eeGeneral;
 ModelData  g_model;
 
-uint16_t g_tmr1Latency_max;
-uint16_t g_tmr1Latency_min = 0x7ff;
+uint8_t g_tmr1Latency_max;
+uint8_t g_tmr1Latency_min;
 uint16_t g_timeMain;
 uint16_t g_time_per10;
 
@@ -1544,23 +1544,26 @@ uint8_t ppmInState = 0; //0=unsync 1..8= wait for value i-1
 
 uint8_t heartbeat;
 
-//ISR(TIMER1_OVF_vect)
 ISR(TIMER1_COMPA_vect) //2MHz pulse generation
 {
   static uint8_t   pulsePol;
   static uint16_t *pulsePtr = pulses2MHz;
 
+  // Latency -- how far further on from interrupt trigger has the timer counted?
+  // (or -- how long did it take to get to this function)
   uint8_t i = 0;
-  while((TCNT1L < 10) && (++i < 50))  // Timer does not read too fast, so i
-    ;
-  uint16_t dt=TCNT1;//-OCR1A;
+  uint8_t dt;
+  do{
+    dt=TCNT1L;//-OCR1A;
+    i++;
+  }while(dt<1 && i<5);
 
   if(pulsePol)
   {
     PORTB |=  (1<<OUT_B_PPM); // GCC optimisation should result in a single SBI instruction
     pulsePol = 0;
   }else{
-    PORTB &= ~(1<<OUT_B_PPM); // GCC optimisation should result in a single CLI instruction
+    PORTB &= ~(1<<OUT_B_PPM); // GCC optimisation should result in a single CBI instruction
     pulsePol = 1;
   }
   g_tmr1Latency_max = max(dt,g_tmr1Latency_max);    // max has leap, therefore vary in length
@@ -1573,19 +1576,23 @@ ISR(TIMER1_COMPA_vect) //2MHz pulse generation
     pulsePtr = pulses2MHz;
     pulsePol = g_model.pulsePol;//0;
 
+    cli();
 #if defined (PCBV3)
     TIMSK1 &= ~(1<<OCIE1A); //stop reentrance
 #else
     TIMSK &= ~(1<<OCIE1A); //stop reentrance
 #endif
-    sei(); // G: th//er9x both have this. But shouldn't cli() be here?)
+    sei();
+
     setupPulses();
+
     cli();
 #if defined (PCBV3)
     TIMSK1 |= (1<<OCIE1A);
 #else
     TIMSK |= (1<<OCIE1A);
 #endif
+    sei();
   }
   heartbeat |= HEART_TIMER2Mhz;
 }

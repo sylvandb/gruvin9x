@@ -347,7 +347,6 @@ inline void FRSKY_EnableTXD(void)
 
 inline void FRSKY_EnableRXD(void)
 {
-
   UCSR0B |= (1 << RXEN0);  // enable RX
   UCSR0B |= (1 << RXCIE0); // enable Interrupt
 }
@@ -383,7 +382,7 @@ void FRSKY_Init(void)
   UBRR0L = UBRRL_VALUE;
   UCSR0A &= ~(1 << U2X0); // disable double speed operation.
 
-  // set 8 N1
+  // set 8N1
   UCSR0B = 0 | (0 << RXCIE0) | (0 << TXCIE0) | (0 << UDRIE0) | (0 << RXEN0) | (0 << TXEN0) | (0 << UCSZ02);
   UCSR0C = 0 | (1 << UCSZ01) | (1 << UCSZ00);
 
@@ -396,34 +395,6 @@ void FRSKY_Init(void)
   FRSKY_EnableTXD(); // enable FrSky-Telemetry reception
   FRSKY_EnableRXD(); // enable FrSky-Telemetry reception
 }
-
-#if 0
-// Send packet requesting all alarm settings be sent back to us
-void frskyAlarmsRefresh()
-{
-
-  if (frskyTxPacketCount) return; // we only have one buffer. If it's in use, then we can't send. Sorry.
-
-  {
-    uint8_t *ptr ;
-    ptr = &frskyTxPacketBuf[0] ;
-    *ptr++ = START_STOP; // Start of packet
-    *ptr++ = ALRM_REQUEST;
-    *ptr++ = 0x00 ;
-    *ptr++ = 0x00 ;
-    *ptr++ = 0x00 ;
-    *ptr++ = 0x00 ;
-    *ptr++ = 0x00 ;
-    *ptr++ = 0x00 ;
-    *ptr++ = 0x00 ;
-    *ptr++ = 0x00 ;
-    *ptr++ = START_STOP;        // End of packet
-  }
-
-  frskyTxPacketCount = 11;
-  frskyTransmitBuffer();
-}
-#endif
 
 void frskyPushValue(uint8_t & i, uint8_t value)
 {

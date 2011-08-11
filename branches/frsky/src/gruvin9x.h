@@ -427,8 +427,8 @@ extern uint8_t Timer2_running ;
 extern uint16_t timer2 ;
 void resetTimer2() ;
 
-extern uint16_t g_tmr1Latency_max;
-extern uint16_t g_tmr1Latency_min;
+extern uint8_t g_tmr1Latency_max;
+extern uint8_t g_tmr1Latency_min;
 extern uint16_t g_timeMain;
 extern uint16_t g_time_per10;
 

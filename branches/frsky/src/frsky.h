@@ -23,7 +23,7 @@
 // .20 seconds
 #define FRSKY_TIMEOUT10ms 20
 
-#define FRSKY_RX_BUFFER_SIZE 20
+#define FRSKY_RX_BUFFER_SIZE 80
 #define FRSKY_RX_PACKET_SIZE 19
 #define FRSKY_TX_PACKET_SIZE 19
 
