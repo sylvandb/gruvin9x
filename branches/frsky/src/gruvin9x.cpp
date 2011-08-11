@@ -1407,6 +1407,7 @@ void perOut(int16_t *chanOut, uint8_t att)
   }
 }
 
+char telemDataBuffer[TELEM_SCREEN_BUFFER_SIZE];
 void perMain()
 {
   static uint16_t lastTMR;
@@ -1425,6 +1426,29 @@ void perMain()
   }
 
   eeCheck();
+
+
+/***** TEST CODE - Fr-Sky User Dat experiments *****/
+
+  char telemRxByteBuf[21];
+  static uint8_t telemDataIndex;
+
+  // retrieve one more byte from telem receive buffer and insert into display string
+  uint8_t numbytes = frskyGetUserData(telemRxByteBuf, 21); // Get as many bytes as we can
+  for (uint8_t byt=0; byt < numbytes; byt++) 
+  {
+    telemDataIndex++;
+    if (telemDataIndex > 20)
+    {
+      for (int xx=0; xx<20; xx++) // scroll one char left
+        telemDataBuffer[xx] = telemDataBuffer[xx+1];
+      telemDataIndex = 20;
+    }
+    telemDataBuffer[telemDataIndex] = telemRxByteBuf[byt];
+  }
+
+/***** END TEST CODE - Fr-Sky User Dat experiments *****/
+
 
   lcd_clear();
   uint8_t evt=getEvent();
@@ -1461,18 +1485,6 @@ void perMain()
 
     case 2:
       {
-/*
-Gruvin:
-  Interesting fault with new unit. Sample is reading 0x06D0 (around 12.3V) but
-  we're only seeing around 0.2V displayed! (Calibrate = 0)
-
-  Long story short, the higher voltage of the new 8-pack of AA alkaline cells I put in the stock
-  '9X, plus just a tiny bit of calibration applied, were causing an overflow in the 16-bit math,
-  causing a wrap-around to a very small voltage.
-
-  See the wiki (VoltageAveraging) if you're interested in my long-winded analysis.
-*/
-
         // initialize to first sample if on first averaging cycle
         if (abRunningAvg == 0) abRunningAvg = anaIn(7);
 
@@ -1499,7 +1511,6 @@ Gruvin:
 
       }
       break;
-
 
 
     case 3:

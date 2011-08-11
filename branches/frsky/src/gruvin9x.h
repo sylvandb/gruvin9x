@@ -648,5 +648,8 @@ extern LimitData *limitaddress(uint8_t idx);
 
 extern void setStickCenter(); // copy state of 3 primary to subtrim
 
+#define TELEM_SCREEN_BUFFER_SIZE 21
+extern char telemDataBuffer[TELEM_SCREEN_BUFFER_SIZE]; // text buffer for frsky telem. user data experiments
+
 #endif // gruvin9x_h
 /*eof*/

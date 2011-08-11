@@ -231,26 +231,9 @@ void menuMainView(uint8_t event)
       if (g_eeGeneral.view & ALTERNATE) {
 
 // G: DEBUG XXX
+        
         // Write user data characters along line, scrolling horizontally once at end
-        char telemRxByteBuf;
-        static char telemDataBuffer[21];
-        static uint8_t telemDataIndex;
-        
-        // retrieve one more byte from telem receive buffer and insert into display string
-        uint8_t numbytes = frskyGetUserData(&telemRxByteBuf, 1); // try to get one byte only
-        if (numbytes) 
-        {
-          telemDataIndex++;
-          if (telemDataIndex > 20)
-          {
-            for (int xx=0; xx<20; xx++) // scroll one char left
-              telemDataBuffer[xx] = telemDataBuffer[xx+1];
-            telemDataIndex = 20;
-          }
-          telemDataBuffer[telemDataIndex] = telemRxByteBuf;
-        }
-        
-        for (uint8_t ii=0; ii < 21; ii++)
+        for (uint8_t ii=0; ii < TELEM_SCREEN_BUFFER_SIZE; ii++)
         {
           char c = telemDataBuffer[ii];
           if (c) lcd_putc(ii*FW, 1*FH, c);
