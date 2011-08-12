@@ -67,9 +67,10 @@ bool FRSKY_alarmRaised(uint8_t idx);
 
 void resetTelemetry();
 
-int frskyParseRxData();
-int frskyGetUserData(char *buffer, uint8_t bufsize);
-void frskyParseOneByte(char data);
+
+void frskyParseRxData();
+
+uint8_t frskyGetUserData(char *buffer, uint8_t bufSize);
 
 #endif
 
