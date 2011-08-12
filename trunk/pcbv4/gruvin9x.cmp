@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPCB (2011-07-08 BZR 3044)-stable date = 24/07/2011 22:36:01
+Cmp-Mod V01 Created by CvPCB (2011-07-08 BZR 3044)-stable date = 01/08/2011 21:15:59
 
 BeginCmp
 TimeStamp = /4CE748AC;
@@ -428,6 +428,13 @@ IdModule  = SM0603_GRUVIN;
 EndCmp
 
 BeginCmp
+TimeStamp = /4E35BB01;
+Reference = C62;
+ValeurCmp = 1uF;
+IdModule  = SM0603_GRUVIN;
+EndCmp
+
+BeginCmp
 TimeStamp = /4DC19467;
 Reference = C91;
 ValeurCmp = 0.1uF;
@@ -613,7 +620,7 @@ BeginCmp
 TimeStamp = /4D3294E5;
 Reference = K3;
 ValeurCmp = CONN_3;
-IdModule  = PIN_ARRAY_3X1_GRUVIN;
+IdModule  = PIN_ARRAY_3X1_SMP_GRUVIN;
 EndCmp
 
 BeginCmp
@@ -778,10 +785,10 @@ IdModule  = PIN_ARRAY_4X2_GRUVIN;
 EndCmp
 
 BeginCmp
-TimeStamp = /4DC18D71;
+TimeStamp = /4E35BA77;
 Reference = P21;
-ValeurCmp = CONN_4;
-IdModule  = PIN_ARRAY_4X1_GRUVIN;
+ValeurCmp = CONN_3;
+IdModule  = PIN_ARRAY_3X1_GRUVIN;
 EndCmp
 
 BeginCmp
@@ -1023,9 +1030,9 @@ IdModule  = SM0603_GRUVIN;
 EndCmp
 
 BeginCmp
-TimeStamp = /4E00D196;
+TimeStamp = /4E37090D;
 Reference = R24;
-ValeurCmp = 5K1;
+ValeurCmp = 200R;
 IdModule  = SM0603_GRUVIN;
 EndCmp
 
@@ -1074,13 +1081,6 @@ EndCmp
 BeginCmp
 TimeStamp = /4E00D15A;
 Reference = R31;
-ValeurCmp = 10K2;
-IdModule  = SM0603_GRUVIN;
-EndCmp
-
-BeginCmp
-TimeStamp = /4E00D161;
-Reference = R32;
 ValeurCmp = 10K2;
 IdModule  = SM0603_GRUVIN;
 EndCmp
@@ -1606,28 +1606,28 @@ EndCmp
 BeginCmp
 TimeStamp = /4E2AE19E;
 Reference = R107;
-ValeurCmp = 1.5K;
+ValeurCmp = 5.1K;
 IdModule  = SM0603_GRUVIN;
 EndCmp
 
 BeginCmp
 TimeStamp = /4E2AE1CC;
 Reference = R108;
-ValeurCmp = 1.5K;
+ValeurCmp = 5.1K;
 IdModule  = SM0603_GRUVIN;
 EndCmp
 
 BeginCmp
 TimeStamp = /4E2AE1BD;
 Reference = R109;
-ValeurCmp = 1.5K;
+ValeurCmp = 5.1K;
 IdModule  = SM0603_GRUVIN;
 EndCmp
 
 BeginCmp
 TimeStamp = /4E2AE1D6;
 Reference = R110;
-ValeurCmp = 1.5K;
+ValeurCmp = 5.1K;
 IdModule  = SM0603_GRUVIN;
 EndCmp
 
@@ -1699,6 +1699,13 @@ TimeStamp = /4DDD5203;
 Reference = U4;
 ValeurCmp = TPS77601;
 IdModule  = SO8E;
+EndCmp
+
+BeginCmp
+TimeStamp = /4E35BAC9;
+Reference = U5;
+ValeurCmp = REF3012;
+IdModule  = SOT23-IGO;
 EndCmp
 
 BeginCmp
