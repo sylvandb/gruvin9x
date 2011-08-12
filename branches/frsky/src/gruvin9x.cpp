@@ -1431,7 +1431,6 @@ void perMain()
   frskyParseRxData();
 
 /***** TEST CODE - Fr-Sky User Dat experiments *****/
-
   char userDataRxBuffer[21]; // The buffer used for on-screen display
 
   // retrieve bytes from user data buffer and insert into display string,
@@ -1450,7 +1449,6 @@ void perMain()
     }
     userDataDisplayBuf[displayBufferIndex] = userDataRxBuffer[byt];
   }
-
 /***************************************************/
 
   lcd_clear();

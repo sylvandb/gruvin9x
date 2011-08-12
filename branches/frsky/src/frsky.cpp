@@ -190,7 +190,7 @@ int frskyGetUserData(char *buffer, uint8_t bufsize)
 
 /*
   Empties any current USART0 receiver buffer content into the Fr-Sky packet
-  parser state machine  
+  parser state machine. (Called from main loop.)
 */
 char telemRxByteBuf[FRSKY_RX_BUFFER_SIZE];
 int frskyParseRxData()
@@ -218,7 +218,9 @@ ISR(USART0_RX_vect)
   // Must read data byte regardless, to clear interrupt flag
   char data = UDR0;  // USART0 received byte register
 
-  // Ignore this byte if frame | overrun | partiy error
+  sei(); // un-block other interrupts. VITAL to allow TIMER1_COMPA (PPM_out) int to fire from here
+
+  // Ignore this byte if (frame | overrun | partiy) error
   if ((UCSR0A & ((1 << FE0) | (1 << DOR0) | (1 << UPE0))) == 0)
   {
     if (((frskyRxBufferIn + 1) % FRSKY_RX_BUFFER_SIZE) != frskyRxBufferOut) // skip if buffer full
