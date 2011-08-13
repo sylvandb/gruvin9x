@@ -1,8 +1,9 @@
-This folder contains the current "under development" version of the V4.x PCB.
+This folder contains the current "under development" version of the V4.x 
+PCB.
 
 Only files that differ from the latest frozen V4.x PCB will be found in this directory.
 
-Library file are duplicated reguardless as they are needed for viewing the PCB etc.
+Library file are duplicated regardless as they are needed for viewing the PCB etc.
 
 
 
