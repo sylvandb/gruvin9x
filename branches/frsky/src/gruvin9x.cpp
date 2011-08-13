@@ -1431,6 +1431,37 @@ void perMain()
   frskyParseRxData();
 
 /***** TEST CODE - Fr-Sky User Dat experiments *****/
+
+  /* Use light switch (on) to open telemtry test log file */
+  static FRESULT f_err_code;
+  static FATFS FATFS_Obj;
+  static uint8_t result = 0;
+  static TCHAR sBuffer[100] = {0};
+  static TCHAR *myStr = sBuffer;
+  static FIL fil_obj;
+
+  static uint8_t testLogOpen = 0;
+
+  /* Log file creation test OK. Max jitter under full load -- 3us
+  if(getSwitch(g_eeGeneral.lightSw,0))
+  {
+    if (!testLogOpen)
+    {
+      f_err_code = f_mount(0, &FATFS_Obj);
+
+      // create new file
+      result = f_open(&fil_obj, "/testlog.txt", FA_CREATE_ALWAYS | FA_WRITE);
+      testLogOpen = 1;
+    }
+  } 
+  else
+  {
+    if (testLogOpen)
+      f_close(&fil_obj);
+    testLogOpen = 0;
+  }
+  *** */
+
   char userDataRxBuffer[21]; // The buffer used for on-screen display
 
   // retrieve bytes from user data buffer and insert into display string,
@@ -1448,6 +1479,12 @@ void perMain()
       displayBufferIndex = 20;
     }
     userDataDisplayBuf[displayBufferIndex] = userDataRxBuffer[byt];
+
+  /*
+     if (testLogOpen)
+      f_putc(userDataRxBuffer[byt], &fil_obj);
+  */
+
   }
 /***************************************************/
 
