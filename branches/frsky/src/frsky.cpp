@@ -16,6 +16,7 @@
 
 #include "gruvin9x.h"
 #include "frsky.h"
+#include "ff.h"
 #include <stdlib.h>
 
 // Enumerate FrSky packet codes
@@ -468,9 +469,90 @@ void FrskyData::set(uint8_t value)
      min = value;
  }
 
+#if defined (PCBV3)
+char g_logFilename[22]; //  "/G9XLOGS/12345678.000\0" max required length = 22
+// These global so we can close any open file from anywhere
+FATFS FATFS_Obj;
+FIL fil_obj;
+#endif
 void resetTelemetry()
 {
   memset(frskyTelemetry, 0, sizeof(frskyTelemetry));
   memset(frskyRSSI, 0, sizeof(frskyRSSI));
+
+#if defined (PCBV3)
+
+  // Determine and set log file filename
+  
+  FRESULT result;
+
+  // close any file left open. E.G. Changing models with log switch still on.
+  if (fil_obj.fs) f_close(&fil_obj); 
+
+  strcpy(g_logFilename, "/G9XLOGS/M00_000.TXT");
+
+  uint8_t num = g_eeGeneral.currModel + 1;
+  itoa(num, (char *)(g_logFilename+10+(num<10)), 10);
+  g_logFilename[12] = '_'; // restore the underscore from the \0 itoa wrote
+
+  result = f_mount(0, &FATFS_Obj);
+  if (result!=FR_OK)
+  {
+    strcpy(g_logFilename, "FILE SYSTEM ERROR");
+  }
+  else
+  {
+    // Skip over any existing log files ... _000, _001, etc
+    while (1)
+    {
+      result = f_open(&fil_obj, g_logFilename, FA_OPEN_EXISTING | FA_READ);
+
+      if (result == FR_OK)
+      {
+        f_close(&fil_obj);
+        // bump log file counter (file extension)
+        num = atoi((char *)(g_logFilename+13));
+        if (++num < 1000) // stop at 999, which will simply casue an error when trying to create an existing file
+        {
+          // figure start column for itoa
+          uint8_t index = 15;
+          if (num > 9) index--;
+          if (num > 99) index--;
+          itoa(num, (char *)(g_logFilename+index), 10);
+          g_logFilename[16] = '.'; // restore the period from the \0 itoa wrote
+        }
+      }
+      else if (result == FR_NO_PATH)
+      {
+        if (f_mkdir("/G9XLOGS") != FR_OK)
+        {
+          result = FR_NO_PATH;
+          break;
+        }
+        else
+          continue;
+      }
+      else
+        break;
+    }
+
+    switch (result)
+    {
+      case FR_NO_PATH:
+        strcpy(g_logFilename, "Check /G9XLOGS folder");
+        break;
+      case FR_NOT_READY:
+        strcpy(g_logFilename, "DATA CARD NOT PRESENT");
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  // g_logFilename should now be set appropriately.
+
+#endif
+
 }
 

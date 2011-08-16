@@ -23,6 +23,7 @@
 
 #include <inttypes.h>
 #include <string.h>
+#include "ff.h"
 
 #if defined(PCBV3)
 #include "time.h"
@@ -650,6 +651,12 @@ extern void setStickCenter(); // copy state of 3 primary to subtrim
 
 #define TELEM_SCREEN_BUFFER_SIZE 21
 extern char userDataDisplayBuf[TELEM_SCREEN_BUFFER_SIZE]; // text buffer for frsky telem. user data experiments
+
+#if defined (PCBV3)
+extern char g_logFilename[22]; // pers.cpp::resetTelemetry()
+extern FATFS FATFS_Obj; // pers.cpp::resetTelemetry()
+extern FIL fil_obj; // pers.cpp::resetTelemetry()
+#endif
 
 #endif // gruvin9x_h
 /*eof*/

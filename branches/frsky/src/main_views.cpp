@@ -230,7 +230,7 @@ void menuMainView(uint8_t event)
       displayCount = (displayCount+1) % 50;
       if (g_eeGeneral.view & ALTERNATE) {
 
-// G: DEBUG XXX
+// G: XXX TODO
         
         // Write user data characters along line, scrolling horizontally once at end
         for (uint8_t ii=0; ii < TELEM_SCREEN_BUFFER_SIZE; ii++)
@@ -239,11 +239,13 @@ void menuMainView(uint8_t event)
           if (c) lcd_putc(ii*FW, 1*FH, c);
         }
 
+    
+
 //        lcd_outdezAtt(20*FW, 2*FH, (frskyRxBufferIn - frskyRxBufferOut), 0);
 //        lcd_outdezAtt(15*FW, 3*FH, frskyUserDataIn, 0);
 //        lcd_outdezAtt(20*FW, 3*FH, frskyUserDataOut, 0);
 
-// G: DEBUG XXX END
+// G: XXX TODO END
 
         if (g_model.frsky.channels[0].ratio || g_model.frsky.channels[1].ratio) {
           x0 = 0;
@@ -264,41 +266,6 @@ void menuMainView(uint8_t event)
           }
         }
 
-#if 0
-        // Display RX Batt Volts only if a valid channel (A1/A2) has been selected
-        if (g_eeFrsky.rxVoltsChannel >0)
-        {
-          y+=FH; lcd_puts_P(2*FW, y, PSTR("Rx Batt:"));
-          // Rx batt voltage bar frame
-
-          // Minimum voltage
-          lcd_vline(3, 58, 6);  // marker
-
-          y = 6*FH;
-          putsVolts(1, y, g_eeFrsky.rxVoltsBarMin, LEFT);
-          uint8_t middleVolts = g_eeFrsky.rxVoltsBarMin+(g_eeFrsky.rxVoltsBarMax - g_eeFrsky.rxVoltsBarMin)/2;
-          putsVolts(64-FW, y, middleVolts, LEFT);
-          lcd_vline(64, 58, 6);  // marker
-          putsVolts(128-FW, y, g_eeFrsky.rxVoltsBarMax, 0);
-          lcd_vline(125, 58, 6); // marker
-
-          // Rx Batt: volts (255 == g_eefrsky.rxVoltsMax)
-          uint16_t centaVolts = (voltsVal > 0) ? (10 * (uint16_t)g_eeFrsky.rxVoltsMax * (uint32_t)(voltsVal) / 255) + g_eeFrsky.rxVoltsOfs : 0;
-          lcd_outdezAtt(13*FW, 4*FH, centaVolts, 0|PREC2);
-          lcd_putc(13*FW, 4*FH, 'v');
-
-          // draw the actual voltage bar
-          uint16_t centaVoltsMin = 10 * g_eeFrsky.rxVoltsBarMin;
-          if (centaVolts >= centaVoltsMin)
-          {
-            uint8_t vbarLen = (centaVolts - (10 * (uint16_t)g_eeFrsky.rxVoltsBarMin))  * 12
-                                / (g_eeFrsky.rxVoltsBarMax - g_eeFrsky.rxVoltsBarMin);
-            for (uint8_t i = 59; i < 63; i++) // Bar 4 pixels thick (high)
-              lcd_hline(4, i, (vbarLen > 120) ? 120 : vbarLen);
-          }
-        }
-#endif
-
         lcd_puts_P(0, 6*FH, PSTR("Rx="));
         lcd_outdezAtt(3 * FW - 2, 5*FH+2, staticRSSI[0], DBLSIZE|LEFT);
         lcd_outdezAtt(4 * FW, 7*FH, frskyRSSI[0].min, 0);
@@ -309,6 +276,7 @@ void menuMainView(uint8_t event)
         lcd_outdezAtt(17 * FW - 2, 7*FH, frskyRSSI[1].max, LEFT);
       }
       else {
+
         y0 = 5*FH;
         //lcd_puts_P(2*FW-3, y0, PSTR("Tele:"));
         x0 = 4*FW-3;
@@ -331,6 +299,7 @@ void menuMainView(uint8_t event)
       }
     }
     else {
+      lcd_putsAtt(0, FH*2, g_logFilename, BSS); // Show log file name on NO DATA screen
       lcd_putsAtt(22, 40, PSTR("NO DATA"), DBLSIZE);
     }
   }

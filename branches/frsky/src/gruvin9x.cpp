@@ -19,6 +19,7 @@
 #include "gruvin9x.h"
 #include "s9xsplash.lbm"
 #include "menus.h"
+#include <stdlib.h>
 
 // MM/SD card Disk IO Support
 #if defined (PCBV3)
@@ -1428,7 +1429,7 @@ void perMain()
   eeCheck();
 
 #if defined (FRSKY)
-  // parse whatever USART0 rx bytes are currently available in receive buffer
+  // parse whatever USART0 bytes are available in receive buffer
   frskyParseRxData();
 
 #if defined (PCBV3)
@@ -1436,30 +1437,49 @@ void perMain()
 /***** TEST CODE - Fr-Sky User Data experiments *****/
 
   /* Use light switch (on) to open telemtry test log file */
-  static FRESULT f_err_code;
-  static FATFS FATFS_Obj;
-  static uint8_t result = 0;
-  static TCHAR sBuffer[100] = {0};
-  static TCHAR *myStr = sBuffer;
-  static FIL fil_obj;
+  static FRESULT result;
 
-  static uint8_t testLogOpen = 0;
+  static int8_t testLogOpen = 0;
 
   if(getSwitch(g_eeGeneral.lightSw,0))
   {
-    if (!testLogOpen)
+    if ((testLogOpen==0) // if we know we haven't started logging
+        || ((testLogOpen==1) && !fil_obj.fs)) // or we thought we did but the file got closed
     {
-      f_err_code = f_mount(0, &FATFS_Obj);
+      result = f_mount(0, &FATFS_Obj);
+      if (result!=FR_OK)
+      {
+        testLogOpen = -1;
+        beepAgain = result - 1;
+        beepKey();
+      }
+      else
+      {
+        // create new log file using filename set up in pers.cpp::resetTelemetry()
+        result = f_open(&fil_obj, g_logFilename, FA_OPEN_ALWAYS | FA_WRITE);
+        if (result!=FR_OK)
+        {
+          testLogOpen = -2;
+          beepAgain = result - 1;
+          beepKey();
+        }
+        else
+        {
+          f_lseek(&fil_obj, fil_obj.fsize); // append
 
-      // create new file
-      result = f_open(&fil_obj, "/testlog.txt", FA_CREATE_ALWAYS | FA_WRITE);
-      testLogOpen = 1;
+          testLogOpen = 1;
+          beepWarn2();
+        }
+      }
     }
   } 
   else
   {
-    if (testLogOpen)
+    if (testLogOpen==1)
+    {
       f_close(&fil_obj);
+      beepWarn2();
+    }
     testLogOpen = 0;
   }
 
@@ -1481,7 +1501,7 @@ void perMain()
     }
     userDataDisplayBuf[displayBufferIndex] = userDataRxBuffer[byt];
 
-    if (testLogOpen)
+    if (testLogOpen && (fil_obj.fs != 0))
       f_putc(userDataRxBuffer[byt], &fil_obj);
 
   }
@@ -1981,14 +2001,6 @@ int main(void)
 
   lcd_init();
 
-#ifdef JETI
-  JETI_Init();
-#endif
-
-#if defined (FRSKY)
-  FRSKY_Init();
-#endif
-
   ADMUX=ADC_VREF_TYPE;
   ADCSRA=0x85; // ADC enabled, pre-scaler division=32 (no interrupt, no auto-triggering)
 
@@ -2086,6 +2098,14 @@ int main(void)
   TIMSK1 |= (1<<OCIE1A); // Pulse generator enable immediately before mainloop
 #else
   TIMSK |= (1<<OCIE1A); // Pulse generator enable immediately before mainloop
+#endif
+
+#ifdef JETI
+  JETI_Init();
+#endif
+
+#if defined (FRSKY)
+  FRSKY_Init();
 #endif
 
 #if defined (PCBV3)
