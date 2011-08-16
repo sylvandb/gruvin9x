@@ -1427,13 +1427,13 @@ void perMain()
 
   eeCheck();
 
-#if defiend (FRSKY)
+#if defined (FRSKY)
   // parse whatever USART0 rx bytes are currently available in receive buffer
   frskyParseRxData();
 
 #if defined (PCBV3)
 
-/***** TEST CODE - Fr-Sky User Dat experiments *****/
+/***** TEST CODE - Fr-Sky User Data experiments *****/
 
   /* Use light switch (on) to open telemtry test log file */
   static FRESULT f_err_code;
