@@ -1427,8 +1427,11 @@ void perMain()
 
   eeCheck();
 
+#if defiend (FRSKY)
   // parse whatever USART0 rx bytes are currently available in receive buffer
   frskyParseRxData();
+
+#if defined (PCBV3)
 
 /***** TEST CODE - Fr-Sky User Dat experiments *****/
 
@@ -1442,7 +1445,6 @@ void perMain()
 
   static uint8_t testLogOpen = 0;
 
-  /* Log file creation test OK. Max jitter under full load -- 3us
   if(getSwitch(g_eeGeneral.lightSw,0))
   {
     if (!testLogOpen)
@@ -1460,7 +1462,6 @@ void perMain()
       f_close(&fil_obj);
     testLogOpen = 0;
   }
-  *** */
 
   char userDataRxBuffer[21]; // The buffer used for on-screen display
 
@@ -1480,13 +1481,15 @@ void perMain()
     }
     userDataDisplayBuf[displayBufferIndex] = userDataRxBuffer[byt];
 
-  /*
-     if (testLogOpen)
+    if (testLogOpen)
       f_putc(userDataRxBuffer[byt], &fil_obj);
-  */
 
   }
-/***************************************************/
+
+// PCBV3
+#endif
+// FRSKY
+#endif
 
   lcd_clear();
   uint8_t evt=getEvent();
