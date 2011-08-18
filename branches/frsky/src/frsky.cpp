@@ -492,8 +492,9 @@ void resetTelemetry()
   strcpy(g_logFilename, "/G9XLOGS/M00_000.TXT");
 
   uint8_t num = g_eeGeneral.currModel + 1;
-  itoa(num, (char *)(g_logFilename+10+(num<10)), 10);
-  g_logFilename[12] = '_'; // restore the underscore from the \0 itoa wrote
+  char *n = &g_logFilename[11];
+  *n = (char)((num % 10) + '0');
+  *(--n) = (char)((num / 10) + '0');
 
   result = f_mount(0, &FATFS_Obj);
   if (result!=FR_OK)
@@ -510,16 +511,23 @@ void resetTelemetry()
       if (result == FR_OK)
       {
         f_close(&fil_obj);
+
         // bump log file counter (file extension)
-        num = atoi((char *)(g_logFilename+13));
-        if (++num < 1000) // stop at 999, which will simply casue an error when trying to create an existing file
+        n = &g_logFilename[15];
+        if (++*n > '9')
         {
-          // figure start column for itoa
-          uint8_t index = 15;
-          if (num > 9) index--;
-          if (num > 99) index--;
-          itoa(num, (char *)(g_logFilename+index), 10);
-          g_logFilename[16] = '.'; // restore the period from the \0 itoa wrote
+          *n='0';
+          n--;
+          if (++*n > '9')
+          {
+            *n='0';
+            n--;
+            if (++*n > '9')
+            {
+              *n='0';
+              break; // Wow. We looped back around past 999 to 000! abort loop
+            }
+          }
         }
       }
       else if (result == FR_NO_PATH)
