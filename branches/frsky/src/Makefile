@@ -109,6 +109,7 @@ ifneq ($(PCB), STD)
   CPPSRC += rtc.cpp
   CPPSRC += ff.cpp
   CPPSRC += diskio.cpp
+#  CPPSRC += ffcc932.cpp
 endif
 
 # List Assembler source files here.
