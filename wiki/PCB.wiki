@@ -5,9 +5,9 @@
 
 == Why? ==
 
-The primary intention with this new main board is to provide a more powerful and flexible platform for the TH/ER/gruvin9x open source firmware to run on – basically, because we can :p. 
+The primary intention with this new main board is to provide a more powerful and flexible platform for the TH/ER/gruvin9x/(RadioClone?) open source firmware to run on – basically, because we want to and we can. :p 
 
-The design is "open", so you can follow its progress in minute detail, as well as make requests and suggestions for additions or improvements – and, of course, you can get involved more directly and do those for yourself.
+The design is "open", so you can follow its progress in all details, as well as make requests and suggestions for additions or improvements – and, of course, you can get involved more directly and do those for yourself. (There are currently two contributors working on the PCB board design.)
 
 Initial intentions were to ...
 
@@ -22,13 +22,13 @@ There are many ideas coming along. Since Gruvin started the new PC board project
 
 == License ==
 
-This logic board PCB design is licensed under the [http://www.tapr.org/TAPR_Open_Hardware_License_v1.0.txt TAPR Open Hardware License v1.0]. The license is very similar to the GPL of this project's related firmware source code, but includes additional protection against the likes of what this author might term, 'hostile patent acts'. In other words, like the GPL license for software source code, the TAPR Open Hardware License seeks to ensure that the openness of this particular design shall endure. The license is NOT a non-commercial license. This design _is_ able to be used by licensees for commercial purposes, under the terms of the OHL license.
+The custom board design is licensed under the [http://www.tapr.org/TAPR_Open_Hardware_License_v1.0.txt TAPR Open Hardware License v1.0]. The license is very similar to the GPL of this project's related firmware source code, but includes additional protection against what your author terms, 'hostile patent acts'. In other words, like the GPL license for software source code, the TAPR Open Hardware License seeks to ensure that the openness of the design will endure. The license is NOT a non-commercial license. This design _is_ able to be used by licensees for commercial purposes, under the terms of the [http://www.tapr.org/TAPR_Open_Hardware_License_v1.0.txt OHL License].
 
 == Progress ==
 
-As a starting point, a PCB design was worked up from scratch in [http://kicad.sourceforge.net/ KiCAD] to closely replicate the wiring and functions of Turnigy V2 '9X logic board. See [http://code.google.com/p/gruvin9x/source/browse/#svn/trunk/pcb/original /trunk/pcb/original/] (as of r155). From there, numerous changes and additions were made -- and continue to be made, as features and versions progress.
+As a starting point, a PCB design was worked up from scratch in [http://kicad.sourceforge.net/ KiCAD] (itself also open source) to closely replicate the wiring and functions of Turnigy V2 '9X logic board. See [http://code.google.com/p/gruvin9x/source/browse/#svn/trunk/pcb/original /trunk/pcb/original/] (as of r155). From there, numerous changes and additions were made -- and continue to be made, as features and versions progress.
 
-The first custom PCB actually built was, somewhat oddly, version v2.14. A few minor bugs were found, additions and changes made and a  second custom board design got under way.
+The first custom prototype PCB actually built was (somewhat oddly labelled) version 2.14. A few minor bugs were found, additions and changes made and a second custom board design got under way for version 3.
 
 Besides the bug-fixes, a few notable changes were made for V3 ...
 
@@ -42,13 +42,21 @@ Since then, HobbyKing has come out with a much cheaper [http://www.hobbyking.com
 
 - - - -
 
-Most of the above comes under conditional code build control.In other words, the project will continue to support the stock (hacked or not) factory controller board, minus the features that require the new board, course. So the stock board, with the "usual hacks" will still be supported for basic Fr-Sky telemetry.
+Most of the above comes under conditional code build control. In other words, the project will continue to support the stock (hacked or not) factory controller board, minus the features that require the new board, of course. So the stock board, with the "usual hacks" will still be supported for basic Fr-Sky telemetry.
 
 Here's a (Photoshop'd) KiCAD 3D perspective of the present v3.2 design (image now outdated) ...
 
 [http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/pcb_v3.2_3d_top.gif]
 
-And a recent V4 visualisation ...
+=== V3 will NOT be produced ===
+
+The V3 board still used a 64-pin MCU chip. So in order to free up more pins for other uses (like the SD card) we had to create a scanned-matrix system for getting all fourteen key and trim switches on just eight pins. Unfortunately, that required a lot more dismantling and hacking of the radio hardware than expected. 
+
+But then, along came Cam (in the UK) with his 100-pin variant of the same MCU and all the new board design to go with it. Thus, PCB v4 was born, which is a simple drop-in replacement for the stock PCB -- no hacking required.  
+
+=== The V4 Board (to be produced for resale as soon as possible) ===
+
+Here's a recent V4 visualisation ...
 
 [http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/pcb_v4.x_3d_top.gif]
 
@@ -57,17 +65,11 @@ And a recent V4 visualisation ...
 
 == Current Status ==
 
-As at July 7th, 2011, the fist ten V3 boards for final testing have entered physical production. 
+As at August 17th, 2011, the fist ten V4 prototype boards have been ordered from the PCB factory in China.
 
-At this time, we are looking for an organisation with the resources and the will to help us do a proper job of manufacturing and supplying these boards to interested parties. HobbyKing seems the obvious choice, if we can twist Andy's rubber arm, so to speak. 
+We are _still_ looking for an organisation with the resources and the will to help us do a proper job of manufacturing and supplying these boards -- fully assembled -- to interested customers. HobbyKing.com seems an obvious choice, if we can twist Andy's rubber arm, so to speak. But first, we have to get a completed, tested unit over to him to play with. We hope to be able to do just that before the end of 2011. (HobbyKing do not know about these plans yet, as far as we know.)
 
-In the meantime, we have received several expressions of interest from people wanting to purchase a new controller board for themselves. *But we are not currently accepting pre-orders*. We want to wait until, a) the V3 board is tested to be without errors and b) a fair and proper mechanism for placing orders is available. We're working on it. Please be patient. And then there's the V4 board thing going on ...
-
-*V4 already in the pipeline*
-
-A V4 board is already under development, thanks to lots of work done by contributor Cam, in the UK. It's _almost_ done -- but it seems just about every other day, something cool is still being added.
-
-The V4 board replaces the 64-pin ATmega2561 with its parent device, the full 100-pin ATmega2560. This gives us four (plus four on JTAG port) more analogue inputs and sixteen digital I/O ports to play with, as well as enabling JTAG in-circuit debugging <i>and</i> an additional to the standard ISP system most of us are using. Oh and two 4-bit rotary encoder inputs for two additional continuously rotating input controls ... and not doubt more.
+In the meantime, we have received several expressions of interest from people wanting to purchase a new controller board for themselves. *But we are not currently accepting pre-orders*. We need to wait until, a) the V4 board is tested to be without errors and b) a fair and proper mechanism for placing orders is available. We're working on it. Please be patient. 
 
 *Past Milestones in descending date order ...*
 
