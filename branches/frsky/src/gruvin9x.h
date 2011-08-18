@@ -1,9 +1,12 @@
 /*
- * gruvin9x Author Bryan J.Rentoul (Gruvin) <gruvin@gmail.com>
+ * Authors (alphabetical order)
+ * - Bertrand Songis <bsongis@gmail.com>
+ * - Bryan J. Rentoul (Gruvin) <gruvin@gmail.com>
  *
  * gruvin9x is based on code named er9x by
  * Author - Erez Raviv <erezraviv@gmail.com>, which is in turn
- * based on th9x -> http://code.google.com/p/th9x/
+ * was based on the original (and ongoing) project by Thomas Husterer,
+ * th9x -- http://code.google.com/p/th9x/
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -15,6 +18,7 @@
  * GNU General Public License for more details.
  *
  */
+
 #ifndef gruvin9x_h
 #define gruvin9x_h
 
@@ -655,7 +659,7 @@ extern char userDataDisplayBuf[TELEM_SCREEN_BUFFER_SIZE]; // text buffer for frs
 #if defined (PCBV3)
 extern char g_logFilename[22]; // pers.cpp::resetTelemetry()
 extern FATFS FATFS_Obj; // pers.cpp::resetTelemetry()
-extern FIL fil_obj; // pers.cpp::resetTelemetry()
+extern FIL g_oLogFile; // pers.cpp::resetTelemetry()
 #endif
 
 #endif // gruvin9x_h

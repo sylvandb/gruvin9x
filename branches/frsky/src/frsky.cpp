@@ -1,8 +1,12 @@
 /*
- * Authors - Bertrand Songis <bsongis@gmail.com>, Bryan J.Rentoul (Gruvin) <gruvin@gmail.com> and Philip Moss
+ * Authors (alpahbetical order)
+ * - Bertrand Songis <bsongis@gmail.com>
+ * - Bryan J. Rentoul (Gruvin) <gruvin@gmail.com>
  *
- * Adapted from jeti.cpp code by Karl Szmutny <shadow@privy.de>
- *
+ * Original contributors
+ * - Philip Moss Adapted first frsky functions from jeti.cpp code by 
+ * - Karl Szmutny <shadow@privy.de> 
+
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License version 2 as published
  * by the Free Software Foundation.
@@ -473,7 +477,7 @@ void FrskyData::set(uint8_t value)
 char g_logFilename[22]; //  "/G9XLOGS/12345678.000\0" max required length = 22
 // These global so we can close any open file from anywhere
 FATFS FATFS_Obj;
-FIL fil_obj;
+FIL g_oLogFile;
 #endif
 void resetTelemetry()
 {
@@ -487,7 +491,7 @@ void resetTelemetry()
   FRESULT result;
 
   // close any file left open. E.G. Changing models with log switch still on.
-  if (fil_obj.fs) f_close(&fil_obj); 
+  if (g_oLogFile.fs) f_close(&g_oLogFile); 
 
   strcpy(g_logFilename, "/G9XLOGS/M00_000.TXT");
 
@@ -506,11 +510,11 @@ void resetTelemetry()
     // Skip over any existing log files ... _000, _001, etc
     while (1)
     {
-      result = f_open(&fil_obj, g_logFilename, FA_OPEN_EXISTING | FA_READ);
+      result = f_open(&g_oLogFile, g_logFilename, FA_OPEN_EXISTING | FA_READ);
 
       if (result == FR_OK)
       {
-        f_close(&fil_obj);
+        f_close(&g_oLogFile);
 
         // bump log file counter (file extension)
         n = &g_logFilename[15];

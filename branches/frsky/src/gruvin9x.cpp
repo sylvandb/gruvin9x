@@ -1,9 +1,12 @@
 /*
- * gruvin9x Author Bryan J.Rentoul (Gruvin) <gruvin@gmail.com>
+ * Authors (alphabetical order)
+ * - Bertrand Songis <bsongis@gmail.com>
+ * - Bryan J. Rentoul (Gruvin) <gruvin@gmail.com>
  *
  * gruvin9x is based on code named er9x by
  * Author - Erez Raviv <erezraviv@gmail.com>, which is in turn
- * based on th9x -> http://code.google.com/p/th9x/
+ * was based on the original (and ongoing) project by Thomas Husterer,
+ * th9x -- http://code.google.com/p/th9x/
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -1443,8 +1446,8 @@ void perMain()
 
   if(getSwitch(g_eeGeneral.lightSw,0))
   {
-    if ((testLogOpen==0) // if we know we haven't started logging
-        || ((testLogOpen==1) && !fil_obj.fs)) // or we thought we did but the file got closed
+    if ((testLogOpen==0) // if we know we haven't started logging ...
+        || ((testLogOpen==1) && !g_oLogFile.fs)) //  ... or we thought we had, but the file got closed
     {
       result = f_mount(0, &FATFS_Obj);
       if (result!=FR_OK)
@@ -1456,7 +1459,7 @@ void perMain()
       else
       {
         // create new log file using filename set up in pers.cpp::resetTelemetry()
-        result = f_open(&fil_obj, g_logFilename, FA_OPEN_ALWAYS | FA_WRITE);
+        result = f_open(&g_oLogFile, g_logFilename, FA_OPEN_ALWAYS | FA_WRITE);
         if (result!=FR_OK)
         {
           testLogOpen = -2;
@@ -1465,7 +1468,7 @@ void perMain()
         }
         else
         {
-          f_lseek(&fil_obj, fil_obj.fsize); // append
+          f_lseek(&g_oLogFile, g_oLogFile.fsize); // append
 
           testLogOpen = 1;
           beepWarn2();
@@ -1477,7 +1480,7 @@ void perMain()
   {
     if (testLogOpen==1)
     {
-      f_close(&fil_obj);
+      f_close(&g_oLogFile);
       beepWarn2();
     }
     testLogOpen = 0;
@@ -1501,8 +1504,8 @@ void perMain()
     }
     userDataDisplayBuf[displayBufferIndex] = userDataRxBuffer[byt];
 
-    if (testLogOpen && (fil_obj.fs != 0))
-      f_putc(userDataRxBuffer[byt], &fil_obj);
+    if (testLogOpen && (g_oLogFile.fs != 0))
+      f_putc(userDataRxBuffer[byt], &g_oLogFile);
 
   }
 

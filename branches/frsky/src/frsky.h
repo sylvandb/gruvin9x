@@ -1,8 +1,11 @@
 /*
- * Author - Bertrand Songis <bsongis@gmail.com>
+ * Authors (alphabetical order)
+ * - Bertrand Songis <bsongis@gmail.com>
+ * - Bryan J. Rentoul (Gruvin) <gruvin@gmail.com>
  *
- * frsky.cpp original authors - Bryan J.Rentoul (Gruvin) <gruvin@gmail.com> and Philip Moss Adapted from jeti.cpp code by Karl
- * Szmutny <shadow@privy.de>* 
+ * Original contributors
+ * - Philip Moss Adapted first frsky functions from jeti.cpp code by 
+ * - Karl Szmutny <shadow@privy.de> 
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
