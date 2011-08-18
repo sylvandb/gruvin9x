@@ -1,7 +1,7 @@
 #summary Custom PCB
 #labels Phase-Implementation,Phase-Design
 <img src="http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/pcb_v3.2_3d_top.gif" hspace="10" width="320" align="right">
-= Custom Main Board Design =
+= Custom Main Board Development =
 
 == Why? ==
 
