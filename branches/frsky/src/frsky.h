@@ -79,5 +79,28 @@ uint8_t frskyGetUserData(char *buffer, uint8_t bufSize);
 extern char telemPacket[TELEM_PKT_SIZE];
 extern void parseTelemHubData();
 
+extern uint16_t gTelem_GPSaltitude[2];   // before,after decimal
+extern uint16_t gTelem_GPSspeed[2];      // before,after decimal
+extern uint16_t gTelem_GPSlongitude[2];  // before,after decimal
+extern uint8_t  gTelem_GPSlongitudeEW;   // East West
+extern uint16_t gTelem_GPSlatitude[2];   // before,after decimal
+extern uint8_t  gTelem_GPSlatitudeNS;    // North/South
+extern uint16_t gTelem_GPScourse[2];     // before.after (0..359 deg. -- unknown precision)
+extern uint8_t  gTelem_GPSyear;
+extern uint8_t  gTelem_GPSmonth;
+extern uint8_t  gTelem_GPSday;
+extern uint8_t  gTelem_GPShour;
+extern uint8_t  gTelem_GPSmin;
+extern uint8_t  gTelem_GPSsec;
+extern int16_t  gTelem_AccelX;           // 1/256th gram (-8g ~ +8g)
+extern int16_t  gTelem_AccelY;           // 1/256th gram (-8g ~ +8g)
+extern int16_t  gTelem_AccelZ;           // 1/256th gram (-8g ~ +8g)
+extern int16_t  gTelem_Temperature1;     // -20 .. 250 deg. celcius
+extern uint16_t gTelem_RPM;              // 0..60,000 revs. per minute
+extern uint8_t  gTelem_FuelLevel;        // 0, 25, 50, 75, 100 percent
+extern int16_t  gTelem_Temperature2;     // -20 .. 250 deg. celcius
+extern uint16_t gTelem_Volts;            // 1/500V increments (0..4.2V)
+extern uint16_t gTelem_baroAltitude;     // 0..9,999 meters
+
 #endif
 

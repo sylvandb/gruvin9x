@@ -241,89 +241,135 @@ uint8_t frskyGetUserData(char *buffer, uint8_t bufSize)
   return i;
 }
 
+///////////////////////////////////////
+/// Fr-Sky Telemetry Hub Processing ///
+///////////////////////////////////////
+
+// Globbal vars to hold telemetry data for logging and display
+
+uint16_t gTelem_GPSaltitude[2];   // before.after
+uint16_t gTelem_GPSspeed[2];      // before.after
+uint16_t gTelem_GPSlongitude[2];  // before.after
+uint8_t  gTelem_GPSlongitudeEW;   // East West
+uint16_t gTelem_GPSlatitude[2];   // before.after
+uint8_t  gTelem_GPSlatitudeNS;    // North/South
+uint16_t gTelem_GPScourse[2];     // before.after (0..359 deg. -- unknown precision)
+uint8_t  gTelem_GPSyear;
+uint8_t  gTelem_GPSmonth;
+uint8_t  gTelem_GPSday;
+uint8_t  gTelem_GPShour;
+uint8_t  gTelem_GPSmin;
+uint8_t  gTelem_GPSsec;
+int16_t  gTelem_AccelX;           // 1/256th gram (-8g ~ +8g)
+int16_t  gTelem_AccelY;           // 1/256th gram (-8g ~ +8g)
+int16_t  gTelem_AccelZ;           // 1/256th gram (-8g ~ +8g)
+int16_t  gTelem_Temperature1;     // -20 .. 250 deg. celcius
+uint16_t gTelem_RPM;              // 0..60,000 revs. per minute
+uint8_t  gTelem_FuelLevel;        // 0, 25, 50, 75, 100 percent
+int16_t  gTelem_Temperature2;     // -20 .. 250 deg. celcius
+uint16_t gTelem_Volts;            // 1/500V increments (0..4.2V)
+uint16_t gTelem_baroAltitude;     // 0..9,999 meters
+
 char telemPacket[TELEM_PKT_SIZE];
 inline void processTelemPacket(void)
 {
-  uint16_t tInt;
   switch (telemPacket[0])
   { 
     case 0x02:    // Temperature 1 (deg. C ~ -20..250)
-      // TEMP TEST CODE
-      tInt = telemPacket[1] | (telemPacket[2] << 8);
-      itoa(tInt, &userDataDisplayBuf[10], 10);
+      gTelem_Temperature1 = telemPacket[1] | (telemPacket[2] << 8);
       break;
 
     case 0x03:    // RPM (0..60000)
-      // TEMP TEST CODE
-      tInt = telemPacket[1] | (telemPacket[2] << 8);
-      itoa(tInt, &userDataDisplayBuf[1], 10);
+      gTelem_RPM = telemPacket[1] | (telemPacket[2] << 8);
       break;
 
     case 0x04:    // Fuel Level (percentage 0, 25, 50, 75, 100)
+      gTelem_FuelLevel = telemPacket[1];
       break;
 
     case 0x05:    // Temperature 2 (deg. C ~ -20..250)
+      gTelem_Temperature2 = telemPacket[1] | (telemPacket[2] << 8);
       break;
 
     case 0x06:    // Volts (1/500v ~ 0..4.2v)
+      gTelem_Volts = (telemPacket[1] | (telemPacket[2] << 8)) / 5; // PREC2
       break;
 
     case 0x10:    // Barometric Altitude
+      gTelem_baroAltitude = telemPacket[1] | (telemPacket[2] << 8);
       break;
 
     // GPS altitude
     case 0x01:    // before '.'
+      gTelem_GPSaltitude[0] = telemPacket[1] | (telemPacket[2] << 8);
       break;
     case 0x01+8:  // after '.'
+      gTelem_GPSaltitude[1] = telemPacket[1] | (telemPacket[2] << 8);
       break;
 
     // GPS speed
     case 0x11:    // before '.'
+      gTelem_GPSspeed[0] = telemPacket[1] | (telemPacket[2] << 8);
       break;
     case 0x11+8:  // after '.'
+      gTelem_GPSspeed[1] = telemPacket[1] | (telemPacket[2] << 8);
       break;
 
     // GPS longitude
     case 0x12:    // before '.'
+      gTelem_GPSlongitude[0] = telemPacket[1] | (telemPacket[2] << 8);
       break;
     case 0x12+8:  // after '.'
+      gTelem_GPSlongitude[1] = telemPacket[1] | (telemPacket[2] << 8);
       break;
     case 0x1a+8:  // East/West
+      gTelem_GPSlongitudeEW = telemPacket[1];
       break;
 
     // GPS latitude
     case 0x13:    // before '.'
+      gTelem_GPSlatitude[0] = telemPacket[1] | (telemPacket[2] << 8);
       break;
     case 0x13+8:  // after '.'
+      gTelem_GPSlatitude[1] = telemPacket[1] | (telemPacket[2] << 8);
       break;
     case 0x1b+8:  // North/South
+      gTelem_GPSlatitudeNS = telemPacket[1];
       break;
 
     // GPS course
     case 0x14:    // before '.'
+      gTelem_GPScourse[0] = telemPacket[1] | (telemPacket[2] << 8);
       break;
     case 0x14+8:  // after '.'
+      gTelem_GPScourse[1] = telemPacket[1] | (telemPacket[2] << 8);
       break;
 
     // GPS date
     case 0x15:    // day/month
+      gTelem_GPSday = telemPacket[1];
+      gTelem_GPSmonth = telemPacket[2];
       break;
     case 0x16:    // year
+      gTelem_GPSyear = telemPacket[1];
       break;
     case 0x17:    // hour/minute
+      gTelem_GPShour = telemPacket[1];
+      gTelem_GPSmin = telemPacket[2];
       break;
     case 0x18:    // second
-      // TEMP TEST CODE
-      tInt = telemPacket[1] | (telemPacket[2] << 8);
-      itoa(tInt, &userDataDisplayBuf[6], 10);
+      gTelem_GPSsec = telemPacket[1];
       break;
 
-    // Accelerometer g-forces
+    // Accelerometer g-forces (leave raw / un-scaled)
     case 0x24:    // x-axis
+      gTelem_AccelX = telemPacket[1] | (telemPacket[2] << 8);
       break;
     case 0x25:    // y-axis
+      gTelem_AccelY = telemPacket[1] | (telemPacket[2] << 8);
       break;
     case 0x26:    // z-axis
+      gTelem_AccelZ = telemPacket[1] | (telemPacket[2] << 8);
       break;
   }
 }
