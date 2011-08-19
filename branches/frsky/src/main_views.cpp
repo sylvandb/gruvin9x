@@ -251,22 +251,14 @@ void menuMainView(uint8_t event)
       displayCount = (displayCount+1) % 50;
       if (g_eeGeneral.view & ALTERNATE) {
 
-// G: XXX TODO
-        
-        // Write user data characters along line, scrolling horizontally once at end
+        // Write user data characters along line, scrolling horizontally
+        // Not much use for telemetry. Maybe do hex chars instead or get 
+        // rid of it altogether XXX
         for (uint8_t ii=0; ii < TELEM_SCREEN_BUFFER_SIZE; ii++)
         {
           char c = userDataDisplayBuf[ii];
           if (c) lcd_putc(ii*FW, 1*FH, c);
         }
-
-    
-
-//        lcd_outdezAtt(20*FW, 2*FH, (frskyRxBufferIn - frskyRxBufferOut), 0);
-//        lcd_outdezAtt(15*FW, 3*FH, frskyUserDataIn, 0);
-//        lcd_outdezAtt(20*FW, 3*FH, frskyUserDataOut, 0);
-
-// G: XXX TODO END
 
         if (g_model.frsky.channels[0].ratio || g_model.frsky.channels[1].ratio) {
           x0 = 0;
@@ -320,7 +312,9 @@ void menuMainView(uint8_t event)
       }
     }
     else {
-      lcd_putsAtt(0, FH*2, g_logFilename, BSS); // Show log file name on NO DATA screen
+      
+      if (g_eeGeneral.view & ALTERNATE)
+        lcd_putsAtt(0, FH*2, g_logFilename, BSS); // Show log filename (or error msg)
       lcd_putsAtt(22, 40, PSTR("NO DATA"), DBLSIZE);
     }
   }
