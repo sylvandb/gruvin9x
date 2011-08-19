@@ -75,5 +75,9 @@ void frskyParseRxData();
 
 uint8_t frskyGetUserData(char *buffer, uint8_t bufSize);
 
+#define TELEM_PKT_SIZE 3
+extern char telemPacket[TELEM_PKT_SIZE];
+extern void parseTelemHubData();
+
 #endif
 

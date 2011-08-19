@@ -1432,12 +1432,16 @@ void perMain()
   eeCheck();
 
 #if defined (FRSKY)
+
   // parse whatever USART0 bytes are available in receive buffer
-  frskyParseRxData();
+  frskyParseRxData();  // Extracts Fr-Sky packets, alarm, user data, etc.
+
+  // parse fr-sky user data -- assuming Fr-Sky hub is plugged into remote receiver
+  parseTelemHubData(); // TODO: Should be conditional on type of data unit connected
 
 #if defined (PCBV3)
 
-/***** TEST CODE - Fr-Sky User Data experiments *****/
+/***** TEST CODE - Fr-Sky SD/MMC card / User Data experiments *****/
 
   /* Use light switch (on) to open telemtry test log file */
   static FRESULT result;
@@ -1486,7 +1490,12 @@ void perMain()
     testLogOpen = 0;
   }
 
-  char userDataRxBuffer[21]; // The buffer used for on-screen display
+
+  /*
+  ////////////////
+  // Write raw user data into on-screen display line buffer
+
+  char userDataRxBuffer[21]; // Temp buffer used to collect fr-sky user data
 
   // retrieve bytes from user data buffer and insert into display string,
   // scrolling at the 21 character mark (edge of screen)
@@ -1504,10 +1513,15 @@ void perMain()
     }
     userDataDisplayBuf[displayBufferIndex] = userDataRxBuffer[byt];
 
+    // Write the raw byte out to log file, if open
     if (testLogOpen && (g_oLogFile.fs != 0))
       f_putc(userDataRxBuffer[byt], &g_oLogFile);
 
   }
+  ////////////////
+*/
+
+/***** END TEST CODE - Fr-Sky User Data experiments *****/
 
 // PCBV3
 #endif
@@ -1526,6 +1540,9 @@ void perMain()
   else
     BACKLIGHT_OFF;
 
+  ////////////////
+  // G: TODO This shouldn't be in perMain(). It should be in the same place 
+  // all the other ADC samples happen
   static int16_t p1valprev;
   p1valdiff = (p1val-calibratedStick[6])/32;
   if(p1valdiff) {
@@ -1533,6 +1550,7 @@ void perMain()
       p1val = calibratedStick[6];
   }
   p1valprev = calibratedStick[6];
+  /////////////////
 
   g_menuStack[g_menuStackPtr](evt);
   refreshDiplay();

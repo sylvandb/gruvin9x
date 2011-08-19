@@ -224,12 +224,7 @@ public:
     } // while
   }; // parseData method
 };
-
 FrskyRxParser frskyRxParser(FRSKY_RX_BUFFER_SIZE);
-
-
-
-
 
 /*
   Copies all available bytes (up to max bufsize) from frskyUserData circular 
@@ -246,6 +241,151 @@ uint8_t frskyGetUserData(char *buffer, uint8_t bufSize)
   return i;
 }
 
+char telemPacket[TELEM_PKT_SIZE];
+inline void processTelemPacket(void)
+{
+  uint16_t tInt;
+  switch (telemPacket[0])
+  { 
+    case 0x02:    // Temperature 1 (deg. C ~ -20..250)
+      // TEMP TEST CODE
+      tInt = telemPacket[1] | (telemPacket[2] << 8);
+      itoa(tInt, &userDataDisplayBuf[10], 10);
+      break;
+
+    case 0x03:    // RPM (0..60000)
+      // TEMP TEST CODE
+      tInt = telemPacket[1] | (telemPacket[2] << 8);
+      itoa(tInt, &userDataDisplayBuf[1], 10);
+      break;
+
+    case 0x04:    // Fuel Level (percentage 0, 25, 50, 75, 100)
+      break;
+
+    case 0x05:    // Temperature 2 (deg. C ~ -20..250)
+      break;
+
+    case 0x06:    // Volts (1/500v ~ 0..4.2v)
+      break;
+
+    case 0x10:    // Barometric Altitude
+      break;
+
+    // GPS altitude
+    case 0x01:    // before '.'
+      break;
+    case 0x01+8:  // after '.'
+      break;
+
+    // GPS speed
+    case 0x11:    // before '.'
+      break;
+    case 0x11+8:  // after '.'
+      break;
+
+    // GPS longitude
+    case 0x12:    // before '.'
+      break;
+    case 0x12+8:  // after '.'
+      break;
+    case 0x1a+8:  // East/West
+      break;
+
+    // GPS latitude
+    case 0x13:    // before '.'
+      break;
+    case 0x13+8:  // after '.'
+      break;
+    case 0x1b+8:  // North/South
+      break;
+
+    // GPS course
+    case 0x14:    // before '.'
+      break;
+    case 0x14+8:  // after '.'
+      break;
+
+    // GPS date
+    case 0x15:    // day/month
+      break;
+    case 0x16:    // year
+      break;
+    case 0x17:    // hour/minute
+      break;
+    case 0x18:    // second
+      // TEMP TEST CODE
+      tInt = telemPacket[1] | (telemPacket[2] << 8);
+      itoa(tInt, &userDataDisplayBuf[6], 10);
+      break;
+
+    // Accelerometer g-forces
+    case 0x24:    // x-axis
+      break;
+    case 0x25:    // y-axis
+      break;
+    case 0x26:    // z-axis
+      break;
+  }
+}
+
+typedef enum {
+  TS_IDLE = 0,// waiting for 0x5e frame marker
+  TS_DATA,    // receive data byte
+  TS_FRAME,   // frame complete. Precess it. (Not used as there's no end of packet market to swallow)
+  TS_XOR      // decode stuffed byte
+} TS_STATE;
+
+void parseTelemHubData()
+{
+  static uint8_t telemIndex;
+  static TS_STATE telemState = TS_IDLE;
+
+  // Process all available bytes in frsky user data Buffer
+  while (!frskyUserData.isEmpty())
+  {
+    char data = frskyUserData.get();
+
+    switch (telemState)
+    {
+      case TS_IDLE:
+        if (data == 0x5e)
+        {
+          telemIndex = 0;
+          telemState = TS_DATA;
+        }
+        break;
+
+      case TS_DATA:
+        if (data == 0x5d) // discard this byte and decode byte stuff on next
+        {
+          telemState = TS_XOR;
+          break;
+        }
+        if (telemIndex < TELEM_PKT_SIZE)
+        {
+          telemPacket[telemIndex++] = data;
+
+          if (telemIndex == TELEM_PKT_SIZE-1)
+          {
+            // process this packet
+            processTelemPacket(); // inline function just to make this code section easier to read
+            telemState = TS_IDLE;
+          }
+        }
+        break;
+
+      case TS_XOR:
+        data = data ^ 0x60;
+        telemState = TS_DATA;
+        break;
+
+      default:
+        telemState = TS_IDLE; // nonsense data byte received. Ignore it.
+
+    }
+  }
+}
+  
 /*
   Empties any current USART0 receiver buffer content into the Fr-Sky packet
   parser state machine. (Called from main loop.)
@@ -402,19 +542,6 @@ inline void FRSKY_EnableRXD(void)
   UCSR0B |= (1 << RXEN0);  // enable RX
   UCSR0B |= (1 << RXCIE0); // enable Interrupt
 }
-
-#if 0
-void FRSKY_DisableTXD(void)
-{
-  UCSR0B &= ~((1 << TXEN0) | (1 << UDRIE0)); // disable TX pin and interrupt
-}
-
-void FRSKY_DisableRXD(void)
-{
-  UCSR0B &= ~(1 << RXEN0);  // disable RX
-  UCSR0B &= ~(1 << RXCIE0); // disable Interrupt
-}
-#endif
 
 void FRSKY_Init(void)
 {
