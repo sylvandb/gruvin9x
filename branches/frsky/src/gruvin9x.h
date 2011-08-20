@@ -118,7 +118,11 @@
 #if defined (PCBV3)
 #define OUT_C_LIGHT   0
 #else
+#ifndef DPPMPB7_HARDWARE
 #define OUT_B_LIGHT   7
+#else
+#define OUT_B_LIGHT   0
+#endif
 #endif
 
 #define INP_B_KEY_LFT 6
@@ -127,7 +131,14 @@
 #define INP_B_KEY_DWN 3
 #define INP_B_KEY_EXT 2
 #define INP_B_KEY_MEN 1
+//vinceofdrink@gmail harwared ppm
+//Orginal bitbang port for PPM
+#ifndef DPPMPB7_HARDWARE
 #define OUT_B_PPM 0
+#else
+#define	OUT_B_PPM 7 //Will not be use
+#endif
+
 #define PORTC_LCD_CTRL PORTC
 #define OUT_C_LCD_E     5
 #define OUT_C_LCD_RnW   4

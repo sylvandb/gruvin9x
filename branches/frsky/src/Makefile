@@ -29,7 +29,7 @@
 
 #gruvin: PCB version -- OVERRIDES the following settings if not STD
 # Values: STD, V3, V4
-PCB = V3
+PCB = STD
 
 # Following options for PCB=STD only (ignored otherwise) ...
 
@@ -166,6 +166,10 @@ ifeq ($(PCB), STD)
 # STD PCB, so ...
 
   CPPDEFS += -DPCBSTD
+# If Hardware PPM mode ( PB0<->BP7) switch the Backlight output with the original PPM to use hardware facility to generate precise PPM (hardware mods)
+  ifeq ($(EXT), HARDPPM)
+   CPPDEFS += -DPPMPB7_HARDWARE
+  endif
 
 # If JETI-Support is enabled
   ifeq ($(EXT), JETI)

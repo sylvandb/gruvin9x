@@ -1623,6 +1623,7 @@ uint8_t ppmInState = 0; //0=unsync 1..8= wait for value i-1
 
 uint8_t heartbeat;
 
+
 ISR(TIMER1_COMPA_vect) //2MHz pulse generation
 {
   static uint8_t   pulsePol;
@@ -1637,6 +1638,9 @@ ISR(TIMER1_COMPA_vect) //2MHz pulse generation
     i++;
   }while(dt<1 && i<5);
 
+//vinceofdrink@gmail harwared ppm
+//Orginal bitbang for PPM
+#ifndef DPPMPB7_HARDWARE
   if(pulsePol)
   {
     PORTB |=  (1<<OUT_B_PPM); // GCC optimisation should result in a single SBI instruction
@@ -1647,8 +1651,13 @@ ISR(TIMER1_COMPA_vect) //2MHz pulse generation
   }
   g_tmr1Latency_max = max(dt,g_tmr1Latency_max);    // max has leap, therefore vary in length
   g_tmr1Latency_min = min(dt,g_tmr1Latency_min);    // min has leap, therefore vary in length
-
+#endif
   OCR1A  = *pulsePtr++;
+
+//vinceofdrink@gmail harwared ppm
+#if defined (DPPMPB7_HARDWARE)
+OCR1C=OCR1A;		//just copy the value of the OCR1A to OCR1C to test PPM out without to much change in the code not optimum but will not alter ppm precision
+#endif
 
   if( *pulsePtr == 0) {
     //currpulse=0;
@@ -2114,6 +2123,11 @@ int main(void)
   g_LightOffCounter = g_eeGeneral.lightAutoOff*500; //turn on light for x seconds - no need to press key Issue 152
 
   if(cModel!=g_eeGeneral.currModel) eeDirty(EE_GENERAL); // if model was quick-selected, make sure it sticks
+
+//addon Vinceofdrink@gmail (hardware ppm)
+#if defined (DPPMPB7_HARDWARE)
+  TCCR1A |=(1<<COM1C0); // (COM1C1=0 and COM1C0=1 in TCCR1A)  toogle the state of PB7  on each TCNT1=OCR1C
+#endif
 
 #if defined (PCBV3)
   TIMSK1 |= (1<<OCIE1A); // Pulse generator enable immediately before mainloop
