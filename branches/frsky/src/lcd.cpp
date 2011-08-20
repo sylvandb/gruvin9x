@@ -254,9 +254,6 @@ void lcd_outdezNAtt(uint8_t x, uint8_t y, int16_t val, uint8_t mode, uint8_t len
     {
       if (mode & DBLSIZE)
       {
-  uint8_t *p    = &displayBuf[ y / 8 * DISPLAY_W + lcd_lastPos ];
-  *p=0xaa;
-  /*
         if (mode & INVERS)
         {
           lcd_vline(lcd_lastPos, y, 2*FH-3);
@@ -269,7 +266,6 @@ void lcd_outdezNAtt(uint8_t x, uint8_t y, int16_t val, uint8_t mode, uint8_t len
           lcd_hline(lcd_lastPos, y+2*FH-3, 2);
         }
         lcd_lastPos += 3;
-    */
       }
       else
       {
