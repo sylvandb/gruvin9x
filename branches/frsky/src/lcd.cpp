@@ -515,7 +515,7 @@ void putsVolts(uint8_t x, uint8_t y, uint16_t volts, uint8_t att, bool noUnit)
 
 void putsVBat(uint8_t x,uint8_t y,uint8_t att, bool noUnit)
 {
-  putsVolts(x, y, g_vbat100mV, att|INVERS, noUnit);
+  putsVolts(x, y, g_vbat100mV, att, noUnit);
 }
 
 void putsChnRaw(uint8_t x, uint8_t y, uint8_t idx, uint8_t att)
