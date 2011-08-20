@@ -51,14 +51,15 @@ void lcd_img(uint8_t i_x,uint8_t i_y,const prog_uchar * imgdat,uint8_t idx,uint8
   }
 }
 
-void lcd_putcAtt(uint8_t x,uint8_t y,const char c,uint8_t mode)
+uint8_t lcd_lastPos;
+
+void lcd_putcAtt(uint8_t x, uint8_t y, const char c, uint8_t mode)
 {
   uint8_t *p    = &displayBuf[ y / 8 * DISPLAY_W + x ];
-  //uint8_t *pmax = &displayBuf[ DISPLAY_H/8 * DISPLAY_W ];
 
   prog_uchar    *q = &font_5x8_x20_x7f[ + (c-0x20)*5];
   bool         inv = (mode & INVERS) ? true : (mode & BLINK ? BLINK_ON_PHASE : false);
-  if(mode&DBLSIZE)
+  if(mode & DBLSIZE)
   {
     /* each letter consists of ten top bytes followed by
      * five bottom by ten bottom bytes (20 bytes per 
@@ -90,17 +91,7 @@ void lcd_putcAtt(uint8_t x,uint8_t y,const char c,uint8_t mode)
       }   
     }   
 
-//    for(char i=5; i>=0; i--){
-//      uint8_t b = i ? pgm_read_byte(q++) : 0;
-//      if(inv) b=~b;
-//      static uint8_t dbl[]={0x00,0x03,0x0c,0x0f, 0x30,0x33,0x3c,0x3f,
-//                            0xc0,0xc3,0xcc,0xcf, 0xf0,0xf3,0xfc,0xff};
-//      if(&p[DISPLAY_W+1] < DISPLAY_END){
-//        p[0] = p[1] = dbl[b&0xf];
-//        p[DISPLAY_W]=p[DISPLAY_W+1] = dbl[b>>4];
-//        p+=2;
-//      }
-//    }
+    lcd_lastPos = x + 2*FW;
   }
   else {
     uint8_t condense=0;
@@ -119,6 +110,8 @@ void lcd_putcAtt(uint8_t x,uint8_t y,const char c,uint8_t mode)
         if(p<DISPLAY_END) *p++ = inv ? ~b : b;
     }
     if(p<DISPLAY_END) *p++ = inv ? ~0 : 0;
+
+    lcd_lastPos = x + FW;
   }
 }
 
@@ -156,7 +149,6 @@ void lcd_putsn_P(uint8_t x,uint8_t y,const prog_char * s,uint8_t len)
 
 void lcd_putsAtt(uint8_t x,uint8_t y,const prog_char * s,uint8_t mode)
 {
-  //while(char c=pgm_read_byte(s++)) {
   while(1) {
     char c = (mode & BSS) ? *s++ : pgm_read_byte(s++);
     if(!c) break;
@@ -164,13 +156,13 @@ void lcd_putsAtt(uint8_t x,uint8_t y,const prog_char * s,uint8_t mode)
     x+=FW;
     if(mode&DBLSIZE) x+=FW;
   }
-  lcd_lastPos = x;
 }
 
 void lcd_puts_P(uint8_t x,uint8_t y,const prog_char * s)
 {
   lcd_putsAtt( x, y, s, 0);
 }
+
 void lcd_outhex4(uint8_t x,uint8_t y,uint16_t val)
 {
   x+=FWNUM*4;
@@ -183,17 +175,95 @@ void lcd_outhex4(uint8_t x,uint8_t y,uint16_t val)
     val>>=4;
   }
 }
-void lcd_outdez(uint8_t x,uint8_t y,int16_t val)
+void lcd_outdez(uint8_t x,uint8_t y, uint16_t val)
 {
   lcd_outdezAtt(x,y,val,0);
 }
 
-void lcd_outdezAtt(uint8_t x,uint8_t y,int16_t val,uint8_t mode)
+void lcd_outdezAtt(uint8_t x,uint8_t y, uint16_t val, uint8_t mode)
 {
-  lcd_outdezNAtt( x,y,val,mode,5);
+  lcd_outdezNAtt( x, y, val, mode, 5);
 }
 
-uint8_t lcd_lastPos;
+/*
+G: That's it. I've had enough of the growing annoying  outdez function. 
+   Rewriting it from scratch
+
+USAGE:
+  lcd_outdezNAtt(x-coord, y-coord, (un)signed-value{0..65535|0..+/-32768}, 
+                  mode_flags, length{0..63}[+[LEADING0|TRAILING0])
+
+  Available mode_flas: PREC{1..3}, SIGN (for programmer selected signed numbers
+                  to allow for unsigned values up to the ful 65535 16-bit limt))
+
+  LEADING0 means pad 0 to the left of sig. digits up to 'len' total characters
+  TRAILING0 means pad 0 to the right of sig. digits up to 'len' total characters
+            (for use with manual decimal parts on right of period (.))
+*/
+#define PREC(n) (n>>4 & 3)
+void lcd_outdezNAtt(uint8_t x, uint8_t y, uint16_t val, uint8_t mode, uint8_t len)
+{
+  char digits[5]; // sig. digits buffered in reverse order
+  uint8_t lastDigit;
+  uint8_t prec = PREC(mode);
+  uint8_t maxLen = len & 0x3f;
+
+  bool neg = false;
+  if (mode & SIGN && (int16_t)val < 0) { neg=true; val=-(int16_t)val; }
+
+  // Buffer characters and determine the significant digit count
+  for (lastDigit = 0; lastDigit < maxLen; lastDigit++)
+  {
+    digits[lastDigit] = (val % 10) + '0';
+    val /= 10;
+    if (!val) break;
+  }
+
+  lcd_lastPos = x;
+  if (~mode & LEFT) // determine correct x-coord starting point for decimal aligned
+  {
+    // Starting point for regular unsigned, no decimal number
+    if (mode & DBLSIZE) 
+      lcd_lastPos -= 2*FW*(lastDigit+1) + ((len & (LEADING0|TRAILING0)) ? 2*(FW-2)*(maxLen - lastDigit - 1) : 0);
+    else
+      lcd_lastPos -= (FW-1)*(lastDigit+1) + ((len & (LEADING0|TRAILING0)) ? (FW-1)*(maxLen - lastDigit - 1) : 0);
+
+    if (prec>0) lcd_lastPos += (mode & DBLSIZE) ? (2*prec*(FW-2)) + 4 : (prec*(FW-1)) + 2; // we use lcd_plot to draw the decimal point
+
+    if (neg) lcd_lastPos -= (mode & DBLSIZE) ? 2*FW : FW;
+  }
+
+  if (neg) lcd_putcAtt(lcd_lastPos++, y, '-', mode); // apply sign
+
+  if (len & LEADING0)
+    for (int8_t i=lastDigit+1; i < maxLen; i++)
+      lcd_putcAtt(lcd_lastPos-1, y, '0', mode);
+
+  for (int8_t i=lastDigit; i >= 0; i--)
+  {
+    lcd_putcAtt(lcd_lastPos-1, y, digits[i], mode);
+    if (prec && i==prec) 
+    {
+      if (mode & DBLSIZE)
+      {
+        lcd_hline(lcd_lastPos, y+2*FH-4, 2, mode);
+        lcd_hline(lcd_lastPos, y+2*FH-3, 2, mode);
+        lcd_lastPos += 3;
+      }
+      else
+      {
+        lcd_plot(lcd_lastPos, y+FH-2, mode);
+        lcd_lastPos += 2;
+      }
+    }
+  }
+  if (len & TRAILING0)
+    for (int8_t i=lastDigit+1; i < maxLen; i++)
+      lcd_putcAtt(lcd_lastPos-1, y, '0', mode);
+
+}
+
+/*
 #define PREC(n) ((n&0x20) ? ((n&0x10) ? 2 : 1) : 0)
 void lcd_outdezNAtt(uint8_t x,uint8_t y,int16_t val,uint8_t mode,uint8_t len)
 {
@@ -202,20 +272,26 @@ void lcd_outdezNAtt(uint8_t x,uint8_t y,int16_t val,uint8_t mode,uint8_t len)
   int16_t tmp = abs(val);
   uint8_t xn = 0;
   uint8_t ln = 2;
+  uint8_t lastXpos;
   char c;
 
   if (mode & DBLSIZE) {
     fw += FWNUM;
     if (mode & LEFT) {
+      if (tmp >= 1000)
+        x += 2*FW;
       if (tmp >= 100 || prec==2)
         x += 2*FW;
       if (tmp >= 10 || prec>0)
         x += 2*FW;
+      if (len & PAD0LEFT)
+        x += (len&0x3f-1) * 2*FW;
+      x--;
     }
     else {
-      x -= 2*FW;
+      x -= 2*FW; 
     }
-    lcd_lastPos = x + 2*FW;
+    lastXpos = x + 2*FW;
   }
   else {
     if (mode & LEFT) {
@@ -223,18 +299,24 @@ void lcd_outdezNAtt(uint8_t x,uint8_t y,int16_t val,uint8_t mode,uint8_t len)
         x += 2;
       if (val < 0)
         x += FWNUM;
+      if (tmp >= 1000)
+        x += FWNUM;
       if (tmp >= 100 || prec==2)
         x += FWNUM;
       if (tmp >= 10 || prec>0)
         x += FWNUM;
+      if (len & PAD0LEFT)
+        x += ((len&0x3f)-1) * FWNUM;
+      x--;
     }
     else {
-      x -= FW;
+      x -= FW; 
     }
-    lcd_lastPos = x + FW;
+    lastXpos = x + FW;
   }
 
-  for (uint8_t i=1; i<=len; i++) {
+  uint8_t i;
+  for (i=1; i<=(len & 0x3f); i++) {
     c = (tmp % 10) + '0';
     lcd_putcAtt(x, y, c, mode);
     if (prec==i) {
@@ -270,17 +352,32 @@ void lcd_outdezNAtt(uint8_t x,uint8_t y,int16_t val,uint8_t mode,uint8_t len)
       }
       else if (mode & LEADING0)
         mode -= LEADING0;
-      else
+      else if (!(len & PAD0LEFT))
         break;
     }
     x-=fw;
   }
+
+  // G: ran out of bits to add a PAD0RIGHT/LEFT flags. So masked len to max 0x3f and put an 0x80 flag on top.
+  if (len & PAD0RIGHT) // pad out zeros to right up to len
+  {
+    x = lastXpos-1;
+    for (; i<(len & 0x3f); i++)
+    {
+      lcd_putcAtt(x, y, '0', mode);
+      x += fw;
+    }
+    lastXpos = x;
+  }
+
   if (xn) {
     lcd_hline(xn, y+2*FH-4, ln);
     lcd_hline(xn, y+2*FH-3, ln);
   }
   if(val<0) lcd_putcAtt(x-fw,y,'-',mode);
+  lcd_lastPos = lastXpos;
 }
+*/
 
 void lcd_mask(uint8_t *p, uint8_t mask, uint8_t att)
 {
@@ -382,20 +479,20 @@ void putsTime(uint8_t x,uint8_t y,int16_t tme,uint8_t att,uint8_t att2)
   }
 
   lcd_putcAtt(x, y, ':', att&att2);
-  lcd_outdezNAtt((att&DBLSIZE) ? x + 2 : x, y, tme/60, LEADING0|att,2);
+  lcd_outdezNAtt((att&DBLSIZE) ? x + 2 : x, y, tme/60, att, 2|LEADING0);
   x += (att&DBLSIZE) ? FWNUM*6-2 : FW*3-1;
-  lcd_outdezNAtt(x, y, tme%60, LEADING0|att2,2);
+  lcd_outdezNAtt(x, y, tme%60, att2, 2|LEADING0);
 }
 
-void putsVolts(uint8_t x,uint8_t y, uint16_t volts, uint8_t att)
+void putsVolts(uint8_t x, uint8_t y, uint16_t volts, uint8_t att, bool noUnit)
 {
   lcd_outdezAtt(x, y, volts, att|PREC1);
-  if(!(att&NO_UNIT)) lcd_putcAtt(lcd_lastPos, y, 'v', att);
+  if(!noUnit) lcd_putcAtt(lcd_lastPos, y, 'v', att);
 }
 
-void putsVBat(uint8_t x,uint8_t y,uint8_t att)
+void putsVBat(uint8_t x,uint8_t y,uint8_t att, bool noUnit)
 {
-  putsVolts(x, y, g_vbat100mV, att);
+  putsVolts(x, y, g_vbat100mV, att, noUnit);
 }
 
 void putsChnRaw(uint8_t x, uint8_t y, uint8_t idx, uint8_t att)
@@ -457,10 +554,10 @@ void putsTmrMode(uint8_t x, uint8_t y, uint8_t attr)
 }
 
 #ifdef FRSKY
-void putsTelemetry(uint8_t x, uint8_t y, uint8_t val, uint8_t unit, uint8_t att)
+void putsTelemetry(uint8_t x, uint8_t y, uint8_t val, uint8_t unit, uint8_t att, bool noUnit)
 {
   if (unit == 0/*v*/) {
-    putsVolts(x, y, val, att);
+    putsVolts(x, y, val, att, noUnit);
   }
   else {
     lcd_outdezAtt(x, y, val, att);

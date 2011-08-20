@@ -40,7 +40,7 @@ uint8_t tabViews[] = {
   3, /*e_inputs*/
   1, /*e_timer2*/
 #ifdef FRSKY
-  2, /*e_telemetry*/
+  4, /*e_telemetry*/
 #endif
 };
 
@@ -63,7 +63,8 @@ void menuMainView(uint8_t event)
       break;
     case EVT_KEY_BREAK(KEY_RIGHT):
     case EVT_KEY_BREAK(KEY_LEFT):
-      g_eeGeneral.view = (g_eeGeneral.view + (event == EVT_KEY_BREAK(KEY_RIGHT) ? ALTERNATE : tabViews[view]*ALTERNATE-ALTERNATE)) % (tabViews[view]*ALTERNATE);
+      g_eeGeneral.view = (g_eeGeneral.view + (event == EVT_KEY_BREAK(KEY_RIGHT) ? 
+            ALTERNATE : tabViews[view]*ALTERNATE-ALTERNATE)) % (tabViews[view]*ALTERNATE);
       eeDirty(EE_GENERAL);
       beepKey();
       break;
@@ -140,7 +141,9 @@ void menuMainView(uint8_t event)
   if(getSwitch(g_model.phaseData[0].swtch, 0) && !trimSwLock) setStickCenter();
   trimSwLock = getSwitch(g_model.phaseData[0].swtch,0);
 
-  if (g_eeGeneral.view == e_telemetry+ALTERNATE) {
+  ///////////////////////////////////////////////////////////////////////
+  /// Upper Section of Display common to all but telemetry alt. views ///
+  if (g_eeGeneral.view >= e_telemetry+ALTERNATE) {
     lcd_putsnAtt(0, 0, g_model.name, sizeof(g_model.name), ZCHAR|INVERS);
     uint8_t att = (g_vbat100mV < g_eeGeneral.vBatWarn ? INVERS|BLINK : INVERS);
     putsVBat(14*FW,0,att);
@@ -152,7 +155,7 @@ void menuMainView(uint8_t event)
   else {
     uint8_t att = (g_vbat100mV < g_eeGeneral.vBatWarn ? BLINK : 0) | DBLSIZE;
     lcd_putsnAtt(2*FW-2, 0*FH, g_model.name, sizeof(g_model.name), ZCHAR|DBLSIZE);
-    putsVBat(6*FW+2, 2*FH, att|NO_UNIT);
+    putsVBat(4*FW+2, 2*FH, att, NO_UNIT);
     lcd_putc(6*FW+2, 3*FH, 'V');
 
     if(s_timerState != TMR_OFF) {
@@ -193,11 +196,15 @@ void menuMainView(uint8_t event)
       lcd_square(xm-3, ym-3, 7);
     }
   }
+  /// Upper Section of Display common to all but telemetry alt. views ///
+  ///////////////////////////////////////////////////////////////////////
 
-  if(view<e_inputs) {
+  ///////////////////////////////////////////////////////////////////////
+  /// Lower section of display                                        ///
+  if(view < e_inputs) {
     for(uint8_t i=0; i<8; i++)
     {
-      uint8_t x0,y0;
+      uint8_t x0, y0;
       int16_t val = g_chans512[i];
       //val += g_model.limitData[i].revert ? g_model.limitData[i].offset : -g_model.limitData[i].offset;
       switch(view)
@@ -239,6 +246,7 @@ void menuMainView(uint8_t event)
     static uint8_t staticTelemetry[2];
     static uint8_t staticRSSI[2];
     static bool alarmRaised[2];
+
     if (frskyStreaming) {
       uint8_t y0, x0, val, blink;
       if (!displayCount) {
@@ -249,8 +257,9 @@ void menuMainView(uint8_t event)
         }
       }
       displayCount = (displayCount+1) % 50;
-      if (g_eeGeneral.view & ALTERNATE) {
+      if (g_eeGeneral.view == e_telemetry+ALTERNATE) { // if on first alternate telemetry view
 
+        // TODO -- this screen line buffer is currently always empty
         // Write user data characters along line, scrolling horizontally
         // Not much use for telemetry. Maybe do hex chars instead or get 
         // rid of it altogether XXX
@@ -259,6 +268,7 @@ void menuMainView(uint8_t event)
           char c = userDataDisplayBuf[ii];
           if (c) lcd_putc(ii*FW, 1*FH, c);
         }
+        //////////////////////////////////////////
 
         if (g_model.frsky.channels[0].ratio || g_model.frsky.channels[1].ratio) {
           x0 = 0;
@@ -269,9 +279,9 @@ void menuMainView(uint8_t event)
               lcd_putc(x0+FW, 3*FH, '1'+i);
               x0 += 3*FW;
               val = ((uint16_t)staticTelemetry[i]+g_model.frsky.channels[i].offset)*g_model.frsky.channels[i].ratio / 255;
-              putsTelemetry(x0-2, 2*FH, val, g_model.frsky.channels[i].type, blink|DBLSIZE|LEFT);
+              putsTelemetry(x0, 2*FH, val, g_model.frsky.channels[i].type, blink|DBLSIZE|LEFT);
               val = ((int16_t)frskyTelemetry[i].min+g_model.frsky.channels[i].offset)*g_model.frsky.channels[i].ratio / 255;
-              putsTelemetry(x0+FW, 4*FH, val, g_model.frsky.channels[i].type, 0);
+              putsTelemetry(x0, 4*FH, val, g_model.frsky.channels[i].type, 0);
               val = ((int16_t)frskyTelemetry[i].max+g_model.frsky.channels[i].offset)*g_model.frsky.channels[i].ratio / 255;
               putsTelemetry(x0+3*FW, 4*FH, val, g_model.frsky.channels[i].type, LEFT);
               x0 = 11*FW-2;
@@ -287,6 +297,65 @@ void menuMainView(uint8_t event)
         lcd_outdezAtt(14 * FW - 4, 5*FH+2, staticRSSI[1], DBLSIZE|LEFT);
         lcd_outdezAtt(15 * FW - 2, 7*FH, frskyRSSI[1].min, 0);
         lcd_outdezAtt(17 * FW - 2, 7*FH, frskyRSSI[1].max, LEFT);
+      }
+      else if (g_eeGeneral.view == e_telemetry+2*ALTERNATE) { //e_telemetry+ALTERNATE+1) { // if on second alternate telemetry view {
+        lcd_putsAtt(19*FW-4, 0, PSTR("GPS"), INVERS); // XXX TEMP
+
+        // date XXX: day and month seem to always be zero. Bug with the Fr-Sky hub?
+        lcd_outdezNAtt(1*FW, 1*FH, gTelem_GPSyear+2000, LEFT, 4);
+        lcd_putc(lcd_lastPos, 1*FH, '-');
+        lcd_outdezNAtt(lcd_lastPos, 1*FH, gTelem_GPSmonth, LEFT, 2|LEADING0);
+        lcd_putc(lcd_lastPos, 1*FH, '-');
+        lcd_outdezNAtt(lcd_lastPos, 1*FH, gTelem_GPSday, LEFT, 2|LEADING0);
+
+        // time
+        lcd_outdezNAtt(FW*10+8, 1*FH, gTelem_GPShour, LEFT, 2|LEADING0);
+        lcd_putc(lcd_lastPos, 1*FH, ':');
+        lcd_outdezNAtt(lcd_lastPos, 1*FH, gTelem_GPSmin, LEFT, 2|LEADING0);
+        lcd_putc(lcd_lastPos, 1*FH, ':');
+        lcd_outdezNAtt(lcd_lastPos, 1*FH, gTelem_GPSsec, LEFT, 2|LEADING0);
+
+        // Longitude
+        lcd_outdezAtt(FW*3-2, 3*FH,  gTelem_GPSlongitude[0] / 100, 0); // ddd before '.'
+        lcd_putc(lcd_lastPos, 3*FH, '@');
+        uint8_t mn = gTelem_GPSlongitude[0] % 100;
+        lcd_outdezNAtt(lcd_lastPos, 3*FH, mn, LEFT, 2|LEADING0); // mm before '.'
+        lcd_plot(lcd_lastPos, 4*FH-2, 0); // small decimal point
+        lcd_outdezNAtt(lcd_lastPos+2, 3*FH, gTelem_GPSlongitude[1], LEFT, 4|TRAILING0); // after '.'
+        lcd_putc(lcd_lastPos+1, 3*FH, gTelem_GPSlongitudeEW ? 'E' : 'W'); 
+
+        // Latitude
+        lcd_outdezAtt(lcd_lastPos+3*FW+3, 3*FH,  gTelem_GPSlatitude[0] / 100, 0); // ddd before '.'
+        lcd_putc(lcd_lastPos, 3*FH, '@');
+        mn = gTelem_GPSlatitude[0] % 100;
+        lcd_outdezNAtt(lcd_lastPos, 3*FH, mn, LEFT, 2|LEADING0); // mm before '.'
+        lcd_plot(lcd_lastPos, 4*FH-2, 0); // small decimal point
+        lcd_outdezNAtt(lcd_lastPos+2, 3*FH, gTelem_GPSlatitude[1], LEFT, 4|TRAILING0); // after '.'
+        lcd_putc(lcd_lastPos+1, 3*FH, gTelem_GPSlatitudeNS ? 'S' : 'N'); 
+
+        // Course / Heading
+        lcd_puts_P(5, 5*FH, PSTR("Hdg:"));
+        lcd_outdezNAtt(lcd_lastPos, 5*FH, gTelem_GPScourse[0], LEFT, 3|LEADING0); // before '.'
+        lcd_plot(lcd_lastPos, 6*FH-2, 0); // small decimal point
+        lcd_outdezAtt(lcd_lastPos+2, 5*FH, gTelem_GPScourse[1], LEFT); // after '.'
+        lcd_putc(lcd_lastPos, 5*FH, '@');
+
+        // Speed
+        lcd_puts_P(76, 5*FH, PSTR("Spd:"));
+        lcd_outdezAtt(lcd_lastPos, 5*FH, gTelem_GPSspeed[0], LEFT); // before '.'
+        lcd_plot(lcd_lastPos, 6*FH-2, 0); // small decimal point
+        lcd_outdezAtt(lcd_lastPos+2, 5*FH, gTelem_GPSspeed[1], LEFT); // after '.'
+
+        // Altititude 
+        lcd_puts_P(7*FW, 7*FH, PSTR("Alt:"));
+        lcd_outdezNAtt(lcd_lastPos, 7*FH, gTelem_GPSaltitude[0], LEFT, 3|LEADING0); // before '.'
+        lcd_plot(lcd_lastPos, 8*FH-2, 0); // small decimal point
+        lcd_outdezAtt(lcd_lastPos+2, 7*FH, gTelem_GPSaltitude[1], LEFT); // after '.'
+        lcd_putc(lcd_lastPos, 7*FH, 'm');
+
+      }
+      else if (g_eeGeneral.view == e_telemetry+3*ALTERNATE) { //e_telemetry+ALTERNATE+1) { // if on second alternate telemetry view {
+        lcd_puts_P(0,1*FH, PSTR("GPS TWO")); // XXX TEMP
       }
       else {
 
@@ -313,7 +382,7 @@ void menuMainView(uint8_t event)
     }
     else {
       
-      if (g_eeGeneral.view & ALTERNATE)
+      if (g_eeGeneral.view == e_telemetry+ALTERNATE) // if on first alternate telemetry view
         lcd_putsAtt(0, FH*2, g_logFilename, BSS); // Show log filename (or error msg)
       lcd_putsAtt(22, 40, PSTR("NO DATA"), DBLSIZE);
     }
@@ -359,4 +428,6 @@ void menuMainView(uint8_t event)
   {
     putsTime(30+5*FW, FH*5, timer2, DBLSIZE, DBLSIZE);
   }
+  /// Lower section of display                                        ///
+  ///////////////////////////////////////////////////////////////////////
 }

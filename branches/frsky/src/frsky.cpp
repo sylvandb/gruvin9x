@@ -411,7 +411,7 @@ void parseTelemHubData()
         {
           telemPacket[telemIndex++] = data;
 
-          if (telemIndex == TELEM_PKT_SIZE-1)
+          if (telemIndex == TELEM_PKT_SIZE)
           {
             // process this packet
             processTelemPacket(); // inline function just to make this code section easier to read
@@ -422,6 +422,9 @@ void parseTelemHubData()
 
       case TS_XOR:
         data = data ^ 0x60;
+        if (telemIndex < TELEM_PKT_SIZE)
+          telemPacket[telemIndex++] = data;
+        // can never been end of frame so ...
         telemState = TS_DATA;
         break;
 

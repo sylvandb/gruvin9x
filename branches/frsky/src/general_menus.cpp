@@ -310,11 +310,11 @@ void menuProcTime(uint8_t event)
               if(attr && (s_editMode || p1valdiff)) at->tm_year = checkIncDec( event, at->tm_year, 110, 200, 0);
               break;
             case 1:
-              lcd_outdezAtt(FW*13, y, at->tm_mon+1, attr | ((at->tm_mon<9) ? LEADING0 : 0));
+              lcd_outdezNAtt(FW*13, y, at->tm_mon+1, attr, 2|LEADING0);
               if(attr && (s_editMode || p1valdiff)) at->tm_mon = checkIncDec( event, at->tm_mon, 0, 11, 0);
               break;
             case 2:
-              lcd_outdezAtt(FW*16-2, y, at->tm_mday, attr | ((t.tm_mday<10) ? LEADING0 : 0));
+              lcd_outdezNAtt(FW*16-2, y, at->tm_mday, attr, 2|LEADING0);
               if(attr && (s_editMode || p1valdiff)) at->tm_mday = checkIncDec( event, at->tm_mday, 1, 31, 0);
               break;
           }
@@ -324,15 +324,15 @@ void menuProcTime(uint8_t event)
           switch (j)
           {
             case 0:
-              lcd_outdezAtt(FW*10+1, y, at->tm_hour, attr | ((at->tm_hour<10) ? LEADING0 : 0));
+              lcd_outdezNAtt(FW*10+1, y, at->tm_hour, attr, 2|LEADING0);
               if(attr && (s_editMode || p1valdiff)) at->tm_hour = checkIncDec( event, at->tm_hour, 0, 23, 0);
               break;
             case 1:
-              lcd_outdezAtt(FW*13-1, y, at->tm_min, attr | ((at->tm_min<10) ? LEADING0 : 0));
+              lcd_outdezNAtt(FW*13-1, y, at->tm_min, attr, 2|LEADING0);
               if(attr && (s_editMode || p1valdiff)) at->tm_min = checkIncDec( event, at->tm_min, 0, 59, 0);
               break;
             case 2:
-              lcd_outdezAtt(FW*16-2, y, at->tm_sec, attr | ((t.tm_sec<10) ? LEADING0 : 0));
+              lcd_outdezNAtt(FW*16-2, y, at->tm_sec, attr, 2|LEADING0);
               if(attr && (s_editMode || p1valdiff)) at->tm_sec = checkIncDec( event, at->tm_sec, 0, 59, 0);
               break;
           }
@@ -396,7 +396,7 @@ void menuProcTrainer(uint8_t event)
   }
 
   lcd_puts_P(0*FW, y, PSTR("Multiplier"));
-  lcd_outdezAtt(13*FW, y, g_eeGeneral.PPM_Multiplier+10, (sub==4 ? INVERS : 0)|PREC1);
+  lcd_outdezAtt(11*FW, y, g_eeGeneral.PPM_Multiplier+10, (sub==4 ? INVERS : 0)|PREC1);
   if(sub==4) CHECK_INCDEC_GENVAR(event, g_eeGeneral.PPM_Multiplier, -10, 40);
   y += FH;
 
@@ -478,14 +478,14 @@ void menuProcDiagAna(uint8_t event)
     lcd_putsn_P( 4*FW, y,PSTR("A1A2A3A4A5A6A7A8")+2*i,2);
     lcd_outhex4( 8*FW, y,anaIn(i));
     if(i<7)  lcd_outdez(17*FW, y, (int32_t)calibratedStick[i]*100/1024);
-    if(i==7) putsVolts(17*FW, y, g_vbat100mV, (sub==1 ? INVERS : 0));
+    if(i==7) putsVolts(16*FW-3, y, g_vbat100mV, (sub==1 ? INVERS : 0));
   }
   // lcd_outdezAtt( 21*FW, 3*FH, g_eeGeneral.vBatCalib, 0) ;
   // lcd_outdezAtt( 21*FW, 4*FH, abRunningAvg, 0) ;
   // Display raw BandGap result (debug)
   lcd_putsn_P( 19*FW, 5*FH,PSTR("BG"),2) ;
   lcd_outdezAtt(21*FW, 6*FH, BandGap, 0);
-  lcd_outdezAtt(21*FW, 7*FH, anaIn(7)*35/512, PREC1);
+  lcd_outdezAtt(20*FW-3, 7*FH, anaIn(7)*35/512, PREC1);
 
   if(sub==1) CHECK_INCDEC_GENVAR(event, g_eeGeneral.vBatCalib, -127, 127);
 

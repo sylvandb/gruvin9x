@@ -161,7 +161,7 @@ void menuProcModelSelect(uint8_t event)
   for(uint8_t i=0; i<6; i++){
     uint8_t y=(i+2)*FH;
     uint8_t k=i+s_pgOfs;
-    lcd_outdezNAtt(  3*FW, y, k+1, ((sub==k) ? INVERS : 0) + LEADING0,2);
+    lcd_outdezNAtt(  3*FW, y, k+1, ((sub==k) ? INVERS : 0), 2|LEADING0);
     static char buf[sizeof(g_model.name)+5];
     if(k==g_eeGeneral.currModel) lcd_putc(1,  y,'*');
     eeLoadModelName(k, buf, sizeof(buf));
@@ -280,7 +280,7 @@ void menuProcModel(uint8_t _event)
   uint8_t subSub = mstate2.m_posHorz;
   uint8_t y = 1*FH;
 
-  lcd_outdezNAtt(7*FW,0,g_eeGeneral.currModel+1,INVERS+LEADING0,2);
+  lcd_outdezNAtt(7*FW,0,g_eeGeneral.currModel+1,INVERS, 2|LEADING0);
 
   uint8_t subN = 1;
   if(s_pgOfs<subN) {
@@ -1624,7 +1624,7 @@ void menuProcTelemetry(uint8_t event)
     if(s_pgOfs<subN) {
       y=(subN-s_pgOfs)*FH;
       lcd_putsAtt(4, y, PSTR("Max"), 0);
-      putsTelemetry(8*FW, y, g_model.frsky.channels[i].ratio, g_model.frsky.channels[i].type, (sub==subN && subSub==0 ? blink:0)|NO_UNIT|LEFT);
+      putsTelemetry(8*FW, y, g_model.frsky.channels[i].ratio, g_model.frsky.channels[i].type, (sub==subN && subSub==0 ? blink:0)|LEFT, NO_UNIT);
       lcd_putsnAtt(lcd_lastPos, y, PSTR("v-")+g_model.frsky.channels[i].type, 1, (sub==subN && subSub==1 ? blink:0));
       if (sub==subN && (s_editMode || p1valdiff)) {
         if (subSub == 0)
@@ -1718,7 +1718,7 @@ void menuProcTemplates(uint8_t event)
     if(k==NUM_TEMPLATES) break;
 
     //write mix names here
-    lcd_outdezNAtt(3*FW, y, k+1, (sub==k ? INVERS : 0) + LEADING0,2);
+    lcd_outdezNAtt(3*FW, y, k+1, (sub==k ? INVERS : 0), 2|LEADING0);
     lcd_putsAtt(  4*FW, y, n_Templates[k],BSS | (s_noHi ? 0 : (sub==k ? INVERS  : 0)));
     y+=FH;
   }

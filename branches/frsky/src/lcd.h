@@ -40,14 +40,15 @@
 #define BSS           0x10
 #define ZCHAR         0x20
 
-/* lcd outdez flags */
-#define LEADING0      0x10
-#define PREC1         0x20
-#define PREC2         0x30 /* 4 modes in 2bits! */
-#define LEFT          0x40 /* align left */
-
-/* time & telemetry flags */
-#define NO_UNIT       0x80
+/* lcd outdezN flags */
+#define PREC1         0x10
+#define PREC2         0x20
+#define PREC3         0x30
+#define SIGN          0x40
+#define LEFT          0x80 /* align left */
+#define LEADING0      0x40 /* add to 'len' to use this */
+#define TRAILING0     0x80 /* add to 'len' to use this */
+#define NO_UNIT true
 
 extern uint8_t lcd_lastPos;
 
@@ -61,11 +62,11 @@ extern void lcd_putsn_P(unsigned char x,unsigned char y,const prog_char * s,unsi
 
 extern void lcd_outhex4(unsigned char x,unsigned char y,uint16_t val);
 
-extern void lcd_outdezAtt(unsigned char x,unsigned char y,int16_t val,uint8_t mode);
-extern void lcd_outdezNAtt(uint8_t x,uint8_t y,int16_t val,uint8_t mode,uint8_t len);
-extern void lcd_outdez(unsigned char x,unsigned char y,int16_t val);
+extern void lcd_outdezAtt(unsigned char x,unsigned char y, uint16_t val,uint8_t mode);
+extern void lcd_outdezNAtt(uint8_t x,uint8_t y,uint16_t val, uint8_t mode,uint8_t len);
+extern void lcd_outdez(unsigned char x,unsigned char y, uint16_t val);
 
-extern void putsSwitches(uint8_t x,uint8_t y,int8_t swtch,uint8_t att);
+extern void putsSwitches(uint8_t x,uint8_t y,int8_t swtch, uint8_t att);
 extern void putsFlightPhase(uint8_t x, uint8_t y, int8_t idx, uint8_t att);
 extern void putsTmrMode(uint8_t x, uint8_t y, uint8_t attr);
 
@@ -73,12 +74,12 @@ extern void putsChnRaw(uint8_t x,uint8_t y,uint8_t idx1,uint8_t att);
 extern void putsChn(uint8_t x,uint8_t y,uint8_t idx1,uint8_t att);
 extern void putsChnLetter(uint8_t x, uint8_t y, uint8_t idx, uint8_t attr);
 
-extern void putsVolts(uint8_t x,uint8_t y, uint16_t volts, uint8_t att);
-extern void putsVBat(uint8_t x,uint8_t y,uint8_t att);
-extern void putsTime(uint8_t x,uint8_t y,int16_t tme,uint8_t att,uint8_t att2);
+extern void putsVolts(uint8_t x,uint8_t y, uint16_t volts, uint8_t att, bool noUnit = false);
+extern void putsVBat(uint8_t x,uint8_t y, uint8_t att, bool noUnit = false);
+extern void putsTime(uint8_t x,uint8_t y, int16_t tme, uint8_t att, uint8_t att2);
 
 #ifdef FRSKY
-extern void putsTelemetry(uint8_t x, uint8_t y, uint8_t val, uint8_t unit, uint8_t att);
+extern void putsTelemetry(uint8_t x, uint8_t y, uint8_t val, uint8_t unit, uint8_t att, bool noUnit = false);
 #endif
 
 #define LCD_XOR   0x00
