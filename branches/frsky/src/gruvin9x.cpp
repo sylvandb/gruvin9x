@@ -2113,6 +2113,11 @@ int main(void)
 
   clearKeyEvents(); //make sure no keys are down before proceeding
 
+  //addon Vinceofdrink@gmail (hardware ppm)
+  #if defined (DPPMPB7_HARDWARE)
+    TCCR1A |=(1<<COM1C0); // (COM1C1=0 and COM1C0=1 in TCCR1A)  toogle the state of PB7  on each TCNT1=OCR1C
+  #endif
+
   setupPulses();
 
   wdt_enable(WDTO_500MS);
@@ -2124,10 +2129,7 @@ int main(void)
 
   if(cModel!=g_eeGeneral.currModel) eeDirty(EE_GENERAL); // if model was quick-selected, make sure it sticks
 
-//addon Vinceofdrink@gmail (hardware ppm)
-#if defined (DPPMPB7_HARDWARE)
-  TCCR1A |=(1<<COM1C0); // (COM1C1=0 and COM1C0=1 in TCCR1A)  toogle the state of PB7  on each TCNT1=OCR1C
-#endif
+
 
 #if defined (PCBV3)
   TIMSK1 |= (1<<OCIE1A); // Pulse generator enable immediately before mainloop
