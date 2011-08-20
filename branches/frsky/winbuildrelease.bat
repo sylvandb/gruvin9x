@@ -1,3 +1,8 @@
+@echo off
+echo This file needs updating to produce same results as *nix buildrelease
+pause
+exit
+
 cd src
 
 make clean  

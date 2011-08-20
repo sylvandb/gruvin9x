@@ -62,10 +62,9 @@ void lcd_putcAtt(uint8_t x, uint8_t y, const char c, uint8_t mode)
   if(mode & DBLSIZE)
   {
     /* each letter consists of ten top bytes followed by
-     * five bottom by ten bottom bytes (20 bytes per 
-     * char) */
+     * by ten bottom bytes (20 bytes per * char) */
     q = &font_10x16_x20_x7f[(c-0x20)*10 + ((c-0x20)/16)*160];
-    for(char i=5; i>=0; i--){
+    for(char i=5; i>=0; i--) {
       /*top byte*/
       uint8_t b1 = i>0 ? pgm_read_byte(q) : 0;
       /*bottom byte*/
@@ -74,7 +73,7 @@ void lcd_putcAtt(uint8_t x, uint8_t y, const char c, uint8_t mode)
       uint8_t b2 = i>0 ? pgm_read_byte(++q) : 0;
       /*bottom byte*/
       uint8_t b4 = i>0 ? pgm_read_byte(160+q) : 0;
-      q++;
+
       if(inv) {
         b1=~b1;
         b2=~b2;
@@ -89,6 +88,7 @@ void lcd_putcAtt(uint8_t x, uint8_t y, const char c, uint8_t mode)
         p[DISPLAY_W+1] = b4; 
         p+=2;
       }   
+      q++;
     }   
 
     lcd_lastPos = x + 2*FW;
@@ -235,6 +235,12 @@ void lcd_outdezNAtt(uint8_t x, uint8_t y, uint16_t val, uint8_t mode, uint8_t le
 
   if (neg) lcd_putcAtt(lcd_lastPos++, y, '-', mode); // apply sign
 
+  if (prec && !lastDigit) 
+  { 
+    lastDigit++;
+    digits[lastDigit]='0';
+  }
+
   if (len & LEADING0)
     for (int8_t i=lastDigit+1; i < maxLen; i++)
       lcd_putcAtt(lcd_lastPos-1, y, '0', mode);
@@ -242,17 +248,34 @@ void lcd_outdezNAtt(uint8_t x, uint8_t y, uint16_t val, uint8_t mode, uint8_t le
   for (int8_t i=lastDigit; i >= 0; i--)
   {
     lcd_putcAtt(lcd_lastPos-1, y, digits[i], mode);
+
+    // draw decimal point
     if (prec && i==prec) 
     {
       if (mode & DBLSIZE)
       {
-        lcd_hline(lcd_lastPos, y+2*FH-4, 2, mode);
-        lcd_hline(lcd_lastPos, y+2*FH-3, 2, mode);
+        if (mode & INVERS)
+        {
+          lcd_vline(lcd_lastPos, y, 2*FH-3);
+          lcd_vline(lcd_lastPos+1, y, 2*FH-3);
+          lcd_hline(lcd_lastPos, y+2*FH-1, 2);
+        }
+        else
+        {
+          lcd_hline(lcd_lastPos, y+2*FH-4, 2);
+          lcd_hline(lcd_lastPos, y+2*FH-3, 2);
+        }
         lcd_lastPos += 3;
       }
       else
       {
-        lcd_plot(lcd_lastPos, y+FH-2, mode);
+        if (mode & INVERS)
+        {
+          lcd_vline(lcd_lastPos, y, FH-2);
+          lcd_plot(lcd_lastPos, y+FH-1);
+        } 
+        else
+          lcd_plot(lcd_lastPos, y+FH-2);
         lcd_lastPos += 2;
       }
     }
@@ -492,7 +515,7 @@ void putsVolts(uint8_t x, uint8_t y, uint16_t volts, uint8_t att, bool noUnit)
 
 void putsVBat(uint8_t x,uint8_t y,uint8_t att, bool noUnit)
 {
-  putsVolts(x, y, g_vbat100mV, att, noUnit);
+  putsVolts(x, y, g_vbat100mV, att|INVERS, noUnit);
 }
 
 void putsChnRaw(uint8_t x, uint8_t y, uint8_t idx, uint8_t att)
