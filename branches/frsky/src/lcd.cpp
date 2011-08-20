@@ -222,18 +222,18 @@ void lcd_outdezNAtt(uint8_t x, uint8_t y, int16_t val, uint8_t mode, uint8_t len
   lcd_lastPos = x;
   if (~mode & LEFT) // determine correct x-coord starting point for decimal aligned
   {
-    // Starting point for regular unsigned, no decimal number
+    // Starting point for regular unsigned, non-decimal number
     if (mode & DBLSIZE) 
       lcd_lastPos -= 2*FW*(lastDigit+1) + ((len & (LEADING0|TRAILING0)) ? 2*(FW-2)*(maxLen - lastDigit - 1) : 0);
     else
       lcd_lastPos -= (FW-1)*(lastDigit+1) + ((len & (LEADING0|TRAILING0)) ? (FW-1)*(maxLen - lastDigit - 1) : 0);
 
-    if (prec>0) lcd_lastPos += (mode & DBLSIZE) ? (2*prec*(FW-2)) + 4 : (prec*(FW-1)) + 2; // we use lcd_plot to draw the decimal point
+    if (prec>0) lcd_lastPos += (mode & DBLSIZE) ? (2*prec*(FW-2)) + 4 : (prec*(FW-1)) + 2;
 
     if (neg) lcd_lastPos -= (mode & DBLSIZE) ? 2*FW : FW;
   }
 
-  if (neg) lcd_putcAtt(lcd_lastPos++, y, '-', mode); // apply sign
+  if (neg) lcd_putcAtt(lcd_lastPos++, y, '-', mode); // apply sign when required
 
   if (prec && !lastDigit) 
   { 
@@ -249,33 +249,26 @@ void lcd_outdezNAtt(uint8_t x, uint8_t y, int16_t val, uint8_t mode, uint8_t len
   {
     lcd_putcAtt(lcd_lastPos-1, y, digits[i], mode);
 
-    // draw decimal point
-    if (prec && i==prec) 
-    {
+    // Draw decimal point
+    // Use direct screen writes to save flash, function calls, stack, cpu load
+    bool inv = (mode & INVERS) ? true : (mode & BLINK ? BLINK_ON_PHASE : false);
+    uint8_t *p = &displayBuf[ y / 8 * DISPLAY_W + lcd_lastPos ];
+    uint8_t bits;
+    if (prec && i==prec) // .. then draw a d'point
+    { 
       if (mode & DBLSIZE)
       {
-        if (mode & INVERS)
-        {
-          lcd_vline(lcd_lastPos, y, 2*FH-3);
-          lcd_vline(lcd_lastPos+1, y, 2*FH-3);
-          lcd_hline(lcd_lastPos, y+2*FH-1, 2);
-        }
-        else
-        {
-          lcd_hline(lcd_lastPos, y+2*FH-4, 2);
-          lcd_hline(lcd_lastPos, y+2*FH-3, 2);
-        }
-        lcd_lastPos += 3;
+        bits = 0; if (inv) bits ^= 0xff;
+        p[0] = bits; p[1] = bits;
+        bits = 0x60; if (inv) bits ^= 0xff;
+        p[DISPLAY_W] = bits;
+        p[DISPLAY_W+1] = bits;
+        lcd_lastPos+=3;
       }
       else
       {
-        if (mode & INVERS)
-        {
-          lcd_vline(lcd_lastPos, y, FH-2);
-          lcd_plot(lcd_lastPos, y+FH-1);
-        } 
-        else
-          lcd_plot(lcd_lastPos, y+FH-2);
+        bits = 0x40; if (inv) bits ^= 0xff;
+        p[0] = bits;
         lcd_lastPos += 2;
       }
     }
@@ -283,7 +276,6 @@ void lcd_outdezNAtt(uint8_t x, uint8_t y, int16_t val, uint8_t mode, uint8_t len
   if (len & TRAILING0)
     for (int8_t i=lastDigit+1; i < maxLen; i++)
       lcd_putcAtt(lcd_lastPos-1, y, '0', mode);
-
 }
 
 void lcd_mask(uint8_t *p, uint8_t mask, uint8_t att)
