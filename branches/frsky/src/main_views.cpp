@@ -299,9 +299,9 @@ void menuMainView(uint8_t event)
         lcd_outdezAtt(17 * FW - 2, 7*FH, frskyRSSI[1].max, LEFT);
       }
       else if (g_eeGeneral.view == e_telemetry+2*ALTERNATE) { //e_telemetry+ALTERNATE+1) { // if on second alternate telemetry view {
-        lcd_putsAtt(19*FW-4, 0, PSTR("GPS"), INVERS); // XXX TEMP
+        lcd_putsAtt(19*FW-4, 0, PSTR("GPS"), INVERS);
 
-        // date XXX: day and month seem to always be zero. Bug with the Fr-Sky hub?
+        // date
         lcd_outdezNAtt(1*FW, 1*FH, gTelem_GPSyear+2000, LEFT, 4);
         lcd_putc(lcd_lastPos, 1*FH, '-');
         lcd_outdezNAtt(lcd_lastPos, 1*FH, gTelem_GPSmonth, LEFT, 2|LEADING0);
@@ -355,7 +355,7 @@ void menuMainView(uint8_t event)
 
       }
       else if (g_eeGeneral.view == e_telemetry+3*ALTERNATE) { //e_telemetry+ALTERNATE+1) { // if on second alternate telemetry view {
-        lcd_puts_P(0,1*FH, PSTR("GPS TWO")); // XXX TEMP
+        lcd_putsAtt(17*FW-4, 0, PSTR("OTHER"), INVERS);
       }
       else {
 

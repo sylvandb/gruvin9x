@@ -152,22 +152,23 @@ public:
           case frskyDataStart:
             if (data == START_STOP) break; // Remain in userDataStart if possible 0x7e,0x7e doublet found.
 
-            if (numPktBytes < FRSKY_RX_PACKET_SIZE)
-              frskyRxPacketBuf[numPktBytes++] = data;
+            frskyRxPacketBuf[numPktBytes++] = data;
             dataState = frskyDataInFrame;
             break;
 
           case frskyDataXOR:
             data ^= STUFF_MASK;
-            dataState = frskyDataInFrame;
             // drop through
 
           case frskyDataInFrame:
-            if (data == BYTESTUFF)
+            if (dataState != frskyDataXOR && data == BYTESTUFF)
             { 
                 dataState = frskyDataXOR; // XOR next byte
                 break; 
             }
+            else
+              dataState = frskyDataInFrame;
+
             if (data == START_STOP) // end of frame detected
             {
               // Process Fr-Sky Packet(uint8_t *frskyRxPacketBuf)
@@ -207,7 +208,11 @@ public:
               dataState = frskyDataIdle;
               break;
             }
-            frskyRxPacketBuf[numPktBytes++] = data;
+            else // not START_STOP
+            {
+              if (numPktBytes < FRSKY_RX_PACKET_SIZE)
+                frskyRxPacketBuf[numPktBytes++] = data;
+            }
             break;
 
           case frskyDataIdle:
@@ -254,8 +259,8 @@ uint16_t gTelem_GPSlatitude[2];   // before.after
 uint8_t  gTelem_GPSlatitudeNS;    // North/South
 uint16_t gTelem_GPScourse[2];     // before.after (0..359 deg. -- unknown precision)
 uint8_t  gTelem_GPSyear;
-uint8_t  gTelem_GPSmonth;
-uint8_t  gTelem_GPSday;
+uint8_t  gTelem_GPSmonth = 0x55;
+uint8_t  gTelem_GPSday = 0xaa;
 uint8_t  gTelem_GPShour;
 uint8_t  gTelem_GPSmin;
 uint8_t  gTelem_GPSsec;
@@ -269,7 +274,7 @@ int16_t  gTelem_Temperature2;     // -20 .. 250 deg. celcius
 uint16_t gTelem_Volts;            // 1/500V increments (0..4.2V)
 uint16_t gTelem_baroAltitude;     // 0..9,999 meters
 
-char telemPacket[TELEM_PKT_SIZE];
+uint8_t telemPacket[TELEM_PKT_SIZE];
 inline void processTelemPacket(void)
 {
   switch (telemPacket[0])
@@ -375,6 +380,7 @@ inline void processTelemPacket(void)
 
 typedef enum {
   TS_IDLE = 0,// waiting for 0x5e frame marker
+  TS_START,   // reset and start receiving data
   TS_DATA,    // receive data byte
   TS_FRAME,   // frame complete. Precess it. (Not used as there's no end of packet market to swallow)
   TS_XOR      // decode stuffed byte
@@ -388,32 +394,31 @@ void parseTelemHubData()
   // Process all available bytes in frsky user data Buffer
   while (!frskyUserData.isEmpty())
   {
-    char data = frskyUserData.get();
-
+    uint8_t data = frskyUserData.get();
+    
     switch (telemState)
     {
-      case TS_IDLE:
-        if (data == 0x5e)
-        {
-          telemIndex = 0;
-          telemState = TS_DATA;
-        }
-        break;
-
       case TS_XOR:
         data = data ^ 0x60;
-        telemState = TS_DATA;
         // drop through
         
       case TS_DATA:
-        if (data == 0x5d) // discard this byte and decode byte stuff on next
+
+        if (telemState != TS_XOR)
         {
-          telemState = TS_XOR;
-          break;
+          if (data == 0x5d) // discard this byte and decode byte-stuff on next
+          {
+            telemState = TS_XOR;
+            break;
+          }
         }
+        else
+          telemState = TS_DATA;
+
         if (telemIndex < TELEM_PKT_SIZE)
         {
-          telemPacket[telemIndex++] = data;
+          telemPacket[telemIndex] = data;
+          telemIndex++;
 
           if (telemIndex == TELEM_PKT_SIZE)
           {
@@ -424,10 +429,19 @@ void parseTelemHubData()
         }
         break;
 
+      case TS_START:
+        if (data == 0x5e)
+          break; // swallow any 0x5e doublet, which DOES happen between frames (not packets)
+        
+        telemPacket[0] = data;
+        telemIndex = 1;
+        telemState = TS_DATA;
+        break;
 
+      case TS_IDLE:
       default:
-        telemState = TS_IDLE; // nonsense data byte received. Ignore it.
-
+        if (data == 0x5e)
+          telemState = TS_START;
     }
   }
 }

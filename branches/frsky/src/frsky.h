@@ -26,7 +26,7 @@
 // .20 seconds
 #define FRSKY_TIMEOUT10ms 20
 
-#define FRSKY_RX_BUFFER_SIZE 80
+#define FRSKY_RX_BUFFER_SIZE 64
 #define FRSKY_RX_PACKET_SIZE 19
 #define FRSKY_TX_PACKET_SIZE 19
 
@@ -76,7 +76,7 @@ void frskyParseRxData();
 uint8_t frskyGetUserData(char *buffer, uint8_t bufSize);
 
 #define TELEM_PKT_SIZE 3
-extern char telemPacket[TELEM_PKT_SIZE];
+extern uint8_t telemPacket[TELEM_PKT_SIZE];
 extern void parseTelemHubData();
 
 extern uint16_t gTelem_GPSaltitude[2];   // before,after decimal
