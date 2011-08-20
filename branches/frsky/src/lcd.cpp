@@ -212,7 +212,7 @@ void lcd_outdezNAtt(uint8_t x, uint8_t y, int16_t val, uint8_t mode, uint8_t len
   if (~mode & UNSIGN && val < 0) { neg=true; val=-val; }
 
   // Buffer characters and determine the significant digit count
-  for (lastDigit = 0; lastDigit < maxLen; lastDigit++)
+  for (lastDigit = 0; lastDigit < 5; lastDigit++)
   {
     digits[lastDigit] = ((uint16_t)val % 10) + '0';
     val = (uint16_t)val / 10;
@@ -243,7 +243,7 @@ void lcd_outdezNAtt(uint8_t x, uint8_t y, int16_t val, uint8_t mode, uint8_t len
     for (int8_t i=lastDigit+1; i < maxLen; i++)
       lcd_putcAtt(lcd_lastPos-1, y, '0', mode);
 
-  for (int8_t i=lastDigit; i >= 0; i--)
+  for (int8_t i=lastDigit; i > (lastDigit-maxLen) && i >=0; i--)
   {
     lcd_putcAtt(lcd_lastPos-1, y, digits[i], mode);
 

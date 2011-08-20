@@ -321,7 +321,7 @@ void menuMainView(uint8_t event)
         uint8_t mn = gTelem_GPSlongitude[0] % 100;
         lcd_outdezNAtt(lcd_lastPos, 3*FH, mn, LEFT, 2|LEADING0); // mm before '.'
         lcd_plot(lcd_lastPos, 4*FH-2, 0); // small decimal point
-        lcd_outdezNAtt(lcd_lastPos+2, 3*FH, gTelem_GPSlongitude[1], LEFT, 4|TRAILING0); // after '.'
+        lcd_outdezNAtt(lcd_lastPos+2, 3*FH, gTelem_GPSlongitude[1], LEFT|UNSIGN, 4|TRAILING0); // after '.'
         lcd_putc(lcd_lastPos+1, 3*FH, gTelem_GPSlongitudeEW ? 'E' : 'W'); 
 
         // Latitude
@@ -330,7 +330,7 @@ void menuMainView(uint8_t event)
         mn = gTelem_GPSlatitude[0] % 100;
         lcd_outdezNAtt(lcd_lastPos, 3*FH, mn, LEFT, 2|LEADING0); // mm before '.'
         lcd_plot(lcd_lastPos, 4*FH-2, 0); // small decimal point
-        lcd_outdezNAtt(lcd_lastPos+2, 3*FH, gTelem_GPSlatitude[1], LEFT, 4|TRAILING0); // after '.'
+        lcd_outdezNAtt(lcd_lastPos+2, 3*FH, gTelem_GPSlatitude[1], LEFT|UNSIGN, 4|TRAILING0); // after '.'
         lcd_putc(lcd_lastPos+1, 3*FH, gTelem_GPSlatitudeNS ? 'S' : 'N'); 
 
         // Course / Heading
@@ -344,13 +344,13 @@ void menuMainView(uint8_t event)
         lcd_puts_P(76, 5*FH, PSTR("Spd:"));
         lcd_outdezAtt(lcd_lastPos, 5*FH, gTelem_GPSspeed[0], LEFT); // before '.'
         lcd_plot(lcd_lastPos, 6*FH-2, 0); // small decimal point
-        lcd_outdezAtt(lcd_lastPos+2, 5*FH, gTelem_GPSspeed[1], LEFT); // after '.'
+        lcd_outdezAtt(lcd_lastPos+2, 5*FH, gTelem_GPSspeed[1], LEFT|UNSIGN); // after '.'
 
         // Altititude 
         lcd_puts_P(7*FW, 7*FH, PSTR("Alt:"));
         lcd_outdezNAtt(lcd_lastPos, 7*FH, gTelem_GPSaltitude[0], LEFT, 3|LEADING0); // before '.'
         lcd_plot(lcd_lastPos, 8*FH-2, 0); // small decimal point
-        lcd_outdezAtt(lcd_lastPos+2, 7*FH, gTelem_GPSaltitude[1], LEFT); // after '.'
+        lcd_outdezAtt(lcd_lastPos+2, 7*FH, gTelem_GPSaltitude[1], LEFT|UNSIGN); // after '.'
         lcd_putc(lcd_lastPos, 7*FH, 'm');
 
       }

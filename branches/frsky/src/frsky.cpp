@@ -157,6 +157,11 @@ public:
             dataState = frskyDataInFrame;
             break;
 
+          case frskyDataXOR:
+            data ^= STUFF_MASK;
+            dataState = frskyDataInFrame;
+            // drop through
+
           case frskyDataInFrame:
             if (data == BYTESTUFF)
             { 
@@ -203,12 +208,6 @@ public:
               break;
             }
             frskyRxPacketBuf[numPktBytes++] = data;
-            break;
-
-          case frskyDataXOR:
-            if (numPktBytes < FRSKY_RX_PACKET_SIZE)
-              frskyRxPacketBuf[numPktBytes++] = data ^ STUFF_MASK;
-            dataState = frskyDataInFrame;
             break;
 
           case frskyDataIdle:
@@ -401,6 +400,11 @@ void parseTelemHubData()
         }
         break;
 
+      case TS_XOR:
+        data = data ^ 0x60;
+        telemState = TS_DATA;
+        // drop through
+        
       case TS_DATA:
         if (data == 0x5d) // discard this byte and decode byte stuff on next
         {
@@ -420,13 +424,6 @@ void parseTelemHubData()
         }
         break;
 
-      case TS_XOR:
-        data = data ^ 0x60;
-        if (telemIndex < TELEM_PKT_SIZE)
-          telemPacket[telemIndex++] = data;
-        // can never been end of frame so ...
-        telemState = TS_DATA;
-        break;
 
       default:
         telemState = TS_IDLE; // nonsense data byte received. Ignore it.
