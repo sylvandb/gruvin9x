@@ -44,7 +44,7 @@
 #define PREC1         0x10
 #define PREC2         0x20
 #define PREC3         0x30
-#define SIGN          0x40
+#define UNSIGN        0x40
 #define LEFT          0x80 /* align left */
 #define LEADING0      0x40 /* add to 'len' to use this */
 #define TRAILING0     0x80 /* add to 'len' to use this */
@@ -62,11 +62,11 @@ extern void lcd_putsn_P(unsigned char x,unsigned char y,const prog_char * s,unsi
 
 extern void lcd_outhex4(unsigned char x,unsigned char y,uint16_t val);
 
-extern void lcd_outdezAtt(unsigned char x,unsigned char y, uint16_t val,uint8_t mode);
-extern void lcd_outdezNAtt(uint8_t x,uint8_t y,uint16_t val, uint8_t mode,uint8_t len);
-extern void lcd_outdez(unsigned char x,unsigned char y, uint16_t val);
+extern void lcd_outdezAtt(unsigned char x,unsigned char y, int16_t val,uint8_t mode);
+extern void lcd_outdezNAtt(uint8_t x,uint8_t y, int16_t val, uint8_t mode,uint8_t len);
+extern void lcd_outdez(unsigned char x,unsigned char y, int16_t val);
 
-extern void putsSwitches(uint8_t x,uint8_t y,int8_t swtch, uint8_t att);
+extern void putsSwitches(uint8_t x,uint8_t y, int8_t swtch, uint8_t att);
 extern void putsFlightPhase(uint8_t x, uint8_t y, int8_t idx, uint8_t att);
 extern void putsTmrMode(uint8_t x, uint8_t y, uint8_t attr);
 

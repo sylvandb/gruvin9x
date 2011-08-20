@@ -175,12 +175,12 @@ void lcd_outhex4(uint8_t x,uint8_t y,uint16_t val)
     val>>=4;
   }
 }
-void lcd_outdez(uint8_t x,uint8_t y, uint16_t val)
+void lcd_outdez(uint8_t x,uint8_t y, int16_t val)
 {
   lcd_outdezAtt(x,y,val,0);
 }
 
-void lcd_outdezAtt(uint8_t x,uint8_t y, uint16_t val, uint8_t mode)
+void lcd_outdezAtt(uint8_t x,uint8_t y, int16_t val, uint8_t mode)
 {
   lcd_outdezNAtt( x, y, val, mode, 5);
 }
@@ -193,7 +193,7 @@ USAGE:
   lcd_outdezNAtt(x-coord, y-coord, (un)signed-value{0..65535|0..+/-32768}, 
                   mode_flags, length{0..63}[+[LEADING0|TRAILING0])
 
-  Available mode_flas: PREC{1..3}, SIGN (for programmer selected signed numbers
+  Available mode_flas: PREC{1..3}, UNSIGN (for programmer selected signed numbers
                   to allow for unsigned values up to the ful 65535 16-bit limt))
 
   LEADING0 means pad 0 to the left of sig. digits up to 'len' total characters
@@ -201,7 +201,7 @@ USAGE:
             (for use with manual decimal parts on right of period (.))
 */
 #define PREC(n) (n>>4 & 3)
-void lcd_outdezNAtt(uint8_t x, uint8_t y, uint16_t val, uint8_t mode, uint8_t len)
+void lcd_outdezNAtt(uint8_t x, uint8_t y, int16_t val, uint8_t mode, uint8_t len)
 {
   char digits[5]; // sig. digits buffered in reverse order
   uint8_t lastDigit;
@@ -209,13 +209,13 @@ void lcd_outdezNAtt(uint8_t x, uint8_t y, uint16_t val, uint8_t mode, uint8_t le
   uint8_t maxLen = len & 0x3f;
 
   bool neg = false;
-  if (mode & SIGN && (int16_t)val < 0) { neg=true; val=-(int16_t)val; }
+  if (~mode & UNSIGN && val < 0) { neg=true; val=-val; }
 
   // Buffer characters and determine the significant digit count
   for (lastDigit = 0; lastDigit < maxLen; lastDigit++)
   {
-    digits[lastDigit] = (val % 10) + '0';
-    val /= 10;
+    digits[lastDigit] = ((uint16_t)val % 10) + '0';
+    val = (uint16_t)val / 10;
     if (!val) break;
   }
 
@@ -254,6 +254,9 @@ void lcd_outdezNAtt(uint8_t x, uint8_t y, uint16_t val, uint8_t mode, uint8_t le
     {
       if (mode & DBLSIZE)
       {
+  uint8_t *p    = &displayBuf[ y / 8 * DISPLAY_W + lcd_lastPos ];
+  *p=0xaa;
+  /*
         if (mode & INVERS)
         {
           lcd_vline(lcd_lastPos, y, 2*FH-3);
@@ -266,6 +269,7 @@ void lcd_outdezNAtt(uint8_t x, uint8_t y, uint16_t val, uint8_t mode, uint8_t le
           lcd_hline(lcd_lastPos, y+2*FH-3, 2);
         }
         lcd_lastPos += 3;
+    */
       }
       else
       {
@@ -285,122 +289,6 @@ void lcd_outdezNAtt(uint8_t x, uint8_t y, uint16_t val, uint8_t mode, uint8_t le
       lcd_putcAtt(lcd_lastPos-1, y, '0', mode);
 
 }
-
-/*
-#define PREC(n) ((n&0x20) ? ((n&0x10) ? 2 : 1) : 0)
-void lcd_outdezNAtt(uint8_t x,uint8_t y,int16_t val,uint8_t mode,uint8_t len)
-{
-  uint8_t fw = FWNUM;
-  uint8_t prec = PREC(mode);
-  int16_t tmp = abs(val);
-  uint8_t xn = 0;
-  uint8_t ln = 2;
-  uint8_t lastXpos;
-  char c;
-
-  if (mode & DBLSIZE) {
-    fw += FWNUM;
-    if (mode & LEFT) {
-      if (tmp >= 1000)
-        x += 2*FW;
-      if (tmp >= 100 || prec==2)
-        x += 2*FW;
-      if (tmp >= 10 || prec>0)
-        x += 2*FW;
-      if (len & PAD0LEFT)
-        x += (len&0x3f-1) * 2*FW;
-      x--;
-    }
-    else {
-      x -= 2*FW; 
-    }
-    lastXpos = x + 2*FW;
-  }
-  else {
-    if (mode & LEFT) {
-      if (prec)
-        x += 2;
-      if (val < 0)
-        x += FWNUM;
-      if (tmp >= 1000)
-        x += FWNUM;
-      if (tmp >= 100 || prec==2)
-        x += FWNUM;
-      if (tmp >= 10 || prec>0)
-        x += FWNUM;
-      if (len & PAD0LEFT)
-        x += ((len&0x3f)-1) * FWNUM;
-      x--;
-    }
-    else {
-      x -= FW; 
-    }
-    lastXpos = x + FW;
-  }
-
-  uint8_t i;
-  for (i=1; i<=(len & 0x3f); i++) {
-    c = (tmp % 10) + '0';
-    lcd_putcAtt(x, y, c, mode);
-    if (prec==i) {
-      mode &= ~PREC2;
-      if (mode & DBLSIZE) {
-        xn = x;
-        if(c=='2' || c=='3' || c=='1') ln++;
-        uint8_t tn = (tmp/10) % 10;
-        if(tn==2 || tn==4) {
-          if (c=='4') {
-            xn++;
-          }
-          else {
-            xn--; ln++;
-          }
-        }
-      }
-      else {
-        x -= 2;
-        if (mode & INVERS)
-          lcd_vline(x+1, y, 7);
-        else
-          lcd_plot(x+1, y+6);
-      }
-      if (tmp >= 10)
-        prec = 0;
-    }
-    tmp /= 10;
-    if (!tmp) {
-      if (prec) {
-        if (i >= prec)
-          prec = 0;
-      }
-      else if (mode & LEADING0)
-        mode -= LEADING0;
-      else if (!(len & PAD0LEFT))
-        break;
-    }
-    x-=fw;
-  }
-
-  // G: ran out of bits to add a PAD0RIGHT/LEFT flags. So masked len to max 0x3f and put an 0x80 flag on top.
-  if (len & PAD0RIGHT) // pad out zeros to right up to len
-  {
-    x = lastXpos-1;
-    for (; i<(len & 0x3f); i++)
-    {
-      lcd_putcAtt(x, y, '0', mode);
-      x += fw;
-    }
-    lastXpos = x;
-  }
-
-  if (xn) {
-    lcd_hline(xn, y+2*FH-4, ln);
-    lcd_hline(xn, y+2*FH-3, ln);
-  }
-  if(val<0) lcd_putcAtt(x-fw,y,'-',mode);
-  lcd_lastPos = lastXpos;
-}
-*/
 
 void lcd_mask(uint8_t *p, uint8_t mask, uint8_t att)
 {
