@@ -1647,18 +1647,21 @@ void menuProcTelemetry(uint8_t event)
       lcd_outdezAtt(8*FW, y, val, PREC2|(sub==subN ? blink:0)|LEFT);
       if (!g_model.frsky.channels[i].type) lcd_putc(lcd_lastPos, y, 'v');
       if(sub==subN) CHECK_INCDEC_MODELVAR(event, g_model.frsky.channels[i].offset, -127, 127);
+      if (g_model.frsky.channels[i].ratio > g_model.frsky.channels[i].barMax) 
+        g_model.frsky.channels[i].barMax = g_model.frsky.channels[i].ratio;
     }
     subN++;
 
     if(s_pgOfs<subN) {
       y=(subN-s_pgOfs)*FH;
-      lcd_puts_P(4, y, PSTR("Bar"));
-      val = ((int16_t)g_model.frsky.channels[i].barMin+g_model.frsky.channels[i].offset)*g_model.frsky.channels[i].ratio / 255;
-      putsTelemetry(8*FW, y, val, g_model.frsky.channels[i].type, (sub==subN && subSub==0 ? blink:0)|LEFT);
-      val = ((int16_t)g_model.frsky.channels[i].barMax+g_model.frsky.channels[i].offset)*g_model.frsky.channels[i].ratio / 255;
-      putsTelemetry(13*FW, y, val, g_model.frsky.channels[i].type, (sub==subN && subSub==1 ? blink:0)|LEFT);
-      if(sub==subN && subSub==0 && (s_editMode || p1valdiff)) g_model.frsky.channels[i].barMin = checkIncDec(event, g_model.frsky.channels[i].barMin, 0, 255, EE_MODEL);
-      if(sub==subN && subSub==1 && (s_editMode || p1valdiff)) g_model.frsky.channels[i].barMax = checkIncDec(event, g_model.frsky.channels[i].barMax, 0, 255, EE_MODEL);
+      lcd_puts_P(4, y, PSTR("G.Bar"));
+      putsTelemetry(8*FW, y, g_model.frsky.channels[i].barMin, g_model.frsky.channels[i].type, (sub==subN && subSub==0 ? blink:0)|LEFT);
+      putsTelemetry(13*FW, y, g_model.frsky.channels[i].barMax, g_model.frsky.channels[i].type, (sub==subN && subSub==1 ? blink:0)|LEFT);
+      if(sub==subN && subSub==0 && (s_editMode || p1valdiff)) g_model.frsky.channels[i].barMin = 
+        checkIncDec(event, g_model.frsky.channels[i].barMin, 0, g_model.frsky.channels[i].barMax, EE_MODEL);
+      if(sub==subN && subSub==1 && (s_editMode || p1valdiff)) g_model.frsky.channels[i].barMax = 
+        checkIncDec(event, g_model.frsky.channels[i].barMax, 
+            max(g_model.frsky.channels[i].barMin, g_model.frsky.channels[i].ratio), 255, EE_MODEL);
     }
     subN++;
 

@@ -161,7 +161,7 @@ typedef struct t_FrSkyChannelData {
   uint8_t   alarms_value[2];    // 0.1V steps EG. 6.6 Volts = 66. 25.1V = 251, etc. 
   uint8_t   alarms_level:4;
   uint8_t   alarms_greater:2;   // 0=LT(<), 1=GT(>)
-  int8_t    barMin;             // minimum for bar display
+  uint8_t   barMin;             // minimum for bar display
   uint8_t   barMax;             // ditto for max display (would usually = ratio)
 } __attribute__((packed)) FrSkyChannelData;
 
