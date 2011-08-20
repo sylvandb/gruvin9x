@@ -278,11 +278,11 @@ void menuMainView(uint8_t event)
               lcd_puts_P(x0, 3*FH, PSTR("A ="));
               lcd_putc(x0+FW, 3*FH, '1'+i);
               x0 += 3*FW;
-              val = ((uint16_t)staticTelemetry[i]+g_model.frsky.channels[i].offset)*g_model.frsky.channels[i].ratio / 255;
+              val = (uint16_t)staticTelemetry[i]*(g_model.frsky.channels[i].ratio+g_model.frsky.channels[i].offset/10)/ 255;
               putsTelemetry(x0, 2*FH, val, g_model.frsky.channels[i].type, blink|DBLSIZE|LEFT);
-              val = ((int16_t)frskyTelemetry[i].min+g_model.frsky.channels[i].offset)*g_model.frsky.channels[i].ratio / 255;
+              val = (int16_t)frskyTelemetry[i].min*(g_model.frsky.channels[i].ratio+g_model.frsky.channels[i].offset/10)/ 255;
               putsTelemetry(x0, 4*FH, val, g_model.frsky.channels[i].type, 0);
-              val = ((int16_t)frskyTelemetry[i].max+g_model.frsky.channels[i].offset)*g_model.frsky.channels[i].ratio / 255;
+              val = (int16_t)frskyTelemetry[i].max*(g_model.frsky.channels[i].ratio+g_model.frsky.channels[i].offset/10)/ 255;
               putsTelemetry(x0+3*FW, 4*FH, val, g_model.frsky.channels[i].type, LEFT);
               x0 = 11*FW-2;
             }
@@ -367,7 +367,7 @@ void menuMainView(uint8_t event)
             blink = (alarmRaised[i] ? INVERS+BLINK : 0)|LEFT;
             lcd_puts_P(x0, y0, PSTR("A ="));
             lcd_putc(x0+FW, y0, '1'+i);
-            val = ((int16_t)staticTelemetry[i]+g_model.frsky.channels[i].offset)*g_model.frsky.channels[i].ratio / 255;
+            val = (int16_t)staticTelemetry[i]*(g_model.frsky.channels[i].ratio+g_model.frsky.channels[i].offset/10) / 255;
             putsTelemetry(x0+3*FW, y0, val, g_model.frsky.channels[i].type, blink);
             x0 = 13*FW-3;
           }

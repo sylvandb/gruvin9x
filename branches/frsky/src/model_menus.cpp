@@ -1638,8 +1638,14 @@ void menuProcTelemetry(uint8_t event)
     if(s_pgOfs<subN) {
       y=(subN-s_pgOfs)*FH;
       lcd_putsAtt(4, y, PSTR("Calib"), 0);
-      val = ((int16_t)frskyTelemetry[i].value+g_model.frsky.channels[i].offset)*g_model.frsky.channels[i].ratio / 255;
-      putsTelemetry(8*FW, y, val, g_model.frsky.channels[i].type, (sub==subN ? blink:0)|LEFT);
+      if (i==0) {
+        lcd_outdez(FW*20, FH*1, frskyTelemetry[i].value);
+        lcd_outdez(FW*20, FH*2, g_model.frsky.channels[i].offset);
+        lcd_outdez(FW*20, FH*3, g_model.frsky.channels[i].ratio);
+      }
+      val = (int32_t)frskyTelemetry[i].value * (g_model.frsky.channels[i].ratio*10 + g_model.frsky.channels[i].offset) / 255;
+      lcd_outdezAtt(8*FW, y, val, PREC2|(sub==subN ? blink:0)|LEFT);
+      if (!g_model.frsky.channels[i].type) lcd_putc(lcd_lastPos, y, 'v');
       if(sub==subN) CHECK_INCDEC_MODELVAR(event, g_model.frsky.channels[i].offset, -127, 127);
     }
     subN++;

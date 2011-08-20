@@ -236,10 +236,8 @@ void lcd_outdezNAtt(uint8_t x, uint8_t y, int16_t val, uint8_t mode, uint8_t len
   if (neg) lcd_putcAtt(lcd_lastPos++, y, '-', mode); // apply sign when required
 
   if (prec && !lastDigit) 
-  { 
-    lastDigit++;
-    digits[lastDigit]='0';
-  }
+    for(uint8_t i = 0; i < prec; i++)
+      digits[++lastDigit]='0';
 
   if (len & LEADING0)
     for (int8_t i=lastDigit+1; i < maxLen; i++)

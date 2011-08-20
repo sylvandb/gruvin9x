@@ -41,7 +41,7 @@
 
 #define EEPROM_VER_r584  3
 #define EEPROM_VER_r751  5
-#define EEPROM_VER       103
+#define EEPROM_VER       104 // G: see t_FrSkyChannelData->offset
 
 typedef struct t_TrainerMix {
   uint8_t srcChn:3; //0-7 = ch1-8
@@ -154,13 +154,13 @@ typedef struct t_SafetySwData { // Safety Switches data
 } __attribute__((packed)) SafetySwData;
 
 typedef struct t_FrSkyChannelData {
-  uint8_t   ratio;              // 0.0 means not used, 0.1V steps EG. 6.6 Volts = 66. 25.1V = 251, etc.
   uint8_t   type:4;             // channel unit (0=volts, ...)
-  int8_t    offset:4;           // calibration offset. Signed 0.1V steps. EG. -4 to substract 0.4V
+  uint8_t   spare:4;
+  uint8_t   ratio;              // 0.0 means not used, 0.1V steps EG. 6.6 Volts = 66. 25.1V = 251, etc.
+  int8_t    offset;             // *ratio* calibration offset. Signed 'Max Volts += -1.27V to +1.27V' in 0.01V steps.
   uint8_t   alarms_value[2];    // 0.1V steps EG. 6.6 Volts = 66. 25.1V = 251, etc. 
   uint8_t   alarms_level:4;
   uint8_t   alarms_greater:2;   // 0=LT(<), 1=GT(>)
-  uint8_t   spare:2;
   int8_t    barMin;             // minimum for bar display
   uint8_t   barMax;             // ditto for max display (would usually = ratio)
 } __attribute__((packed)) FrSkyChannelData;
