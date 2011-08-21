@@ -29,7 +29,7 @@
 
 #gruvin: PCB version -- OVERRIDES the following settings if not STD
 # Values: STD, V3, V4
-PCB = STD
+PCB = V3
 
 # Following options for PCB=STD only (ignored otherwise) ...
 
