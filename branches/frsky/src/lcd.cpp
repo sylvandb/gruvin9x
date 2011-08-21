@@ -186,9 +186,6 @@ void lcd_outdezAtt(uint8_t x,uint8_t y, int16_t val, uint8_t mode)
 }
 
 /*
-G: That's it. I've had enough of the growing annoying  outdez function. 
-   Rewriting it from scratch
-
 USAGE:
   lcd_outdezNAtt(x-coord, y-coord, (un)signed-value{0..65535|0..+/-32768}, 
                   mode_flags, length{0..63}[+[LEADING0|TRAILING0])
@@ -204,8 +201,8 @@ USAGE:
 void lcd_outdezNAtt(uint8_t x, uint8_t y, int16_t val, uint8_t mode, uint8_t len)
 {
   char digits[5]; // sig. digits buffered in reverse order
-  uint8_t lastDigit;
-  uint8_t prec = PREC(mode);
+  int8_t lastDigit;
+  int8_t prec = PREC(mode);
   uint8_t maxLen = len & 0x3f;
 
   bool neg = false;
@@ -217,6 +214,14 @@ void lcd_outdezNAtt(uint8_t x, uint8_t y, int16_t val, uint8_t mode, uint8_t len
     digits[lastDigit] = ((uint16_t)val % 10) + '0';
     val = (uint16_t)val / 10;
     if (!val) break;
+  }
+
+  // add leading zeros as prec requires
+  if (prec)
+  {
+    int8_t ld = lastDigit;
+    for(int8_t i = 0; i < (prec-ld); i++)
+      digits[++lastDigit]='0';
   }
 
   lcd_lastPos = x;
@@ -234,10 +239,6 @@ void lcd_outdezNAtt(uint8_t x, uint8_t y, int16_t val, uint8_t mode, uint8_t len
   }
 
   if (neg) lcd_putcAtt(lcd_lastPos++, y, '-', mode); // apply sign when required
-
-  if (prec && !lastDigit) 
-    for(uint8_t i = 0; i < prec; i++)
-      digits[++lastDigit]='0';
 
   if (len & LEADING0)
     for (int8_t i=lastDigit+1; i < maxLen; i++)
@@ -456,7 +457,7 @@ void putsTelemetry(uint8_t x, uint8_t y, uint8_t val, uint8_t unit, uint8_t att,
   if (unit == 0/*v*/) {
     putsVolts(x, y, val, att, noUnit);
   }
-  else {
+  else /* raw or reserved unit */ {
     lcd_outdezAtt(x, y, val, att);
   }
 }

@@ -125,6 +125,9 @@
 #endif
 #endif
 
+extern uint16_t DEBUG1;
+extern uint16_t DEBUG2;
+
 #define INP_B_KEY_LFT 6
 #define INP_B_KEY_RGT 5
 #define INP_B_KEY_UP  4
@@ -668,7 +671,7 @@ extern void setStickCenter(); // copy state of 3 primary to subtrim
 extern char userDataDisplayBuf[TELEM_SCREEN_BUFFER_SIZE]; // text buffer for frsky telem. user data experiments
 
 #if defined (PCBV3)
-extern char g_logFilename[22]; // pers.cpp::resetTelemetry()
+extern char g_logFilename[21]; // pers.cpp::resetTelemetry()
 extern FATFS FATFS_Obj; // pers.cpp::resetTelemetry()
 extern FIL g_oLogFile; // pers.cpp::resetTelemetry()
 #endif

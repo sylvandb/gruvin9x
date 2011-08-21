@@ -420,12 +420,13 @@ void per10ms()
 
 #if defined (FRSKY)
 
-  // Transmit Fr-Sky data request packets every 250ms
-  static uint8_t FrskyDelay = 25;
-  if (!(--FrskyDelay) && FrskyAlarmSendState )
+  // Attempt to transmit any waiting Fr-Sky alarm set packets every 50ms (subject to packet buffer availability)
+  static uint8_t FrskyDelay = 5;
+  if (FrskyAlarmSendState && (--FrskyDelay == 0))
+  {
+    FrskyDelay = 5; // 50ms
     FRSKY10mspoll();
-  else
-    FrskyDelay = 25; // 250ms - G: 50ms was way to frequent IMO
+  }
   
   if (frskyStreaming > 0)
     frskyStreaming--;

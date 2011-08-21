@@ -170,7 +170,7 @@ uint8_t Translate()
             // assert(&g_model.frsky.channels[i].ratio < &v4->frsky.channels[i].ratio);
             g_model.frsky.channels[i].ratio = v4->frsky.channels[i].ratio;
             g_model.frsky.channels[i].type = v4->frsky.channels[i].type;
-            g_model.frsky.channels[i].offset = 0;
+            // g_model.frsky.channels[i].offset = 0;
             g_model.frsky.channels[i].alarms_value[0] = v4->frsky.channels[i].alarms_value[0];
             g_model.frsky.channels[i].alarms_value[1] = v4->frsky.channels[i].alarms_value[1];
             g_model.frsky.channels[i].alarms_level = v4->frsky.channels[i].alarms_level;

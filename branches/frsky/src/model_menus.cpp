@@ -1592,7 +1592,7 @@ void menuProcSafetySwitches(uint8_t event)
 #ifdef FRSKY
 void menuProcTelemetry(uint8_t event)
 {
-  MENU("TELEMETRY", menuTabModel, e_Telemetry, 13, {0, -1, 1, 0, 1, 2, 2, -1, 1, 0, 1, 2/*, 2*/});
+  MENU("TELEMETRY", menuTabModel, e_Telemetry, 13, {0, -1, 0, 0, 1, 2, 2, -1, 1, 0, 1, 2/*, 2*/});
 
   int8_t  sub    = mstate2.m_posVert;
   uint8_t subSub = mstate2.m_posHorz;
@@ -1611,7 +1611,6 @@ void menuProcTelemetry(uint8_t event)
   blink = s_editMode ? BLINK : INVERS ;
   uint8_t subN = 1;
   uint8_t t;
-  int16_t val;
 
   for (int i=0; i<2; i++) {
     if(s_pgOfs<subN) {
@@ -1623,72 +1622,74 @@ void menuProcTelemetry(uint8_t event)
 
     if(s_pgOfs<subN) {
       y=(subN-s_pgOfs)*FH;
-      lcd_putsAtt(4, y, PSTR("Max"), 0);
-      putsTelemetry(8*FW, y, g_model.frsky.channels[i].ratio, g_model.frsky.channels[i].type, (sub==subN && subSub==0 ? blink:0)|LEFT, NO_UNIT);
-      lcd_putsnAtt(lcd_lastPos, y, PSTR("v-")+g_model.frsky.channels[i].type, 1, (sub==subN && subSub==1 ? blink:0));
-      if (sub==subN && (s_editMode || p1valdiff)) {
-        if (subSub == 0)
-          g_model.frsky.channels[i].ratio = checkIncDec(event, g_model.frsky.channels[i].ratio, 0, 255, EE_MODEL);
-        else
-          CHECK_INCDEC_MODELVAR(event, g_model.frsky.channels[i].type, 0, 1);
-      }
+      lcd_putsAtt(4, y, PSTR("MaxV"), 0);
+      lcd_outdezNAtt(8*FW-3, y, g_model.frsky.channels[i].ratio, (sub==subN ? INVERS:0)|PREC2, 4);
+      if (g_model.frsky.channels[i].type == 0) lcd_puts_P(13*FW, y, PSTR("(cal)"));
+      if (sub==subN)
+          g_model.frsky.channels[i].ratio = checkIncDec(event, g_model.frsky.channels[i].ratio, 0, 4095/* 40.95V */, EE_MODEL);
     }
     subN++;
 
     if(s_pgOfs<subN) {
       y=(subN-s_pgOfs)*FH;
-      lcd_putsAtt(4, y, PSTR("Calib"), 0);
-      if (i==0) {
-        lcd_outdez(FW*20, FH*1, frskyTelemetry[i].value);
-        lcd_outdez(FW*20, FH*2, g_model.frsky.channels[i].offset);
-        lcd_outdez(FW*20, FH*3, g_model.frsky.channels[i].ratio);
-      }
-      val = (int32_t)frskyTelemetry[i].value * (g_model.frsky.channels[i].ratio*10 + g_model.frsky.channels[i].offset) / 255;
-      lcd_outdezAtt(8*FW, y, val, PREC2|(sub==subN ? blink:0)|LEFT);
-      if (!g_model.frsky.channels[i].type) lcd_putc(lcd_lastPos, y, 'v');
-      if(sub==subN) CHECK_INCDEC_MODELVAR(event, g_model.frsky.channels[i].offset, -127, 127);
-      if (g_model.frsky.channels[i].ratio > g_model.frsky.channels[i].barMax) 
-        g_model.frsky.channels[i].barMax = g_model.frsky.channels[i].ratio;
+      lcd_putsAtt(4, y, PSTR("Type"), 0);
+      lcd_putsnAtt(7*FW, y, PSTR("Volts"" raw ")+5*g_model.frsky.channels[i].type, 5, (sub==subN ? INVERS:0));
+      if (sub==subN)  CHECK_INCDEC_MODELVAR(event, g_model.frsky.channels[i].type, 0, 1/* +14 reserved */);
+
+      frskyDisplayValue(14*FW, y, frskyTelemetry[i].value, g_model.frsky.channels[i].ratio, 
+          g_model.frsky.channels[i].type, LEFT, 2);
+
     }
     subN++;
 
     if(s_pgOfs<subN) {
       y=(subN-s_pgOfs)*FH;
       lcd_puts_P(4, y, PSTR("G.Bar"));
-      putsTelemetry(8*FW, y, g_model.frsky.channels[i].barMin, g_model.frsky.channels[i].type, (sub==subN && subSub==0 ? blink:0)|LEFT);
-      putsTelemetry(13*FW, y, g_model.frsky.channels[i].barMax, g_model.frsky.channels[i].type, (sub==subN && subSub==1 ? blink:0)|LEFT);
+
+      // These voltages need to extend all the way out a possbile maxVOlts 40.95 (4096)
+      frskyDisplayValue(7*FW, y, g_model.frsky.channels[i].barMin, g_model.frsky.channels[i].ratio, 
+          g_model.frsky.channels[i].type, (sub==subN && subSub==0 ? blink:0)|LEFT, 2);
+
+      lcd_puts_P(lcd_lastPos+FW, y, PSTR("to"));
+      
+      frskyDisplayValue(lcd_lastPos+FW, y, g_model.frsky.channels[i].barMax, g_model.frsky.channels[i].ratio, 
+          g_model.frsky.channels[i].type, (sub==subN && subSub==1 ? blink:0)|LEFT, 2);
+
       if(sub==subN && subSub==0 && (s_editMode || p1valdiff)) g_model.frsky.channels[i].barMin = 
         checkIncDec(event, g_model.frsky.channels[i].barMin, 0, g_model.frsky.channels[i].barMax, EE_MODEL);
       if(sub==subN && subSub==1 && (s_editMode || p1valdiff)) g_model.frsky.channels[i].barMax = 
-        checkIncDec(event, g_model.frsky.channels[i].barMax, 
-            max(g_model.frsky.channels[i].barMin, g_model.frsky.channels[i].ratio), 255, EE_MODEL);
+        checkIncDec(event, g_model.frsky.channels[i].barMax, g_model.frsky.channels[i].barMin, 255, EE_MODEL);
     }
     subN++;
 
     for (int j=0; j<2; j++) {
       if(s_pgOfs<subN) {
         y=(subN-s_pgOfs)*FH;
-        lcd_putsAtt(4, y, PSTR("Alarm"), 0);
+        lcd_putsAtt(4, y, PSTR("Alarm"), 0); lcd_putc(lcd_lastPos, y, '1'+j);
         lcd_putsnAtt(8*FW, y, PSTR("---YelOrgRed")+3*ALARM_LEVEL(i, j),3,(sub==subN && subSub==0 ? blink:0));
         lcd_putsnAtt(13*FW, y, PSTR("<>")+ALARM_GREATER(i, j),1,(sub==subN && subSub==1 ? blink:0));
-        uint8_t alarmValue = ((uint16_t)g_model.frsky.channels[i].alarms_value[j] * g_model.frsky.channels[i].ratio) / 255;
-        putsTelemetry(17*FW, y, alarmValue, g_model.frsky.channels[i].type, (sub==subN && subSub==2 ? blink:0));
+      
+        frskyDisplayValue(16*FW, y, g_model.frsky.channels[i].alarms_value[j], g_model.frsky.channels[i].ratio, 
+          g_model.frsky.channels[i].type, (sub==subN && subSub==2 ? blink:0)|LEFT, 2);
 
         if(sub==subN && (s_editMode || p1valdiff)) {
           switch (subSub) {
-           case 0:
-             t = ALARM_LEVEL(i, j);
-             g_model.frsky.channels[i].alarms_level = (g_model.frsky.channels[i].alarms_level & ~(3<<(2*j))) + (checkIncDec(event, t, 0, 3, EE_MODEL) << (2*j));
-             break;
-           case 1:
-             t = ALARM_GREATER(i, j);
-             g_model.frsky.channels[i].alarms_greater = (g_model.frsky.channels[i].alarms_greater & ~(1<<j)) + (checkIncDec(event, t, 0, 1, EE_MODEL) << j);
-             if(checkIncDec_Ret)
-               FRSKY_setModelAlarms();
-             break;
-           case 2:
-             g_model.frsky.channels[i].alarms_value[j] = checkIncDec(event, g_model.frsky.channels[i].alarms_value[j], 0, 255, EE_MODEL);
-             break;
+            case 0:
+              t = ALARM_LEVEL(i, j);
+              g_model.frsky.channels[i].alarms_level = (g_model.frsky.channels[i].alarms_level & ~(3<<(2*j)))
+                + (checkIncDec(event, t, 0, 3, EE_MODEL) << (2*j));
+              break;
+            case 1:
+              t = ALARM_GREATER(i, j);
+              g_model.frsky.channels[i].alarms_greater = (g_model.frsky.channels[i].alarms_greater & ~(1<<j))
+                + (checkIncDec(event, t, 0, 1, EE_MODEL) << j);
+              if(checkIncDec_Ret)
+                FRSKY_setModelAlarms();
+              break;
+            case 2:
+              g_model.frsky.channels[i].alarms_value[j] = 
+                checkIncDec(event, g_model.frsky.channels[i].alarms_value[j], 0, 255, EE_MODEL);
+              break;
           }
         }
       }

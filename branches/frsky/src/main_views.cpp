@@ -47,7 +47,7 @@ uint8_t tabViews[] = {
 void menuMainView(uint8_t event)
 {
   static uint8_t trimSwLock;
-  uint8_t view = g_eeGeneral.view & 0x0f;
+  uint8_t view = g_eeGeneral.view & 0x0f; // mask out ALTERNATE views
 
   switch(event)
   {
@@ -143,7 +143,7 @@ void menuMainView(uint8_t event)
 
   ///////////////////////////////////////////////////////////////////////
   /// Upper Section of Display common to all but telemetry alt. views ///
-  if (g_eeGeneral.view >= e_telemetry+ALTERNATE) {
+  if (view == e_telemetry && ((g_eeGeneral.view & 0xf0) >= ALTERNATE)) { // If view is a telemetry ALTERNATE view
     lcd_putsnAtt(0, 0, g_model.name, sizeof(g_model.name), ZCHAR|INVERS);
     uint8_t att = (g_vbat100mV < g_eeGeneral.vBatWarn ? INVERS|BLINK : INVERS);
     putsVBat(14*FW,0,att);
@@ -152,7 +152,7 @@ void menuMainView(uint8_t event)
       putsTime(18*FW+3, 0, s_timerVal, att, att);
     }
   }
-  else {
+  else { // not in a telemetry ALTERNATE view
     uint8_t att = (g_vbat100mV < g_eeGeneral.vBatWarn ? BLINK : 0) | DBLSIZE;
     lcd_putsnAtt(2*FW-2, 0*FH, g_model.name, sizeof(g_model.name), ZCHAR|DBLSIZE);
     putsVBat(4*FW+2, 2*FH, att, NO_UNIT);
@@ -201,7 +201,7 @@ void menuMainView(uint8_t event)
 
   ///////////////////////////////////////////////////////////////////////
   /// Lower section of display                                        ///
-  if(view < e_inputs) {
+  if(view < e_inputs) { // values and bars
     for(uint8_t i=0; i<8; i++)
     {
       uint8_t x0, y0;
@@ -240,7 +240,44 @@ void menuMainView(uint8_t event)
       }
     }
   }
-#ifdef FRSKY
+  else if (view == e_inputs) {
+    #define BOX_WIDTH     23
+    #define BAR_HEIGHT    (BOX_WIDTH-1l)
+    #define MARKER_WIDTH  5
+    #define SCREEN_WIDTH  128
+    #define SCREEN_HEIGHT 64
+    #define BOX_LIMIT     (BOX_WIDTH-MARKER_WIDTH)
+    #define LBOX_CENTERX  (  SCREEN_WIDTH/4 + 10)
+    #define LBOX_CENTERY  (SCREEN_HEIGHT-9-BOX_WIDTH/2)
+    #define RBOX_CENTERX  (3*SCREEN_WIDTH/4 - 10)
+    #define RBOX_CENTERY  (SCREEN_HEIGHT-9-BOX_WIDTH/2)
+
+    lcd_square(LBOX_CENTERX-BOX_WIDTH/2, LBOX_CENTERY-BOX_WIDTH/2, BOX_WIDTH);
+    lcd_square(RBOX_CENTERX-BOX_WIDTH/2, RBOX_CENTERY-BOX_WIDTH/2, BOX_WIDTH);
+
+    DO_CROSS(LBOX_CENTERX,LBOX_CENTERY,3)
+    DO_CROSS(RBOX_CENTERX,RBOX_CENTERY,3)
+
+    lcd_square(LBOX_CENTERX+(calibratedStick[0]*BOX_LIMIT/(2*RESX))-MARKER_WIDTH/2, LBOX_CENTERY-(calibratedStick[1]*BOX_LIMIT/(2*RESX))-MARKER_WIDTH/2, MARKER_WIDTH);
+    lcd_square(RBOX_CENTERX+(calibratedStick[3]*BOX_LIMIT/(2*RESX))-MARKER_WIDTH/2, RBOX_CENTERY-(calibratedStick[2]*BOX_LIMIT/(2*RESX))-MARKER_WIDTH/2, MARKER_WIDTH);
+
+    // Optimization by Mike Blandford
+    {
+        uint8_t x, y, len ;         // declare temporary variables
+        for( x = -5, y = 4 ; y < 7 ; x += 5, y += 1 )
+        {
+            len = ((calibratedStick[y]+RESX)*BAR_HEIGHT/(RESX*2))+1l ;  // calculate once per loop
+            V_BAR(SCREEN_WIDTH/2+x,SCREEN_HEIGHT-10, len )
+        }
+    }
+
+    int8_t a = (g_eeGeneral.view == e_inputs) ? 0 : 3+(g_eeGeneral.view/ALTERNATE)*6;
+    int8_t b = (g_eeGeneral.view == e_inputs) ? 6 : 6+(g_eeGeneral.view/ALTERNATE)*6;
+    for(int8_t i=a; i<(a+3); i++) lcd_putsnAtt(2*FW-2 ,(i-a)*FH+4*FH,get_switches_string()+3*i,3,getSwitch(i+1, 0) ? INVERS : 0);
+    for(int8_t i=b; i<(b+3); i++) lcd_putsnAtt(17*FW-1,(i-b)*FH+4*FH,get_switches_string()+3*i,3,getSwitch(i+1, 0) ? INVERS : 0);
+  }
+
+#if defined(FRSKY)
   else if(view == e_telemetry) {
     static uint8_t displayCount = 0;
     static uint8_t staticTelemetry[2];
@@ -278,11 +315,11 @@ void menuMainView(uint8_t event)
               lcd_puts_P(x0, 3*FH, PSTR("A ="));
               lcd_putc(x0+FW, 3*FH, '1'+i);
               x0 += 3*FW;
-              val = (uint16_t)staticTelemetry[i]*(g_model.frsky.channels[i].ratio+g_model.frsky.channels[i].offset/10)/ 255;
+              val = frskyComputeVolts(staticTelemetry[i], g_model.frsky.channels[i].ratio);
               putsTelemetry(x0, 2*FH, val, g_model.frsky.channels[i].type, blink|DBLSIZE|LEFT);
-              val = (int16_t)frskyTelemetry[i].min*(g_model.frsky.channels[i].ratio+g_model.frsky.channels[i].offset/10)/ 255;
+              val = frskyComputeVolts(frskyTelemetry[i].min, g_model.frsky.channels[i].ratio);
               putsTelemetry(x0, 4*FH, val, g_model.frsky.channels[i].type, 0);
-              val = (int16_t)frskyTelemetry[i].max*(g_model.frsky.channels[i].ratio+g_model.frsky.channels[i].offset/10)/ 255;
+              val = frskyComputeVolts(frskyTelemetry[i].max, g_model.frsky.channels[i].ratio);
               putsTelemetry(x0+3*FW, 4*FH, val, g_model.frsky.channels[i].type, LEFT);
               x0 = 11*FW-2;
             }
@@ -367,7 +404,7 @@ void menuMainView(uint8_t event)
             blink = (alarmRaised[i] ? INVERS+BLINK : 0)|LEFT;
             lcd_puts_P(x0, y0, PSTR("A ="));
             lcd_putc(x0+FW, y0, '1'+i);
-            val = (int16_t)staticTelemetry[i]*(g_model.frsky.channels[i].ratio+g_model.frsky.channels[i].offset/10) / 255;
+            val = frskyComputeVolts(staticTelemetry[i], g_model.frsky.channels[i].ratio);
             putsTelemetry(x0+3*FW, y0, val, g_model.frsky.channels[i].type, blink);
             x0 = 13*FW-3;
           }
@@ -381,50 +418,16 @@ void menuMainView(uint8_t event)
       }
     }
     else {
-      
+#if defined (PCBV3)
       if (g_eeGeneral.view == e_telemetry+ALTERNATE) // if on first alternate telemetry view
         lcd_putsAtt(0, FH*2, g_logFilename, BSS); // Show log filename (or error msg)
+#endif 
       lcd_putsAtt(22, 40, PSTR("NO DATA"), DBLSIZE);
     }
   }
-#endif
-  else if(view<e_timer2) {
-    #define BOX_WIDTH     23
-    #define BAR_HEIGHT    (BOX_WIDTH-1l)
-    #define MARKER_WIDTH  5
-    #define SCREEN_WIDTH  128
-    #define SCREEN_HEIGHT 64
-    #define BOX_LIMIT     (BOX_WIDTH-MARKER_WIDTH)
-    #define LBOX_CENTERX  (  SCREEN_WIDTH/4 + 10)
-    #define LBOX_CENTERY  (SCREEN_HEIGHT-9-BOX_WIDTH/2)
-    #define RBOX_CENTERX  (3*SCREEN_WIDTH/4 - 10)
-    #define RBOX_CENTERY  (SCREEN_HEIGHT-9-BOX_WIDTH/2)
+#endif /* defined(FRSKY) */
 
-    lcd_square(LBOX_CENTERX-BOX_WIDTH/2, LBOX_CENTERY-BOX_WIDTH/2, BOX_WIDTH);
-    lcd_square(RBOX_CENTERX-BOX_WIDTH/2, RBOX_CENTERY-BOX_WIDTH/2, BOX_WIDTH);
-
-    DO_CROSS(LBOX_CENTERX,LBOX_CENTERY,3)
-    DO_CROSS(RBOX_CENTERX,RBOX_CENTERY,3)
-
-    lcd_square(LBOX_CENTERX+(calibratedStick[0]*BOX_LIMIT/(2*RESX))-MARKER_WIDTH/2, LBOX_CENTERY-(calibratedStick[1]*BOX_LIMIT/(2*RESX))-MARKER_WIDTH/2, MARKER_WIDTH);
-    lcd_square(RBOX_CENTERX+(calibratedStick[3]*BOX_LIMIT/(2*RESX))-MARKER_WIDTH/2, RBOX_CENTERY-(calibratedStick[2]*BOX_LIMIT/(2*RESX))-MARKER_WIDTH/2, MARKER_WIDTH);
-
-    // Optimization by Mike Blandford
-    {
-        uint8_t x, y, len ;         // declare temporary variables
-        for( x = -5, y = 4 ; y < 7 ; x += 5, y += 1 )
-        {
-            len = ((calibratedStick[y]+RESX)*BAR_HEIGHT/(RESX*2))+1l ;  // calculate once per loop
-            V_BAR(SCREEN_WIDTH/2+x,SCREEN_HEIGHT-10, len )
-        }
-    }
-
-    int8_t a = (g_eeGeneral.view == e_inputs) ? 0 : 3+(g_eeGeneral.view/ALTERNATE)*6;
-    int8_t b = (g_eeGeneral.view == e_inputs) ? 6 : 6+(g_eeGeneral.view/ALTERNATE)*6;
-    for(int8_t i=a; i<(a+3); i++) lcd_putsnAtt(2*FW-2 ,(i-a)*FH+4*FH,get_switches_string()+3*i,3,getSwitch(i+1, 0) ? INVERS : 0);
-    for(int8_t i=b; i<(b+3); i++) lcd_putsnAtt(17*FW-1,(i-b)*FH+4*FH,get_switches_string()+3*i,3,getSwitch(i+1, 0) ? INVERS : 0);
-  }
-  else  // New Timer2 display
+  else  // timer2
   {
     putsTime(30+5*FW, FH*5, timer2, DBLSIZE, DBLSIZE);
   }

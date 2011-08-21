@@ -41,7 +41,7 @@
 
 #define EEPROM_VER_r584  3
 #define EEPROM_VER_r751  5
-#define EEPROM_VER       104 // G: see t_FrSkyChannelData->offset
+#define EEPROM_VER       105
 
 typedef struct t_TrainerMix {
   uint8_t srcChn:3; //0-7 = ch1-8
@@ -154,15 +154,15 @@ typedef struct t_SafetySwData { // Safety Switches data
 } __attribute__((packed)) SafetySwData;
 
 typedef struct t_FrSkyChannelData {
-  uint8_t   type:4;             // channel unit (0=volts, ...)
-  uint8_t   spare:4;
-  uint8_t   ratio;              // 0.0 means not used, 0.1V steps EG. 6.6 Volts = 66. 25.1V = 251, etc.
-  int8_t    offset;             // *ratio* calibration offset. Signed 'Max Volts += -1.27V to +1.27V' in 0.01V steps.
-  uint8_t   alarms_value[2];    // 0.1V steps EG. 6.6 Volts = 66. 25.1V = 251, etc. 
-  uint8_t   alarms_level:4;
-  uint8_t   alarms_greater:2;   // 0=LT(<), 1=GT(>)
-  uint8_t   barMin;             // minimum for bar display
-  uint8_t   barMax;             // ditto for max display (would usually = ratio)
+  uint16_t  ratio:12;           // (Maximum resistor divider input volts +/- calibration. 0 means channel not used.
+                                // 0.01v steps from 0 to 40.95V. Ex. 6.60 Volts = 660. 40.95V = 4095
+  uint16_t  type:4;             // channel display unit (0=volts, 1=raw, 2-15=reserverd.)
+  uint8_t   alarms_value[2];    // raw sample values 0..255 
+  uint8_t   alarms_level:4;     // two pairs of 2bits. none=0, yel=1, org=2, red=3
+  uint8_t   alarms_greater:2;   // two alarms, 1 bit each. 0=LT(<), 1=GT(>)
+  uint8_t   spare:2;
+  uint8_t   barMin;             // minimum for bar display (raw ADC value)
+  uint8_t   barMax;             // ditto for max display (would G:NOT usually = ratio)
 } __attribute__((packed)) FrSkyChannelData;
 
 typedef struct t_FrSkyData {

@@ -1964,8 +1964,8 @@ extern uint16_t g_timeMain;
 #endif
 */
 
-uint8_t DEBUG1 = 0;
-uint8_t DEBUG2 = 0;
+uint16_t DEBUG1 = 0;
+uint16_t DEBUG2 = 0;
 
 extern unsigned char __bss_end ;
 

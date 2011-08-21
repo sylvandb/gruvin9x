@@ -38,6 +38,33 @@
 #define BYTESTUFF       0x7d
 #define STUFF_MASK      0x20
 
+uint16_t frskyComputeVolts(uint8_t rawADC, uint16_t ratio/* max cirecuit designed input voltage */, uint8_t decimals/* 1 or 2. defaults to 1 */)
+{
+  uint16_t val;
+  val = (uint32_t)rawADC * ratio / ((decimals == 2) ? 255 : 2550); // result is naturally rounded and will in fact always be <= 16 bits
+  return val;
+}
+
+/*
+   Displays either a voltage or raw formatted value, given raw ADC, calibrartion ratio and optionally type, print mode and decimals
+   type defaults to 0 -- volts
+   mode defaults to 0 -- no special display attributes
+   decimals can be either 1 or 2 and defaults to 1
+  */
+void frskyDisplayValue(uint8_t x, uint8_t y, uint8_t value, uint16_t ratio, uint8_t type, uint8_t mode, uint8_t decimals)
+{
+  if (type == 0/*volts*/)
+  {
+    uint16_t val = frskyComputeVolts(value, ratio, decimals);
+    lcd_outdezNAtt(x, y, val, mode|((decimals == 2) ? PREC2 : PREC1), 4);
+    lcd_putcAtt(lcd_lastPos, y, 'v', mode);
+  }
+  else /* assume raw */
+  {
+    lcd_outdezNAtt(x, y, value, mode, 3|LEADING0);
+  }
+}
+
 // Fr-Sky Single Packet receive buffer. 9 bytes (full packet), worst case 18 bytes with byte-stuffing (+1). Ditto for tx buffer
 uint8_t frskyRxPacketBuf[FRSKY_RX_PACKET_SIZE];
 uint8_t frskyTxPacketBuf[FRSKY_TX_PACKET_SIZE];
@@ -257,10 +284,10 @@ uint16_t gTelem_GPSlongitude[2];  // before.after
 uint8_t  gTelem_GPSlongitudeEW;   // East West
 uint16_t gTelem_GPSlatitude[2];   // before.after
 uint8_t  gTelem_GPSlatitudeNS;    // North/South
-uint16_t gTelem_GPScourse[2];     // before.after (0..359 deg. -- unknown precision)
+uint16_t gTelem_GPScourse[2];     // before.after (0..359.99 deg. -- seemingly 2-decimal precision)
 uint8_t  gTelem_GPSyear;
-uint8_t  gTelem_GPSmonth = 0x55;
-uint8_t  gTelem_GPSday = 0xaa;
+uint8_t  gTelem_GPSmonth;
+uint8_t  gTelem_GPSday;
 uint8_t  gTelem_GPShour;
 uint8_t  gTelem_GPSmin;
 uint8_t  gTelem_GPSsec;
@@ -504,44 +531,43 @@ void frskyPushValue(uint8_t & i, uint8_t value);
 void frskyTransmitBuffer()
 {
   frskyTxISRIndex = 0;
-  UCSR0B |= (1 << UDRIE0); // enable  UDRE0 interrupt
+  UCSR0B |= (1 << UDRIE0); // enable  UDRE0 (data register empty) interrupt
 }
 
 
-uint8_t FrskyAlarmSendState = 0 ;
+uint8_t FrskyAlarmSendState = 0 ; // Which channel and alarm slot (1/2) to send
+                                  // Set to 4 to cause all four alarm setting to be sent to module
 
-void FRSKY10mspoll(void)
+void FRSKY10mspoll(void) // called from drivers.cpp if FrskyAlarmSendState > 0
 {
 
-  if (frskyTxPacketCount)
-    return; // we only have one buffer. If it's in use, then we can't send yet.
+    if (frskyTxPacketCount) // we only have one buffer. If it's in use, then we can't send yet.
+      return;               // drivers.cpp will have us back here in 50ms if needed.
 
-  // Now send a packet
-  {
-    FrskyAlarmSendState -= 1 ;
-    uint8_t channel = 1 - (FrskyAlarmSendState / 2);
-    uint8_t alarm = 1 - (FrskyAlarmSendState % 2);
-    
-    uint8_t i = 0;
-    frskyTxPacketBuf[i++] = START_STOP; // Start of packet
-    frskyTxPacketBuf[i++] = (A22PKT + FrskyAlarmSendState); // fc - fb - fa - f9
-    frskyPushValue(i, g_model.frsky.channels[channel].alarms_value[alarm]);
+    uint8_t sendAlarmState = FrskyAlarmSendState - 1;
+    // Now send a packet
     {
-      uint8_t *ptr ;
-      ptr = &frskyTxPacketBuf[i] ;
-      *ptr++ = ALARM_GREATER(channel, alarm);
-      *ptr++ = ALARM_LEVEL(channel, alarm);
-      *ptr++ = 0x00 ;
-      *ptr++ = 0x00 ;
-      *ptr++ = 0x00 ;
-      *ptr++ = 0x00 ;
-      *ptr++ = 0x00 ;
-      *ptr++ = START_STOP;        // End of packet
-      i += 8 ;
+      uint8_t channel = 1 - (sendAlarmState / 2);
+      uint8_t alarm = 1 - (sendAlarmState % 2);
+
+      uint8_t i = 0;
+      frskyTxPacketBuf[i++] = START_STOP; // Start of packet
+      frskyTxPacketBuf[i++] = (A22PKT + sendAlarmState); // fc - fb - fa - f9
+      frskyPushValue(i, g_model.frsky.channels[channel].alarms_value[alarm]);
+      {
+        frskyTxPacketBuf[i++] = ALARM_GREATER(channel, alarm);
+        frskyTxPacketBuf[i++] = ALARM_LEVEL(channel, alarm);
+        frskyTxPacketBuf[i++] = 0x00 ;
+        frskyTxPacketBuf[i++] = 0x00 ;
+        frskyTxPacketBuf[i++] = 0x00 ;
+        frskyTxPacketBuf[i++] = 0x00 ;
+        frskyTxPacketBuf[i++] = 0x00 ;
+        frskyTxPacketBuf[i++] = START_STOP;        // End of packet
+      }
+      frskyTxPacketCount = i;
+      frskyTransmitBuffer(); 
     }
-    frskyTxPacketCount = i;
-    frskyTransmitBuffer(); 
-  }
+    FrskyAlarmSendState--;
 }
 
 void FRSKY_setRSSIAlarms(void)
@@ -661,7 +687,7 @@ void FrskyData::set(uint8_t value)
  }
 
 #if defined (PCBV3)
-char g_logFilename[22]; //  "/G9XLOGS/12345678.000\0" max required length = 22
+char g_logFilename[21]; //  "/G9XLOGS/M00_000.TXT\0" max required length = 21
 // These global so we can close any open file from anywhere
 FATFS FATFS_Obj;
 FIL g_oLogFile;
@@ -694,7 +720,7 @@ void resetTelemetry()
   }
   else
   {
-    // Skip over any existing log files ... _000, _001, etc
+    // Skip over any existing log files ... _000, _001, etc. (or find first gap in numbering)
     while (1)
     {
       result = f_open(&g_oLogFile, g_logFilename, FA_OPEN_EXISTING | FA_READ);
