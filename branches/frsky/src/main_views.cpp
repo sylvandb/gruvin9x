@@ -155,6 +155,13 @@ void menuMainView(uint8_t event)
       att = (s_timerState==TMR_BEEPING ? INVERS|BLINK : INVERS);
       putsTime(18*FW+3, 0, s_timerVal, att, att);
     }
+    // The timer is in the way ... but more important than a screen title
+    else if (g_eeGeneral.view == e_telemetry+ALTERNATE) // if on first alternate telemetry view
+        lcd_putsAtt(18*FW-4, 0, PSTR("MAIN"), INVERS);
+    else if (g_eeGeneral.view == e_telemetry+2*ALTERNATE) // if on first alternate telemetry view
+        lcd_putsAtt(19*FW-4, 0, PSTR("GPS"), INVERS);
+    else if (g_eeGeneral.view == e_telemetry+3*ALTERNATE) // if on second alternate telemetry view
+        lcd_putsAtt(17*FW-4, 0, PSTR("OTHER"), INVERS);
   }
   else { // not in a telemetry ALTERNATE view
     uint8_t att = (g_vbat100mV < g_eeGeneral.vBatWarn ? BLINK : 0) | DBLSIZE;
@@ -340,7 +347,7 @@ void menuMainView(uint8_t event)
         lcd_outdezAtt(17 * FW - 2, 7*FH, frskyRSSI[1].max, LEFT);
       }
 #if defined (PCBV3) /* ATmega64A just doesn't have enough RAM */
-      else if (g_eeGeneral.view == e_telemetry+2*ALTERNATE) { //e_telemetry+ALTERNATE+1) { // if on second alternate telemetry view {
+      else if (g_eeGeneral.view == e_telemetry+2*ALTERNATE) { // if on second alternate telemetry view
         lcd_putsAtt(19*FW-4, 0, PSTR("GPS"), INVERS);
 
         // date
@@ -396,8 +403,7 @@ void menuMainView(uint8_t event)
         lcd_putc(lcd_lastPos, 7*FH, 'm');
 
       }
-      else if (g_eeGeneral.view == e_telemetry+3*ALTERNATE) { //e_telemetry+ALTERNATE+1) { // if on second alternate telemetry view {
-        lcd_putsAtt(17*FW-4, 0, PSTR("OTHER"), INVERS);
+      else if (g_eeGeneral.view == e_telemetry+3*ALTERNATE) { // if on second alternate telemetry view
 
         uint8_t y = 2*FH;
 
