@@ -51,12 +51,12 @@ uint16_t frskyComputeVolts(uint8_t rawADC, uint16_t ratio/* max cirecuit designe
    mode defaults to 0 -- no special display attributes
    decimals can be either 1 or 2 and defaults to 1
   */
-void frskyDisplayValue(uint8_t x, uint8_t y, uint8_t value, uint16_t ratio, uint8_t type, uint8_t mode, uint8_t decimals)
+void frskyPutAValue(uint8_t x, uint8_t y, uint8_t channel, uint8_t value, uint8_t mode)
 {
-  if (type == 0/*volts*/)
+  if (g_model.frsky.channels[channel].type == 0/*volts*/)
   {
-    uint16_t val = frskyComputeVolts(value, ratio, decimals);
-    lcd_outdezNAtt(x, y, val, mode|((decimals == 2) ? PREC2 : PREC1), 4);
+    uint16_t val = frskyComputeVolts(value, g_model.frsky.channels[channel].ratio, (mode & PREC2) ? 2 : 1);
+    lcd_outdezNAtt(x, y, val, mode | (mode&PREC2 ? PREC2 : PREC1));
     lcd_putcAtt(lcd_lastPos, y, 'v', mode);
   }
   else /* assume raw */
@@ -188,13 +188,13 @@ public:
             // drop through
 
           case frskyDataInFrame:
-            if (dataState != frskyDataXOR && data == BYTESTUFF)
+            if (dataState == frskyDataXOR)
+              dataState = frskyDataInFrame;
+            else if (data == BYTESTUFF)
             { 
                 dataState = frskyDataXOR; // XOR next byte
                 break; 
             }
-            else
-              dataState = frskyDataInFrame;
 
             if (data == START_STOP) // end of frame detected
             {
@@ -431,16 +431,13 @@ void parseTelemHubData()
         
       case TS_DATA:
 
-        if (telemState != TS_XOR)
-        {
-          if (data == 0x5d) // discard this byte and decode byte-stuff on next
-          {
-            telemState = TS_XOR;
-            break;
-          }
-        }
-        else
+        if (telemState == TS_XOR)
           telemState = TS_DATA;
+        else if (data == 0x5d) // discard this byte and decode byte-stuff on next
+        {
+          telemState = TS_XOR;
+          break;
+        }
 
         if (telemIndex < TELEM_PKT_SIZE)
         {

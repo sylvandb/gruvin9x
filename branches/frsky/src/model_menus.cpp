@@ -1633,11 +1633,10 @@ void menuProcTelemetry(uint8_t event)
     if(s_pgOfs<subN) {
       y=(subN-s_pgOfs)*FH;
       lcd_putsAtt(4, y, PSTR("Type"), 0);
-      lcd_putsnAtt(7*FW, y, PSTR("Volts"" raw ")+5*g_model.frsky.channels[i].type, 5, (sub==subN ? INVERS:0));
+      lcd_putsnAtt(7*FW, y, PSTR("Volts""raw  ")+5*g_model.frsky.channels[i].type, 5, (sub==subN ? INVERS:0));
       if (sub==subN)  CHECK_INCDEC_MODELVAR(event, g_model.frsky.channels[i].type, 0, 1/* +14 reserved */);
 
-      frskyDisplayValue(14*FW, y, frskyTelemetry[i].value, g_model.frsky.channels[i].ratio, 
-          g_model.frsky.channels[i].type, LEFT, 2);
+      frskyPutAValue(14*FW, y, i, frskyTelemetry[i].value, LEFT|PREC2);
 
     }
     subN++;
@@ -1646,14 +1645,12 @@ void menuProcTelemetry(uint8_t event)
       y=(subN-s_pgOfs)*FH;
       lcd_puts_P(4, y, PSTR("G.Bar"));
 
-      // These voltages need to extend all the way out a possbile maxVOlts 40.95 (4096)
-      frskyDisplayValue(7*FW, y, g_model.frsky.channels[i].barMin, g_model.frsky.channels[i].ratio, 
-          g_model.frsky.channels[i].type, (sub==subN && subSub==0 ? blink:0)|LEFT, 2);
+      // These voltages need to extend all the way out a possbile maxVolts 40.95 (4096)
+      frskyPutAValue(7*FW, y, i, g_model.frsky.channels[i].barMin, (sub==subN && subSub==0 ? blink:0)|LEFT|PREC2);
 
       lcd_puts_P(lcd_lastPos+FW, y, PSTR("to"));
       
-      frskyDisplayValue(lcd_lastPos+FW, y, g_model.frsky.channels[i].barMax, g_model.frsky.channels[i].ratio, 
-          g_model.frsky.channels[i].type, (sub==subN && subSub==1 ? blink:0)|LEFT, 2);
+      frskyPutAValue(lcd_lastPos+FW, y, i, g_model.frsky.channels[i].barMax, (sub==subN && subSub==1 ? blink:0)|LEFT|PREC2);
 
       if(sub==subN && subSub==0 && (s_editMode || p1valdiff)) g_model.frsky.channels[i].barMin = 
         checkIncDec(event, g_model.frsky.channels[i].barMin, 0, g_model.frsky.channels[i].barMax, EE_MODEL);
@@ -1669,8 +1666,7 @@ void menuProcTelemetry(uint8_t event)
         lcd_putsnAtt(8*FW, y, PSTR("---YelOrgRed")+3*ALARM_LEVEL(i, j),3,(sub==subN && subSub==0 ? blink:0));
         lcd_putsnAtt(13*FW, y, PSTR("<>")+ALARM_GREATER(i, j),1,(sub==subN && subSub==1 ? blink:0));
       
-        frskyDisplayValue(16*FW, y, g_model.frsky.channels[i].alarms_value[j], g_model.frsky.channels[i].ratio, 
-          g_model.frsky.channels[i].type, (sub==subN && subSub==2 ? blink:0)|LEFT, 2);
+        frskyPutAValue(16*FW, y, i, g_model.frsky.channels[i].alarms_value[j], (sub==subN && subSub==2 ? blink:0)|LEFT|PREC2);
 
         if(sub==subN && (s_editMode || p1valdiff)) {
           switch (subSub) {

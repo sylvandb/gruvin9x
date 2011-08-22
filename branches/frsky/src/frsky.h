@@ -58,8 +58,7 @@ extern uint8_t frskyUserDataIn;
 extern uint8_t frskyUserDataOut;
 
 extern uint16_t frskyComputeVolts(uint8_t rawADC, uint16_t ratio, uint8_t decimals=1); 
-extern void frskyDisplayValue(uint8_t x, uint8_t y, uint8_t value, uint16_t ratio, 
-    uint8_t type = 0, uint8_t mode = 0, uint8_t decimals = 1);
+extern void frskyPutAValue(uint8_t x, uint8_t y, uint8_t channel, uint8_t value, uint8_t mode = 0);
 
 void FRSKY_Init(void);
 void FRSKY10mspoll(void);
