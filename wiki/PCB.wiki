@@ -65,7 +65,7 @@ Here's a recent V4 visualisation ...
 
 == Current Status ==
 
-As at August 17th, 2011, the fist ten V4 prototype boards have been ordered from the PCB factory in China.
+201108-21: The fist ten V4 prototype boards have arrived in cam's hands. At least two other project followers have asked for blank boards to build up from scratch themselves. Great stuff -- more beta testers! :D
 
 We are _still_ looking for an organisation with the resources and the will to help us do a proper job of manufacturing and supplying these boards -- fully assembled -- to interested customers. HobbyKing.com seems an obvious choice, if we can twist Andy's rubber arm, so to speak. But first, we have to get a completed, tested unit over to him to play with. We hope to be able to do just that before the end of 2011. (HobbyKing do not know about these plans yet, as far as we know.)
 
