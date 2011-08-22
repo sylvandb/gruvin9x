@@ -1436,10 +1436,10 @@ void perMain()
   // parse whatever USART0 bytes are available in receive buffer
   frskyParseRxData();  // Extracts Fr-Sky packets, alarm, user data, etc.
 
+#if defined (PCBV3) /* Not enough SRAM for ATmega64A to handle this */
   // parse fr-sky user data -- assuming Fr-Sky hub is plugged into remote receiver
   parseTelemHubData(); // TODO: Should be conditional on type of data unit connected
 
-#if defined (PCBV3)
 
 /***** TEST CODE - Fr-Sky SD/MMC card / User Data experiments *****/
 

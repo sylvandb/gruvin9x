@@ -26,7 +26,12 @@
 // .20 seconds
 #define FRSKY_TIMEOUT10ms 20
 
+#if defined (PCBV3) /* ATmega64A just doesn't have enough RAM */
 #define FRSKY_RX_BUFFER_SIZE 64
+#else
+#define FRSKY_RX_BUFFER_SIZE 20
+#endif
+
 #define FRSKY_RX_PACKET_SIZE 19
 #define FRSKY_TX_PACKET_SIZE 19
 

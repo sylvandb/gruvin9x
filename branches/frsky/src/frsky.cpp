@@ -137,10 +137,11 @@ public:
   }
 };
 
+#if defined (PCBV3) /* ATmega64A just doesn't have enough RAM */
 // Fr-Sky User Data receive buffer. (Circular)
 #define FRSKY_USER_DATA_SIZE 20
 CircularBuffer frskyUserData(FRSKY_USER_DATA_SIZE);
-
+#endif
 
 // inherit and extend CircularBuffer to make parsing data more efficient
 class FrskyRxParser : public CircularBuffer {
@@ -223,9 +224,11 @@ public:
                   break;
 
                 case USRPKT: // User Data frskyRxPacketBuf
+#if defined (PCBV3) /* ATmega64A just doesn't have enough RAM */
                   uint8_t numBytes = frskyRxPacketBuf[1] & 0x07; // sanitize in case of data corruption leading to buffer overflow
                   for(uint8_t i=0; (i < numBytes) && (!frskyUserData.isFull()); i++)
                       frskyUserData.put(frskyRxPacketBuf[3+i]);
+#endif
                   break;
               }
 
@@ -257,6 +260,7 @@ public:
 };
 FrskyRxParser frskyRxParser(FRSKY_RX_BUFFER_SIZE);
 
+#if defined (PCBV3) /* ATmega64A just doesn't have enough RAM */
 /*
   Copies all available bytes (up to max bufsize) from frskyUserData circular 
   buffer into supplied *buffer. Returns number of bytes copied (or zero)
@@ -271,7 +275,9 @@ uint8_t frskyGetUserData(char *buffer, uint8_t bufSize)
   }
   return i;
 }
+#endif
 
+#if defined (PCBV3) /* ATmega64A just doesn't have enough RAM */
 ///////////////////////////////////////
 /// Fr-Sky Telemetry Hub Processing ///
 ///////////////////////////////////////
@@ -469,6 +475,7 @@ void parseTelemHubData()
     }
   }
 }
+#endif
   
 /*
   Empties any current USART0 receiver buffer content into the Fr-Sky packet
