@@ -112,6 +112,9 @@ ifneq ($(PCB), STD)
 #  CPPSRC += ffcc932.cpp
 endif
 
+# experiemental stack-overflow / stack-heap-clobber detector
+CPPSRC += stack-monitor.cpp
+
 # List Assembler source files here.
 #     Make them always end in a capital .S.  Files ending in a lowercase .s
 #     will not be considered source files but generated files (assembler

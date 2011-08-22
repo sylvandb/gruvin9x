@@ -229,11 +229,11 @@ void lcd_outdezNAtt(uint8_t x, uint8_t y, int16_t val, uint8_t mode, uint8_t len
   {
     // Starting point for regular unsigned, non-decimal number
     if (mode & DBLSIZE) 
-      lcd_lastPos -= 2*FW*(lastDigit+1) + ((len & (LEADING0|TRAILING0)) ? 2*(FW-2)*(maxLen - lastDigit - 1) : 0);
+      lcd_lastPos -= 2*FW*(lastDigit+1) + ((len & (LEADING0|TRAILING0)) ? 10*(maxLen - lastDigit - 1) : 0);
     else
       lcd_lastPos -= (FW-1)*(lastDigit+1) + ((len & (LEADING0|TRAILING0)) ? (FW-1)*(maxLen - lastDigit - 1) : 0);
 
-    if (prec>0) lcd_lastPos += (mode & DBLSIZE) ? (2*prec*(FW-2)) + 4 : (prec*(FW-1)) + 2;
+    if (prec>0) lcd_lastPos += (mode & DBLSIZE) ? prec*11 : prec*5;
 
     if (neg) lcd_lastPos -= (mode & DBLSIZE) ? 2*FW : FW;
   }

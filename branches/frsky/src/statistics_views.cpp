@@ -88,18 +88,18 @@ void menuProcStatistic2(uint8_t event)
       break;
   }
   lcd_puts_P( 0*FW,  1*FH, PSTR("tmr1Lat max    us"));
-  lcd_outdez(14*FW , 1*FH, g_tmr1Latency_max/2 );
+  lcd_outdez(15*FW , 1*FH, g_tmr1Latency_max/2 );
   lcd_puts_P( 0*FW,  2*FH, PSTR("tmr1Lat min    us"));
-  lcd_outdez(14*FW , 2*FH, g_tmr1Latency_min/2 );
+  lcd_outdez(15*FW , 2*FH, g_tmr1Latency_min/2 );
   lcd_puts_P( 0*FW,  3*FH, PSTR("tmr1 Jitter    us"));
-  lcd_outdez(14*FW , 3*FH, (g_tmr1Latency_max - g_tmr1Latency_min) /2 );
+  lcd_outdez(15*FW , 3*FH, (g_tmr1Latency_max - g_tmr1Latency_min) /2 );
   lcd_puts_P( 0*FW,  4*FH, PSTR("tmain max      ms"));
-  lcd_outdezAtt(14*FW , 4*FH, (g_timeMain*100)/16 ,PREC2);
+  lcd_outdezAtt(15*FW-2*FWNUM-FWDP, 4*FH, (g_timeMain*100)/16,PREC2);
   lcd_puts_P( 0*FW,  5*FH, PSTR("t10ms          us"));
-  lcd_outdez(14*FW , 5*FH, g_time_per10/2 );
+  lcd_outdez(15*FW , 5*FH, g_time_per10/2 );
 #ifndef SIMU
-  lcd_puts_P( 0*FW,  6*FH, PSTR("Stack          b"));
-  lcd_outhex4( 10*FW+3, 6*FH, stack_free() ) ;
+  lcd_puts_P( 0*FW,  6*FH, PSTR("Free Stack min    b"));
+  lcd_outdez(18*FW-1,  6*FH, stack_free() ) ;
 #endif
   lcd_puts_P( 3*FW,  7*FH, PSTR("[MENU] to reset"));
 }

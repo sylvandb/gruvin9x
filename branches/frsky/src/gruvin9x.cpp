@@ -1964,21 +1964,22 @@ extern uint16_t g_timeMain;
 #endif
 */
 
+#ifdef DEBUG
 uint16_t DEBUG1 = 0;
 uint16_t DEBUG2 = 0;
+#endif
 
-extern unsigned char __bss_end ;
-
-unsigned int stack_free()
+extern uint16_t __bss_end;
+extern uint16_t __stack;
+uint16_t stack_free()
 {
-  unsigned char *p ;
+  uint16_t *p ;
+  uint16_t c;
+  p = &__stack; // start of stack (usually the end of SRAM)
+  while ( *p-- != 0xc5c5); // scan downwards for bottom of used stack
+  while ( *p-- == 0xc5c5 && p > &__bss_end) c++;
 
-  p = &__bss_end + 1 ;
-  while ( *p == 0x55 )
-  {
-    p+= 1 ;
-  }
-  return p - &__bss_end ;
+  return c;
 }
 
 #endif

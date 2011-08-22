@@ -28,6 +28,7 @@
 #define DISPLAY_H  64
 #define FW          6
 #define FWNUM       5
+#define FWDP        2 /* DP=decimal point */
 #define FH          8
 
 /* lcd common flags */
