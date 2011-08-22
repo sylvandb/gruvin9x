@@ -146,7 +146,7 @@ void menuMainView(uint8_t event)
   if (view == e_telemetry && ((g_eeGeneral.view & 0xf0) >= ALTERNATE)) { // If view is a telemetry ALTERNATE view
     lcd_putsnAtt(0, 0, g_model.name, sizeof(g_model.name), ZCHAR|INVERS);
     uint8_t att = (g_vbat100mV < g_eeGeneral.vBatWarn ? INVERS|BLINK : INVERS);
-    putsVBat(14*FW,0,att);
+    putsVBat(12*FW,0,att);
     if(s_timerState != TMR_OFF){
       att = (s_timerState==TMR_BEEPING ? INVERS|BLINK : INVERS);
       putsTime(18*FW+3, 0, s_timerVal, att, att);
@@ -359,7 +359,7 @@ void menuMainView(uint8_t event)
         lcd_outdezNAtt(lcd_lastPos, 3*FH, mn, LEFT, 2|LEADING0); // mm before '.'
         lcd_plot(lcd_lastPos, 4*FH-2, 0); // small decimal point
         lcd_outdezNAtt(lcd_lastPos+2, 3*FH, gTelem_GPSlongitude[1], LEFT|UNSIGN, 4|TRAILING0); // after '.'
-        lcd_putc(lcd_lastPos+1, 3*FH, gTelem_GPSlongitudeEW ? 'E' : 'W'); 
+        lcd_putc(lcd_lastPos+1, 3*FH, gTelem_GPSlongitudeEW ? gTelem_GPSlongitudeEW : '-'); 
 
         // Latitude
         lcd_outdezAtt(lcd_lastPos+3*FW+3, 3*FH,  gTelem_GPSlatitude[0] / 100, 0); // ddd before '.'
@@ -368,7 +368,7 @@ void menuMainView(uint8_t event)
         lcd_outdezNAtt(lcd_lastPos, 3*FH, mn, LEFT, 2|LEADING0); // mm before '.'
         lcd_plot(lcd_lastPos, 4*FH-2, 0); // small decimal point
         lcd_outdezNAtt(lcd_lastPos+2, 3*FH, gTelem_GPSlatitude[1], LEFT|UNSIGN, 4|TRAILING0); // after '.'
-        lcd_putc(lcd_lastPos+1, 3*FH, gTelem_GPSlatitudeNS ? 'S' : 'N'); 
+        lcd_putc(lcd_lastPos+1, 3*FH, gTelem_GPSlatitudeNS ? gTelem_GPSlatitudeNS : '-'); 
 
         // Course / Heading
         lcd_puts_P(5, 5*FH, PSTR("Hdg:"));
@@ -393,6 +393,61 @@ void menuMainView(uint8_t event)
       }
       else if (g_eeGeneral.view == e_telemetry+3*ALTERNATE) { //e_telemetry+ALTERNATE+1) { // if on second alternate telemetry view {
         lcd_putsAtt(17*FW-4, 0, PSTR("OTHER"), INVERS);
+
+        uint8_t y = 2*FH;
+
+        // Temperature 1
+        lcd_puts_P(0, y, PSTR("Temp1:"));
+        lcd_outdezNAtt(lcd_lastPos, y, gTelem_Temperature1, LEFT);
+        lcd_puts_P(lcd_lastPos, y, PSTR("@C"));
+        y += FH;
+
+        // Temperature 2
+        lcd_puts_P(0, y, PSTR("Temp2:"));
+        lcd_outdezNAtt(lcd_lastPos, y, gTelem_Temperature2, LEFT);
+        lcd_puts_P(lcd_lastPos, y, PSTR("@C"));
+
+        y += 2*FH;
+
+        // RPM
+        lcd_puts_P(0, y, PSTR("RPM:"));
+        lcd_outdezNAtt(lcd_lastPos, y, gTelem_RPM, LEFT);
+        y += FH;
+
+        // Fuel
+        lcd_puts_P(0, y, PSTR("Fuel:"));
+        lcd_outdezNAtt(lcd_lastPos, y, gTelem_FuelLevel, LEFT);
+        lcd_putc(lcd_lastPos, y, '%');
+        y += FH;
+
+        // Volts
+        lcd_puts_P(0, y, PSTR("Volts:"));
+        lcd_outdezNAtt(lcd_lastPos, y, gTelem_Volts, LEFT);
+        lcd_putc(lcd_lastPos, y, 'V');
+
+        y = 2*FH;
+        // Altitude (barometric)
+        lcd_puts_P(12*FW, y, PSTR("Alt:"));
+        lcd_outdezNAtt(lcd_lastPos, y, gTelem_baroAltitude, LEFT|UNSIGN);
+        lcd_putc(lcd_lastPos, y, 'm');
+
+        y += 2*FH;
+
+        // Acceleromter
+        lcd_puts_P(11*FW, y, PSTR("Accel"));
+        y += FH;
+        lcd_puts_P(11*FW, y, PSTR("x="));
+        lcd_outdezNAtt(FW*17, y, (int32_t)gTelem_AccelX * 100 / 256, PREC2);
+        lcd_putc(lcd_lastPos, y, 'g');
+        y += FH;
+        lcd_puts_P(11*FW, y, PSTR("y="));
+        lcd_outdezNAtt(FW*17, y, (int32_t)gTelem_AccelY * 100 / 256, PREC2);
+        lcd_putc(lcd_lastPos, y, 'g');
+        y += FH;
+        lcd_puts_P(11*FW, y, PSTR("z="));
+        lcd_outdezNAtt(FW*17, y, (int32_t)gTelem_AccelZ * 100 / 256, PREC2);
+        lcd_putc(lcd_lastPos, y, 'g');
+
       }
       else {
 

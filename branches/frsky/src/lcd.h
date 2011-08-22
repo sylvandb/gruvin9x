@@ -63,7 +63,7 @@ extern void lcd_putsn_P(unsigned char x,unsigned char y,const prog_char * s,unsi
 extern void lcd_outhex4(unsigned char x,unsigned char y,uint16_t val);
 
 extern void lcd_outdezAtt(unsigned char x,unsigned char y, int16_t val,uint8_t mode);
-extern void lcd_outdezNAtt(uint8_t x,uint8_t y, int16_t val, uint8_t mode,uint8_t len);
+extern void lcd_outdezNAtt(uint8_t x,uint8_t y, int16_t val, uint8_t mode = 0, uint8_t len = 5);
 extern void lcd_outdez(unsigned char x,unsigned char y, int16_t val);
 
 extern void putsSwitches(uint8_t x,uint8_t y, int8_t swtch, uint8_t att);
