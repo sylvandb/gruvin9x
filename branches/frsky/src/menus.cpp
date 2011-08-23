@@ -56,7 +56,7 @@ int16_t checkIncDec(uint8_t event, int16_t val, int16_t i_min, int16_t i_max, ui
   int16_t newval = val;
   uint8_t kpl=KEY_RIGHT, kmi=KEY_LEFT, kother = -1;
 
-  if(event & _MSK_KEY_DBL){
+  if(event & _MSK_KEY_DBL){ 
     uint8_t hlp=kpl;
     kpl=kmi;
     kmi=hlp;
@@ -186,10 +186,8 @@ void MState2::check(uint8_t event, uint8_t curr, MenuFuncP *menuTab, uint8_t men
   switch(event)
   {
     case EVT_ENTRY:
-      //if(m_posVert>maxrow)
-        init();
-        s_editMode = false;
-      //init();BLINK_SYNC;
+      init();
+      s_editMode = false;
       break;
     case EVT_KEY_FIRST(KEY_MENU):
       if (maxcol > 0)
@@ -197,10 +195,8 @@ void MState2::check(uint8_t event, uint8_t curr, MenuFuncP *menuTab, uint8_t men
       break;
     case EVT_KEY_LONG(KEY_EXIT):
       s_editMode = false;
-      //popMenu(true); //return to uppermost, beeps itself
       popMenu(false);
       break;
-      //fallthrough
     case EVT_KEY_BREAK(KEY_EXIT):
       if(s_editMode) {
         s_editMode = false;

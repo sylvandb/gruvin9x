@@ -1592,6 +1592,7 @@ void menuProcSafetySwitches(uint8_t event)
 #ifdef FRSKY
 void menuProcTelemetry(uint8_t event)
 {
+  lcd_outhex4(12*FW, 0, event);
   MENU("TELEMETRY", menuTabModel, e_Telemetry, 13, {0, -1, 0, 0, 1, 2, 2, -1, 1, 0, 1, 2/*, 2*/});
 
   int8_t  sub    = mstate2.m_posVert;
@@ -1599,12 +1600,29 @@ void menuProcTelemetry(uint8_t event)
   uint8_t blink;
   uint8_t y;
 
-  switch(event){
+  lcd_outdezNAtt(FW*10, 0, sub);
+
+  switch(event) {
+
+    case EVT_KEY_FIRST(KEY_MENU): // press [MENU] to advance to next whole volt
+      if (sub == 3)
+        g_model.frsky.channels[0].ratio = ((g_model.frsky.channels[0].ratio + 100) % 4096)/100*100;
+      else if (sub == 9)
+        g_model.frsky.channels[1].ratio = ((g_model.frsky.channels[1].ratio + 100) % 4096)/100*100;
+      break;
+
+    case EVT_KEY_LONG(KEY_MENU): // press [MENU_LONG] to select standard 2:1 or 4:1 resistor divder (max volts)
+      if (sub == 3)
+        g_model.frsky.channels[0].ratio = (g_model.frsky.channels[0].ratio == 700) ? 1320 : 660;
+      else if (sub == 9)
+        g_model.frsky.channels[1].ratio = (g_model.frsky.channels[1].ratio == 700) ? 1320 : 660;
+      break;
+
     case EVT_KEY_BREAK(KEY_DOWN):
     case EVT_KEY_BREAK(KEY_UP):
     case EVT_KEY_BREAK(KEY_LEFT):
     case EVT_KEY_BREAK(KEY_RIGHT):
-      if(s_editMode)
+      if(s_editMode) // only fr-sky alarm fields have an edit mode
         FRSKY_setModelAlarms(); // update Fr-Sky module when edit mode exited
   }
 
@@ -1624,7 +1642,7 @@ void menuProcTelemetry(uint8_t event)
       y=(subN-s_pgOfs)*FH;
       lcd_putsAtt(4, y, PSTR("Type"), 0);
       lcd_putsnAtt(7*FW, y, PSTR("Volts""raw  ")+5*g_model.frsky.channels[i].type, 5, (sub==subN ? INVERS:0));
-      if (sub==subN)  CHECK_INCDEC_MODELVAR(event, g_model.frsky.channels[i].type, 0, 1/* +14 reserved */);
+      if (sub==subN)  CHECK_INCDEC_MODELVAR(event, g_model.frsky.channels[i].type, 0, 1);
 
     }
     subN++;
@@ -1635,7 +1653,7 @@ void menuProcTelemetry(uint8_t event)
       lcd_outdezNAtt(8*FW-1, y, g_model.frsky.channels[i].ratio, (sub==subN ? INVERS:0)|PREC2);
       lcd_putc(lcd_lastPos, y, 'v');
 
-      if (g_model.frsky.channels[i].type == 0) 
+      if (g_model.frsky.channels[i].type == 0) // display 'cal(ibrate) and arrow only if type == volts
       {
         frskyPutAValue(16*FW, y, i, frskyTelemetry[i].value, LEFT|PREC2);
         lcd_puts_P(12*FW-3, y, PSTR("cal"));
@@ -1643,6 +1661,7 @@ void menuProcTelemetry(uint8_t event)
         lcd_plot(14*FW+8, y+2);
         lcd_plot(14*FW+8, y+4);
       }
+
       if (sub==subN)
           g_model.frsky.channels[i].ratio = checkIncDec(event, g_model.frsky.channels[i].ratio, 0, 4095/* 40.95V */, EE_MODEL);
     }
