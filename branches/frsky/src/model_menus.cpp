@@ -1622,22 +1622,29 @@ void menuProcTelemetry(uint8_t event)
 
     if(s_pgOfs<subN) {
       y=(subN-s_pgOfs)*FH;
-      lcd_putsAtt(4, y, PSTR("MaxV"), 0);
-      lcd_outdezNAtt(8*FW-3, y, g_model.frsky.channels[i].ratio, (sub==subN ? INVERS:0)|PREC2, 4);
-      if (g_model.frsky.channels[i].type == 0) lcd_puts_P(13*FW, y, PSTR("(cal)"));
-      if (sub==subN)
-          g_model.frsky.channels[i].ratio = checkIncDec(event, g_model.frsky.channels[i].ratio, 0, 4095/* 40.95V */, EE_MODEL);
+      lcd_putsAtt(4, y, PSTR("Type"), 0);
+      lcd_putsnAtt(7*FW, y, PSTR("Volts""raw  ")+5*g_model.frsky.channels[i].type, 5, (sub==subN ? INVERS:0));
+      if (sub==subN)  CHECK_INCDEC_MODELVAR(event, g_model.frsky.channels[i].type, 0, 1/* +14 reserved */);
+
     }
     subN++;
 
     if(s_pgOfs<subN) {
       y=(subN-s_pgOfs)*FH;
-      lcd_putsAtt(4, y, PSTR("Type"), 0);
-      lcd_putsnAtt(7*FW, y, PSTR("Volts""raw  ")+5*g_model.frsky.channels[i].type, 5, (sub==subN ? INVERS:0));
-      if (sub==subN)  CHECK_INCDEC_MODELVAR(event, g_model.frsky.channels[i].type, 0, 1/* +14 reserved */);
+      lcd_putsAtt(4, y, PSTR("MaxV"), 0);
+      lcd_outdezNAtt(8*FW-1, y, g_model.frsky.channels[i].ratio, (sub==subN ? INVERS:0)|PREC2);
+      lcd_putc(lcd_lastPos, y, 'v');
 
-      frskyPutAValue(14*FW, y, i, frskyTelemetry[i].value, LEFT|PREC2);
-
+      if (g_model.frsky.channels[i].type == 0) 
+      {
+        frskyPutAValue(16*FW, y, i, frskyTelemetry[i].value, LEFT|PREC2);
+        lcd_puts_P(12*FW-3, y, PSTR("cal"));
+        lcd_hline(14*FW+3, y+3, 7);
+        lcd_plot(14*FW+8, y+2);
+        lcd_plot(14*FW+8, y+4);
+      }
+      if (sub==subN)
+          g_model.frsky.channels[i].ratio = checkIncDec(event, g_model.frsky.channels[i].ratio, 0, 4095/* 40.95V */, EE_MODEL);
     }
     subN++;
 

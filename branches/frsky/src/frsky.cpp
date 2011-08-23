@@ -61,7 +61,7 @@ void frskyPutAValue(uint8_t x, uint8_t y, uint8_t channel, uint8_t value, uint8_
   }
   else /* assume raw */
   {
-    lcd_outdezNAtt(x, y, value, mode, 3|LEADING0);
+    lcd_outdezNAtt(x, y, value, mode&(~(PREC1|PREC2)), 3|LEADING0);
   }
 }
 
