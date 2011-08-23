@@ -1592,15 +1592,12 @@ void menuProcSafetySwitches(uint8_t event)
 #ifdef FRSKY
 void menuProcTelemetry(uint8_t event)
 {
-  lcd_outhex4(12*FW, 0, event);
   MENU("TELEMETRY", menuTabModel, e_Telemetry, 13, {0, -1, 0, 0, 1, 2, 2, -1, 1, 0, 1, 2/*, 2*/});
 
   int8_t  sub    = mstate2.m_posVert;
   uint8_t subSub = mstate2.m_posHorz;
   uint8_t blink;
   uint8_t y;
-
-  lcd_outdezNAtt(FW*10, 0, sub);
 
   switch(event) {
 
