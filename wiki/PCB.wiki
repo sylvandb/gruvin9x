@@ -52,7 +52,9 @@ Here's a (Photoshop'd) KiCAD 3D perspective of the present v3.2 design (image no
 
 The V3 board still used a 64-pin MCU chip. So in order to free up more pins for other uses (like the SD card) we had to create a scanned-matrix system for getting all fourteen key and trim switches on just eight pins. Unfortunately, that required a lot more dismantling and hacking of the radio hardware than expected. 
 
-But then, along came Cam (in the UK) with his 100-pin variant of the same MCU and all the new board design to go with it. Thus, PCB v4 was born, which is a simple drop-in replacement for the stock PCB -- no hacking required.  
+But then, along came Cam (in the UK) with his 100-pin variant of the same MCU and all the new board design to go with it. Thus, PCB v4 was born, which is a simple drop-in replacement for the stock PCB -- no hacking required.
+
+[ I was asked to make a video of the actual v3.2 board that I had hand constructed. Here it is: http://www.youtube.com/watch?v=V-QUrYAcJOU ]
 
 === The V4 Board (to be produced for resale as soon as possible) ===
 
