@@ -370,7 +370,7 @@ void menuMainView(uint8_t event)
         uint8_t mn = gTelem_GPSlongitude[0] % 100;
         lcd_outdezNAtt(lcd_lastPos, 3*FH, mn, LEFT, 2|LEADING0); // mm before '.'
         lcd_plot(lcd_lastPos, 4*FH-2, 0); // small decimal point
-        lcd_outdezNAtt(lcd_lastPos+2, 3*FH, gTelem_GPSlongitude[1], LEFT|UNSIGN, 4|TRAILING0); // after '.'
+        lcd_outdezNAtt(lcd_lastPos+2, 3*FH, gTelem_GPSlongitude[1], LEFT|UNSIGN, 4|LEADING0); // after '.'
         lcd_putc(lcd_lastPos+1, 3*FH, gTelem_GPSlongitudeEW ? gTelem_GPSlongitudeEW : '-'); 
 
         // Latitude
@@ -379,7 +379,7 @@ void menuMainView(uint8_t event)
         mn = gTelem_GPSlatitude[0] % 100;
         lcd_outdezNAtt(lcd_lastPos, 3*FH, mn, LEFT, 2|LEADING0); // mm before '.'
         lcd_plot(lcd_lastPos, 4*FH-2, 0); // small decimal point
-        lcd_outdezNAtt(lcd_lastPos+2, 3*FH, gTelem_GPSlatitude[1], LEFT|UNSIGN, 4|TRAILING0); // after '.'
+        lcd_outdezNAtt(lcd_lastPos+2, 3*FH, gTelem_GPSlatitude[1], LEFT|UNSIGN, 4|LEADING0); // after '.'
         lcd_putc(lcd_lastPos+1, 3*FH, gTelem_GPSlatitudeNS ? gTelem_GPSlatitudeNS : '-'); 
 
         // Course / Heading
