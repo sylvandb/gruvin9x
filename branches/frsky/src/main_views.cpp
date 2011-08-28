@@ -40,11 +40,7 @@ uint8_t tabViews[] = {
   3, /*e_inputs*/
   1, /*e_timer2*/
 #ifdef FRSKY
-#if defined (PCBV3) /* ATmega64A just doesn't have enough RAM */
   4, /*e_telemetry*/
-#else
-  2,
-#endif
 #endif
 };
 
@@ -346,7 +342,6 @@ void menuMainView(uint8_t event)
         lcd_outdezAtt(15 * FW - 2, 7*FH, frskyRSSI[1].min, 0);
         lcd_outdezAtt(17 * FW - 2, 7*FH, frskyRSSI[1].max, LEFT);
       }
-#if defined (PCBV3) /* ATmega64A just doesn't have enough RAM */
       else if (g_eeGeneral.view == e_telemetry+2*ALTERNATE) { // if on second alternate telemetry view
         lcd_putsAtt(19*FW-4, 0, PSTR("GPS"), INVERS);
 
@@ -460,7 +455,6 @@ void menuMainView(uint8_t event)
         lcd_putc(lcd_lastPos, y, 'g');
 
       }
-#endif
       else {
 
         y0 = 5*FH;
@@ -488,7 +482,7 @@ void menuMainView(uint8_t event)
 #if defined (PCBV3)
       if (g_eeGeneral.view == e_telemetry+ALTERNATE) // if on first alternate telemetry view
         lcd_putsAtt(0, FH*2, g_logFilename, BSS); // Show log filename (or error msg)
-#endif 
+#endif
       lcd_putsAtt(22, 40, PSTR("NO DATA"), DBLSIZE);
     }
   }
