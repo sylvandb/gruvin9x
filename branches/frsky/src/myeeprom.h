@@ -85,7 +85,7 @@ typedef struct t_EEGeneral {
   uint8_t   preBeep:1;
   uint8_t   flashBeep:1;
   uint8_t   disableSplashScreen:1;
-  uint8_t   enableTelemetryWarning:1;   // 0=no, 1=yes (Sound alarm when there's no telem. data coming in)
+  uint8_t   enableTelemetryAlarm:1;   // 0=no, 1=yes (Sound alarm when there's no telem. data coming in)
   uint8_t   spare:2;
   uint8_t   filterInput;
   uint8_t   lightAutoOff;

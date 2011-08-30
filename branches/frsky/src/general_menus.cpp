@@ -214,13 +214,13 @@ void menuProcSetup(uint8_t event)
   }subN++;
 
   if(s_pgOfs<subN) {
-      uint8_t b = g_eeGeneral.enableTelemetryWarning;
+      uint8_t b = g_eeGeneral.enableTelemetryAlarm;
       lcd_puts_P(0, y,PSTR("NO DATA Alarm"));
       menu_lcd_onoff( PARAM_OFS, y, b, sub==subN ) ;
       if(sub==subN)
       {
           CHECK_INCDEC_GENVAR(event, b, 0, 1);
-          g_eeGeneral.enableTelemetryWarning = b;
+          g_eeGeneral.enableTelemetryAlarm = b;
       }
       if((y+=FH)>7*FH) return;
   }subN++;
