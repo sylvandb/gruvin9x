@@ -1,3 +1,5 @@
+#ifndef SIMU
+
 void StackPaint(void) __attribute__ ((naked)) __attribute__ ((section (".init1")));
 
 void StackPaint(void)
@@ -26,3 +28,4 @@ void StackPaint(void)
 #endif
 } 
 
+#endif
