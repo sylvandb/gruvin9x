@@ -493,7 +493,6 @@ void putsVolts(uint8_t x, uint8_t y, uint16_t volts, uint8_t att, bool displayUn
 
 void putsVBat(uint8_t x, uint8_t y, uint8_t att, bool displayUnit)
 {
-  g_vbat100mV = 129;
   putsVolts(x, y, g_vbat100mV, att, displayUnit);
 }
 
