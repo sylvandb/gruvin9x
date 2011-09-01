@@ -341,7 +341,6 @@ void menuMainView(uint8_t event)
         lcd_outdezAtt(17 * FW - 2, 7*FH, frskyRSSI[1].max, LEFT);
       }
       else if (g_eeGeneral.view == e_telemetry+2*ALTERNATE) { // if on second alternate telemetry view
-        lcd_putsAtt(19*FW-4, 0, PSTR("GPS"), INVERS);
         
 #if OUTDEZ_SPEED == 0
 #define LAST_POS (lcd_lastPos+FW)
