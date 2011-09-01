@@ -396,10 +396,10 @@ void lcd_plot(uint8_t x,uint8_t y, uint8_t att)
     lcd_mask(p, BITMASK(y%8), att);
 }
 
-void lcd_hlineStip(int8_t x, uint8_t y, int8_t  w, uint8_t pat, uint8_t att)
+void lcd_hlineStip(int8_t x, uint8_t y, uint8_t w, uint8_t pat, uint8_t att)
 {
   if (y >= DISPLAY_H) return;
-  if (w<0) { x+=w; w=-w; }
+  // if (w<0) { x+=w; w=-w; }
   if (x<0) { w+=x; x=0; }
   if (x+w > DISPLAY_W) { w = DISPLAY_W - x; }
 
@@ -418,7 +418,7 @@ void lcd_hlineStip(int8_t x, uint8_t y, int8_t  w, uint8_t pat, uint8_t att)
   }
 }
 
-void lcd_hline(uint8_t x,uint8_t y, int8_t w, uint8_t att)
+void lcd_hline(uint8_t x,uint8_t y, uint8_t w, uint8_t att)
 {
   lcd_hlineStip(x, y, w, 0xff, att);
 }
@@ -465,7 +465,7 @@ void lcd_rect(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_t pat)
 
 void lcd_filled_rect(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_t att)
 {
-  for (uint8_t i=y+h-1; i>=y; i--)
+  for (uint8_t i=y; i<y+h; i++)
     lcd_hline(x, i, w, att);
 }
 

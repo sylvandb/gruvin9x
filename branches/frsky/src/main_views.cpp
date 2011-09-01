@@ -144,20 +144,18 @@ void menuMainView(uint8_t event)
   ///////////////////////////////////////////////////////////////////////
   /// Upper Section of Display common to all but telemetry alt. views ///
   if (view == e_telemetry && ((g_eeGeneral.view & 0xf0) >= ALTERNATE)) { // If view is a telemetry ALTERNATE view
-    lcd_putsnAtt(0, 0, g_model.name, sizeof(g_model.name), ZCHAR|INVERS);
-    uint8_t att = (g_vbat100mV < g_eeGeneral.vBatWarn ? INVERS|BLINK : INVERS);
+    lcd_putsnAtt(0, 0, g_model.name, sizeof(g_model.name), ZCHAR);
+    uint8_t att = (g_vbat100mV < g_eeGeneral.vBatWarn ? BLINK : 0);
     putsVBat(14*FW,0,att);
     if(s_timerState != TMR_OFF){
-      att = (s_timerState==TMR_BEEPING ? INVERS|BLINK : INVERS);
+      att = (s_timerState==TMR_BEEPING ? BLINK : 0);
       putsTime(17*FW, 0, s_timerVal, att, att);
     }
     // The timer is in the way ... but more important than a screen title
-    else if (g_eeGeneral.view == e_telemetry+ALTERNATE) // if on first alternate telemetry view
-      lcd_putsAtt(18*FW-4, 0, PSTR("MAIN"), INVERS);
-    else if (g_eeGeneral.view == e_telemetry+2*ALTERNATE) // if on first alternate telemetry view
-      lcd_putsAtt(19*FW-4, 0, PSTR("GPS"), INVERS);
-    else if (g_eeGeneral.view == e_telemetry+3*ALTERNATE) // if on second alternate telemetry view
-      lcd_putsAtt(17*FW-4, 0, PSTR("OTHER"), INVERS);
+    else {
+      lcd_putsnAtt(17*FW-4, 0, PSTR(" MAIN  GPSOTHER") + 5 * (g_eeGeneral.view - e_telemetry) / ALTERNATE - 5, 5, 0);
+    }
+    lcd_filled_rect(0, 0, DISPLAY_W, 8);
   }
   else { // not in a telemetry ALTERNATE view
     uint8_t phase = getFlightPhase();
