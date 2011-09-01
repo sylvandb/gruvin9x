@@ -36,17 +36,17 @@ void menuProcStatistic(uint8_t event)
   }
 
   lcd_puts_P(  1*FW, FH*1, PSTR("TME"));
-  putsTime(    7*FW, FH*1, s_timeCumAbs, 0, 0);
+  putsTime(    5*FW, FH*1, s_timeCumAbs, 0, 0);
   lcd_puts_P( 17*FW, FH*1, PSTR("TSW"));
-  putsTime(   13*FW, FH*1, s_timeCumSw,      0, 0);
+  putsTime(   11*FW, FH*1, s_timeCumSw,      0, 0);
 
   lcd_puts_P(  1*FW, FH*2, PSTR("STK"));
-  putsTime(    7*FW, FH*2, s_timeCumThr, 0, 0);
+  putsTime(    5*FW, FH*2, s_timeCumThr, 0, 0);
   lcd_puts_P( 17*FW, FH*2, PSTR("ST%"));
-  putsTime(   13*FW, FH*2, s_timeCum16ThrP/16, 0, 0);
+  putsTime(   11*FW, FH*2, s_timeCum16ThrP/16, 0, 0);
 
   lcd_puts_P( 17*FW, FH*0, PSTR("TOT"));
-  putsTime(   13*FW, FH*0, s_timeCumTot, 0, 0);
+  putsTime(   11*FW, FH*0, s_timeCumTot, 0, 0);
 
   uint16_t traceRd = s_traceCnt>MAXTRACE ? s_traceWr : 0;
   uint8_t x=5;
