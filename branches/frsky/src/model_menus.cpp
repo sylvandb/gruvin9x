@@ -161,7 +161,7 @@ void menuProcModelSelect(uint8_t event)
   for(uint8_t i=0; i<6; i++){
     uint8_t y=(i+2)*FH;
     uint8_t k=i+s_pgOfs;
-    lcd_outdezNAtt(  3*FW, y, k+1, ((sub==k) ? INVERS : 0), 2|LEADING0);
+    lcd_outdezNAtt(  3*FW, y, k+1, LEADING0+((sub==k) ? INVERS : 0), 2);
     static char buf[sizeof(g_model.name)+5];
     if(k==g_eeGeneral.currModel) lcd_putc(1,  y,'*');
     eeLoadModelName(k, buf, sizeof(buf));
@@ -280,7 +280,7 @@ void menuProcModel(uint8_t _event)
   uint8_t subSub = mstate2.m_posHorz;
   uint8_t y = 1*FH;
 
-  lcd_outdezNAtt(7*FW,0,g_eeGeneral.currModel+1,INVERS, 2|LEADING0);
+  lcd_outdezNAtt(7*FW,0,g_eeGeneral.currModel+1,INVERS+LEADING0,2);
 
   uint8_t subN = 1;
   if(s_pgOfs<subN) {
@@ -291,7 +291,7 @@ void menuProcModel(uint8_t _event)
 
   if(s_pgOfs<subN) {
     lcd_puts_P(0*FW, y, PSTR("Timer"));
-    putsTime(12*FW-1, y, g_model.tmrVal,
+    putsTime(10*FW+1, y, g_model.tmrVal,
         (sub==subN && subSub==0 ? (s_editMode ? BLINK : INVERS):0),
         (sub==subN && subSub==1 ? (s_editMode ? BLINK : INVERS):0) );
 
@@ -1247,7 +1247,7 @@ void menuProcExpoMix(uint8_t expo, uint8_t __event)
       break;
   }
 
-  lcd_outdezAtt(lcd_lastPos+2*FW+FW/2, 0, getExpoMixCount(expo), 0);
+  lcd_outdezAtt(lcd_lastPos+2*FW+FW/2, 0, getExpoMixCount(expo));
   lcd_puts_P(lcd_lastPos, 0, expo ? PSTR("/14") : PSTR("/32"));
 
   s_currCh = 0;
@@ -1411,7 +1411,7 @@ void menuProcLimits(uint8_t event)
   if(k==NUM_CHNOUT){
     //last line available - add the "copy trim menu" line
     uint8_t attr = (sub==NUM_CHNOUT) ? INVERS : 0;
-    lcd_putsAtt(  3*FW,y,PSTR("COPY TRIM [MENU]"),s_noHi ? 0 : attr);
+    lcd_putsAtt(3*FW,y,PSTR("COPY TRIM [MENU]"),s_noHi ? 0 : attr);
     if(attr && event==EVT_KEY_LONG(KEY_MENU)) {
       s_noHi = NO_HI_LEN;
       killEvents(event);
@@ -1637,17 +1637,16 @@ void menuProcTelemetry(uint8_t event)
 
     if(s_pgOfs<subN) {
       y=(subN-s_pgOfs)*FH;
-      lcd_putsAtt(4, y, PSTR("Type"), 0);
+      lcd_putsAtt(4, y, PSTR("Type"), 0); // TODO puts_P
       lcd_putsnAtt(7*FW, y, PSTR("Volts""raw  ")+5*g_model.frsky.channels[i].type, 5, (sub==subN ? INVERS:0));
       if (sub==subN)  CHECK_INCDEC_MODELVAR(event, g_model.frsky.channels[i].type, 0, 1);
-
     }
     subN++;
 
     if(s_pgOfs<subN) {
       y=(subN-s_pgOfs)*FH;
       lcd_putsAtt(4, y, PSTR("MaxV"), 0);
-      lcd_outdezNAtt(8*FW-1, y, g_model.frsky.channels[i].ratio, (sub==subN ? INVERS:0)|PREC2);
+      lcd_outdezNAtt(7*FW+1, y, g_model.frsky.channels[i].ratio, (sub==subN ? INVERS:0)|PREC2|LEFT);
       lcd_putc(lcd_lastPos, y, 'v');
 
       if (g_model.frsky.channels[i].type == 0) // display 'cal(ibrate) and arrow only if type == volts
@@ -1669,7 +1668,7 @@ void menuProcTelemetry(uint8_t event)
       lcd_puts_P(4, y, PSTR("G.Bar"));
 
       // These voltages need to extend all the way out a possbile maxVolts 40.95 (4096)
-      frskyPutAValue(7*FW, y, i, g_model.frsky.channels[i].barMin, (sub==subN && subSub==0 ? blink:0)|LEFT|PREC2);
+      frskyPutAValue(7*FW+1, y, i, g_model.frsky.channels[i].barMin, (sub==subN && subSub==0 ? blink:0)|LEFT|PREC2);
 
       lcd_puts_P(lcd_lastPos+FW, y, PSTR("to"));
       
@@ -1747,7 +1746,7 @@ void menuProcTemplates(uint8_t event)
     if(k==NUM_TEMPLATES) break;
 
     //write mix names here
-    lcd_outdezNAtt(3*FW, y, k+1, (sub==k ? INVERS : 0), 2|LEADING0);
+    lcd_outdezNAtt(3*FW, y, k+1, (sub==k ? INVERS : 0)|LEADING0, 2);
     lcd_putsAtt(  4*FW, y, n_Templates[k],BSS | (s_noHi ? 0 : (sub==k ? INVERS  : 0)));
     y+=FH;
   }

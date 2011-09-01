@@ -31,25 +31,33 @@
 #define FWDP        2 /* DP=decimal point */
 #define FH          8
 
+#define OUTDEZ_SPEED 0
+
 /* lcd common flags */
-#define INVERS        0x01
-#define BLINK         0x02
+#define BLINK         0x01
+
+/* lcd text flags */
+#define INVERS        0x02
 #define DBLSIZE       0x04
+
+/* lcd putc flags */
 #define CONDENSED     0x08
 
 /* lcd puts flags */
 #define BSS           0x10
 #define ZCHAR         0x20
 
-/* lcd outdezN flags */
-#define PREC1         0x10
-#define PREC2         0x20
-#define PREC3         0x30
-#define UNSIGN        0x40
+/* lcd outdez flags */
+#define UNSIGN        0x08
+#define LEADING0      0x10
+#define SPARE1        0x20
+#define SPARE2        0x30
+#define SPARE3        0x40
+#define PREC1         0x50
+#define PREC2         0x60
+#define PREC3         0x70
+#define MODE(flags)   (-4 + ((int8_t)(flags & 0x70) >> 4))
 #define LEFT          0x80 /* align left */
-#define LEADING0      0x40 /* add to 'len' to use this */
-#define TRAILING0     0x80 /* add to 'len' to use this */
-#define NO_UNIT true
 
 extern uint8_t lcd_lastPos;
 
@@ -63,9 +71,9 @@ extern void lcd_putsn_P(unsigned char x,unsigned char y,const prog_char * s,unsi
 
 extern void lcd_outhex4(unsigned char x,unsigned char y,uint16_t val);
 
-extern void lcd_outdezAtt(unsigned char x,unsigned char y, int16_t val,uint8_t mode);
-extern void lcd_outdezNAtt(uint8_t x,uint8_t y, int16_t val, uint8_t mode = 0, uint8_t len = 5);
-extern void lcd_outdez(unsigned char x,unsigned char y, int16_t val);
+extern void lcd_outdezAtt(uint8_t x, uint8_t y, int16_t val, uint8_t mode=0);
+extern void lcd_outdezNAtt(uint8_t x, uint8_t y, int16_t val, uint8_t mode=0, uint8_t len=5);
+extern void lcd_outdez8(uint8_t x, uint8_t y, int8_t val);
 
 extern void putsSwitches(uint8_t x,uint8_t y, int8_t swtch, uint8_t att);
 extern void putsFlightPhase(uint8_t x, uint8_t y, int8_t idx, uint8_t att);
@@ -75,12 +83,13 @@ extern void putsChnRaw(uint8_t x,uint8_t y,uint8_t idx1,uint8_t att);
 extern void putsChn(uint8_t x,uint8_t y,uint8_t idx1,uint8_t att);
 extern void putsChnLetter(uint8_t x, uint8_t y, uint8_t idx, uint8_t attr);
 
-extern void putsVolts(uint8_t x,uint8_t y, uint16_t volts, uint8_t att, bool noUnit = false);
-extern void putsVBat(uint8_t x,uint8_t y, uint8_t att, bool noUnit = false);
+extern void putsVolts(uint8_t x, uint8_t y, uint16_t volts, uint8_t att, bool displayUnit=true);
+extern void putsVBat(uint8_t x, uint8_t y, uint8_t att, bool displayUnit=true);
 extern void putsTime(uint8_t x,uint8_t y, int16_t tme, uint8_t att, uint8_t att2);
 
 #ifdef FRSKY
-extern void putsTelemetry(uint8_t x, uint8_t y, uint8_t val, uint8_t unit, uint8_t att, bool noUnit = false);
+// TODO move this into frsky.h
+extern void putsTelemetry(uint8_t x, uint8_t y, uint8_t val, uint8_t unit, uint8_t att, bool displayUnit = true);
 #endif
 
 #define LCD_XOR   0x00

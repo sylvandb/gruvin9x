@@ -146,33 +146,33 @@ void menuMainView(uint8_t event)
   if (view == e_telemetry && ((g_eeGeneral.view & 0xf0) >= ALTERNATE)) { // If view is a telemetry ALTERNATE view
     lcd_putsnAtt(0, 0, g_model.name, sizeof(g_model.name), ZCHAR|INVERS);
     uint8_t att = (g_vbat100mV < g_eeGeneral.vBatWarn ? INVERS|BLINK : INVERS);
-    putsVBat(12*FW,0,att);
+    putsVBat(14*FW,0,att);
     if(s_timerState != TMR_OFF){
       att = (s_timerState==TMR_BEEPING ? INVERS|BLINK : INVERS);
-      putsTime(18*FW+3, 0, s_timerVal, att, att);
+      putsTime(17*FW, 0, s_timerVal, att, att);
     }
     // The timer is in the way ... but more important than a screen title
     else if (g_eeGeneral.view == e_telemetry+ALTERNATE) // if on first alternate telemetry view
-        lcd_putsAtt(18*FW-4, 0, PSTR("MAIN"), INVERS);
+      lcd_putsAtt(18*FW-4, 0, PSTR("MAIN"), INVERS);
     else if (g_eeGeneral.view == e_telemetry+2*ALTERNATE) // if on first alternate telemetry view
-        lcd_putsAtt(19*FW-4, 0, PSTR("GPS"), INVERS);
+      lcd_putsAtt(19*FW-4, 0, PSTR("GPS"), INVERS);
     else if (g_eeGeneral.view == e_telemetry+3*ALTERNATE) // if on second alternate telemetry view
-        lcd_putsAtt(17*FW-4, 0, PSTR("OTHER"), INVERS);
+      lcd_putsAtt(17*FW-4, 0, PSTR("OTHER"), INVERS);
   }
   else { // not in a telemetry ALTERNATE view
-    uint8_t att = (g_vbat100mV < g_eeGeneral.vBatWarn ? BLINK : 0) | DBLSIZE;
-    lcd_putsnAtt(2*FW-2, 0*FH, g_model.name, sizeof(g_model.name), ZCHAR|DBLSIZE);
-    putsVBat(4*FW+2, 2*FH, att, NO_UNIT);
-    lcd_putc(6*FW+2, 3*FH, 'V');
-
-    if(s_timerState != TMR_OFF) {
-      uint8_t att = DBLSIZE | (s_timerState==TMR_BEEPING ? BLINK : 0);
-      putsTime(16*FW-2, FH*2, s_timerVal, att,att);
-      putsTmrMode(s_timerVal >= 0 ? 9*FW-FW/2+5 : 9*FW-FW/2-2, FH*3, 0);
-    }
-
     uint8_t phase = getFlightPhase();
     lcd_putsnAtt(6*FW+2, 2*FH, g_model.phaseData[phase].name, sizeof(g_model.phaseData[phase].name), ZCHAR);
+
+    uint8_t att = (g_vbat100mV < g_eeGeneral.vBatWarn ? BLINK : 0) | DBLSIZE;
+    lcd_putsnAtt(2*FW-2, 0*FH, g_model.name, sizeof(g_model.name), ZCHAR|DBLSIZE);
+    putsVBat(6*FW+3, 2*FH, att, false);
+    lcd_putc(6*FW+3, 3*FH, 'V');
+
+    if (s_timerState != TMR_OFF) {
+      uint8_t att = DBLSIZE | (s_timerState==TMR_BEEPING ? BLINK : 0);
+      putsTime(12*FW+3, FH*2, s_timerVal, att, att);
+      putsTmrMode(s_timerVal >= 0 ? 9*FW-FW/2+5 : 9*FW-FW/2-2, FH*3, 0);
+    }
 
     // trim sliders
     for(uint8_t i=0; i<4; i++)
@@ -222,7 +222,7 @@ void menuMainView(uint8_t event)
           // *1000/1024 = x - x/32 + x/128
 #define GPERC(x)  (x - x/32 + x/128)
 #if defined (DECIMALS_DISPLAYED)
-          lcd_outdezAtt( x0+4*FW , y0, GPERC(val), PREC1 );
+          lcd_outdezAtt( x0+4*FW , y0, GPERC(val), PREC1);
 #else
           lcd_outdezAtt( x0+4*FW , y0, GPERC(val)/10, 0); // G: Don't like the decimal part*
 #endif
@@ -344,42 +344,48 @@ void menuMainView(uint8_t event)
       }
       else if (g_eeGeneral.view == e_telemetry+2*ALTERNATE) { // if on second alternate telemetry view
         lcd_putsAtt(19*FW-4, 0, PSTR("GPS"), INVERS);
+        
+#if OUTDEZ_SPEED == 0
+#define LAST_POS (lcd_lastPos+FW)
+#else
+#define LAST_POS lcd_lastPos
+#endif
 
         // date
         lcd_outdezNAtt(1*FW, 1*FH, gTelem_GPSyear+2000, LEFT, 4);
         lcd_putc(lcd_lastPos, 1*FH, '-');
-        lcd_outdezNAtt(lcd_lastPos, 1*FH, gTelem_GPSmonth, LEFT, 2|LEADING0);
+        lcd_outdezNAtt(LAST_POS, 1*FH, gTelem_GPSmonth, LEFT|LEADING0, 2);
         lcd_putc(lcd_lastPos, 1*FH, '-');
-        lcd_outdezNAtt(lcd_lastPos, 1*FH, gTelem_GPSday, LEFT, 2|LEADING0);
+        lcd_outdezNAtt(LAST_POS, 1*FH, gTelem_GPSday, LEFT|LEADING0, 2);
 
         // time
-        lcd_outdezNAtt(FW*10+8, 1*FH, gTelem_GPShour, LEFT, 2|LEADING0);
+        lcd_outdezNAtt(FW*10+8, 1*FH, gTelem_GPShour, LEFT|LEADING0, 2);
         lcd_putc(lcd_lastPos, 1*FH, ':');
-        lcd_outdezNAtt(lcd_lastPos, 1*FH, gTelem_GPSmin, LEFT, 2|LEADING0);
+        lcd_outdezNAtt(LAST_POS, 1*FH, gTelem_GPSmin, LEFT|LEADING0, 2);
         lcd_putc(lcd_lastPos, 1*FH, ':');
-        lcd_outdezNAtt(lcd_lastPos, 1*FH, gTelem_GPSsec, LEFT, 2|LEADING0);
+        lcd_outdezNAtt(LAST_POS, 1*FH, gTelem_GPSsec, LEFT|LEADING0, 2);
 
         // Longitude
         lcd_outdezAtt(FW*3-2, 3*FH,  gTelem_GPSlongitude[0] / 100, 0); // ddd before '.'
         lcd_putc(lcd_lastPos, 3*FH, '@');
         uint8_t mn = gTelem_GPSlongitude[0] % 100;
-        lcd_outdezNAtt(lcd_lastPos, 3*FH, mn, LEFT, 2|LEADING0); // mm before '.'
+        lcd_outdezNAtt(LAST_POS, 3*FH, mn, LEFT|LEADING0, 2); // mm before '.'
         lcd_plot(lcd_lastPos, 4*FH-2, 0); // small decimal point
-        lcd_outdezNAtt(lcd_lastPos+2, 3*FH, gTelem_GPSlongitude[1], LEFT|UNSIGN, 4|LEADING0); // after '.'
+        lcd_outdezNAtt(lcd_lastPos+2, 3*FH, gTelem_GPSlongitude[1], LEFT|UNSIGN|LEADING0, 4); // after '.'
         lcd_putc(lcd_lastPos+1, 3*FH, gTelem_GPSlongitudeEW ? gTelem_GPSlongitudeEW : '-'); 
 
         // Latitude
         lcd_outdezAtt(lcd_lastPos+3*FW+3, 3*FH,  gTelem_GPSlatitude[0] / 100, 0); // ddd before '.'
         lcd_putc(lcd_lastPos, 3*FH, '@');
         mn = gTelem_GPSlatitude[0] % 100;
-        lcd_outdezNAtt(lcd_lastPos, 3*FH, mn, LEFT, 2|LEADING0); // mm before '.'
+        lcd_outdezNAtt(LAST_POS, 3*FH, mn, LEFT|LEADING0, 2); // mm before '.'
         lcd_plot(lcd_lastPos, 4*FH-2, 0); // small decimal point
-        lcd_outdezNAtt(lcd_lastPos+2, 3*FH, gTelem_GPSlatitude[1], LEFT|UNSIGN, 4|LEADING0); // after '.'
+        lcd_outdezNAtt(lcd_lastPos+2, 3*FH, gTelem_GPSlatitude[1], LEFT|UNSIGN|LEADING0, 4); // after '.'
         lcd_putc(lcd_lastPos+1, 3*FH, gTelem_GPSlatitudeNS ? gTelem_GPSlatitudeNS : '-'); 
 
         // Course / Heading
         lcd_puts_P(5, 5*FH, PSTR("Hdg:"));
-        lcd_outdezNAtt(lcd_lastPos, 5*FH, gTelem_GPScourse[0], LEFT, 3|LEADING0); // before '.'
+        lcd_outdezNAtt(lcd_lastPos, 5*FH, gTelem_GPScourse[0], LEFT|LEADING0, 3); // before '.'
         lcd_plot(lcd_lastPos, 6*FH-2, 0); // small decimal point
         lcd_outdezAtt(lcd_lastPos+2, 5*FH, gTelem_GPScourse[1], LEFT); // after '.'
         lcd_putc(lcd_lastPos, 5*FH, '@');
@@ -390,13 +396,12 @@ void menuMainView(uint8_t event)
         lcd_plot(lcd_lastPos, 6*FH-2, 0); // small decimal point
         lcd_outdezAtt(lcd_lastPos+2, 5*FH, gTelem_GPSspeed[1], LEFT|UNSIGN); // after '.'
 
-        // Altititude 
+        // Altitude
         lcd_puts_P(7*FW, 7*FH, PSTR("Alt:"));
-        lcd_outdezNAtt(lcd_lastPos, 7*FH, gTelem_GPSaltitude[0], LEFT, 3|LEADING0); // before '.'
+        lcd_outdezNAtt(lcd_lastPos, 7*FH, gTelem_GPSaltitude[0], LEFT|LEADING0, 3); // before '.'
         lcd_plot(lcd_lastPos, 8*FH-2, 0); // small decimal point
         lcd_outdezAtt(lcd_lastPos+2, 7*FH, gTelem_GPSaltitude[1], LEFT|UNSIGN); // after '.'
         lcd_putc(lcd_lastPos, 7*FH, 'm');
-
       }
       else if (g_eeGeneral.view == e_telemetry+3*ALTERNATE) { // if on second alternate telemetry view
 
@@ -490,7 +495,7 @@ void menuMainView(uint8_t event)
 
   else  // timer2
   {
-    putsTime(30+5*FW, FH*5, timer2, DBLSIZE, DBLSIZE);
+    putsTime(33+FW+2, FH*5, timer2, DBLSIZE, DBLSIZE);
   }
   /// Lower section of display                                        ///
   ///////////////////////////////////////////////////////////////////////
