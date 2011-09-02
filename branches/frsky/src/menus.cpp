@@ -144,12 +144,12 @@ int8_t checkIncDecGen(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max)
   return checkIncDec(event,i_val,i_min,i_max,EE_GENERAL);
 }
 
-void MState2::check_simple(uint8_t event, uint8_t curr, MenuFuncP *menuTab, uint8_t menuTabSize, uint8_t maxrow)
+void check_simple(uint8_t event, uint8_t curr, MenuFuncP *menuTab, uint8_t menuTabSize, uint8_t maxrow)
 {
   check(event, curr, menuTab, menuTabSize, 0, 0, maxrow);
 }
 
-void MState2::check_submenu_simple(uint8_t event, uint8_t maxrow)
+void check_submenu_simple(uint8_t event, uint8_t maxrow)
 {
   check_simple(event, 0, 0, 0, maxrow);
 }
@@ -157,7 +157,7 @@ void MState2::check_submenu_simple(uint8_t event, uint8_t maxrow)
 #define MAXCOL(row) (horTab ? pgm_read_byte(horTab+min(row, horTabMax)) : (const uint8_t)0)
 #define INC(val,max) if(val<max) {val++;} else {val=0;}
 #define DEC(val,max) if(val>0  ) {val--;} else {val=max;}
-void MState2::check(uint8_t event, uint8_t curr, MenuFuncP *menuTab, uint8_t menuTabSize, prog_uint8_t *horTab, uint8_t horTabMax, uint8_t maxrow)
+void check(uint8_t event, uint8_t curr, MenuFuncP *menuTab, uint8_t menuTabSize, prog_uint8_t *horTab, uint8_t horTabMax, uint8_t maxrow)
 {
   if (menuTab) {
     uint8_t attr = m_posVert==0 ? INVERS : 0;
@@ -186,7 +186,7 @@ void MState2::check(uint8_t event, uint8_t curr, MenuFuncP *menuTab, uint8_t men
   switch(event)
   {
     case EVT_ENTRY:
-      init();
+      minit();
       s_editMode = false;
       break;
     case EVT_KEY_FIRST(KEY_MENU):
@@ -207,7 +207,7 @@ void MState2::check(uint8_t event, uint8_t curr, MenuFuncP *menuTab, uint8_t men
       }
       else {
         beepKey();
-        init();BLINK_SYNC;
+        minit();BLINK_SYNC;
       }
       break;
 
@@ -257,20 +257,22 @@ void MState2::check(uint8_t event, uint8_t curr, MenuFuncP *menuTab, uint8_t men
 }
 
 MenuFuncP g_menuStack[5];
+uint8_t g_menuPos[4];
 uint8_t g_menuStackPtr = 0;
 
-MenuFuncP lastPopMenu()
-{
-  return  g_menuStack[g_menuStackPtr+1];
-}
+uint8_t m_posVert;
+uint8_t m_posHorz;
 
 void popMenu(bool uppermost)
 {
-  if(g_menuStackPtr>0){
+  if (g_menuStackPtr>0) {
     g_menuStackPtr = uppermost ? 0 : g_menuStackPtr-1;
     beepKey();
+    m_posHorz = g_menuPos[g_menuStackPtr] & 0x0F;
+    m_posVert = g_menuPos[g_menuStackPtr] >> 4;
     (*g_menuStack[g_menuStackPtr])(EVT_ENTRY_UP);
-  }else{
+  }
+  else {
     alert(PSTR("menuStack underflow"));
   }
 }
@@ -284,6 +286,7 @@ void chainMenu(MenuFuncP newMenu)
 
 void pushMenu(MenuFuncP newMenu)
 {
+  g_menuPos[g_menuStackPtr] = (m_posVert << 4) + m_posHorz;
 
   g_menuStackPtr++;
   if(g_menuStackPtr >= DIM(g_menuStack))

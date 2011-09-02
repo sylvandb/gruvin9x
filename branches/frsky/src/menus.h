@@ -61,7 +61,10 @@ void    chainMenu(MenuFuncP newMenu);
 /// goto given Menu, store current menu in menuStack
 void    pushMenu(MenuFuncP newMenu);
 ///deliver address of last menu which was popped from
-MenuFuncP lastPopMenu();
+inline MenuFuncP lastPopMenu()
+{
+  return g_menuStack[g_menuStackPtr+1];
+}
 /// return to last menu in menustack
 /// if uppermost is set true, thenmenu return to uppermost menu in menustack
 void    popMenu(bool uppermost=false);
@@ -86,16 +89,16 @@ int8_t checkIncDecGen(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max);
 #define CHECK_INCDEC_GENVAR( event, var, min, max)     \
   var = checkIncDecGen(event,var,min,max)
 
+extern uint8_t m_posVert;
+extern uint8_t m_posHorz;
+
 // Menus related stuff ...
-struct MState2
-{
-  uint8_t m_posVert;
-  uint8_t m_posHorz;
-  void init(){m_posVert=m_posHorz=0;};
+/*  uint8_t m_posVert;
+  uint8_t m_posHorz; */
+  inline void minit(){m_posVert=m_posHorz=0;}
   void check(uint8_t event, uint8_t curr, MenuFuncP *menuTab, uint8_t menuTabSize, prog_uint8_t *subTab, uint8_t subTabMax, uint8_t maxrow);
   void check_simple(uint8_t event, uint8_t curr, MenuFuncP *menuTab, uint8_t menuTabSize, uint8_t maxrow);
   void check_submenu_simple(uint8_t event, uint8_t maxrow);
-};
 
 typedef PROGMEM void (*MenuFuncP_PROGMEM)(uint8_t event);
 
@@ -104,13 +107,11 @@ typedef PROGMEM void (*MenuFuncP_PROGMEM)(uint8_t event);
 
 #define MENU(title, tab, menu, lines_count, lines...) \
 TITLE(title); \
-static MState2 mstate2; \
 static prog_uint8_t APM mstate_tab[] = lines; \
-mstate2.check(event,menu,tab,DIM(tab),mstate_tab,DIM(mstate_tab)-1,lines_count-1)
+check(event,menu,tab,DIM(tab),mstate_tab,DIM(mstate_tab)-1,lines_count-1)
 
 #define SIMPLE_MENU_NOTITLE(tab, menu, lines_count) \
-static MState2 mstate2; \
-mstate2.check_simple(event,menu,tab,DIM(tab),lines_count-1)
+check_simple(event,menu,tab,DIM(tab),lines_count-1)
 
 #define SIMPLE_MENU(title, tab, menu, lines_count) \
 TITLE(title); \
@@ -118,13 +119,11 @@ SIMPLE_MENU_NOTITLE(tab, menu, lines_count)
 
 #define SUBMENU(title, lines_count, lines...) \
 TITLE(title); \
-static MState2 mstate2; \
 static prog_uint8_t APM mstate_tab[] = lines; \
-mstate2.check(event,0,NULL,0,mstate_tab,DIM(mstate_tab)-1,lines_count-1)
+check(event,0,NULL,0,mstate_tab,DIM(mstate_tab)-1,lines_count-1)
 
 #define SIMPLE_SUBMENU_NOTITLE(lines_count) \
-static MState2 mstate2; \
-mstate2.check_submenu_simple(event,lines_count-1)
+check_submenu_simple(event,lines_count-1)
 
 #define SIMPLE_SUBMENU(title, lines_count) \
 TITLE(title); \

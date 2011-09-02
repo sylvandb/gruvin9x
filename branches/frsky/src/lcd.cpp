@@ -337,7 +337,7 @@ void lcd_outdezNAtt(uint8_t x, uint8_t y, int16_t val, uint8_t flags, uint8_t le
 
   if (flags & LEFT) {
     x += len * fw;
-    if (val < 0)
+    if (neg)
       x += FWNUM;
   }
 
@@ -372,7 +372,7 @@ void lcd_outdezNAtt(uint8_t x, uint8_t y, int16_t val, uint8_t flags, uint8_t le
     lcd_hline(xn, y+2*FH-3, ln);
     lcd_hline(xn, y+2*FH-2, ln);
   }
-  if (neg) lcd_putcAtt(x-fw,y,'-', flags);
+  if (neg) lcd_putcAtt(x,y,'-', flags);
 }
 #endif
 

@@ -63,7 +63,7 @@ void menuProcSetup(uint8_t event)
 
   SIMPLE_MENU("RADIO SETUP", menuTabDiag, e_Setup, COUNT_ITEMS+1);
 
-  int8_t  sub    = mstate2.m_posVert;
+  int8_t  sub    = m_posVert;
 
   // last 2 lines (radio mode) are non break-able
   if(s_pgOfs==COUNT_ITEMS-7) s_pgOfs= sub<(COUNT_ITEMS-4) ? COUNT_ITEMS-8 : COUNT_ITEMS-6;
@@ -254,8 +254,8 @@ void menuProcTime(uint8_t event)
 {
   MENU("DATE AND TIME", menuTabDiag, e_FrskyTime, 3, {0, 2/*, 2*/});
 
-  int8_t  sub    = mstate2.m_posVert - 1; // vertical position (1 = page counter, top/right)
-  uint8_t subSub = mstate2.m_posHorz;     // horizontal position
+  int8_t  sub    = m_posVert - 1; // vertical position (1 = page counter, top/right)
+  uint8_t subSub = m_posHorz;     // horizontal position
   static struct tm t;
   struct tm *at = &t;
 
@@ -348,8 +348,8 @@ void menuProcTrainer(uint8_t event)
 {
   MENU("TRAINER", menuTabDiag, e_Trainer, 7, {0, 3, 3, 3, 3/*, 0, 0*/});
 
-  int8_t  sub    = mstate2.m_posVert;
-  uint8_t subSub = mstate2.m_posHorz;
+  int8_t  sub    = m_posVert;
+  uint8_t subSub = m_posHorz;
   uint8_t y;
   bool    edit;
   uint8_t blink ;
@@ -470,7 +470,7 @@ void menuProcDiagAna(uint8_t event)
 {
   SIMPLE_MENU("ANA", menuTabDiag, e_Ana, 2);
 
-  int8_t  sub    = mstate2.m_posVert ;
+  int8_t  sub    = m_posVert ;
 
   for(uint8_t i=0; i<8; i++)
   {
@@ -495,7 +495,7 @@ void menuProcDiagCalib(uint8_t event)
 {
   SIMPLE_MENU("CALIBRATION", menuTabDiag, e_Calib, 4);
 
-  int8_t  sub    = mstate2.m_posVert ;
+  int8_t  sub    = m_posVert ;
   static int16_t midVals[7];
   static int16_t loVals[7];
   static int16_t hiVals[7];
