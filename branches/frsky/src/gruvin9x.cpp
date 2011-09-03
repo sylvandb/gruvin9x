@@ -2100,6 +2100,11 @@ int main(void)
   g_menuStack[1] = menuProcModelSelect;
 
   lcdSetRefVolt(25);
+
+#if defined (FRSKY)
+  FRSKY_Init();
+#endif
+
   eeReadAll();
 
   uint8_t cModel = g_eeGeneral.currModel;
@@ -2142,10 +2147,6 @@ int main(void)
 
 #ifdef JETI
   JETI_Init();
-#endif
-
-#if defined (FRSKY)
-  FRSKY_Init();
 #endif
 
 #if defined (PCBV3)
