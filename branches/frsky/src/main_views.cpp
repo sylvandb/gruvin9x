@@ -146,9 +146,11 @@ void menuMainView(uint8_t event)
   if (view == e_telemetry && ((g_eeGeneral.view & 0xf0) >= ALTERNATE)) { // If view is a telemetry ALTERNATE view
     lcd_putsnAtt(0, 0, g_model.name, sizeof(g_model.name), ZCHAR);
     uint8_t att = (g_vbat100mV < g_eeGeneral.vBatWarn ? BLINK : 0);
+    // 212.75us (speed=0) vs 258.75us (speed=2)
     putsVBat(14*FW,0,att);
     if(s_timerState != TMR_OFF){
       att = (s_timerState==TMR_BEEPING ? BLINK : 0);
+      // 390.5us (speed=2) vs 221.75us (speed=0)
       putsTime(17*FW, 0, s_timerVal, att, att);
     }
     // The timer is in the way ... but more important than a screen title
@@ -492,6 +494,7 @@ void menuMainView(uint8_t event)
 
   else  // timer2
   {
+    // 359us (speed=0) vs 513us (speed=2)
     putsTime(33+FW+2, FH*5, timer2, DBLSIZE, DBLSIZE);
   }
   /// Lower section of display                                        ///
