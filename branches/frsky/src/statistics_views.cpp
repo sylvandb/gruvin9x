@@ -94,7 +94,7 @@ void menuProcStatistic2(uint8_t event)
   lcd_puts_P( 0*FW,  3*FH, PSTR("tmr1 Jitter    us"));
   lcd_outdez8(15*FW , 3*FH, (g_tmr1Latency_max - g_tmr1Latency_min) /2 );
   lcd_puts_P( 0*FW,  4*FH, PSTR("tmain max      ms"));
-  lcd_outdezAtt(15*FW-2*FWNUM-FWDP, 4*FH, (g_timeMain*100)/16, PREC2);
+  lcd_outdezAtt(15*FW, 4*FH, (g_timeMain*100)/16, PREC2);
   lcd_puts_P( 0*FW,  5*FH, PSTR("t10ms          us"));
   lcd_outdez8(15*FW , 5*FH, g_time_per10/2 );
 #ifndef SIMU
