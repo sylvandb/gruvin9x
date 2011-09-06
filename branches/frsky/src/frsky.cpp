@@ -496,6 +496,7 @@ ISR(USART0_RX_vect)
     frskyRxParser.put(data);
 
   UCSR0B |= (1 << RXCIE0); // enable (ONLY) USART RX interrupt
+  cli(); // As much as I hate to have this here for PPM_out's sake -- I really don't have a choice.
 }
 
 /*
