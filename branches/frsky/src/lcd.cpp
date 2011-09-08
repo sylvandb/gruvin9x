@@ -316,7 +316,7 @@ void lcd_outdezNAtt(uint8_t x, uint8_t y, int16_t val, uint8_t flags, uint8_t le
 
   if (mode != MODE(LEADING0)) {
     len = 1;
-    uint16_t tmp = val / 10;
+    uint16_t tmp = ((uint16_t)val) / 10;
     while (tmp) {
       len++;
       tmp /= 10;
@@ -365,14 +365,16 @@ void lcd_outdezNAtt(uint8_t x, uint8_t y, int16_t val, uint8_t flags, uint8_t le
           lcd_vline(x+1, y, 8);
       }
     }
-    val = (uint16_t)val / 10;
+    val = ((uint16_t)val) / 10;
     x-=fw;
   }
   if (xn) {
     lcd_hline(xn, y+2*FH-3, ln);
     lcd_hline(xn, y+2*FH-2, ln);
   }
-  if (neg) lcd_putcAtt(x,y,'-', flags);
+
+  // TODO we could change the '-' to have one pixel removed at its left
+  if (neg) { lcd_putcAtt(x, y, '-', flags); lcd_plot(x, y+3); }
 }
 #endif
 
@@ -381,9 +383,9 @@ void lcd_mask(uint8_t *p, uint8_t mask, uint8_t att)
 {
   assert(p < DISPLAY_END);
 
-  if (att & LCD_BLACK)
+  if (att & BLACK)
     *p |= mask;
-  else if (att & LCD_WHITE)
+  else if (att & WHITE)
     *p &= ~mask;
   else
     *p ^= mask;
@@ -399,7 +401,6 @@ void lcd_plot(uint8_t x,uint8_t y, uint8_t att)
 void lcd_hlineStip(int8_t x, uint8_t y, uint8_t w, uint8_t pat, uint8_t att)
 {
   if (y >= DISPLAY_H) return;
-  // if (w<0) { x+=w; w=-w; }
   if (x<0) { w+=x; x=0; }
   if (x+w > DISPLAY_W) { w = DISPLAY_W - x; }
 
@@ -455,12 +456,14 @@ void lcd_vline(uint8_t x, int8_t y, int8_t h)
   lcd_vlineStip(x, y, h, 0xff);
 }
 
-void lcd_rect(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_t pat)
+void lcd_rect(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_t pat, uint8_t att)
 {
-  lcd_vlineStip(x, y, h, pat);
-  lcd_hlineStip(x, y+h-1, w, pat);
-  lcd_vlineStip(x+w-1, y, h, pat);
-  lcd_hlineStip(x, y, w, pat);
+  if (!((att & BLINK) && BLINK_ON_PHASE)) {
+    lcd_vlineStip(x, y, h, pat);
+    lcd_hlineStip(x, y+h-1, w, pat);
+    lcd_vlineStip(x+w-1, y, h, pat);
+    lcd_hlineStip(x, y, w, pat);
+  }
 }
 
 void lcd_filled_rect(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_t att)
@@ -472,28 +475,29 @@ void lcd_filled_rect(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_t att)
 void putsTime(uint8_t x,uint8_t y,int16_t tme,uint8_t att,uint8_t att2)
 {
   if (tme<0) {
-    lcd_putcAtt(x - FWNUM, y, '-', att);
+    lcd_putcAtt(x - ((att & DBLSIZE) ? FW+1 : FWNUM), y, '-', att);
     tme = -tme;
   }
 
   lcd_outdezNAtt(x, y, tme/60, att|LEADING0|LEFT, 2);
-  lcd_putcAtt(lcd_lastPos-((att&DBLSIZE) ? 1 : 0), y, ':', att&att2);
+  lcd_putcAtt(lcd_lastPos-((att & DBLSIZE) ? 1 : 0), y, ':', att&att2);
 #if OUTDEZ_SPEED != 0
-  lcd_outdezNAtt(lcd_lastPos-((att&DBLSIZE) ? 5 : 0), y, tme%60, att2|LEADING0|LEFT, 2);
+  lcd_outdezNAtt(lcd_lastPos-((att & DBLSIZE) ? 5 : 0), y, tme%60, att2|LEADING0|LEFT, 2);
 #else
-  lcd_outdezNAtt(lcd_lastPos-((att&DBLSIZE) ? 6-2*FW : -FW), y, tme%60, att2|LEADING0|LEFT, 2);
+  lcd_outdezNAtt(lcd_lastPos+FW, y, tme%60, att2|LEADING0|LEFT, 2);
 #endif
 }
 
-void putsVolts(uint8_t x, uint8_t y, uint16_t volts, uint8_t att, bool displayUnit)
+void putsVolts(uint8_t x, uint8_t y, uint16_t volts, uint8_t att)
 {
+// 215.94us vs 257.31us
   lcd_outdezAtt(x, y, (int16_t)volts, att|PREC1|UNSIGN);
-  if (displayUnit) lcd_putcAtt(lcd_lastPos, y, 'v', att);
+  if (~att & NO_UNIT) lcd_putcAtt(lcd_lastPos, y, 'v', att);
 }
 
-void putsVBat(uint8_t x, uint8_t y, uint8_t att, bool displayUnit)
+void putsVBat(uint8_t x, uint8_t y, uint8_t att)
 {
-  putsVolts(x, y, g_vbat100mV, att, displayUnit);
+  putsVolts(x, y, g_vbat100mV, att);
 }
 
 void putsChnRaw(uint8_t x, uint8_t y, uint8_t idx, uint8_t att)
@@ -541,7 +545,7 @@ void putsTmrMode(uint8_t x, uint8_t y, uint8_t attr)
   int8_t tm = g_model.tmrMode;
   if(abs(tm)<TMR_VAROFS) {
     lcd_putsnAtt(  x, y, PSTR("OFFABSRUsRU%ELsEL%THsTH%ALsAL%P1 P1%P2 P2%P3 P3%")+3*abs(tm),3,attr);
-    if(tm<(-TMRMODE_ABS)) lcd_putcAtt(x-1*FW,  y,'!',attr);
+    if(tm<(-TMRMODE_ABS)) lcd_putcAtt(x-1*FW, y, '!', attr);
     return;
   }
 
@@ -556,10 +560,10 @@ void putsTmrMode(uint8_t x, uint8_t y, uint8_t attr)
 
 #ifdef FRSKY
 // TODO move this into frsky.cpp
-void putsTelemetry(uint8_t x, uint8_t y, uint8_t val, uint8_t unit, uint8_t att, bool displayUnit)
+void putsTelemetry(uint8_t x, uint8_t y, uint8_t val, uint8_t unit, uint8_t att)
 {
   if (unit == 0/*v*/) {
-    putsVolts(x, y, val, att, displayUnit);
+    putsVolts(x, y, val, att);
   }
   else /* raw or reserved unit */ {
     lcd_outdezAtt(x, y, val, att);

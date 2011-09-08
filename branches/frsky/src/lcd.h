@@ -31,8 +31,6 @@
 #define FWDP        2 /* DP=decimal point */
 #define FH          8
 
-extern uint8_t displayBuf[DISPLAY_W*DISPLAY_H/8];
-
 #define OUTDEZ_SPEED 0
 
 /* lcd common flags */
@@ -61,6 +59,14 @@ extern uint8_t displayBuf[DISPLAY_W*DISPLAY_H/8];
 #define MODE(flags)   (-4 + ((int8_t)(flags & 0x70) >> 4))
 #define LEFT          0x80 /* align left */
 
+/* line, rect, square flags */
+#define BLACK         0x02
+#define WHITE         0x04
+
+/* time & telemetry flags */
+#define NO_UNIT       UNSIGN
+
+extern uint8_t displayBuf[DISPLAY_W*DISPLAY_H/8];
 extern uint8_t lcd_lastPos;
 
 extern void lcd_putc(unsigned char x,unsigned char y,const char c);
@@ -74,7 +80,7 @@ extern void lcd_putsn_P(unsigned char x,unsigned char y,const prog_char * s,unsi
 extern void lcd_outhex4(unsigned char x,unsigned char y,uint16_t val);
 
 extern void lcd_outdezAtt(uint8_t x, uint8_t y, int16_t val, uint8_t mode=0);
-extern void lcd_outdezNAtt(uint8_t x, uint8_t y, int16_t val, uint8_t mode=0, uint8_t len=5);
+extern void lcd_outdezNAtt(uint8_t x, uint8_t y, int16_t val, uint8_t mode=0, uint8_t len=0);
 extern void lcd_outdez8(uint8_t x, uint8_t y, int8_t val);
 
 extern void putsSwitches(uint8_t x,uint8_t y, int8_t swtch, uint8_t att);
@@ -85,27 +91,24 @@ extern void putsChnRaw(uint8_t x,uint8_t y,uint8_t idx1,uint8_t att);
 extern void putsChn(uint8_t x,uint8_t y,uint8_t idx1,uint8_t att);
 extern void putsChnLetter(uint8_t x, uint8_t y, uint8_t idx, uint8_t attr);
 
-extern void putsVolts(uint8_t x, uint8_t y, uint16_t volts, uint8_t att, bool displayUnit=true);
-extern void putsVBat(uint8_t x, uint8_t y, uint8_t att, bool displayUnit=true);
+extern void putsVolts(uint8_t x, uint8_t y, uint16_t volts, uint8_t att);
+extern void putsVBat(uint8_t x, uint8_t y, uint8_t att);
 extern void putsTime(uint8_t x,uint8_t y, int16_t tme, uint8_t att, uint8_t att2);
 
 #ifdef FRSKY
 // TODO move this into frsky.h
-extern void putsTelemetry(uint8_t x, uint8_t y, uint8_t val, uint8_t unit, uint8_t att, bool displayUnit = true);
+extern void putsTelemetry(uint8_t x, uint8_t y, uint8_t val, uint8_t unit, uint8_t att);
 #endif
 
-#define LCD_XOR   0x00
-#define LCD_BLACK 0x01
-#define LCD_WHITE 0x02
-extern void lcd_plot(unsigned char x, unsigned char y, uint8_t att=LCD_XOR);
-extern void lcd_hline(unsigned char x,unsigned char y, uint8_t w, uint8_t att=LCD_XOR);
-extern void lcd_hlineStip(int8_t x, uint8_t y, uint8_t  w, uint8_t pat, uint8_t att=LCD_XOR);
+extern void lcd_plot(unsigned char x, unsigned char y, uint8_t att=0);
+extern void lcd_hline(unsigned char x,unsigned char y, uint8_t w, uint8_t att=0);
+extern void lcd_hlineStip(int8_t x, uint8_t y, uint8_t  w, uint8_t pat, uint8_t att=0);
 extern void lcd_vline(uint8_t x, int8_t y, int8_t h);
 extern void lcd_vlineStip(uint8_t x, int8_t y, int8_t h, uint8_t pat);
 
-extern void lcd_rect(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_t pat=0xff);
-extern void lcd_filled_rect(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_t att=LCD_XOR);
-inline void lcd_square(uint8_t x, uint8_t y, uint8_t w) { lcd_rect(x, y, w, w); }
+extern void lcd_rect(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_t pat=0xff, uint8_t att=0);
+extern void lcd_filled_rect(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_t att=0);
+inline void lcd_square(uint8_t x, uint8_t y, uint8_t w, uint8_t att=0) { lcd_rect(x, y, w, w); }
 
 #define DO_CROSS(xx,yy,ww)          \
     lcd_vline(xx,yy-ww/2,ww);  \

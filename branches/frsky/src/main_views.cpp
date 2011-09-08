@@ -165,7 +165,7 @@ void menuMainView(uint8_t event)
 
     uint8_t att = (g_vbat100mV < g_eeGeneral.vBatWarn ? BLINK : 0) | DBLSIZE;
     lcd_putsnAtt(2*FW-2, 0*FH, g_model.name, sizeof(g_model.name), ZCHAR|DBLSIZE);
-    putsVBat(6*FW+3, 2*FH, att, false);
+    putsVBat(6*FW+3, 2*FH, att|NO_UNIT);
     lcd_putc(6*FW+3, 3*FH, 'V');
 
     if (s_timerState != TMR_OFF) {
