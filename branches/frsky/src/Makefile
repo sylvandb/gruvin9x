@@ -769,6 +769,10 @@ clean_list :
 	@echo
 	@echo $(MSG_CLEANING)
 	$(REMOVE) simu
+	$(REMOVE) rletest
+	$(REMOVE) gtests
+	$(REMOVE) gtest.a
+	$(REMOVE) gtest_main.a
 	$(REMOVE) $(TARGET).hex
 	$(REMOVE) $(TARGET).eep
 	$(REMOVE) $(TARGET).cof
@@ -778,7 +782,8 @@ clean_list :
 	$(REMOVE) $(TARGET).lss
 	$(REMOVEDIR) $(OBJDIR)
 	$(REMOVE) $(SRC:.c=.s)
-	$(REMOVE) $(SRC:.c=.d)
+	$(REMOVE) *.o
+	$(REMOVE) *.d
 	$(REMOVEDIR) .dep
 
 
@@ -794,3 +799,56 @@ $(shell mkdir $(OBJDIR) 2>/dev/null)
 .PHONY : all begin finish end sizebefore sizeafter gccversion \
 build elf hex eep lss sym coff extcoff \
 clean clean_list program debug gdb-config stamp
+
+
+#### GOOGLE TESTS 
+
+GTEST_DIR = ../gtest-1.6.0/
+
+# Where to find user code.
+USER_DIR = ./
+
+# Flags passed to the preprocessor.
+CPPFLAGS += -I$(GTEST_DIR)/include
+
+# Flags passed to the C++ compiler.
+CXXFLAGS += -g -Wall -Wextra
+
+# All Google Test headers.  Usually you shouldn't change this
+# definition.
+GTEST_HEADERS = $(GTEST_DIR)/include/gtest/*.h \
+                $(GTEST_DIR)/include/gtest/internal/*.h
+
+# House-keeping build targets.
+
+# Builds gtest.a and gtest_main.a.
+
+# Usually you shouldn't tweak such internal variables, indicated by a
+# trailing _.
+GTEST_SRCS_ = $(GTEST_DIR)/src/*.cc $(GTEST_DIR)/src/*.h $(GTEST_HEADERS)
+
+# For simplicity and to avoid depending on Google Test's
+# implementation details, the dependencies specified below are
+# conservative and not optimized.  This is fine as Google Test
+# compiles fast and for ordinary users its source rarely changes.
+gtest-all.o : $(GTEST_SRCS_)
+	$(CXX) $(CPPFLAGS) -I$(GTEST_DIR) $(CXXFLAGS) -c \
+            $(GTEST_DIR)/src/gtest-all.cc
+
+gtest_main.o : $(GTEST_SRCS_)
+	$(CXX) $(CPPFLAGS) -I$(GTEST_DIR) $(CXXFLAGS) -c \
+            $(GTEST_DIR)/src/gtest_main.cc
+
+gtest.a : gtest-all.o
+	$(AR) $(ARFLAGS) $@ $^
+
+gtest_main.a : gtest-all.o gtest_main.o
+	$(AR) $(ARFLAGS) $@ $^
+
+# Builds a sample test.  A test should link with either gtest.a or
+# gtest_main.a, depending on whether it defines its own main()
+# function.
+
+gtests: $(CPPSRC) gtests.cpp simu.cpp gtest_main.a
+	g++ $(CPPSRC) gtests.cpp simu.cpp $(CPPFLAGS) -I$(GTEST_DIR) $(ARCH) -o gtests $(INC) $(LIB) -MD -DSIMU -DGTESTS gtest_main.a 
+	
