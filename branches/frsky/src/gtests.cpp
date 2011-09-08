@@ -22,7 +22,10 @@
 #include <gtest/gtest.h>
 #include "gruvin9x.h"
 
-extern uint8_t displayBuf[DISPLAY_W*DISPLAY_H/8];
+uint16_t anaIn(uint8_t chan)
+{
+  return 0;
+}
 
 TEST(outdezNAtt, test_unsigned) {
   uint16_t altitude = 65530;

@@ -31,60 +31,12 @@
 #include <time.h>
 #include <ctype.h>
 
-volatile unsigned char pinb=0, pinc=0xff, pind, pine=0xff, ping=0xff;
-unsigned char portb, dummyport;
-int g_snapshot_idx = 0;
-const char *eepromFile = "eeprom.bin";
-
-extern unsigned char displayBuf[DISPLAY_W*DISPLAY_H/8+DISPLAY_W];
-
-
-void eeWriteBlockCmp(const void *i_pointer_ram, void *pointer_eeprom, size_t size)
-{
-  FILE *fp = fopen(eepromFile, "r+");
-  long ofs = (long) pointer_eeprom;
-  const char* pointer_ram= (const char*)i_pointer_ram;
-  //printf("eeWr p=%10p blk%3d ofs=%2d l=%d",pointer_ram,
-  //       (int)pointer_eeprom/16,
-  //       (int)pointer_eeprom%16,
-  //       (int)size);
-  while(size){
-    if(fseek(fp, ofs , SEEK_SET)==-1) perror("error in seek");
-    char buf[1];
-    if (fread(buf, 1, 1, fp) != 1) perror("error in read");
-
-    if(buf[0] !=  pointer_ram[0]){
-      //printf("X");
-      g_tmr10ms++;
-      if(fseek(fp, ofs , SEEK_SET)==-1) perror("error in seek");
-      fwrite(pointer_ram, 1, 1,fp);
-    }else{
-      //printf(".");
-    }
-
-    size--;
-    ofs++;
-    (const char*)pointer_ram++;
-  }
-  fclose(fp);
-  //puts("");
-}
-
-void eeprom_read_block (void *pointer_ram,
-                   const void *pointer_eeprom,
-                   size_t size)
-{
-  FILE *fp=fopen(eepromFile, "r");
-  if(fseek(fp, (long) pointer_eeprom, SEEK_SET)==-1) perror("error in seek");
-  if (fread(pointer_ram, size, 1, fp) <= 0) perror("error in read");
-  fclose(fp);
-}
-
-
 #define W  DISPLAY_W
 #define H  DISPLAY_H
 #define W2 W*2
 #define H2 H*2
+
+int g_snapshot_idx = 0;
 
 class Gruvin9xSim: public FXMainWindow
 {

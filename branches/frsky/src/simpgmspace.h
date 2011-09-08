@@ -76,6 +76,7 @@ typedef const int8_t prog_int8_t;
 extern volatile unsigned char pinb,pinc,pind,pine,ping;
 extern unsigned char portb,dummyport;
 
+extern const char *eepromFile;
 void eeprom_read_block (void *pointer_ram,
                    const void *pointer_eeprom,
                         size_t size);
