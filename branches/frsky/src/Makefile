@@ -640,8 +640,8 @@ endif
 rletest: file.cpp
 	g++ file.cpp $(CPPFLAGS) $(ARCH) -o $@ -DTEST -DSIMU
 
-simu: $(CPPSRC) Makefile simu.cpp $(CPPSRC) *.h *.lbm eeprom.bin
-	g++ simu.cpp $(CPPFLAGS) $(CPPSRC) $(ARCH) -o simu $(INC) $(LIB) -MD -DSIMU
+simu: $(CPPSRC) Makefile simu.cpp $(CPPSRC) simpgmspace.cpp *.h *.lbm eeprom.bin
+	g++ simu.cpp $(CPPFLAGS) $(CPPSRC) simpgmspace.cpp $(ARCH) -o simu $(INC) $(LIB) -MD -DSIMU
 
 eeprom.bin:
 	dd if=/dev/zero of=$@ bs=1 count=2048
@@ -849,6 +849,6 @@ gtest_main.a : gtest-all.o gtest_main.o
 # gtest_main.a, depending on whether it defines its own main()
 # function.
 
-gtests: $(CPPSRC) gtests.cpp simu.cpp gtest_main.a
-	g++ $(CPPSRC) gtests.cpp simu.cpp $(CPPFLAGS) -I$(GTEST_DIR) $(ARCH) -o gtests $(INC) $(LIB) -MD -DSIMU -DGTESTS gtest_main.a 
+gtests: $(CPPSRC) gtests.cpp simpgmspace.cpp gtest_main.a
+	g++ $(CPPSRC) gtests.cpp simpgmspace.cpp $(CPPFLAGS) -I$(GTEST_DIR) $(ARCH) -o gtests $(INC) $(LIB) -MD -DSIMU -DGTESTS gtest_main.a 
 	
