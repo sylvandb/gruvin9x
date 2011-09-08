@@ -31,6 +31,8 @@
 #define FWDP        2 /* DP=decimal point */
 #define FH          8
 
+extern uint8_t displayBuf[DISPLAY_W*DISPLAY_H/8];
+
 #define OUTDEZ_SPEED 0
 
 /* lcd common flags */

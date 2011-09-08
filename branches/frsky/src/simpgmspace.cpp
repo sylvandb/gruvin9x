@@ -31,7 +31,7 @@ volatile unsigned char pinb=0, pinc=0xff, pind, pine=0xff, ping=0xff;
 unsigned char portb, dummyport;
 const char *eepromFile = "eeprom.bin";
 
-extern RlcEFile theFile;  //used for any file operation
+extern EFile theFile;  //used for any file operation
 
 void eeWriteBlockCmp(const void *i_pointer_ram, void *pointer_eeprom, size_t size)
 {
