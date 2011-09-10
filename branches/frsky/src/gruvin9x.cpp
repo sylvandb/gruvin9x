@@ -1411,15 +1411,25 @@ void perOut(int16_t *chanOut, uint8_t att)
   }
 }
 
-char userDataDisplayBuf[TELEM_SCREEN_BUFFER_SIZE];
+char userDataDisplayBuf[TELEM_SCREEN_BUFFER_SIZE]; // TODO ifdef
+
 void perMain()
 {
   static uint16_t lastTMR;
   tick10ms = (get_tmr10ms() != lastTMR);
   lastTMR = get_tmr10ms();
 
-
   perOut(g_chans512, 0);
+
+#ifdef ASYNC_WRITE
+  if (!eeprom_buffer_size) {
+    if (theFile.isWriting())
+      theFile.nextWriteStep();
+    else if (s_eeDirtyMsk)
+      eeCheck();
+  }
+#endif
+
   if(!tick10ms) return; //make sure the rest happen only every 10ms.
 
   if ( Timer2_running ) {
@@ -1429,7 +1439,9 @@ void perMain()
     }
   }
 
+#ifndef ASYNC_WRITE
   eeCheck();
+#endif
 
 #if defined (FRSKY)
 

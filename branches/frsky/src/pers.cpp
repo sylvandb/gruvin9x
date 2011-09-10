@@ -27,8 +27,7 @@
 #include "gruvin9x.h"
 #include "templates.h"
 
-EFile theFile;  //used for any file operation
-EFile theFile2; //sometimes we need two files
+RlcFile theFile;  //used for any file operation
 
 #define FILE_TYP_GENERAL 1
 #define FILE_TYP_MODEL   2
@@ -75,7 +74,7 @@ uint8_t Translate()
     g_eeGeneral.disableMemoryWarning = old->disableMemoryWarning;
     g_eeGeneral.switchWarning = old->disableSwitchWarning ? 0 : -1;
     for (uint8_t id=0; id<MAX_MODELS; id++) {
-      theFile.openRd(FILE_MODEL(id));
+      theFile.openRlc(FILE_MODEL(id));
       uint16_t sz = theFile.readRlc1((uint8_t*)&g_model, sizeof(EEPROM_V4::ModelData));
       if(sz > 0) {
         EEPROM_V4::ModelData *v4 = (EEPROM_V4::ModelData *)&g_model;
@@ -182,11 +181,11 @@ uint8_t Translate()
         memset(&g_model.phaseData[0], 0, sizeof(g_model.phaseData));
         g_model.phaseData[0].swtch = trimSw;
         memcpy(&g_model.phaseData[0].trim[0], &trims[0], 4);
-        theFile.writeRlc(FILE_MODEL(id), FILE_TYP_MODEL, (uint8_t*)&g_model, sizeof(g_model), 200);
+        theFile.writeRlc(FILE_MODEL(id), FILE_TYP_MODEL, (uint8_t*)&g_model, sizeof(g_model), true);
       }
     }
     g_eeGeneral.myVers = EEPROM_VER;
-    theFile.writeRlc(FILE_GENERAL, FILE_TYP_GENERAL, (uint8_t*)&g_eeGeneral, sizeof(EEGeneral), 200);
+    theFile.writeRlc(FILE_GENERAL, FILE_TYP_GENERAL, (uint8_t*)&g_eeGeneral, sizeof(EEGeneral), true);
     return sizeof(EEGeneral);
   }
 
@@ -197,11 +196,11 @@ uint8_t Translate()
 
 bool eeLoadGeneral()
 {
-  theFile.openRd(FILE_GENERAL);
+  theFile.openRlc(FILE_GENERAL);
   uint8_t sz = 0;
 
   if (theFile.readRlc((uint8_t*)&g_eeGeneral, 1) == 1) {
-    theFile.openRd(FILE_GENERAL);
+    theFile.openRlc(FILE_GENERAL);
     if (g_eeGeneral.myVers == EEPROM_VER) {
       sz = theFile.readRlc((uint8_t*)&g_eeGeneral, sizeof(g_eeGeneral));
     }
@@ -233,7 +232,7 @@ void eeLoadModelName(uint8_t id,char*buf,uint8_t len)
 {
   if(id<MAX_MODELS)
   {
-    theFile.openRd(FILE_MODEL(id));
+    theFile.openRlc(FILE_MODEL(id));
     memset(buf, 0, len);
     if (theFile.readRlc((uint8_t*)buf, sizeof(g_model.name)) == sizeof(g_model.name) )
     {
@@ -253,7 +252,7 @@ void eeLoadModel(uint8_t id)
 {
   if(id<MAX_MODELS)
   {
-    theFile.openRd(FILE_MODEL(id));
+    theFile.openRlc(FILE_MODEL(id));
     uint16_t sz = theFile.readRlc((uint8_t*)&g_model, sizeof(g_model));
 
     if (sz != sizeof(ModelData)) {
@@ -277,31 +276,33 @@ bool eeDuplicateModel(uint8_t id)
   {
     if(! EFile::exists(FILE_MODEL(i))) break;
   }
-  if(i==MAX_MODELS) return false; //no free space in directory left
+  if(i==MAX_MODELS) return false; // no free space in directory left
 
-  theFile.openRd(FILE_MODEL(id));
-  theFile2.create(FILE_MODEL(i),FILE_TYP_MODEL,600);
+  EFile theFile2;
+  theFile2.openRd(FILE_MODEL(id));
+
+#ifdef ASYNC_WRITE
+  theFile.create(FILE_MODEL(i), FILE_TYP_MODEL, true);
+#else
+  theFile.create(FILE_MODEL(i), FILE_TYP_MODEL, 600);
+#endif
   uint8_t buf[15];
-  uint8_t l;
-  while((l=theFile.read(buf,15)))
+  uint8_t len;
+  while((len=theFile2.read(buf, 15)))
   {
-    theFile2.write(buf,l);
-//    if(theFile.errno()==ERR_TMO)
-//    {
-//        //wait for 10ms and try again
-//        uint16_t tgtime = get_tmr10ms() + 100;
-//        while (get_tmr10ms()!=tgtime);
-//        theFile2.write(buf,l);
-//    }
-    wdt_reset();
+    theFile.write(buf, len);
+    wdt_reset(); // TODO I don't know what it is
+    if (errno() != 0) {
+      EFile::rm(FILE_MODEL(i)); // TODO need to test this code, it's new
+      return false;
+    }
   }
-  theFile2.closeTrunc();
-  // TODO error handling
+  theFile.close();
   return true;
 }
 void eeReadAll()
 {
-  if(!EeFsOpen()  ||
+  if(!EeFsOpen() ||
      EeFsck() < 0 ||
      !eeLoadGeneral()
   )
@@ -311,14 +312,22 @@ void eeReadAll()
     EeFsFormat();
     //alert(PSTR("format ok"));
     generalDefault();
-    // alert(PSTR("default ok"));
+    //alert(PSTR("default ok"));
 
-    uint16_t sz = theFile.writeRlc(FILE_GENERAL,FILE_TYP_GENERAL,(uint8_t*)&g_eeGeneral,sizeof(EEGeneral),200);
+#ifdef ASYNC_WRITE
+    theFile.writeRlc(FILE_GENERAL, FILE_TYP_GENERAL,(uint8_t*)&g_eeGeneral,sizeof(EEGeneral), true);
+#else
+    uint16_t sz = theFile.writeRlc(FILE_GENERAL,FILE_TYP_GENERAL,(uint8_t*)&g_eeGeneral,sizeof(EEGeneral), 200);
     if(sz!=sizeof(EEGeneral)) alert(PSTR("genwrite error"));
+#endif
 
     modelDefault(0);
     //alert(PSTR("modef ok"));
-    theFile.writeRlc(FILE_MODEL(0),FILE_TYP_MODEL,(uint8_t*)&g_model,sizeof(g_model),200);
+#ifdef ASYNC_WRITE
+    theFile.writeRlc(FILE_MODEL(0), FILE_TYP_MODEL, (uint8_t*)&g_model, sizeof(g_model), true);
+#else
+    theFile.writeRlc(FILE_MODEL(0), FILE_TYP_MODEL, (uint8_t*)&g_model, sizeof(g_model),200);
+#endif
     //alert(PSTR("modwrite ok"));
   }
 
@@ -326,28 +335,48 @@ void eeReadAll()
 }
 
 
-static uint8_t  s_eeDirtyMsk;
+uint8_t  s_eeDirtyMsk;
+#ifndef ASYNC_WRITE
 static uint16_t s_eeDirtyTime10ms;
+#define WRITE_DELAY_10MS 100
+#endif
 void eeDirty(uint8_t msk)
 {
-  if(!msk) return;
-  s_eeDirtyMsk      |= msk;
-  s_eeDirtyTime10ms  = get_tmr10ms();
+  s_eeDirtyMsk |= msk;
+#ifndef ASYNC_WRITE
+  if (msk)
+    s_eeDirtyTime10ms  = get_tmr10ms();
+#endif
 }
-#define WRITE_DELAY_10MS 100
+
 void eeCheck(bool immediately)
 {
+#ifdef ASYNC_WRITE
+  if (immediately) {
+    while (eeprom_buffer_size > 0);
+  }
+  if (s_eeDirtyMsk & EE_GENERAL) {
+    s_eeDirtyMsk -= EE_GENERAL;
+    theFile.writeRlc(FILE_GENERAL, FILE_TYP_GENERAL, (uint8_t*)&g_eeGeneral, sizeof(EEGeneral), immediately);
+    if (!immediately) return;
+  }
+  if (s_eeDirtyMsk & EE_MODEL) {
+    s_eeDirtyMsk = 0;
+    theFile.writeRlc(FILE_MODEL(g_eeGeneral.currModel), FILE_TYP_MODEL, (uint8_t*)&g_model, sizeof(g_model), immediately);
+  }
+#else
   uint8_t msk  = s_eeDirtyMsk;
-  if(!msk) return;
+  if (!msk) return;
   if( !immediately && ((get_tmr10ms() - s_eeDirtyTime10ms) < WRITE_DELAY_10MS)) return;
   s_eeDirtyMsk = 0;
+
   if(msk & EE_GENERAL){
     if(theFile.writeRlc(FILE_TMP, FILE_TYP_GENERAL, (uint8_t*)&g_eeGeneral,
                         sizeof(EEGeneral),20) == sizeof(EEGeneral))
     {
       EFile::swap(FILE_GENERAL,FILE_TMP);
     }else{
-      if(theFile.errno()==ERR_TMO){
+      if(errno()==ERR_TMO){
         s_eeDirtyMsk |= EE_GENERAL; //try again
         s_eeDirtyTime10ms = get_tmr10ms() - WRITE_DELAY_10MS;
       }else{
@@ -356,13 +385,13 @@ void eeCheck(bool immediately)
     }
     //first finish GENERAL, then MODEL !!avoid Toggle effect
   }
-  else if(msk & EE_MODEL){
+  else if(msk & EE_MODEL){ // TODO we should not have set the dirtyMask to 0 just before!
     if(theFile.writeRlc(FILE_TMP, FILE_TYP_MODEL, (uint8_t*)&g_model,
                         sizeof(g_model),20) == sizeof(g_model))
     {
       EFile::swap(FILE_MODEL(g_eeGeneral.currModel),FILE_TMP);
     }else{
-      if(theFile.errno()==ERR_TMO){
+      if(errno()==ERR_TMO){
         s_eeDirtyMsk |= EE_MODEL; //try again
         s_eeDirtyTime10ms = get_tmr10ms() - WRITE_DELAY_10MS;
       }else{
@@ -371,4 +400,5 @@ void eeCheck(bool immediately)
     }
   }
   //beepWarn1();
+#endif
 }

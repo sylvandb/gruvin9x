@@ -45,6 +45,52 @@ TEST(outdezNAtt, test_unsigned) {
   EXPECT_EQ(memcmp(refBuf, displayBuf, sizeof(displayBuf)), 0) << "Unsigned numbers will be bad displayed";
 }
 
+TEST(EEPROM, test1) {
+  eepromFile = NULL; // in memory
+  RlcFile f;
+  uint8_t buf[1000];
+  uint8_t buf2[1000];
+
+  EeFsFormat();
+
+  for(int i=0; i<10000; i++) {
+    int size = rand()%800;
+    for(int j=0; j<size; j++) {
+      buf[j] = rand() < (RAND_MAX/10000*i) ? 0 : (j&0xff);
+    }
+    f.writeRlc(5, 5, buf, size, 100);
+    // printf("size=%4d red=%4d\n\n\n", size, f.size());
+    f.openRd(5);
+    uint16_t n = f.readRlc(buf2,size+1);
+    EXPECT_EQ(n, size);
+    EXPECT_EQ(memcmp(buf, buf2, size), 0);
+  }
+}
+
+TEST(EEPROM, test2) {
+  eepromFile = NULL; // in memory
+  RlcFile f;
+  uint8_t buf[1000];
+
+  EeFsFormat();
+
+  for(int i=0; i<1000; i++) buf[i]='6'+i%4;
+
+  f.writeRlc(6, 6, buf, 300, 100);
+  // f.writeRlc(5, 5, buf, 5, 100);
+
+  f.openRd(6);
+  uint16_t sz=0;
+  for(int i=0; i<500; i++){
+    uint8_t b;
+    uint16_t n=f.readRlc(&b,1);
+    if(n) EXPECT_EQ(b, ('6'+sz%4));
+    sz+=n;
+  }
+  EXPECT_EQ(sz, 300);
+}
+
+
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();

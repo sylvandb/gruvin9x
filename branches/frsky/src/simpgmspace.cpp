@@ -30,52 +30,77 @@
 volatile unsigned char pinb=0, pinc=0xff, pind, pine=0xff, ping=0xff;
 unsigned char portb, dummyport;
 const char *eepromFile = "eeprom.bin";
+size_t eeprom_buffer_size = 0;
 
-extern EFile theFile;  //used for any file operation
+uint8_t eeprom[EESIZE];
+// volatile uint16_t g_tmr10ms=0; // TODO remove
+
 
 void eeWriteBlockCmp(const void *i_pointer_ram, void *pointer_eeprom, size_t size)
 {
-  FILE *fp = fopen(eepromFile, "r+");
-  long ofs = (long) pointer_eeprom;
-  const char* pointer_ram= (const char*)i_pointer_ram;
-  //printf("eeWr p=%10p blk%3d ofs=%2d l=%d",pointer_ram,
-  //       (int)pointer_eeprom/16,
-  //       (int)pointer_eeprom%16,
-  //       (int)size);
-  while(size) {
-    if(fseek(fp, ofs , SEEK_SET)==-1) perror("error in seek");
-    char buf[1];
-    if (fread(buf, 1, 1, fp) != 1) perror("error in read");
-
-    if (buf[0] != pointer_ram[0]){
-      //printf("X");
-      g_tmr10ms++;
-      if(fseek(fp, ofs , SEEK_SET)==-1) perror("error in seek");
-      fwrite(pointer_ram, 1, 1,fp);
-    }
-    else{
-      //printf(".");
-    }
-
-    size--;
-    ofs++;
-    (const char*)pointer_ram++;
-  }
-  fclose(fp);
-
-#ifdef ASYNC_WRITE
-  theFile.nextWriteStep();
+#if 0
+  printf(" eeWriteBlockCmp(%d %d)", size, (int)pointer_eeprom);
+  for(uint8_t i=0; i<size; i++)
+    printf(" %02X", ((const char*)i_pointer_ram)[i]);
+  printf("\n");fflush(stdout);
 #endif
 
-  //puts("");
+  if (eepromFile) {
+    FILE *fp = fopen(eepromFile, "r+");
+    long ofs = (long) pointer_eeprom;
+    const char* pointer_ram= (const char*)i_pointer_ram;
+    //printf("eeWr p=%10p blk%3d ofs=%2d l=%d",pointer_ram,
+    //       (int)pointer_eeprom/16,
+    //       (int)pointer_eeprom%16,
+    //       (int)size);
+    while(size) {
+      if(fseek(fp, ofs , SEEK_SET)==-1) perror("error in seek");
+      char buf[1];
+      if (fread(buf, 1, 1, fp) != 1) perror("error in read");
+
+      if (buf[0] != pointer_ram[0]){
+        //printf("X");
+        g_tmr10ms++;
+        if(fseek(fp, ofs , SEEK_SET)==-1) perror("error in seek");
+        fwrite(pointer_ram, 1, 1,fp);
+      }
+      else{
+        //printf(".");
+      }
+
+      size--;
+      ofs++;
+      (const char*)pointer_ram++;
+    }
+    fclose(fp);
+  }
+  else {
+    memcpy(&eeprom[(int)pointer_eeprom], i_pointer_ram, size);
+  }
 }
 
 void eeprom_read_block (void *pointer_ram,
-                   const void *pointer_eeprom,
-                   size_t size)
+    const void *pointer_eeprom,
+    size_t size)
 {
-  FILE *fp=fopen(eepromFile, "r");
-  if(fseek(fp, (long) pointer_eeprom, SEEK_SET)==-1) perror("error in seek");
-  if (fread(pointer_ram, size, 1, fp) <= 0) perror("error in read");
-  fclose(fp);
+  if (eepromFile) {
+    FILE *fp=fopen(eepromFile, "r");
+    if(fseek(fp, (long) pointer_eeprom, SEEK_SET)==-1) perror("error in seek");
+    if (fread(pointer_ram, size, 1, fp) <= 0) perror("error in read");
+    fclose(fp);
+  }
+  else {
+    memcpy(pointer_ram, &eeprom[(int)pointer_eeprom], size);
+  }
 }
+
+#if 0
+static void EeFsDump(){
+  for(int i=0; i<EESIZE; i++)
+  {
+    printf("%02x ",eeprom[i]);
+    if(i%16 == 15) puts("");
+  }
+  puts("");
+}
+#endif

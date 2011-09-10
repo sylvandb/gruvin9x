@@ -136,23 +136,28 @@ void menuProcModelSelect(uint8_t event)
     case  EVT_KEY_LONG(KEY_MENU):
       if(sel_editMode){
         message(PSTR("Duplicating model"));
-        if(eeDuplicateModel(sub)) {
+        if (eeDuplicateModel(sub)) {
           beepKey();
           sel_editMode = false;
         }
-        else beepWarn();
       }
       break;
 
     case EVT_ENTRY:
       sel_editMode = false;
-
       m_posVert = g_eeGeneral.currModel;
       eeCheck(true); //force writing of current model data before this is changed
       break;
   }
   if(sel_editMode && subOld!=sub){
+#ifdef ASYNC_WRITE
+    eeCheck(true);
+    s_sync_write = true;
+#endif
     EFile::swap(FILE_MODEL(subOld),FILE_MODEL(sub));
+#ifdef ASYNC_WRITE
+    s_sync_write = false;
+#endif
   }
 
   if(sub-s_pgOfs < 1)        s_pgOfs = max(0,sub-1);

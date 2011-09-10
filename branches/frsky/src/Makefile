@@ -637,9 +637,6 @@ else
    ARCH=
 endif
 
-rletest: file.cpp
-	g++ file.cpp $(CPPFLAGS) $(ARCH) -o $@ -DTEST -DSIMU
-
 simu: $(CPPSRC) Makefile simu.cpp $(CPPSRC) simpgmspace.cpp *.h *.lbm eeprom.bin
 	g++ simu.cpp $(CPPFLAGS) $(CPPSRC) simpgmspace.cpp $(ARCH) -o simu $(INC) $(LIB) -MD -DSIMU
 
@@ -769,7 +766,6 @@ clean_list :
 	@echo
 	@echo $(MSG_CLEANING)
 	$(REMOVE) simu
-	$(REMOVE) rletest
 	$(REMOVE) gtests
 	$(REMOVE) gtest.a
 	$(REMOVE) gtest_main.a

@@ -25,6 +25,8 @@
 #define VERS 1
 #define SUB_VERS 2
 
+#define ASYNC_WRITE
+
 #include <inttypes.h>
 #include <string.h>
 #include "ff.h"
@@ -69,9 +71,10 @@
 #include <avr/wdt.h>
 #endif
 
-//#define eeprom_write_block eeWriteBlockCmp
-
 #include "file.h"
+
+extern RlcFile theFile;  //used for any file operation
+
 //
 //                  elev                        thr
 //                   LV                         RV
@@ -478,6 +481,8 @@ void getADC_filt();
 #define   EE_MODEL   0x02
 
 extern bool warble;
+
+extern uint8_t  s_eeDirtyMsk;
 
 #define STORE_MODELVARS eeDirty(EE_MODEL)
 #define STORE_GENERALVARS eeDirty(EE_GENERAL)

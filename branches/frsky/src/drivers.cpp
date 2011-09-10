@@ -21,11 +21,13 @@
 
 #include "gruvin9x.h"
 
+#ifndef SIMU
+
 #ifdef ASYNC_WRITE
 
-static uint16_t eeprom_pointer;
-static const char* eeprom_buffer_data;
-static size_t eeprom_buffer_size = 0;
+uint16_t eeprom_pointer;
+const char* eeprom_buffer_data;
+size_t eeprom_buffer_size = 0;
 
 inline void eeprom_write_byte()
 {
@@ -40,13 +42,14 @@ inline void eeprom_write_byte()
 #endif
   eeprom_pointer++;
   eeprom_buffer_data++;
-  eeprom_buffer_size--;
 }
 
 ISR(EE_READY_vect)
 {
-  eeprom_write_byte();
-  if (eeprom_buffer_size == 0) {
+  if (--eeprom_buffer_size > 0) {
+    eeprom_write_byte();
+  }
+  else {
 #if defined (PCBV3)
     EECR &= ~(1<<EERIE);
 #else
@@ -57,9 +60,8 @@ ISR(EE_READY_vect)
 
 void eeWriteBlockCmp(const void *i_pointer_ram, void *i_pointer_eeprom, size_t size)
 {
-  while (eeprom_buffer_size);
+  assert(!eeprom_buffer_size);
 
-  // TODO while (eeprom_buffer_size > 0) ...
   eeprom_pointer = (uint16_t)i_pointer_eeprom;
   eeprom_buffer_data = (const char*)i_pointer_ram;
   eeprom_buffer_size = size;
@@ -70,14 +72,10 @@ void eeWriteBlockCmp(const void *i_pointer_ram, void *i_pointer_eeprom, size_t s
   EECR |= (1<<EERIE);
 #endif
 
-  cli();
-  eeprom_write_byte();
-  sei();
+  while (s_sync_write && eeprom_buffer_size > 0);
 }
 
 #else
-
-#ifndef SIMU
 
 ///opt/cross/avr/include/avr/eeprom.h
 static inline void __attribute__ ((always_inline))
@@ -120,15 +118,8 @@ void eeWriteBlockCmp(const void *i_pointer_ram, void *i_pointer_eeprom, size_t s
 }
 
 #endif
+
 #endif
-
-//inline uint16_t anaIn(uint8_t chan)
-//{
-//  //                     ana-in:   3 1 2 0 4 5 6 7
-//  static prog_char APM crossAna[]={4,2,3,1,5,6,7,0}; // wenn schon Tabelle, dann muss sich auch lohnen
-//  return s_ana[pgm_read_byte(crossAna+chan)] / 4;
-//}
-
 
 
 static uint8_t s_evt;
