@@ -13,5 +13,7 @@ Ongoing custom circuit and PCB design takes place at [http://gruvin9x.googlecode
 == First Prototype ==
 The first prototype 'rev 2.14' PCB design, schematic and production files, as sent to the PCB fabrication factory in December of 2010, can be found at [http://gruvin9x.googlecode.com/svn/trunk/pcb/rev2.14-frozen]. For your convenience, there's a PDF version of the schematic, [http://gruvin9x.googlecode.com/svn/trunk/pcb/rev2.14-frozen/gruvin9x.pdf here].
 
+As at September 2011, we've progressed to v4.0 and are yet to release a board for general consumption. It is our firm intention to finally do just that with v4.1, hopefully before December this year. Version 4.0, final prototypes are currently being assembled with a number of beta testers being lined up for the first few v4.1 production boards.
+
 == Original 'Hacked' Radio ==
 Gruvin's original '9X radio has been the test bed for much of the work to date, and has been chopped up and re-wired in several ways. A (generally) up to date reference schematic for that can be found at [http://gruvin9x.googlecode.com/svn/trunk/pcb/hacked]. For your convenience, there's a PDF version of the schematic, [http://gruvin9x.googlecode.com/svn/trunk/pcb/hacked/gruvin9x-hacked.pdf here].
