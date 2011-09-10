@@ -5,7 +5,7 @@
 
 == Why? ==
 
-The primary intention with this new main board is to provide a more powerful and flexible platform for the TH/ER/gruvin9x/(RadioClone?) open source firmware to run on – basically, because we want to and we can. :p 
+The primary intention with this new main board is to provide a more powerful and flexible platform for the TH/ER/gruvin9x/(RadioClone?) open source firmware to run on – basically, because we want to and we can. :p (See project home page if you don't know what that even is :-)
 
 The design is "open", so you can follow its progress in all details, as well as make requests and suggestions for additions or improvements – and, of course, you can get involved more directly and do those for yourself. (There are currently two contributors working on the PCB board design.)
 
