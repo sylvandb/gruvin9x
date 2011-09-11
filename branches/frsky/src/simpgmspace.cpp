@@ -75,7 +75,7 @@ void eeWriteBlockCmp(const void *i_pointer_ram, void *pointer_eeprom, size_t siz
     fclose(fp);
   }
   else {
-    memcpy(&eeprom[(int)pointer_eeprom], i_pointer_ram, size);
+    memcpy(&eeprom[(int64_t)pointer_eeprom], i_pointer_ram, size);
   }
 }
 
