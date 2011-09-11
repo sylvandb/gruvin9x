@@ -621,14 +621,14 @@ endif
 	@echo break main >> $(GDBINIT_FILE)
 
 # gruvin: added extra include and lib paths to get simu working on my Mac
-INC=-I/usr/local/include/fox-1.6 -I/usr/include/fox-1.6 \
-    -I$(FOXPATH)/include \
-    -I/opt/local/include/fox-1.6
-LIB=-L/usr/local/lib \
-    -L$(FOXPATH)/src/.libs \
-    -L/opt/local/lib \
-    -lFOX-1.6 \
-    -Wl,-rpath,$(FOXPATH)/src/.libs
+FOXINC=-I/usr/local/include/fox-1.6 -I/usr/include/fox-1.6 \
+       -I$(FOXPATH)/include \
+       -I/opt/local/include/fox-1.6
+FOXLIB=-L/usr/local/lib \
+       -L$(FOXPATH)/src/.libs \
+       -L/opt/local/lib \
+       -lFOX-1.6 \
+       -Wl,-rpath,$(FOXPATH)/src/.libs
 
 LBITS := $(shell getconf LONG_BIT)
 ifeq ($(LBITS),64)
@@ -638,7 +638,7 @@ else
 endif
 
 simu: $(CPPSRC) Makefile simu.cpp $(CPPSRC) simpgmspace.cpp *.h *.lbm eeprom.bin
-	g++ simu.cpp $(CPPFLAGS) $(CPPSRC) simpgmspace.cpp $(ARCH) -o simu $(INC) $(LIB) -MD -DSIMU
+	g++ simu.cpp $(CPPFLAGS) $(CPPSRC) simpgmspace.cpp $(ARCH) -o simu $(FOXINC) $(FOXLIB) -MD -DSIMU
 
 eeprom.bin:
 	dd if=/dev/zero of=$@ bs=1 count=2048
@@ -846,5 +846,5 @@ gtest_main.a : gtest-all.o gtest_main.o
 # function.
 
 gtests: $(CPPSRC) gtests.cpp simpgmspace.cpp gtest_main.a
-	g++ $(CPPSRC) gtests.cpp simpgmspace.cpp $(CPPFLAGS) -I$(GTEST_DIR) $(ARCH) -o gtests $(INC) $(LIB) -MD -DSIMU -DGTESTS gtest_main.a 
+	g++ $(CPPSRC) gtests.cpp simpgmspace.cpp $(CPPFLAGS) -I$(GTEST_DIR) $(ARCH) -o gtests -lpthread -MD -DSIMU gtest_main.a 
 	
