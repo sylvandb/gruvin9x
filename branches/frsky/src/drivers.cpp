@@ -27,7 +27,7 @@
 
 uint16_t eeprom_pointer;
 const char* eeprom_buffer_data;
-size_t eeprom_buffer_size = 0;
+volatile size_t eeprom_buffer_size = 0;
 
 inline void eeprom_write_byte()
 {
