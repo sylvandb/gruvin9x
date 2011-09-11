@@ -161,12 +161,12 @@ void menuMainView(uint8_t event)
   }
   else { // not in a telemetry ALTERNATE view
     uint8_t phase = getFlightPhase();
-    lcd_putsnAtt(6*FW+2, 2*FH, g_model.phaseData[phase].name, sizeof(g_model.phaseData[phase].name), ZCHAR);
+    lcd_putsnAtt(6*FW+4, 2*FH, g_model.phaseData[phase].name, sizeof(g_model.phaseData[phase].name), ZCHAR);
 
     uint8_t att = (g_vbat100mV < g_eeGeneral.vBatWarn ? BLINK : 0) | DBLSIZE;
     lcd_putsnAtt(2*FW-2, 0*FH, g_model.name, sizeof(g_model.name), ZCHAR|DBLSIZE);
     putsVBat(6*FW+3, 2*FH, att|NO_UNIT);
-    lcd_putc(6*FW+3, 3*FH, 'V');
+    lcd_putc(6*FW+4, 3*FH, 'V');
 
     if (s_timerState != TMR_OFF) {
       uint8_t att = DBLSIZE | (s_timerState==TMR_BEEPING ? BLINK : 0);
