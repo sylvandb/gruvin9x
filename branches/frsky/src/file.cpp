@@ -456,18 +456,17 @@ uint8_t RlcFile::write(uint8_t*buf, uint8_t i_len)
 
 void RlcFile::create(uint8_t i_fileId, uint8_t typ, uint8_t sync_write)
 {
-  openRlc(i_fileId); // internal use
-  eeFs.files[i_fileId].typ      = typ;
-  eeFs.files[i_fileId].size     = 0;
+  // all write operations will be executed on FILE_TMP
+  openRlc(FILE_TMP); // internal use
+  eeFs.files[FILE_TMP].typ      = typ;
+  eeFs.files[FILE_TMP].size     = 0;
+  m_fileId = i_fileId;
   s_sync_write = sync_write;
 }
 
 void RlcFile::writeRlc(uint8_t i_fileId, uint8_t typ, uint8_t*buf, uint16_t i_len, uint8_t sync_write)
 {
-  // all write operations will be executed on FILE_TMP
-  create(FILE_TMP, typ, sync_write);
-
-  m_fileId = i_fileId;
+  create(i_fileId, typ, sync_write);
 
   m_write_step = WRITE_START_STEP;
   m_rlc_buf = buf;
@@ -570,6 +569,17 @@ void RlcFile::nextRlcWriteStep()
    }
 }
 
+void RlcFile::flush()
+{
+  while (eeprom_buffer_size > 0);
+  s_sync_write = true;
+  while (theFile.m_write_len && !s_write_err)
+    theFile.nextWriteStep();
+  while (theFile.isWriting() && !s_write_err)
+    theFile.nextRlcWriteStep();
+  s_sync_write = false;
+}
+
 #else
 
 void RlcFile::create(uint8_t i_fileId, uint8_t typ, uint16_t maxTme10ms)
@@ -650,12 +660,21 @@ uint16_t RlcFile::writeRlc(uint8_t i_fileId, uint8_t typ,uint8_t*buf,uint16_t i_
 void RlcFile::close()
 {
   uint8_t fri=0;
-  eeFs.files[m_fileId].size     = m_pos;
+
   if(m_currBlk && ( fri = EeFsGetLink(m_currBlk)))    EeFsSetLink(m_currBlk, 0);
+
+#ifdef ASYNC_WRITE
+  eeFs.files[FILE_TMP].size     = m_pos;
+  EFile::swap(m_fileId, FILE_TMP);
+#else
+  eeFs.files[m_fileId].size     = m_pos;
   EeFsFlush(); //chained out
+#endif
 
   if(fri) EeFsFree( fri );  //chain in
+
 #ifdef ASYNC_WRITE
+  m_write_step = 0;
   s_sync_write = false;
 #endif
 }

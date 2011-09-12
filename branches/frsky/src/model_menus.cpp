@@ -91,7 +91,7 @@ void menuProcModelSelect(uint8_t event)
 {
   TITLE("MODELSEL");
   int8_t subOld  = m_posVert;
-  check_submenu_simple(event,MAX_MODELS-1) ;
+  if (!check_submenu_simple(event, MAX_MODELS-1)) return;
 
   lcd_puts_P(     9*FW, 0, PSTR("free"));
   lcd_outdezAtt(  17*FW, 0, EeFsGetFree(),0);
@@ -100,6 +100,8 @@ void menuProcModelSelect(uint8_t event)
 
   int8_t  sub    = m_posVert;
   static uint8_t sel_editMode;
+  
+  eeCheck(true); // force writing of current model data before this is changed
 
   switch(event)
   {
@@ -111,8 +113,7 @@ void menuProcModelSelect(uint8_t event)
         killEvents(event);
         eeLoadModel(g_eeGeneral.currModel = m_posVert);
         STORE_GENERALVARS;
-        STORE_MODELVARS;
-        break;
+        // STORE_MODELVARS; // TODO why?
       }
       //fallthrough
     case  EVT_KEY_FIRST(KEY_LEFT):
@@ -128,17 +129,20 @@ void menuProcModelSelect(uint8_t event)
       //case EXIT handled in checkExit
       if(event==EVT_KEY_FIRST(KEY_LEFT))  chainMenu(menuTabModel[DIM(menuTabModel)-1]);
       if(event==EVT_KEY_FIRST(KEY_RIGHT)) chainMenu(menuProcModel);
-      break;
+      return;
     case  EVT_KEY_FIRST(KEY_MENU):
-        sel_editMode = true;
-        beepKey();
-        break;
+      sel_editMode = true;
+      beepKey();
+      break;
     case  EVT_KEY_LONG(KEY_MENU):
       if(sel_editMode){
-        message(PSTR("Duplicating model"));
+        // message(PSTR("Duplicating model"));
         if (eeDuplicateModel(sub)) {
           beepKey();
           sel_editMode = false;
+        }
+        else {
+          beepWarn();
         }
       }
       break;
@@ -146,12 +150,10 @@ void menuProcModelSelect(uint8_t event)
     case EVT_ENTRY:
       sel_editMode = false;
       m_posVert = g_eeGeneral.currModel;
-      eeCheck(true); //force writing of current model data before this is changed
       break;
   }
   if(sel_editMode && subOld!=sub){
 #ifdef ASYNC_WRITE
-    eeCheck(true);
     s_sync_write = true;
 #endif
     EFile::swap(FILE_MODEL(subOld),FILE_MODEL(sub));
@@ -166,10 +168,13 @@ void menuProcModelSelect(uint8_t event)
     uint8_t y=(i+2)*FH;
     uint8_t k=i+s_pgOfs;
     lcd_outdezNAtt(  3*FW, y, k+1, LEADING0+((sub==k) ? INVERS : 0), 2);
-    static char buf[sizeof(g_model.name)+5];
     if(k==g_eeGeneral.currModel) lcd_putc(1,  y,'*');
-    eeLoadModelName(k, buf, sizeof(buf));
-    lcd_putsnAtt(4*FW, y, buf, sizeof(buf), ZCHAR|((sub==k) ? (sel_editMode ? INVERS : 0 ) : 0));
+    char name[sizeof(g_model.name)];
+    uint16_t size = eeLoadModelName(k, name);
+    if (size) {
+      putsModelName(4*FW, y, name, k, ((sub==k) ? (sel_editMode ? INVERS : 0 ) : 0));
+      lcd_outdezAtt(20*FW, y, size, ((sub==k) ? (sel_editMode ? INVERS : 0 ) : 0));
+    }
   }
 }
 

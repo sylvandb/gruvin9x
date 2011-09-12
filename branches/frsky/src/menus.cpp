@@ -144,20 +144,20 @@ int8_t checkIncDecGen(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max)
   return checkIncDec(event,i_val,i_min,i_max,EE_GENERAL);
 }
 
-void check_simple(uint8_t event, uint8_t curr, MenuFuncP *menuTab, uint8_t menuTabSize, uint8_t maxrow)
+bool check_simple(uint8_t event, uint8_t curr, MenuFuncP *menuTab, uint8_t menuTabSize, uint8_t maxrow)
 {
-  check(event, curr, menuTab, menuTabSize, 0, 0, maxrow);
+  return check(event, curr, menuTab, menuTabSize, 0, 0, maxrow);
 }
 
-void check_submenu_simple(uint8_t event, uint8_t maxrow)
+bool check_submenu_simple(uint8_t event, uint8_t maxrow)
 {
-  check_simple(event, 0, 0, 0, maxrow);
+  return check_simple(event, 0, 0, 0, maxrow);
 }
 
 #define MAXCOL(row) (horTab ? pgm_read_byte(horTab+min(row, horTabMax)) : (const uint8_t)0)
 #define INC(val,max) if(val<max) {val++;} else {val=0;}
 #define DEC(val,max) if(val>0  ) {val--;} else {val=max;}
-void check(uint8_t event, uint8_t curr, MenuFuncP *menuTab, uint8_t menuTabSize, prog_uint8_t *horTab, uint8_t horTabMax, uint8_t maxrow)
+bool check(uint8_t event, uint8_t curr, MenuFuncP *menuTab, uint8_t menuTabSize, prog_uint8_t *horTab, uint8_t horTabMax, uint8_t maxrow)
 {
   if (menuTab) {
     uint8_t attr = m_posVert==0 ? INVERS : 0;
@@ -170,13 +170,13 @@ void check(uint8_t event, uint8_t curr, MenuFuncP *menuTab, uint8_t menuTabSize,
             chainMenu((MenuFuncP)pgm_read_adr(&menuTab[curr-1]));
           else
             chainMenu((MenuFuncP)pgm_read_adr(&menuTab[menuTabSize-1]));
-          break;
+          return false;
         case EVT_KEY_FIRST(KEY_RIGHT):
           if(curr < (menuTabSize-1))
             chainMenu((MenuFuncP)pgm_read_adr(&menuTab[curr+1]));
           else
             chainMenu((MenuFuncP)pgm_read_adr(&menuTab[0]));
-          break;
+          return false;
       }
     }
     DisplayScreenIndex(curr, menuTabSize, attr);
@@ -254,6 +254,7 @@ void check(uint8_t event, uint8_t curr, MenuFuncP *menuTab, uint8_t menuTabSize,
   if(m_posVert<1) s_pgOfs=0;
   else if(m_posVert-s_pgOfs>max) s_pgOfs = m_posVert-max;
   else if(m_posVert-s_pgOfs<1) s_pgOfs = m_posVert-1;
+  return true;
 }
 
 MenuFuncP g_menuStack[5];

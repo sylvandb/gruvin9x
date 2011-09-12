@@ -77,7 +77,6 @@ TEST(EEPROM, test2) {
   for(int i=0; i<1000; i++) buf[i]='6'+i%4;
 
   f.writeRlc(6, 6, buf, 300, 100);
-  // f.writeRlc(5, 5, buf, 5, 100);
 
   f.openRd(6);
   uint16_t sz=0;
@@ -90,6 +89,81 @@ TEST(EEPROM, test2) {
   EXPECT_EQ(sz, 300);
 }
 
+TEST(EEPROM, eeCheckImmediately) {
+  eepromFile = NULL; // in memory
+  // RlcFile f;
+  uint8_t buf[1000];
+
+  EeFsFormat();
+
+  for(int i=0; i<1000; i++) buf[i]='6'+i%4;
+
+  theFile.writeRlc(6, 6, buf, 300, false);
+
+  eeCheck(true);
+
+  theFile.openRd(6);
+  uint16_t sz=0;
+  for(int i=0; i<500; i++){
+    uint8_t b;
+    uint16_t n=theFile.readRlc(&b,1);
+    if(n) EXPECT_EQ(b, ('6'+sz%4));
+    sz+=n;
+  }
+  EXPECT_EQ(sz, 300);
+}
+
+TEST(EEPROM, eeDuplicateModel) {
+  eepromFile = NULL; // in memory
+
+  uint8_t buf[1000];
+
+  EeFsFormat();
+
+  for(int i=0; i<1000; i++) buf[i]='6'+i%4;
+
+  theFile.writeRlc(5, 6, buf, 300, true);
+
+  eeDuplicateModel(4);
+
+  theFile.openRd(6);
+  uint16_t sz=0;
+  for(int i=0; i<500; i++){
+    uint8_t b;
+    uint16_t n=theFile.readRlc(&b,1);
+    if(n) EXPECT_EQ(b, ('6'+sz%4));
+    sz+=n;
+  }
+  EXPECT_EQ(sz, 300);
+}
+
+TEST(EEPROM, rm) {
+  eepromFile = NULL; // in memory
+
+  uint8_t buf[1000];
+
+  EeFsFormat();
+
+  for(int i=0; i<1000; i++) buf[i]='6'+i%4;
+
+  theFile.writeRlc(5, 6, buf, 300, true);
+
+  EXPECT_EQ(EFile::exists(5), true);
+
+  EFile::rm(5);
+
+  EXPECT_EQ(EFile::exists(5), false);
+
+  theFile.openRd(5);
+  uint16_t sz=0;
+  for(int i=0; i<500; i++){
+    uint8_t b;
+    uint16_t n=theFile.readRlc(&b,1);
+    if(n) EXPECT_EQ(b, ('6'+sz%4));
+    sz+=n;
+  }
+  EXPECT_EQ(sz, 0);
+}
 
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);

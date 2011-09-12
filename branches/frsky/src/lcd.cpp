@@ -521,6 +521,19 @@ void putsChnLetter(uint8_t x, uint8_t y, uint8_t idx, uint8_t attr)
   lcd_putsnAtt(x, y, PSTR("RETA")+CHANNEL_ORDER(idx)-1, 1, attr);
 }
 
+void putsModelName(uint8_t x, uint8_t y, char *name, uint8_t id, uint8_t att)
+{
+  uint8_t len = sizeof(g_model.name);
+  while (len>0 && !name[len-1]) --len;
+  if (len==0) {
+    lcd_putsAtt(x, y, PSTR("MODEL"/*MODEL*/), att);
+    lcd_outdezNAtt(lcd_lastPos, y, id+1, att|LEADING0|LEFT, 2);
+  }
+  else {
+    lcd_putsnAtt(x, y, name, sizeof(g_model.name), ZCHAR|att);
+  }
+}
+
 void putsSwitches(uint8_t x,uint8_t y,int8_t idx,uint8_t att)
 {
   switch(idx){

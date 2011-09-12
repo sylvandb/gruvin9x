@@ -89,16 +89,13 @@ int8_t checkIncDecGen(uint8_t event, int8_t i_val, int8_t i_min, int8_t i_max);
 #define CHECK_INCDEC_GENVAR( event, var, min, max)     \
   var = checkIncDecGen(event,var,min,max)
 
+// Menus related stuff ...
 extern uint8_t m_posVert;
 extern uint8_t m_posHorz;
-
-// Menus related stuff ...
-/*  uint8_t m_posVert;
-  uint8_t m_posHorz; */
-  inline void minit(){m_posVert=m_posHorz=0;}
-  void check(uint8_t event, uint8_t curr, MenuFuncP *menuTab, uint8_t menuTabSize, prog_uint8_t *subTab, uint8_t subTabMax, uint8_t maxrow);
-  void check_simple(uint8_t event, uint8_t curr, MenuFuncP *menuTab, uint8_t menuTabSize, uint8_t maxrow);
-  void check_submenu_simple(uint8_t event, uint8_t maxrow);
+inline void minit(){m_posVert=m_posHorz=0;}
+bool check(uint8_t event, uint8_t curr, MenuFuncP *menuTab, uint8_t menuTabSize, prog_uint8_t *subTab, uint8_t subTabMax, uint8_t maxrow);
+bool check_simple(uint8_t event, uint8_t curr, MenuFuncP *menuTab, uint8_t menuTabSize, uint8_t maxrow);
+bool check_submenu_simple(uint8_t event, uint8_t maxrow);
 
 typedef PROGMEM void (*MenuFuncP_PROGMEM)(uint8_t event);
 
@@ -108,10 +105,10 @@ typedef PROGMEM void (*MenuFuncP_PROGMEM)(uint8_t event);
 #define MENU(title, tab, menu, lines_count, lines...) \
 TITLE(title); \
 static prog_uint8_t APM mstate_tab[] = lines; \
-check(event,menu,tab,DIM(tab),mstate_tab,DIM(mstate_tab)-1,lines_count-1)
+if (!check(event,menu,tab,DIM(tab),mstate_tab,DIM(mstate_tab)-1,lines_count-1)) return;
 
 #define SIMPLE_MENU_NOTITLE(tab, menu, lines_count) \
-check_simple(event,menu,tab,DIM(tab),lines_count-1)
+if (!check_simple(event,menu,tab,DIM(tab),lines_count-1)) return;
 
 #define SIMPLE_MENU(title, tab, menu, lines_count) \
 TITLE(title); \
@@ -120,10 +117,10 @@ SIMPLE_MENU_NOTITLE(tab, menu, lines_count)
 #define SUBMENU(title, lines_count, lines...) \
 TITLE(title); \
 static prog_uint8_t APM mstate_tab[] = lines; \
-check(event,0,NULL,0,mstate_tab,DIM(mstate_tab)-1,lines_count-1)
+if (!check(event,0,NULL,0,mstate_tab,DIM(mstate_tab)-1,lines_count-1)) return;
 
 #define SIMPLE_SUBMENU_NOTITLE(lines_count) \
-check_submenu_simple(event,lines_count-1)
+if (!check_submenu_simple(event,lines_count-1)) return;
 
 #define SIMPLE_SUBMENU(title, lines_count) \
 TITLE(title); \

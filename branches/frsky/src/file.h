@@ -131,6 +131,7 @@ public:
   void nextWriteStep();
   void nextRlcWriteStep();
   void writeRlc(uint8_t i_fileId, uint8_t typ, uint8_t *buf, uint16_t i_len, uint8_t sync_write);
+  void flush();
 #else
   /// create a new file with given fileId,
   /// !!! if this file already exists, then all blocks are reused

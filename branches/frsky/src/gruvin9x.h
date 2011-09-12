@@ -516,7 +516,7 @@ void eeCheck(bool immediately=false);
 //void eeWriteGeneral();
 void eeReadAll();
 bool eeModelExists(uint8_t id);
-void eeLoadModelName(uint8_t id,char*buf,uint8_t len);
+uint16_t eeLoadModelName(uint8_t id, char *name);
 void eeLoadModel(uint8_t id);
 //void eeSaveModel(uint8_t id);
 bool eeDuplicateModel(uint8_t id);

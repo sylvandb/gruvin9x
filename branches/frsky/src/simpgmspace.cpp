@@ -33,8 +33,6 @@ const char *eepromFile = "eeprom.bin";
 volatile size_t eeprom_buffer_size = 0;
 
 uint8_t eeprom[EESIZE];
-// volatile uint16_t g_tmr10ms=0; // TODO remove
-
 
 void eeWriteBlockCmp(const void *i_pointer_ram, void *pointer_eeprom, size_t size)
 {

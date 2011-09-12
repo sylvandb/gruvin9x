@@ -144,7 +144,7 @@ void menuMainView(uint8_t event)
   ///////////////////////////////////////////////////////////////////////
   /// Upper Section of Display common to all but telemetry alt. views ///
   if (view == e_telemetry && ((g_eeGeneral.view & 0xf0) >= ALTERNATE)) { // If view is a telemetry ALTERNATE view
-    lcd_putsnAtt(0, 0, g_model.name, sizeof(g_model.name), ZCHAR);
+    putsModelName(0, 0, g_model.name, g_eeGeneral.currModel, 0);
     uint8_t att = (g_vbat100mV < g_eeGeneral.vBatWarn ? BLINK : 0);
     // 212.75us (speed=0) vs 258.75us (speed=2)
     putsVBat(14*FW,0,att);
@@ -164,7 +164,7 @@ void menuMainView(uint8_t event)
     lcd_putsnAtt(6*FW+4, 2*FH, g_model.phaseData[phase].name, sizeof(g_model.phaseData[phase].name), ZCHAR);
 
     uint8_t att = (g_vbat100mV < g_eeGeneral.vBatWarn ? BLINK : 0) | DBLSIZE;
-    lcd_putsnAtt(2*FW-2, 0*FH, g_model.name, sizeof(g_model.name), ZCHAR|DBLSIZE);
+    putsModelName(2*FW-2, 0*FH, g_model.name, g_eeGeneral.currModel, DBLSIZE);
     putsVBat(6*FW+3, 2*FH, att|NO_UNIT);
     lcd_putc(6*FW+4, 3*FH, 'V');
 

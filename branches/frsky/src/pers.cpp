@@ -222,25 +222,19 @@ bool eeLoadGeneral()
 void modelDefault(uint8_t id)
 {
   memset(&g_model, 0, sizeof(g_model));
-  memcpy(g_model.name, "\x0d\x0f\x04\x05\x0c\0\0\0\0\0"/*MODEL     */, 10);
-  g_model.name[5]=27/*0 char*/+(id+1)/10;
-  g_model.name[6]=27/*0 char*/+(id+1)%10;
   applyTemplate(0); //default 4 channel template
 }
 
-void eeLoadModelName(uint8_t id,char*buf,uint8_t len)
+uint16_t eeLoadModelName(uint8_t id, char *name)
 {
-  if(id<MAX_MODELS)
-  {
+  memset(name, 0, sizeof(g_model.name));
+  if (id<MAX_MODELS) {
     theFile.openRlc(FILE_MODEL(id));
-    memset(buf, 0, len);
-    if (theFile.readRlc((uint8_t*)buf, sizeof(g_model.name)) == sizeof(g_model.name) )
-    {
-      uint16_t sz=theFile.size();
-      buf+=len;
-      while(sz){ --buf; *buf=27/*0 char*/+sz%10; sz/=10;}
+    if (theFile.readRlc((uint8_t*)name, sizeof(g_model.name)) == sizeof(g_model.name)) {
+      return theFile.size();
     }
   }
+  return 0;
 }
 
 bool eeModelExists(uint8_t id)
@@ -293,7 +287,6 @@ bool eeDuplicateModel(uint8_t id)
     theFile.write(buf, len);
     wdt_reset(); // TODO I don't know what it is
     if (errno() != 0) {
-      EFile::rm(FILE_MODEL(i)); // TODO need to test this code, it's new
       return false;
     }
   }
@@ -353,7 +346,7 @@ void eeCheck(bool immediately)
 {
 #ifdef ASYNC_WRITE
   if (immediately) {
-    while (eeprom_buffer_size > 0);
+    theFile.flush();
   }
   if (s_eeDirtyMsk & EE_GENERAL) {
     s_eeDirtyMsk -= EE_GENERAL;
@@ -385,7 +378,7 @@ void eeCheck(bool immediately)
     }
     //first finish GENERAL, then MODEL !!avoid Toggle effect
   }
-  else if(msk & EE_MODEL){ // TODO we should not have set the dirtyMask to 0 just before!
+  if(msk & EE_MODEL){
     if(theFile.writeRlc(FILE_TMP, FILE_TYP_MODEL, (uint8_t*)&g_model,
                         sizeof(g_model),20) == sizeof(g_model))
     {
