@@ -845,6 +845,6 @@ gtest_main.a : gtest-all.o gtest_main.o
 # gtest_main.a, depending on whether it defines its own main()
 # function.
 
-gtests: $(CPPSRC) gtests.cpp simpgmspace.cpp gtest_main.a
+gtests: $(CPPSRC) gtests.cpp simpgmspace.cpp *.h gtest_main.a
 	g++ $(CPPSRC) gtests.cpp simpgmspace.cpp $(CPPFLAGS) -I$(GTEST_DIR) $(ARCH) -o gtests -lpthread -MD -DSIMU gtest_main.a 
 	

@@ -110,14 +110,14 @@ public:
 
   inline uint8_t get()
   {
-    uint8_t data;
+    uint8_t data = 0;
     if (out != in) // if queue not empty
     {
       data = queue[out];
       out++;
       out %= FRSKY_BUFFER_SIZE;
-      return data;
     }
+    return data;
   }
 
   inline uint8_t isFull()
