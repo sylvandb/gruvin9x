@@ -791,9 +791,10 @@ void getADC_filt()
 void getADC_osmp()
 {
   uint16_t temp_ana[8] = {0};
-  for (uint8_t adc_input=0;adc_input<8;adc_input++){
+  for (uint8_t adc_input=0;adc_input<8;adc_input++)
+  {
+    ADMUX=adc_input|ADC_VREF_TYPE;
     for (uint8_t i=0; i<4;i++) {  // Going from 10bits to 11 bits.  Addition = n.  Loop 4^n times
-      ADMUX=adc_input|ADC_VREF_TYPE;
       // Start the AD conversion
       ADCSRA|=0x40;
       // Wait for the AD conversion to complete
@@ -807,7 +808,8 @@ void getADC_osmp()
 
 void getADC_single()
 {
-    for (uint8_t adc_input=0;adc_input<8;adc_input++){
+  for (uint8_t adc_input=0;adc_input<8;adc_input++)
+  {
       ADMUX=adc_input|ADC_VREF_TYPE;
       // Start the AD conversion
       ADCSRA|=0x40;
@@ -831,11 +833,16 @@ void getADC_bandgap()
                  // See http://www.avrfreaks.net/index.php?name=PNphpBB2&file=viewtopic&p=847208#847208
   // In the end, simply using a longer delay (presumably to account for the higher
   // impedance Vbg internal source) solved the problem. NOTE: Does NOT adversely affect PPM_out latency.
+#if defined (PCBV4)
+  ADCSRB &= ~(1<<MUX5);
+#endif
   ADMUX=0x1E|ADC_VREF_TYPE; // Switch MUX to internal 1.1V reference
   _delay_us(300); // this somewhat costly delay is the only remedy for stable results on the Atmega2560/1 chips
   ADCSRA|=0x40; while ((ADCSRA & 0x10)==0); ADCSRA|=0x10; // again becasue first one is usually inaccurate
   BandGap=ADCW;
-
+#if defined (PCBV4)
+  ADCSRB |= (1<<MUX5);
+#endif
 #endif
 }
 
@@ -2032,19 +2039,19 @@ void setStickCenter() // copy state of 3 primary to subtrim
 #ifndef SIMU
 int main(void)
 {
-  // Set up I/O port data diretions and initial states
-
-  DDRA = 0xff;  PORTA = 0x00;
+  // Set up I/O port data directions and initial states
+  DDRA = 0xff;  PORTA = 0x00; // LCD data
 
 #if defined (PCBV4)
   DDRB = 0b10010111;  PORTB = 0b01101000; // 7:SPKR, 6:IDL2_S|PPM,  5:TrainSW,  SDCARD[4:CS 3:MISO 2:MOSI 1:SCK], 0:PPM_OUT|IDL2_SW
   DDRC = 0x3f;  PORTC = 0xc0; // 7:AilDR, 6:EleDR, LCD[5,4,3,2,1[, 0:BackLight
   DDRD = 0x01;  PORTD = 0xfe; // 7/6:Spare3/4, 5:RENC2_PUSH, 4:RENC1_PUSH, 3:RENC2_B, 2:RENC2_A, 1:I2C_SDA, 0:I2C_SCL
   DDRE = 0b00001010;  PORTE = 0b11110101; // 7:PPM_IN, 6: RENC1_B, 5:RENC1_A, 4:USB_DNEG, 3:BUZZER, 2:USB_DPOS, 1:TELEM_TX, 0:TELEM_RX
-  DDRF = 0x0F;  PORTF = 0xff; // 7-4:JTAG, 3:ADC_REF_1.2V input, 2-0:ADC_SPARE_2-0
+  DDRF = 0x00;  PORTF = 0x00; // 7-4:JTAG, 3:ADC_REF_1.2V input, 2-0:ADC_SPARE_2-0
   DDRG = 0b00010000;  PORTG = 0xff; // 7-6:N/A, 5:GearSW, 4: Sim_Ctrl[out], 3:IDL1_Sw, 2:TCut_Sw, 1:RF_Power[in], 0: RudDr_Sw 
   DDRH = 0x00;  PORTH = 0xff; // 7:0 Spare port -- all inputer for now [Bit 2:VIB_OPTION -- setting to input for now]
   DDRJ = 0x00;  PORTJ = 0xff; // 7-0:Trim switch inputs
+  DDRK = 0x00;  PORTK = 0x00; // anain. No pull-ups!
   DDRL = 0x00;  PORTL = 0xff; // 7-6:Spare6/5 (inputs), 5-0: User Button inputs
 #else
 #  if defined (PCBV3)
@@ -2065,6 +2072,9 @@ int main(void)
 
   ADMUX=ADC_VREF_TYPE;
   ADCSRA=0x85; // ADC enabled, pre-scaler division=32 (no interrupt, no auto-triggering)
+#if defined (PCBV4)
+  ADCSRB=(1<<MUX5);
+#endif
 
   /**** Set up timer/counter 0 ****/
 #if defined (PCBV3)
