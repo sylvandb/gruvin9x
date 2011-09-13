@@ -5,36 +5,11 @@
 Add your content here.
 
 
-= Coming Soon =
+= Coming Soon (maybe) =
 
-== In the meantime ... ==
+We're working hard to make the v4 board available in completed form. Time and especially budgets are against us. Please be patient or, better still, go win a lottery near you and then come sponsor our efforts. :-)
 
-=== Copy of email recently sent to the gruvin9x-discuss group ===
-2011-07-05 05:38 UTC
-
-Hi all.
-
-*PCB short-run in production order is underway*
-
-All going well, it looks like we should be able to supply the first 6 or so V3 PC boards for about US$9 a piece, plus postage -- within about 4 weeks.  But I'm going to wait until I have built and tested a complete V3 board before taking any actual orders.
-
-I'm only currently aware of about five (5) people who definitely want the board. Since I'll have enough to supply those, we'll probably decide to make it first in first serve. PLEASE DO NOT EMAIL ME ME WITH AN ORDER. I'll put a site together with a proper ordering form some time over the next weeks and let you know when it's ready. Then, we can begin to gauge genuine interest and take it from there.
-
-The V4 board will probably not be far behind -- possibly just days. Whilst both Cam (its designer) and I would very much like to see the V4 board as, "the board to have straight away" -- truthfully, it's too early to tell, just yet. There's code to be written to support it and potential deign flaws to get past first -- though we do not expect that to take long. Some people will want wait for the V4 board. That's fine. Others will jump right in with the V3 design and start enjoying its convenience and extra features.It's going to be your call. (There's also a remote chance that I have made some serious error on the V3 production board. Hence the very small first run.)
-
-*Kit of Components*
-
-A full kit of parts from Digikey.com is about USD$52 plus shipping, including the SD card components. The SD card PC board will be about $3.  We should be able to provide a Digikey part number for the entire kit. Shipping from Digikey is on the order of US$20 (to New Zealand).
-
-Some people -- perhaps especially in Europe/UK -- will have cheaper shipping access to Farnell. Cam has worked hard on a bill of materials spreadsheet with Farnell part numbers for the V4 board. I will be using that as a basis to update the V3 BOM, likewise. Watch the project site wiki page Kit Availably.
-
-*Carrying Stock* (not)
-
-At this stage we have no concrete plans of stocking large numbers of boards or components for direct sale. There's simply insufficient proof of demand to go investing in stock at this time. (And the V4 board may change demand for V3 quite soon, depending on the success of the prototyping phase.)
 
 *IMPORTANT DISCLAIMER NOTICE*
 
-Whatever happens, please be aware that this is a tiny group of hobbyists sharing their work. We are NOT a business group developing a product for mass production, with advertising budgets or formal after sales support or anything of that nature. Anything you buy from us directly or though advice you believe to have received from us is done so strictly at your own risk with no warranties expressed or implied. We accept absolutely no financial responsibility what-so-ever. That said, we will of course do whatever we reasonably can to help solve any issues you may encounter.
-
-Bryan
-aka Gruvin
+Whatever happens, please be aware that this is a tiny group of hobbyists sharing their work for free. We are NOT a business group developing a product for mass production, with advertising budgets or formal after-sales support or anything of that nature. Anything you may buy from us is purchased strictly at your own risk with no warranties expressed or implied -- unless otherwise stated at the time of sale. We simply cannot accept any financial responsibility what-so-ever. However, with the best of intentions in mind, we do pledge to do whatever we reasonably can at any given time to help solve any issues you may encounter, all at our sole discretion of course.
