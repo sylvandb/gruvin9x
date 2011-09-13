@@ -113,7 +113,7 @@ void menuProcModelSelect(uint8_t event)
         killEvents(event);
         eeLoadModel(g_eeGeneral.currModel = m_posVert);
         STORE_GENERALVARS;
-        // STORE_MODELVARS; // TODO why?
+        break;
       }
       //fallthrough
     case  EVT_KEY_FIRST(KEY_LEFT):
