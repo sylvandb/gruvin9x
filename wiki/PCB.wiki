@@ -34,8 +34,6 @@ Thanks to the enthusiastic support of several people over the months, there have
 
 The custom board design is licensed under the [http://www.tapr.org/TAPR_Open_Hardware_License_v1.0.txt TAPR Open Hardware License v1.0]. The license is very similar to the GPL of this project's related firmware source code, but includes additional protection against what your author terms, 'hostile patent acts'. In other words, like the GPL license for software source code, the TAPR Open Hardware License seeks to ensure that the openness of the design will endure. The license is NOT a non-commercial license. This design _is_ able to be used by licensees for commercial purposes, under the terms of the [http://www.tapr.org/TAPR_Open_Hardware_License_v1.0.txt OHL License].
 
-*The following paragraphs are a bit of a shambles, especially since so much has changed since it was all first written. You may have to read through it all and figure out by the end what parts still apply and which do not.*
-
 == Where it Started ==
 
 As a starting point -- and in fact initially only as a test case to help learn to use the CAD software -- a PCB design was worked up from scratch in [http://kicad.sourceforge.net/ KiCAD] (itself also open source) to closely replicate the wiring and functions of Turnigy V2 '9X logic board. See [http://code.google.com/p/gruvin9x/source/browse/#svn/trunk/pcb/original /trunk/pcb/original/] (as of r155). From there, things just kept growing, with numerous changes and additions being made, until eventually an actual new board ended up being produced.
