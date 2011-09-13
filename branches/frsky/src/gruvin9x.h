@@ -173,7 +173,7 @@ extern uint16_t DEBUG2;
 #  define INP_C_ElevDR   6
 #  define OUT_C_LIGHT    0
 
-#    define INP_B_Speaker 7
+#    define OUT_B_Speaker 7
 #    define INP_B_Trainer 5
 
 //vinceofdrink@gmail hardwared ppm

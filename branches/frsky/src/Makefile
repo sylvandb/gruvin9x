@@ -171,6 +171,7 @@ ifeq ($(PCB), STD)
 
   CPPDEFS += -DPCBSTD
 # If Hardware PPM mode ( PB0<->BP7) switch the Backlight output with the original PPM to use hardware facility to generate precise PPM (hardware mods)
+# G: TODO This prevents HARDPPM being used with FRSKY. HARDPPM needs its own option XXX
   ifeq ($(EXT), HARDPPM)
    CPPDEFS += -DPPMPB7_HARDWARE
   endif
