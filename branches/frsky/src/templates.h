@@ -90,6 +90,12 @@ void clearMixes();
 void clearCurves();
 void applyTemplate(uint8_t idx);
 
+#ifdef TEMPLATES
+inline void applyDefaultTemplate()
+{
+  applyTemplate(0);
+}
+#endif
 
 #endif //TEMPLATES_H
 

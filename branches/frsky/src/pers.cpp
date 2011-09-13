@@ -219,10 +219,24 @@ bool eeLoadGeneral()
   return false;
 }
 
+#ifndef TEMPLATES
+inline void applyDefaultTemplate()
+{
+  for (int i=0; i<NUM_STICKS; i++) {
+    MixData *md = mixaddress(i);
+    md->destCh = i+1;
+    md->weight = 100;
+    md->srcRaw = i+1;
+  }
+
+  STORE_MODELVARS;
+}
+#endif
+
 void modelDefault(uint8_t id)
 {
   memset(&g_model, 0, sizeof(g_model));
-  applyTemplate(0); //default 4 channel template
+  applyDefaultTemplate();
 }
 
 uint16_t eeLoadModelName(uint8_t id, char *name)

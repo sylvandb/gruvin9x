@@ -94,7 +94,7 @@ TARGET = gruvin9x
 OBJDIR = obj
 
 # List C++ source files here. (C dependencies are automatically generated.)
-CPPSRC = gruvin9x.cpp stamp.cpp menus.cpp model_menus.cpp general_menus.cpp main_views.cpp statistics_views.cpp pers.cpp file.cpp lcd.cpp drivers.cpp templates.cpp 
+CPPSRC = gruvin9x.cpp stamp.cpp menus.cpp model_menus.cpp general_menus.cpp main_views.cpp statistics_views.cpp pers.cpp file.cpp lcd.cpp drivers.cpp 
 
 ifeq ($(EXT), JETI)
  CPPSRC += jeti.cpp
@@ -233,6 +233,7 @@ endif
 
 ifeq ($(TEMPLATES), YES)
  CPPDEFS += -DTEMPLATES
+ CPPSRC += templates.cpp
 endif
 
 
