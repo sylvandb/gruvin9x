@@ -31,7 +31,7 @@
 #define FWDP        2 /* DP=decimal point */
 #define FH          8
 
-#define OUTDEZ_SPEED 0
+#define OUTDEZ_SPEED 2
 
 /* lcd common flags */
 #define BLINK         0x01
