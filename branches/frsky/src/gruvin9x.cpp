@@ -438,7 +438,7 @@ bool getSwitch(int8_t swtch, bool nc, uint8_t level)
 //#define CS_EGREATER  12
 //#define CS_ELESS     13
 
-#if defined (PCBV3)
+#if defined (PCBV3) && !defined (PCBV4)
 // The ugly scanned keys thing should be gone for PCBV4+. In the meantime ...
 uint8_t keyDown()
 {
@@ -455,7 +455,11 @@ uint8_t keyDown()
 #else
 inline uint8_t keyDown()
 {
+#if defined (PCBV4)
+  return (~PINL) & 0x3F;
+#else
   return (~PINB) & 0x7E;
+#endif
 }
 #endif
 
@@ -2031,18 +2035,31 @@ int main(void)
   // Set up I/O port data diretions and initial states
 
   DDRA = 0xff;  PORTA = 0x00;
-#if defined (PCBV3)
+
+#if defined (PCBV4)
+  DDRB = 0b10010111;  PORTB = 0; // 7:SPKR, 6:IDL2_S|PPM,  5:TrainSW,  SDCARD[4:CS 3:MISO 2:MOSI 1:SCK], 0:PPM_OUT|IDL2_SW
+  DDRC = 0x3f;  PORTC = 0xc0; // 7:AilDR, 6:EleDR, LCD[5,4,3,2,1[, 0:BackLight
+  DDRD = 0x01;  PORTD = 0xfe; // 7/6:Spare3/4, 5:RENC2_PUSH, 4:RENC1_PUSH, 3:RENC2_B, 2:RENC2_A, 1:I2C_SDA, 0:I2C_SCL
+  DDRE = 0b00001010;  PORTE = 0b11110101; // 7:PPM_IN, 6: RENC1_B, 5:RENC1_A, 4:USB_DNEG, 3:BUZZER, 2:USB_DPOS, 1:TELEM_TX, 0:TELEM_RX
+  DDRF = 0x0F;  PORTF = 0xff; // 7-4:JTAG, 3:ADC_REF_1.2V input, 2-0:ADC_SPARE_2-0
+  DDRG = 0b00010000;  PORTG = 0xff; // 7-6:N/A, 5:GearSW, 4: Sim_Ctrl[out], 3:IDL1_Sw, 2:TCut_Sw, 1:RF_Power[in], 0: RudDr_Sw 
+  DDRH = 0x00;  PORTH = 0xff; // 7:0 Spare port -- all inputer for now [Bit 2:VIB_OPTION -- setting to input for now]
+  DDRJ = 0x00;  PORTJ = 0xff; // 7-0:Trim switch inputs
+  DDRL = 0x00;  PORTL = 0xff; // 7-6:Spare6/5 (inputs), 5-0: User Button inputs
+#else
+#  if defined (PCBV3)
   DDRB = 0x97;  PORTB = 0x1e; // 7:AUDIO, SD_CARD[6:SDA 5:SCL 4:CS 3:MISO 2:MOSI 1:SCK], 0:PPM_OUT
   DDRC = 0x3f;  PORTC = 0xc0; // PC0 used for LCD back light control
   DDRD = 0x0F;  PORTD = 0xff; // 7:4=inputs (keys/trims, pull-ups on), 3:0=outputs (keyscan row select)
-#else
+#  else
   DDRB = 0x81;  PORTB = 0x7e; //pullups keys+nc
   DDRC = 0x3e;  PORTC = 0xc1; //pullups nc
   DDRD = 0x00;  PORTD = 0xff; //pullups keys
-#endif
+#  endif
   DDRE = (1<<OUT_E_BUZZER);  PORTE = 0xff-(1<<OUT_E_BUZZER); //pullups + buzzer 0
   DDRF = 0x00;  PORTF = 0x00; //anain
   DDRG = 0x10;  PORTG = 0xff; //pullups + SIM_CTL=1 = phonejack = ppm_in
+#endif
 
   lcd_init();
 

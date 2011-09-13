@@ -29,7 +29,8 @@
 
 #gruvin: PCB version -- OVERRIDES the following settings if not STD
 # Values: STD, V3, V4
-PCB = V3
+PCB = V4
+#NOTE!: V4 adds to V3, such that both PCBV3 and PCBV4 get defined
 
 # Following options for PCB=STD only (ignored otherwise) ...
 
@@ -210,7 +211,7 @@ else
     CPPDEFS += -DPCBV3 -DFRSKY -DBEEPSPKR
   endif
   ifeq ($(PCB), V4)
-    CPPDEFS += -DPCBV4 -DFRSKY -DBEEPSPKR
+    CPPDEFS += -DPCBV3 -DPCBV4 -DFRSKY -DBEEPSPKR
   endif
 endif
 

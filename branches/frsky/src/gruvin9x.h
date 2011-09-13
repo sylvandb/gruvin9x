@@ -116,16 +116,12 @@ extern RlcFile theFile;  //used for any file operation
 //                            SIM_CTL  ID1      NC      RF_POW RuddDR
 
 #define PORTA_LCD_DAT  PORTA
-
-#if defined (PCBV3)
-#  define OUT_C_LIGHT   0
-#else
-#  ifndef DPPMPB7_HARDWARE
-#    define OUT_B_LIGHT   7
-#  else
-#    define OUT_B_LIGHT   0
-#  endif
-#endif
+#define PORTC_LCD_CTRL PORTC
+#define OUT_C_LCD_E     5
+#define OUT_C_LCD_RnW   4
+#define OUT_C_LCD_A0    3
+#define OUT_C_LCD_RES   2
+#define OUT_C_LCD_CS1   1
 
 extern uint16_t DEBUG1;
 extern uint16_t DEBUG2;
@@ -148,42 +144,6 @@ extern uint16_t DEBUG2;
 #  define INP_J_TRM_RH_DWN  6
 #  define INP_J_TRM_RH_UP   7
 
-#else
-
-// boards prior to v4 ...
-#  define INP_B_KEY_LFT 6
-#  define INP_B_KEY_RGT 5
-#  define INP_B_KEY_UP  4
-#  define INP_B_KEY_DWN 3
-#  define INP_B_KEY_EXT 2
-#  define INP_B_KEY_MEN 1
-//vinceofdrink@gmail harwared ppm
-//Orginal bitbang port for PPM
-#  ifndef DPPMPB7_HARDWARE
-#    define OUT_B_PPM 0
-#  else
-#    define	OUT_B_PPM 7 // will not be used
-#  endif
-
-#  define INP_D_TRM_LH_UP   7
-#  define INP_D_TRM_LH_DWN  6
-#  define INP_D_TRM_RV_DWN  5
-#  define INP_D_TRM_RV_UP   4
-#  define INP_D_TRM_LV_DWN  3
-#  define INP_D_TRM_LV_UP   2
-#  define INP_D_TRM_RH_DWN  1
-#  define INP_D_TRM_RH_UP   0
-
-#endif
-
-#define PORTC_LCD_CTRL PORTC
-#define OUT_C_LCD_E     5
-#define OUT_C_LCD_RnW   4
-#define OUT_C_LCD_A0    3
-#define OUT_C_LCD_RES   2
-#define OUT_C_LCD_CS1   1
-
-#if defined (PCBV4)
 #  define INP_E_PPM_IN      7
 #  define INP_E_ROT_ENC_1_B 6
 #  define INP_E_ROT_ENC_1_A 5
@@ -211,12 +171,58 @@ extern uint16_t DEBUG2;
 
 #  define INP_C_AileDR   7
 #  define INP_C_ElevDR   6
+#  define OUT_C_LIGHT    0
 
-#  define INP_B_Speaker  7
-#  define INP_B_ID2      6
-#  define INP_B_Trainer  5
+#    define INP_B_Speaker 7
+#    define INP_B_Trainer 5
 
-#else // not defined (PCBV4)
+//vinceofdrink@gmail hardwared ppm
+//Orginal bitbang port for PPM
+//G: The v4.1 board will have H/W PPM as standard. All v4.0 beta boards must be hacked likewise, but not yet.
+#  ifndef DPPMPB7_HARDWARE
+#    define INP_B_ID2     6
+#    define OUT_B_PPM     0
+#  else
+#    define OUT_B_PPM     6 // will be switched via internal MCU Timer/PWM hardware
+#    define INP_B_ID2     0
+#  endif
+
+
+#else // boards prior to v4 ...
+
+
+#  define INP_B_KEY_LFT 6
+#  define INP_B_KEY_RGT 5
+#  define INP_B_KEY_UP  4
+#  define INP_B_KEY_DWN 3
+#  define INP_B_KEY_EXT 2
+#  define INP_B_KEY_MEN 1
+//vinceofdrink@gmail harwared ppm
+//Orginal bitbang port for PPM
+#  ifndef DPPMPB7_HARDWARE
+#    define OUT_B_PPM 0
+#  else
+#    define	OUT_B_PPM 7 // will not be used
+#  endif
+
+#  define INP_D_TRM_LH_UP   7
+#  define INP_D_TRM_LH_DWN  6
+#  define INP_D_TRM_RV_DWN  5
+#  define INP_D_TRM_RV_UP   4
+#  define INP_D_TRM_LV_DWN  3
+#  define INP_D_TRM_LV_UP   2
+#  define INP_D_TRM_RH_DWN  1
+#  define INP_D_TRM_RH_UP   0
+
+#  if defined (PCBV3)
+#    define OUT_C_LIGHT   0
+#  else
+#    ifndef DPPMPB7_HARDWARE
+#      define OUT_B_LIGHT   7
+#    else
+#      define OUT_B_LIGHT   0
+#    endif
+#  endif
 
 #  define INP_E_PPM_IN  7
 #  define INP_E_ID2     6
