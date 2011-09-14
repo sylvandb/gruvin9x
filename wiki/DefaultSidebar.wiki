@@ -10,6 +10,7 @@
   * [MakeOptions Make Options]
  * [PCB Custom PCB]
   * [Circuitry Custom Schematics]
+  * [PcbAssembly Build Your Own Board]
   * [TurnigyV2 9X Reference Data]
    * [ReferenceImages Reference Images]
    * [SchematicV2 V2 Circuit Schematic]
