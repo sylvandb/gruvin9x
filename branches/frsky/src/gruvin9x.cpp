@@ -1665,7 +1665,7 @@ ISR(TIMER1_COMPA_vect) //2MHz pulse generation
 
 //vinceofdrink@gmail harwared ppm
 //Orginal bitbang for PPM
-#ifndef DPPMPB7_HARDWARE
+#if !defined (DPPMPB7_HARDWARE) && !defined (PCBV4)
   if(pulsePol)
   {
     PORTB |=  (1<<OUT_B_PPM); // GCC optimisation should result in a single SBI instruction
@@ -1677,12 +1677,19 @@ ISR(TIMER1_COMPA_vect) //2MHz pulse generation
   g_tmr1Latency_max = max(dt,g_tmr1Latency_max);    // max has leap, therefore vary in length
   g_tmr1Latency_min = min(dt,g_tmr1Latency_min);    // min has leap, therefore vary in length
 #endif
-  OCR1A  = *pulsePtr++;
+  OCR1A=*pulsePtr; // Schedule next interrupt vector (to this handler)
 
+#if defined (PCBV4)
+  OCR1B=*pulsePtr; // G: Using timer in CTC mode, restricted to OCR1A. So I think we have to do it this way.
+#else
 //vinceofdrink@gmail harwared ppm
-#if defined (DPPMPB7_HARDWARE)
-OCR1C=OCR1A;		//just copy the value of the OCR1A to OCR1C to test PPM out without to much change in the code not optimum but will not alter ppm precision
+#  if defined (DPPMPB7_HARDWARE)
+  OCR1C=*pulsePtr;  // just copy the value of the OCR1A to OCR1C to test PPM out without too 
+                    // much change in the code not optimum but will not alter ppm precision
+#  endif
 #endif
+
+  *pulsePtr++;
 
   if( *pulsePtr == 0) {
     //currpulse=0;
@@ -2043,7 +2050,7 @@ int main(void)
   DDRA = 0xff;  PORTA = 0x00; // LCD data
 
 #if defined (PCBV4)
-  DDRB = 0b10010111;  PORTB = 0b01101000; // 7:SPKR, 6:IDL2_S|PPM,  5:TrainSW,  SDCARD[4:CS 3:MISO 2:MOSI 1:SCK], 0:PPM_OUT|IDL2_SW
+  DDRB = 0b11010110;  PORTB = 0b00101001; // 7:SPKR, 6:PPM_OUT,  5:TrainSW,  SDCARD[4:CS 3:MISO 2:MOSI 1:SCK], 0:IDL2_SW
   DDRC = 0x3f;  PORTC = 0xc0; // 7:AilDR, 6:EleDR, LCD[5,4,3,2,1[, 0:BackLight
   DDRD = 0x01;  PORTD = 0xfe; // 7/6:Spare3/4, 5:RENC2_PUSH, 4:RENC1_PUSH, 3:RENC2_B, 2:RENC2_A, 1:I2C_SDA, 0:I2C_SCL
   DDRE = 0b00001010;  PORTE = 0b11110101; // 7:PPM_IN, 6: RENC1_B, 5:RENC1_A, 4:USB_DNEG, 3:BUZZER, 2:USB_DPOS, 1:TELEM_TX, 0:TELEM_RX
@@ -2119,7 +2126,7 @@ int main(void)
   // not here ... TIMSK1 |= (1<<OCIE1A); ... enable immediately before mainloop
 
   // TCNT3 (2MHz) used for PPM_IN pulse width capture
-#if defined (PPMIN_MOD1) || defined (PCBV3)
+#if defined (PPMIN_MOD1) || defined (PCBV3) // XXX Is this still true with the V4 PCB's PPM circuitry?
   // Noise Canceller enabled, pos. edge, clock at 16MHz / 8 (2MHz)
   TCCR3B  = (1<<ICNC3) | (1<<ICES3) | (0b010 << CS30);
 #else
@@ -2128,7 +2135,7 @@ int main(void)
 #endif
 
 #if defined (PCBV3)
-  TIMSK3 |= (1<<ICIE3);         // Enable capture event interrupt
+  TIMSK3 |= (1<<ICIE3);         // Enable Timer 3 (PPM_IN) capture event interrupt
 #else
   ETIMSK |= (1<<TICIE3);
 #endif
@@ -2142,6 +2149,10 @@ int main(void)
 
 #if defined (FRSKY)
   FRSKY_Init();
+#endif
+
+#ifdef JETI
+  JETI_Init();
 #endif
 
   eeReadAll();
@@ -2160,10 +2171,14 @@ int main(void)
 
   clearKeyEvents(); //make sure no keys are down before proceeding
 
-  //addon Vinceofdrink@gmail (hardware ppm)
-  #if defined (DPPMPB7_HARDWARE)
-    TCCR1A |=(1<<COM1C0); // (COM1C1=0 and COM1C0=1 in TCCR1A)  toogle the state of PB7  on each TCNT1=OCR1C
-  #endif
+#if defined (PCBV4)
+    TCCR1A |=(1<<COM1B0); // (COM1B1=0 and COM1B0=1 in TCCR1A)  toogle the state of PB6(OC1B) on each TCNT1=OCR1B
+#else
+//addon Vinceofdrink@gmail (hardware ppm)
+#  if defined (DPPMPB7_HARDWARE)
+    TCCR1A |=(1<<COM1C0); // (COM1C1=0 and COM1C0=1 in TCCR1A)  toogle the state of PB7(OC1C) on each TCNT1=OCR1C
+#  endif
+#endif
 
   setupPulses();
 
@@ -2175,18 +2190,6 @@ int main(void)
   g_LightOffCounter = g_eeGeneral.lightAutoOff*500; //turn on light for x seconds - no need to press key Issue 152
 
   if(cModel!=g_eeGeneral.currModel) eeDirty(EE_GENERAL); // if model was quick-selected, make sure it sticks
-
-
-
-#if defined (PCBV3)
-  TIMSK1 |= (1<<OCIE1A); // Pulse generator enable immediately before mainloop
-#else
-  TIMSK |= (1<<OCIE1A); // Pulse generator enable immediately before mainloop
-#endif
-
-#ifdef JETI
-  JETI_Init();
-#endif
 
 #if defined (PCBV3)
 // Initialise global unix timestamp with current time from RTC chip on SD card interface
@@ -2201,6 +2204,12 @@ int main(void)
   utm.tm_sec =  rtc.sec;
   utm.tm_wday = rtc.wday - 1;
   g_unixTime = mktime(&utm);
+#endif
+
+#if defined (PCBV3)
+  TIMSK1 |= (1<<OCIE1A); // Pulse generator enable immediately before mainloop
+#else
+  TIMSK |= (1<<OCIE1A); // Pulse generator enable immediately before mainloop
 #endif
 
   while(1){
