@@ -1,6 +1,6 @@
 #summary Building Your Own gruvin9x PC Board
 
-= Introduction =
+= Building Your Own G9X PC Board =
 
 With more people beginning to show an interest in assembling (soldering) their own PC boards, I thought I'd start a wiki page on the topic.
 
