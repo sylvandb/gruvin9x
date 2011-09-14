@@ -327,13 +327,13 @@ void setupPulses()
 #if defined (PCBV4)
   // (Re)set PPM_OUT pin polarity if required by forcing an output compare
   if(PINB&(1<<OUT_B_PPM) && g_model.pulsePol)
-       TCCR1C |=(1<<FOC1B);
+       TCCR1C=(1<<FOC1B); // TCCRnC always reads as zero. No need to read-modify-write (|=)
 #else
 #  if defined (DPPMPB7_HARDWARE)
   //Don't know if its usefull for the other encoding type or if they have polarity option cannot test those
   //Force an ouput compare to match the ppm polarity
   if(PINB&(1<<7) && g_model.pulsePol)
-       TCCR1C |=(1<<FOC1C);
+       TCCR1C=(1<<FOC1C);
 #  endif
 #endif
 }

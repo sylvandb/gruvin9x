@@ -1677,21 +1677,23 @@ ISR(TIMER1_COMPA_vect) //2MHz pulse generation
   g_tmr1Latency_max = max(dt,g_tmr1Latency_max);    // max has leap, therefore vary in length
   g_tmr1Latency_min = min(dt,g_tmr1Latency_min);    // min has leap, therefore vary in length
 #endif
-  OCR1A=*pulsePtr; // Schedule next interrupt vector (to this handler)
+  OCR1A = *pulsePtr; // Schedule next interrupt vector (to this handler)
 
 #if defined (PCBV4)
-  OCR1B=*pulsePtr; // G: Using timer in CTC mode, restricted to OCR1A. So I think we have to do it this way.
+  OCR1B = *pulsePtr; /* G: Using timer in CTC mode, restricted to using OCR1A for interrupt triggering.  
+                        So we actually have to handle the OCR1B register separately in this way. */
 #else
 //vinceofdrink@gmail harwared ppm
 #  if defined (DPPMPB7_HARDWARE)
-  OCR1C=*pulsePtr;  // just copy the value of the OCR1A to OCR1C to test PPM out without too 
-                    // much change in the code not optimum but will not alter ppm precision
+  OCR1C = *pulsePtr;  // just copy the value of the OCR1A to OCR1C to test PPM out without too 
+                      // much change in the code not optimum but will not alter ppm precision
 #  endif
 #endif
 
   *pulsePtr++;
 
-  if( *pulsePtr == 0) {
+  if( *pulsePtr == 0)
+  {
     //currpulse=0;
     pulsePtr = pulses2MHz;
     pulsePol = g_model.pulsePol;//0;
@@ -2171,17 +2173,6 @@ int main(void)
 
   clearKeyEvents(); //make sure no keys are down before proceeding
 
-#if defined (PCBV4)
-    TCCR1A |=(1<<COM1B0); // (COM1B1=0 and COM1B0=1 in TCCR1A)  toogle the state of PB6(OC1B) on each TCNT1=OCR1B
-#else
-//addon Vinceofdrink@gmail (hardware ppm)
-#  if defined (DPPMPB7_HARDWARE)
-    TCCR1A |=(1<<COM1C0); // (COM1C1=0 and COM1C0=1 in TCCR1A)  toogle the state of PB7(OC1C) on each TCNT1=OCR1C
-#  endif
-#endif
-
-  setupPulses();
-
   wdt_enable(WDTO_500MS);
 
   perOut(g_chans512, 0);
@@ -2206,11 +2197,31 @@ int main(void)
   g_unixTime = mktime(&utm);
 #endif
 
+/***********************************************************/
+/*** Keep this code block directly before the main loop ****/
+  
+  setupPulses();
+
+#if defined (PCBV4)
+    OCR1B = 0xffff; /* Prevent any PPM_PUT pin toggle before the TCNT1 interrupt 
+                       fires for the first time and sets up the pulse period. */
+    TCCR1A |= (1<<COM1B0); // (COM1B1=0 and COM1B0=1 in TCCR1A)  toogle the state of PB6(OC1B) on each TCNT1==OCR1B
+#else
+//addon Vinceofdrink@gmail (hardware ppm)
+#  if defined (DPPMPB7_HARDWARE)
+    OCR1C = 0xffff; // See comment for PCBV4, above
+    TCCR1A |= (1<<COM1C0); // (COM1C1=0 and COM1C0=1 in TCCR1A)  toogle the state of PB7(OC1C) on each TCNT1==OCR1C
+#  endif
+#endif
+
 #if defined (PCBV3)
   TIMSK1 |= (1<<OCIE1A); // Pulse generator enable immediately before mainloop
 #else
   TIMSK |= (1<<OCIE1A); // Pulse generator enable immediately before mainloop
 #endif
+
+/*** Keep this code block directly before the main loop ****/
+/***********************************************************/
 
   while(1){
     uint16_t t0 = getTmr16KHz();

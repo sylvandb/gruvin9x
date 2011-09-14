@@ -176,7 +176,7 @@ extern uint16_t DEBUG2;
 #  define OUT_C_LIGHT    0
 
 #  define OUT_B_Speaker  7
-#  define OUT_B_PPM      6 // will be switched via internal MCU Timer/PWM hardware
+#  define OUT_B_PPM      6 // will be switched by TCNT1==OCR1B in hardware
 #  define INP_B_Trainer  5
 #  define INP_B_ID2      0
 
