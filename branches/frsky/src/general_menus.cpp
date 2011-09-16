@@ -346,7 +346,7 @@ void menuProcTime(uint8_t event)
 
 void menuProcTrainer(uint8_t event)
 {
-  MENU("TRAINER", menuTabDiag, e_Trainer, 7, {0, 3, 3, 3, 3/*, 0, 0*/});
+  MENU("TRAINER", menuTabDiag, e_Trainer, 7, {0, 2, 2, 2, 2/*, 0, 0*/});
 
   int8_t  sub    = m_posVert;
   uint8_t subSub = m_posHorz;
@@ -359,7 +359,7 @@ void menuProcTrainer(uint8_t event)
     return;
   }
 
-  lcd_puts_P(3*FW, 1*FH, PSTR("mode   % src  sw"));
+  lcd_puts_P(3*FW, 1*FH, PSTR("mode   % src"));
 
   sub--;
   y = 2*FH;
@@ -378,9 +378,9 @@ void menuProcTrainer(uint8_t event)
       CHECK_INCDEC_GENVAR(event, td->mode, 0, 2);
 
     edit = (sub==i && subSub==1);
-    lcd_outdezAtt(11*FW, y, td->studWeight*13/4, edit ? blink : 0);
+    lcd_outdezAtt(11*FW, y, td->studWeight, edit ? blink : 0);
     if (edit && s_editMode)
-      CHECK_INCDEC_GENVAR(event, td->studWeight, -31, 31);
+      CHECK_INCDEC_GENVAR(event, td->studWeight, -100, 100);
 
     edit = (sub==i && subSub==2);
     lcd_putsnAtt(12*FW, y, PSTR("ch1ch2ch3ch4")+3*td->srcChn, 3, edit ? blink : 0);
@@ -388,9 +388,6 @@ void menuProcTrainer(uint8_t event)
       CHECK_INCDEC_GENVAR(event, td->srcChn, 0, 3);
 
     edit = (sub==i && subSub==3);
-    putsSwitches(16*FW, y, td->swtch, edit ? blink : 0);
-    if (edit && s_editMode)
-      CHECK_INCDEC_GENVAR(event, td->swtch, -MAX_TRNSWITCH, MAX_TRNSWITCH);
 
     y += FH;
   }

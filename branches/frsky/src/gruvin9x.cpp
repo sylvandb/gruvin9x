@@ -1145,16 +1145,14 @@ uint8_t evalSticks()
 
 
     if (i < NUM_STICKS) { //only do this for sticks
-      if (!s_noStickInputs && g_model.traineron) {
+      if (!s_noStickInputs && (isFunctionActive(FUNC_TRAINER) || isFunctionActive(FUNC_TRAINER_RUD+i))) {
         // trainer mode
         TrainerMix* td = &g_eeGeneral.trainer.mix[i];
-        if (td->mode && getSwitch(td->swtch, 1)) {
+        if (td->mode) {
           uint8_t chStud = td->srcChn;
-          int16_t vStud  = (g_ppmIns[chStud]- g_eeGeneral.trainer.calib[chStud]) /* *2 */ ;
-          vStud /= 2 ;      // Only 2, because no *2 above
+          int32_t vStud  = (g_ppmIns[chStud]- g_eeGeneral.trainer.calib[chStud]);
           vStud *= td->studWeight ;
-          vStud /= 31 ;
-          vStud *= 4 ;
+          vStud /= 50;
           switch (td->mode) {
             case 1: v += vStud;   break; // add-mode
             case 2: v  = vStud;   break; // subst-mode
@@ -1180,6 +1178,23 @@ uint8_t evalSticks()
   return anaCenter;
 }
 
+uint16_t active_functions = 0; // current max = 16 functions
+
+void evalFunctions()
+{
+  assert(sizeof(active_functions)*8 >= FUNC_LAST);
+
+  for (uint8_t i=0; i<NUM_FSW; i++) {
+    FuncSwData *sd = &g_model.funcSw[i];
+    if (sd->swtch && sd->func) {
+      uint16_t mask = (1 << (sd->func-1));
+      if (getSwitch(sd->swtch, 0))
+        active_functions |= mask;
+      else
+        active_functions &= (~mask);
+    }
+  }
+}
 
 void perOut(int16_t *chanOut)
 {
@@ -1499,6 +1514,8 @@ void perMain()
       timer2 += 1 ;
     }
   }
+
+  evalFunctions();
   
   if (s_noHi) s_noHi--;
   if (g_eeGeneral.inactivityTimer && g_vbat100mV>49) {

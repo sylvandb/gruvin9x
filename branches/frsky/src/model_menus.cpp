@@ -38,6 +38,7 @@ enum EnumTabModel {
   e_Limits,
   e_CurvesAll,
   e_CustomSwitches,
+  e_FunctionSwitches,
   e_SafetySwitches,
 #ifdef FRSKY
   e_Telemetry,
@@ -58,6 +59,7 @@ void menuProcMixAll(uint8_t event);
 void menuProcLimits(uint8_t event);
 void menuProcCurvesAll(uint8_t event);
 void menuProcCustomSwitches(uint8_t event);
+void menuProcFunctionSwitches(uint8_t event);
 void menuProcSafetySwitches(uint8_t event);
 #ifdef FRSKY
 void menuProcTelemetry(uint8_t event);
@@ -78,6 +80,7 @@ MenuFuncP_PROGMEM APM menuTabModel[] = {
   menuProcLimits,
   menuProcCurvesAll,
   menuProcCustomSwitches,
+  menuProcFunctionSwitches,
   menuProcSafetySwitches,
 #ifdef FRSKY
   menuProcTelemetry,
@@ -283,7 +286,7 @@ void menuProcModel(uint8_t _event)
     chainMenu(menuProcModelSelect);
   }
 
-  MENU("SETUP", menuTabModel, e_Model, 16, {0,sizeof(g_model.name)-1,1,0,0,0,0,0,0,0,0,0,6,2/*,0, 0*/});
+  MENU("SETUP", menuTabModel, e_Model, 15, {0,sizeof(g_model.name)-1,1,0,0,0,0,0,0,0,0,6,2/*,0, 0*/});
 
   uint8_t  sub    = m_posVert;
   uint8_t y = 1*FH;
@@ -383,13 +386,6 @@ void menuProcModel(uint8_t _event)
     if((y+=FH)>7*FH) return;
   }subN++;
   
-  if(s_pgOfs<subN) {
-    lcd_puts_P(    0,    y, PSTR("Trainer"));
-    menu_lcd_onoff( 10*FW, y, g_model.traineron, sub==subN ) ;
-    if(sub==subN) CHECK_INCDEC_MODELVAR(event,g_model.traineron,0,1);
-    if((y+=FH)>7*FH) return;
-  }subN++;
-
   if(s_pgOfs<subN) {
     lcd_puts_P(    0,    y, PSTR("Beep Ctr"));
     for(uint8_t i=0;i<7;i++) lcd_putsnAtt((10+i)*FW, y, PSTR("RETA123")+i,1, ((m_posHorz==i) && (sub==subN)) ? BLINK : ((g_model.beepANACenter & (1<<i)) ? INVERS : 0 ) );
@@ -1570,6 +1566,44 @@ void menuProcCustomSwitches(uint8_t event)
               break;
           }
       }
+  }
+}
+
+void menuProcFunctionSwitches(uint8_t event)
+{
+  MENU("FUNCTION SWITCHES", menuTabModel, e_FunctionSwitches, NUM_FSW+1, {0, 1/*repeated*/});
+
+  uint8_t y = 0;
+  uint8_t k = 0;
+  int8_t  sub    = m_posVert - 1;
+
+  for(uint8_t i=0; i<7; i++) {
+    y=(i+1)*FH;
+    k=i+s_pgOfs;
+    if(k==NUM_CHNOUT) break;
+    FuncSwData *sd = &g_model.funcSw[k];
+    for (uint8_t j=0; j<2; j++) {
+      uint8_t attr = ((sub==k && m_posHorz==j) ? (s_editMode ? BLINK : INVERS) : 0);
+      switch (j) {
+        case 0:
+          putsSwitches(1*FW, y, sd->swtch, attr);
+          if (attr && (s_editMode || p1valdiff)) {
+            CHECK_INCDEC_MODELVAR( event, sd->swtch, -MAX_SWITCH, MAX_SWITCH);
+          }
+          break;
+        case 1:
+          if (sd->swtch) {
+            lcd_putsnAtt(5*FW, y, PSTR(FSWITCH_STR)+FSW_LEN_FUNC*sd->func, FSW_LEN_FUNC, attr);
+            if (attr && (s_editMode || p1valdiff)) {
+              CHECK_INCDEC_MODELVAR( event, sd->func, 0, FUNC_LAST);
+            }
+          }
+          else if (attr) {
+            m_posHorz = 0;
+          }
+          break;
+      }
+    }
   }
 }
 

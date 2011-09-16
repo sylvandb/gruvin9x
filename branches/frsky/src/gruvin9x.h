@@ -319,6 +319,9 @@ enum EnumKeys {
 #define CSWITCH_STR  "----   v>ofs  v<ofs  |v|>ofs|v|<ofsAND    OR     XOR    ""v1==v2 ""v1!=v2 ""v1>v2  ""v1<v2  ""v1>=v2 ""v1<=v2 "
 #define CSW_LEN_FUNC 7
 
+#define FSWITCH_STR  "----          ""Trainer       ""Trainer RUD   ""Trainer ELE   ""Trainer THR   ""Trainer AIL   ""Instant Trim  "
+#define FSW_LEN_FUNC 14
+
 #define SWASH_TYPE_STR   "---   ""120   ""120X  ""140   ""90    "
 
 #define SWASH_TYPE_120   1
@@ -355,7 +358,6 @@ enum EnumKeys {
 #define MAX_PSWITCH   (SW_Trainer-SW_ThrCt+1)  // 9 physical switches
 #define MAX_SWITCH    (1+MAX_PSWITCH+NUM_CSW)  // 22(1+9+12) !switches + 0 + 22 switches: 6 bits needed
 #define MAX_DRSWITCH  (MAX_PSWITCH+NUM_CSW/2)  // 15(9+6) !switches + 0 + 15 switches: 5 bits needed
-#define MAX_TRNSWITCH (MAX_PSWITCH+NUM_CSW/2)  // 15(9+6) !switches + 0 + 15 switches: 5 bits needed
 
 #define NUM_STICKS      4
 #define NUM_POTS        3
@@ -734,6 +736,12 @@ extern LimitData *limitaddress(uint8_t idx);
 extern void incSubtrim(uint8_t idx, int16_t inc);
 extern void instantTrim();
 extern void moveTrimsToOffsets(); // move state of 3 primary trims to offsets
+
+extern uint16_t active_functions;
+inline bool isFunctionActive(uint8_t func)
+{
+  return active_functions & (1 << (func-1));
+}
 
 #define TELEM_SCREEN_BUFFER_SIZE 21
 extern char userDataDisplayBuf[TELEM_SCREEN_BUFFER_SIZE]; // text buffer for frsky telem. user data experiments

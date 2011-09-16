@@ -44,10 +44,9 @@
 #define EEPROM_VER       106
 
 typedef struct t_TrainerMix {
-  uint8_t srcChn:3; //0-7 = ch1-8
-  int8_t  swtch:5;
-  int8_t  studWeight:6;
-  uint8_t mode:2;   //off,add-mode,subst-mode
+  uint8_t srcChn:6; // 0-7 = ch1-8
+  uint8_t mode:2;   // off,add-mode,subst-mode
+  int8_t  studWeight;
 } __attribute__((packed)) TrainerMix; //
 
 typedef struct t_TrainerData {
@@ -153,6 +152,19 @@ typedef struct t_SafetySwData { // Safety Switches data
   int8_t  val;
 } __attribute__((packed)) SafetySwData;
 
+#define FUNC_TRAINER        1
+#define FUNC_TRAINER_RUD    2
+#define FUNC_TRAINER_ELE    3
+#define FUNC_TRAINER_THR    4
+#define FUNC_TRAINER_AIL    5
+#define FUNC_INSTANT_TRIM   6
+#define FUNC_LAST           6
+
+typedef struct t_FuncSwData { // Function Switches data
+  int8_t  swtch; //input
+  uint8_t func;
+} __attribute__((packed)) FuncSwData;
+
 typedef struct t_FrSkyChannelData {
   uint16_t  ratio:12;           // (Maximum resistor divider input volts +/- calibration. 0 means channel not used.
                                 // 0.01v steps from 0 to 40.95V. Ex. 6.60 Volts = 660. 40.95V = 4095
@@ -205,6 +217,7 @@ typedef struct t_PhaseData {
 
 #define NUM_CHNOUT   16 // number of real output channels CH1-CH16
 #define NUM_CSW      12  // number of custom switches
+#define NUM_FSW      12 // number of functions assigned to switches
 
 typedef struct t_ModelData {
   char      name[10];             // 10 must be first for eeLoadModelName
@@ -216,11 +229,11 @@ typedef struct t_ModelData {
   uint8_t   thrTrim:1;            // Enable Throttle Trim
   uint8_t   thrExpo:1;            // Enable Throttle Expo
   uint8_t   trimInc:3;            // Trim Increments
-  uint8_t   traineron:1;          // 0 disable trainer, 1 allow trainer
+  uint8_t   spare1:1;
   uint8_t   pulsePol:1;
   uint8_t   extendedLimits:1;
   uint8_t   extendedTrims:1;
-  uint8_t   spare:1;
+  uint8_t   spare2:1;
   int8_t    ppmDelay;
   uint8_t   beepANACenter;        // 1<<0->A1.. 1<<6->A7
   int8_t    tmr2Mode:7;           // timer trigger source -> off, abs, stk, stk%, sw/!sw, !m_sw/!m_sw
@@ -233,6 +246,7 @@ typedef struct t_ModelData {
   int8_t    curves9[MAX_CURVE9][9];
   CustomSwData  customSw[NUM_CSW];
   SafetySwData  safetySw[NUM_CHNOUT];
+  FuncSwData    funcSw[NUM_FSW];
   SwashRingData swashR;
   PhaseData phaseData[MAX_PHASES];
   FrSkyData     frsky;

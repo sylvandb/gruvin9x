@@ -138,8 +138,9 @@ void menuMainView(uint8_t event)
       break;
   }
 
-  if(getSwitch(g_model.phaseData[0].swtch, 0) && !instantTrimSwLock) instantTrim();
-  instantTrimSwLock = getSwitch(g_model.phaseData[0].swtch,0);
+  bool trimSw = isFunctionActive(FUNC_INSTANT_TRIM);
+  if (!instantTrimSwLock && trimSw) instantTrim();
+  instantTrimSwLock = trimSw;
 
   ///////////////////////////////////////////////////////////////////////
   /// Upper Section of Display common to all but telemetry alt. views ///

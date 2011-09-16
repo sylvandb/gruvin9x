@@ -73,6 +73,11 @@ uint8_t Translate()
     EEPROM_V3::EEGeneral *old = (EEPROM_V3::EEGeneral *)&g_eeGeneral;
     g_eeGeneral.disableMemoryWarning = old->disableMemoryWarning;
     g_eeGeneral.switchWarning = old->disableSwitchWarning ? 0 : -1;
+    for (uint8_t i=0; i<4; i++) {
+      g_eeGeneral.trainer.mix[i].srcChn = old->trainer.mix[i].srcChn;
+      g_eeGeneral.trainer.mix[i].mode = old->trainer.mix[i].mode;
+      g_eeGeneral.trainer.mix[i].studWeight = old->trainer.mix[i].studWeight * 13 / 4;
+    }
     for (uint8_t id=0; id<MAX_MODELS; id++) {
       theFile.openRlc(FILE_MODEL(id));
       uint16_t sz = theFile.readRlc1((uint8_t*)&g_model, sizeof(EEPROM_V4::ModelData));
@@ -99,17 +104,16 @@ uint8_t Translate()
         g_model.thrTrim = v3->thrTrim;
         g_model.thrExpo = v3->thrExpo;
         g_model.trimInc = v3->trimInc;
+        g_model.spare1 = 0;
         g_model.pulsePol = v3->pulsePol;
         if (g_eeGeneral.myVers == EEPROM_ER9X_VER) {
           g_model.extendedLimits = v4->extendedLimits;
-          g_model.traineron = v4->traineron;
         }
         else {
           g_model.extendedLimits = 0;
-          g_model.traineron = 0;
         }
         g_model.extendedTrims = 0;
-        g_model.spare = 0;
+        g_model.spare2 = 0;
         g_model.ppmDelay = v3->ppmDelay;
         g_model.beepANACenter = v3->beepANACenter;
         g_model.tmr2Mode = 0;
@@ -181,7 +185,11 @@ uint8_t Translate()
           }
         }
         memset(&g_model.phaseData[0], 0, sizeof(g_model.phaseData));
-        g_model.phaseData[0].swtch = trimSw;
+        memset(&g_model.funcSw[0], 0, sizeof(g_model.funcSw));
+        if (trimSw) {
+          g_model.funcSw[0].swtch = trimSw;
+          g_model.funcSw[0].func = FUNC_INSTANT_TRIM;
+        }
         for (uint8_t i=0; i<NUM_STICKS; i++)
           setTrimValue(0, i, trims[i]);
         theFile.writeRlc(FILE_MODEL(id), FILE_TYP_MODEL, (uint8_t*)&g_model, sizeof(g_model), true);
