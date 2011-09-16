@@ -281,9 +281,10 @@ const prog_char *get_switches_string()
   return PSTR(SWITCHES_STR);
 }
 
+static bool s_noStickInputs = false;
 inline int16_t getValue(uint8_t i)
 {
-    if(i<NUM_STICKS+NUM_POTS) return calibratedStick[i];//-512..512
+    if(i<NUM_STICKS+NUM_POTS) return (s_noStickInputs ? 0 : calibratedStick[i]);
     else if(i<MIX_FULL/*srcRaw is shifted +1!*/) return 1024; //FULL/MAX
     else if(i<PPM_BASE+NUM_CAL_PPM) return (g_ppmIns[i-PPM_BASE] - g_eeGeneral.trainer.calib[i-PPM_BASE])*2;
     else if(i<PPM_BASE+NUM_PPM) return g_ppmIns[i-PPM_BASE]*2;
@@ -305,16 +306,33 @@ uint8_t getFlightPhase()
   return 0;
 }
 
-uint8_t getTrimFlightPhase(uint8_t idx, int8_t phase)
+int16_t getTrimValue(uint8_t phase, uint8_t idx)
+{
+  PhaseData *p = phaseaddress(phase);
+  return (((int16_t)p->trim[idx]) << 2) + ((p->trim_ext >> (2*idx)) & 0x03);
+}
+
+void setTrimValue(uint8_t phase, uint8_t idx, int16_t trim)
+{
+  PhaseData *p = phaseaddress(phase);
+  p->trim[idx] = (int8_t)(trim >> 2);
+  p->trim_ext = (p->trim_ext & ~(0x03 << (2*idx))) + (((trim & 0x03) << (2*idx)));
+  STORE_MODELVARS;
+}
+
+uint8_t getTrimFlightPhase(uint8_t idx, int8_t phase) // TODO uint8_t phase?
 {
   if (phase == -1) phase = getFlightPhase();
-  if (phase == 0) return phase;
-  int8_t trim = g_model.phaseData[phase].trim[idx];
-  if (trim > 125) return 0;
-  if (trim >= -125) return phase;
-  uint8_t result = 129 + trim;
-  if (result == phase) result++;
-  return result;
+
+  for (uint8_t i=0; i<MAX_PHASES; i++) {
+    if (phase == 0) return 0;
+    int16_t trim = getTrimValue(phase, idx);
+    if (trim <= TRIM_EXTENDED_MAX) return phase;
+    uint8_t result = trim-TRIM_EXTENDED_MAX-1;
+    if (result >= phase) result++;
+    phase = result;
+  }
+  return 0;
 }
 
 bool getSwitch(int8_t swtch, bool nc, uint8_t level)
@@ -407,25 +425,18 @@ bool getSwitch(int8_t swtch, bool nc, uint8_t level)
   break;
   case (CS_EQUAL):
       return (x==y);
-      break;
   case (CS_NEQUAL):
       return (x!=y);
-      break;
   case (CS_GREATER):
       return (x>y);
-      break;
   case (CS_LESS):
       return (x<y);
-      break;
   case (CS_EGREATER):
       return (x>=y);
-      break;
   case (CS_ELESS):
       return (x<=y);
-      break;
   default:
       return false;
-      break;
   }
 
 }
@@ -676,41 +687,54 @@ uint8_t checkTrim(uint8_t event)
   int8_t  k = (event & EVT_KEY_MASK) - TRM_BASE;
   int8_t  s = g_model.trimInc;
 
-  if((k>=0) && (k<8))// && (event & _MSK_KEY_REPT))
-  {
+  if (k>=0 && k<8) { // && (event & _MSK_KEY_REPT))
     //LH_DWN LH_UP LV_DWN LV_UP RV_DWN RV_UP RH_DWN RH_UP
     uint8_t idx = k/2;
     uint8_t phase = getTrimFlightPhase(idx);
-    int8_t  t = g_model.phaseData[phase].trim[idx];
-    int8_t  v = (s==0) ? (abs(t)/4)+1 : 1 << (s-1); // 1=>1  2=>2  3=>4  4=>8
+    int16_t before = getTrimValue(phase, idx);
+    int8_t  v = (s==0) ? min(32, abs(before)/4+1) : 1 << (s-1); // 1=>1  2=>2  3=>4  4=>8
     bool thro = (((2-(g_eeGeneral.stickMode&1)) == idx) && g_model.thrTrim);
     if (thro) v = 4; // if throttle trim and trim trottle then step=4
-    int16_t x = (k&1) ? t + v : t - v;   // positive = k&1
+    int16_t after = (k&1) ? before + v : before - v;   // positive = k&1
 
-    if (x <= -125) {
-      x = -125;
-      thro = true;
+    bool beepTrim = false;
+    for (int16_t mark=TRIM_MIN; mark<=TRIM_MAX; mark+=TRIM_MAX) {
+      if ((mark!=0 || !thro) && ((mark!=TRIM_MIN && after>=mark && before<mark) || (mark!=TRIM_MAX && after<=mark && before>mark))) {
+        after = mark;
+        beepTrim = true;
       }
-    else if (x >= 125) {
-      x = 125;
-      thro = true;
-    }
-    else if ((!thro) && ((x>=0 && t<0) || (x<=0 && t>0))) {
-      x = 0;
-      thro = true;
-    }
-    else {
-      thro = false;
     }
 
-    g_model.phaseData[phase].trim[idx] = (int8_t)x;
-    STORE_MODELVARS;
+    if ((before<after && after>TRIM_MAX) || (before>after && after<TRIM_MIN)) {
+      if (!g_model.extendedTrims) after = before;
+      beepTrim = true; // no repetition, it could be dangerous
+    }
 
-    if (thro) {
+    if (after < TRIM_EXTENDED_MIN) {
+      after = TRIM_EXTENDED_MIN;
+    }
+    if (after > TRIM_EXTENDED_MAX) {
+      after = TRIM_EXTENDED_MAX;
+    }
+
+    setTrimValue(phase, idx, after);
+
+#if defined (BEEPSPKR)
+    // toneFreq higher/lower according to trim position
+    // limit the frequency, range -125 to 125 = toneFreq: 19 to 101
+    if (after > TRIM_MAX)
+      after = TRIM_MAX;
+    if (after < TRIM_MIN)
+      after = TRIM_MIN;
+    after /= 4;
+    after += 60;
+#endif
+
+    if (beepTrim) {
       killEvents(event);
       warble = false;
 #if defined (BEEPSPKR)
-      beepWarn2Spkr((x/4)+60);
+      beepWarn2Spkr(after);
 #else
       beepWarn2();
 #endif
@@ -718,9 +742,7 @@ uint8_t checkTrim(uint8_t event)
     else {
       if (event & _MSK_KEY_REPT) warble = true;
 #if defined (BEEPSPKR)
-      // toneFreq higher/lower according to trim position
-      // beepTrimSpkr((x/3)+60);  // Range -125 to 125 = toneFreq: 19 to 101
-      beepTrimSpkr((x/4)+60);  // Divide by 4 more efficient. Range -125 to 125 = toneFreq: 28 to 91
+      beepTrimSpkr(after);
 #else
       beepWarn1();
 #endif
@@ -899,6 +921,8 @@ uint8_t Timer2_running = 0 ;
 uint8_t Timer2_pre = 0 ;
 uint16_t timer2 = 0 ;
 
+uint8_t  trimsCheckTimer = 0;
+
 void resetTimer1()
 {
   s_timerState = TMR_OFF; //is changed to RUNNING dep from mode
@@ -1059,6 +1083,7 @@ uint16_t isqrt32(uint32_t n)
 // It's also easier to initialize them here.
 uint16_t pulses2MHz[120] = {0};
 int16_t  anas [NUM_XCHNRAW] = {0};
+int16_t  trims[NUM_STICKS] = {0};
 int32_t  chans[NUM_CHNOUT] = {0};
 uint32_t inacCounter = 0;
 uint16_t inacSum = 0;
@@ -1068,26 +1093,28 @@ int32_t  act   [MAX_MIXERS] = {0};
 uint8_t  swOn  [MAX_MIXERS] = {0};
 uint8_t mixWarning;
 
-void perOut(int16_t *chanOut, uint8_t att)
+inline void evalTrims()
 {
-  int16_t  trimA[4];
-  uint8_t  anaCenter = 0;
-
-  if(tick10ms) {
-    if(s_noHi) s_noHi--;
-      if (g_eeGeneral.inactivityTimer && g_vbat100mV>49) {
-      inacCounter++;
-      uint16_t tsum = 0;
-      for(uint8_t i=0;i<4;i++) tsum += anaIn(i)/64;  // reduce sensitivity
-      if(tsum!=inacSum){
-        inacSum = tsum;
-        inacCounter=0;
-      }
-      if(inacCounter>((uint32_t)g_eeGeneral.inactivityTimer*100*60))
-        if((inacCounter&0x3F)==10) beepWarn();
+  for (uint8_t i=0; i<NUM_STICKS; i++) {
+    // do trim -> throttle trim if applicable
+    int16_t v = anas[i];
+    int32_t vv = 2*RESX;
+    int16_t trim = getTrimValue(getTrimFlightPhase(i), i);
+    if (IS_THROTTLE(i) && g_model.thrTrim) {
+      vv = (g_eeGeneral.throttleReversed) ?
+                ((int32_t)trim+TRIM_MIN)*(RESX+v)/(2*RESX) :
+                ((int32_t)trim-TRIM_MIN)*(RESX-v)/(2*RESX);
     }
-  }
+    else if (trimsCheckTimer > 0) {
+      trim = 0;
+    }
 
+    trims[i] = (vv==2*RESX) ? trim*2 : (int16_t)vv*2; // if throttle trim -> trim low end
+  }
+}
+
+uint8_t evalSticks()
+{
 #ifdef HELI
   uint16_t d = 0;
   if(g_model.swashR.value) {
@@ -1100,11 +1127,11 @@ void perOut(int16_t *chanOut, uint8_t att)
   }
 #endif
 
-  uint8_t phase = getFlightPhase();
+  uint8_t anaCenter = 0;
 
-  for(uint8_t i=0;i<7;i++){        // Sticks & Pots
+  for(uint8_t i=0; i<NUM_STICKS+NUM_POTS; i++) {
 
-    //Normalization  [0..2048] ->   [-1024..1024]
+    // normalization [0..2048] -> [-1024..1024]
 
     int16_t v = anaIn(i);
     v -= g_eeGeneral.calibMid[i];
@@ -1117,8 +1144,8 @@ void perOut(int16_t *chanOut, uint8_t att)
     if(!(v/16)) anaCenter |= 1<<(CONVERT_MODE((i+1))-1);
 
 
-    if (i<4) { //only do this for sticks
-      if (!(att&NO_TRAINER) && g_model.traineron) {
+    if (i < NUM_STICKS) { //only do this for sticks
+      if (!s_noStickInputs && g_model.traineron) {
         // trainer mode
         TrainerMix* td = &g_eeGeneral.trainer.mix[i];
         if (td->mode && getSwitch(td->swtch, 1)) {
@@ -1148,18 +1175,16 @@ void perOut(int16_t *chanOut, uint8_t att)
   applyExpos(anas);
 
   /* TRIMs */
-  for(uint8_t i=0; i<4; i++) {
-    // do trim -> throttle trim if applicable
-    int16_t v = anas[i];
-    int32_t vv = 2*RESX;
-      int8_t trim = g_model.phaseData[getTrimFlightPhase(i)].trim[i];
-    if (IS_THROTTLE(i) && g_model.thrTrim) vv = (g_eeGeneral.throttleReversed) ?
-                               ((int32_t)trim-125)*(RESX+v)/(2*RESX) :
-                               ((int32_t)trim+125)*(RESX-v)/(2*RESX);
+  evalTrims();
 
-      //trim
-      trimA[i] = (vv==2*RESX) ? (int16_t)trim*2 : (int16_t)vv*2; //    if throttle trim -> trim low end
+  return anaCenter;
 }
+
+
+void perOut(int16_t *chanOut)
+{
+  uint8_t phase = getFlightPhase();
+  uint8_t anaCenter = evalSticks();
 
   //===========BEEP CENTER================
   anaCenter &= g_model.beepANACenter;
@@ -1188,8 +1213,8 @@ void perOut(int16_t *chanOut, uint8_t att)
 
   if(g_model.swashR.type)
   {
-      int16_t vp = anas[ELE_STICK]+trimA[ELE_STICK];
-      int16_t vr = anas[AIL_STICK]+trimA[AIL_STICK];
+      int16_t vp = anas[ELE_STICK]+trims[ELE_STICK];
+      int16_t vr = anas[AIL_STICK]+trims[AIL_STICK];
       int16_t vc = 0;
       if(g_model.swashR.collectiveSource)
           vc = anas[g_model.swashR.collectiveSource-1];
@@ -1234,21 +1259,20 @@ void perOut(int16_t *chanOut, uint8_t att)
   }
 #endif
 
-  if(att&NO_INPUT) { //zero input for setStickCenter()
-    for(uint8_t i=0;i<4;i++) {
-      if(!IS_THROTTLE(i)) {
+  if (s_noStickInputs) {
+    for (uint8_t i=0; i<NUM_STICKS; i++) {
+      if (!IS_THROTTLE(i)) {
         anas[i]  = 0;
-        trimA[i] = 0;
       }
     }
-    for(uint8_t i=0;i<NUM_PPM;i++) anas[i+PPM_BASE] = 0;
+    for (uint8_t i=0; i<NUM_PPM; i++) anas[i+PPM_BASE] = 0;
   }
   else {
-  for(uint8_t i=0;i<NUM_CAL_PPM;i++)       anas[i+PPM_BASE]   = (g_ppmIns[i] - g_eeGeneral.trainer.calib[i])*2; //add ppm channels
-  for(uint8_t i=NUM_CAL_PPM;i<NUM_PPM;i++) anas[i+PPM_BASE]   = g_ppmIns[i]*2; //add ppm channels
+    for (uint8_t i=0; i<NUM_CAL_PPM; i++)       anas[i+PPM_BASE] = (g_ppmIns[i] - g_eeGeneral.trainer.calib[i])*2; // add ppm channels
+    for (uint8_t i=NUM_CAL_PPM; i<NUM_PPM; i++) anas[i+PPM_BASE] = g_ppmIns[i]*2; // add ppm channels
   }
-
-  for(uint8_t i=CHOUT_BASE;i<NUM_XCHNRAW;i++) anas[i] = chans[i-CHOUT_BASE]; //other mixes previous outputs
+  
+  for (uint8_t i=CHOUT_BASE; i<NUM_XCHNRAW; i++) anas[i] = chans[i-CHOUT_BASE]; // other mixes previous outputs
 
   if(tick10ms) trace(); //trace thr 0..32  (/32)
 
@@ -1348,7 +1372,7 @@ void perOut(int16_t *chanOut, uint8_t att)
         v = applyCurve(v, md->curve, md->srcRaw);
 
       //========== TRIM ===============
-      if((md->carryTrim==0) && (md->srcRaw>0) && (md->srcRaw<=4)) v += trimA[md->srcRaw-1];  //  0 = Trim ON  =  Default
+      if((md->carryTrim==0) && (md->srcRaw>0) && (md->srcRaw<=4)) v += trims[md->srcRaw-1];  //  0 = Trim ON  =  Default
 
       //========== MULTIPLEX ===============
       int32_t dv = (int32_t)v*md->weight;
@@ -1384,7 +1408,7 @@ void perOut(int16_t *chanOut, uint8_t att)
   } */
 
   //========== LIMITS ===============
-  for(uint8_t i=0;i<NUM_CHNOUT;i++){
+  for (uint8_t i=0;i<NUM_CHNOUT;i++) {
       // chans[i] holds data from mixer.   chans[i] = v*weight => 1024*100
       // later we multiply by the limit (up to 100) and then we need to normalize
       // at the end chans[i] = chans[i]/100 =>  -1024..1024
@@ -1416,9 +1440,7 @@ void perOut(int16_t *chanOut, uint8_t att)
       if(g_model.safetySw[i].swtch)  //if safety sw available for channel check and replace val if needed
           if(getSwitch(g_model.safetySw[i].swtch,0)) q = calc100toRESX(g_model.safetySw[i].val);
 
-      cli();
       chanOut[i] = q; //copy consistent word to int-level
-      sei();
   }
 }
 
@@ -1430,7 +1452,35 @@ void perMain()
   tick10ms = (get_tmr10ms() != lastTMR);
   lastTMR = get_tmr10ms();
 
-  perOut(g_chans512, 0);
+  int16_t last_chans512[NUM_CHNOUT];
+  int16_t next_chans512[NUM_CHNOUT];
+
+  static uint8_t last_phase = 0;
+  uint8_t phase = getFlightPhase();
+
+  static uint8_t fading_out_timer = 0;
+  if (last_phase != phase) {
+    fading_out_timer = 10 * max(g_model.phaseData[last_phase].fadeOut, g_model.phaseData[phase].fadeIn);
+    last_phase = phase;
+  }
+
+  if (fading_out_timer) {
+    memcpy(last_chans512, g_chans512, sizeof(g_chans512));
+  }
+
+  perOut(next_chans512);
+
+  cli();
+  if (fading_out_timer) {
+    for (uint8_t i=0; i<NUM_CHNOUT; i++) {
+      g_chans512[i] = last_chans512[i] + (next_chans512[i] - last_chans512[i]) / fading_out_timer;
+    }
+    fading_out_timer--;
+  }
+  else {
+    memcpy(g_chans512, next_chans512, sizeof(g_chans512));
+  }
+  sei();
 
 #ifdef ASYNC_WRITE
   if (!eeprom_buffer_size) {
@@ -1449,6 +1499,22 @@ void perMain()
       timer2 += 1 ;
     }
   }
+  
+  if (s_noHi) s_noHi--;
+  if (g_eeGeneral.inactivityTimer && g_vbat100mV>49) {
+    inacCounter++;
+    uint16_t tsum = 0;
+    for(uint8_t i=0;i<4;i++) tsum += anaIn(i)/64;  // reduce sensitivity
+    if(tsum!=inacSum){
+      inacSum = tsum;
+      inacCounter=0;
+    }
+    if(inacCounter>((uint32_t)g_eeGeneral.inactivityTimer*100*60))
+      if((inacCounter&0x3F)==10) beepWarn();
+  }
+  
+  if (trimsCheckTimer > 0)
+    trimsCheckTimer -= 1;
 
 #ifndef ASYNC_WRITE
   eeCheck();
@@ -2018,28 +2084,53 @@ uint16_t stack_free()
 
 #endif
 
-void setStickCenter() // copy state of 3 primary to subtrim
+
+void instantTrim()
 {
-  int16_t zero_chans512_before[NUM_CHNOUT];
-  int16_t zero_chans512_after[NUM_CHNOUT];
-
-  perOut(zero_chans512_before, NO_TRAINER + NO_INPUT); // do output loop - zero input channels
-  perOut(zero_chans512_after, NO_TRAINER); // do output loop - actual input channels
-
-  for (uint8_t i=0; i<NUM_CHNOUT; i++) {
-    int16_t v = g_model.limitData[i].offset;
-    v += g_model.limitData[i].revert ?
-         (zero_chans512_before[i] - zero_chans512_after[i]) :
-         (zero_chans512_after[i] - zero_chans512_before[i]);
-    g_model.limitData[i].offset = max(min(v, (int16_t)1000), (int16_t)-1000); // make sure the offset doesn't go haywire
+  for (uint8_t i=0; i<NUM_STICKS; i++) {
+    if (!IS_THROTTLE(i)) {
+      // don't instant trim the throttle stick
+      uint8_t phase = getTrimFlightPhase(i);
+      s_noStickInputs = true;
+      evalSticks();
+      s_noStickInputs = false;
+      int16_t trim = (anas[i] + trims[i]) / 2;
+      // printf("anas[%d]=%d, trims[%d]=%d, trim=%d, subtrim=%d => trim=%d\n", i, anas[i], i, trims[i], g_model.phaseData[phase].trim[i], g_model.subtrim[i], trim);
+      if (trim < TRIM_EXTENDED_MIN) {
+        trim = TRIM_EXTENDED_MIN;
       }
+      if (trim > TRIM_EXTENDED_MAX) {
+        trim = TRIM_EXTENDED_MAX;
+      }
+      setTrimValue(phase, i, trim);
+    }
+  }
 
-  // TODO discuss with bryan what should be done here.
-  // I choosed the easy way: use the current trims to compute the channels offsets => Instant trim will be ok (to be tested)
-  // But other flight modes will have their trims wrong after this function called
-  uint8_t phase = getFlightPhase();
-  for (uint8_t i=0; i<4; i++)
-    if (!IS_THROTTLE(i)) g_model.phaseData[getTrimFlightPhase(i, phase)].trim[i] = 0;// set trims to zero.
+  STORE_MODELVARS;
+  beepWarn1();
+}
+
+void moveTrimsToOffsets() // copy state of 3 primary to subtrim
+{
+  int16_t zero_chans512[NUM_CHNOUT];
+
+  s_noStickInputs = true;
+  perOut(zero_chans512); // do output loop - zero input sticks
+  s_noStickInputs = false;
+
+  for (uint8_t i=0; i<NUM_CHNOUT; i++)
+    g_model.limitData[i].offset = max(min(zero_chans512[i], (int16_t)1000), (int16_t)-1000); // make sure the offset doesn't go haywire
+
+  // reset all trims, except throttle
+  for (uint8_t i=0; i<4; i++) {
+    if (!IS_THROTTLE(i)) {
+      for (uint8_t phase=0; phase<MAX_PHASES; phase++) {
+        int16_t trim = getTrimValue(phase, i);
+        if (trim <= TRIM_EXTENDED_MAX)
+          setTrimValue(phase, i, 0);
+      }
+    }
+  }
 
   STORE_MODELVARS;
   beepWarn1();
@@ -2175,7 +2266,7 @@ int main(void)
 
   wdt_enable(WDTO_500MS);
 
-  perOut(g_chans512, 0);
+  perOut(g_chans512);
 
   lcdSetRefVolt(g_eeGeneral.contrast);
   g_LightOffCounter = g_eeGeneral.lightAutoOff*500; //turn on light for x seconds - no need to press key Issue 152

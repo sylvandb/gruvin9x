@@ -46,7 +46,7 @@ uint8_t tabViews[] = {
 
 void menuMainView(uint8_t event)
 {
-  static uint8_t trimSwLock;
+  static bool instantTrimSwLock;
   uint8_t view = g_eeGeneral.view & 0x0f; // mask out ALTERNATE views
 
   switch(event)
@@ -134,12 +134,12 @@ void menuMainView(uint8_t event)
       killEvents(KEY_EXIT);
       killEvents(KEY_UP);
       killEvents(KEY_DOWN);
-      trimSwLock = true;
+      instantTrimSwLock = true;
       break;
   }
 
-  if(getSwitch(g_model.phaseData[0].swtch, 0) && !trimSwLock) setStickCenter();
-  trimSwLock = getSwitch(g_model.phaseData[0].swtch,0);
+  if(getSwitch(g_model.phaseData[0].swtch, 0) && !instantTrimSwLock) instantTrim();
+  instantTrimSwLock = getSwitch(g_model.phaseData[0].swtch,0);
 
   ///////////////////////////////////////////////////////////////////////
   /// Upper Section of Display common to all but telemetry alt. views ///
@@ -181,26 +181,39 @@ void menuMainView(uint8_t event)
       //                        LH LV RV RH
       static uint8_t x[4]    = {128*1/4+2, 4, 128-4, 128*3/4-2};
       static uint8_t vert[4] = {0,1,1,0};
-      uint8_t xm,ym;
-      xm=x[i];
-      int8_t val = max((int8_t)-(TL+1),min((int8_t)(TL+1),(int8_t)(phaseaddress(getTrimFlightPhase(i, phase))->trim[i]/4)));
-      if(vert[i]){
-        ym=31;
-        lcd_vline(xm, ym-TL, TL*2);
+      uint8_t xm, ym;
+      xm = x[i];
 
+      uint8_t att = 0;
+      int16_t val = getTrimValue(getTrimFlightPhase(i, phase), i);;
+
+      if (val < -125 || val > 125)
+        att = BLINK;
+
+      if (val < -(TL+1)*4)
+        val = -(TL+1);
+      else if (val > (TL+1)*4)
+        val = TL+1;
+      else
+        val /= 4;
+
+      if (vert[i]) {
+        ym = 31;
+        lcd_vline(xm, ym-TL, TL*2);
         if(((g_eeGeneral.stickMode&1) != (i&1)) || !(g_model.thrTrim)){
           lcd_vline(xm-1, ym-1,  3);
           lcd_vline(xm+1, ym-1,  3);
         }
         ym -= val;
-      }else{
-        ym=60;
+      }
+      else {
+        ym = 60;
         lcd_hline(xm-TL, ym, TL*2);
         lcd_hline(xm-1, ym-1,  3);
         lcd_hline(xm-1, ym+1,  3);
         xm += val;
       }
-      lcd_square(xm-3, ym-3, 7);
+      lcd_square(xm-3, ym-3, 7, att);
     }
   }
   /// Upper Section of Display common to all but telemetry alt. views ///

@@ -283,7 +283,7 @@ void menuProcModel(uint8_t _event)
     chainMenu(menuProcModelSelect);
   }
 
-  MENU("SETUP", menuTabModel, e_Model, 15, {0,sizeof(g_model.name)-1,1,0,0,0,0,0,0,0,0,6,2/*,0, 0*/});
+  MENU("SETUP", menuTabModel, e_Model, 16, {0,sizeof(g_model.name)-1,1,0,0,0,0,0,0,0,0,0,6,2/*,0, 0*/});
 
   uint8_t  sub    = m_posVert;
   uint8_t y = 1*FH;
@@ -377,6 +377,13 @@ void menuProcModel(uint8_t _event)
   }subN++;
 
   if(s_pgOfs<subN) {
+    lcd_puts_P(    0,    y, PSTR("E. Trims"));
+    menu_lcd_onoff( 10*FW, y, g_model.extendedTrims, sub==subN ) ;
+    if(sub==subN) CHECK_INCDEC_MODELVAR(event,g_model.extendedTrims,0,1);
+    if((y+=FH)>7*FH) return;
+  }subN++;
+  
+  if(s_pgOfs<subN) {
     lcd_puts_P(    0,    y, PSTR("Trainer"));
     menu_lcd_onoff( 10*FW, y, g_model.traineron, sub==subN ) ;
     if(sub==subN) CHECK_INCDEC_MODELVAR(event,g_model.traineron,0,1);
@@ -451,7 +458,7 @@ void menuProcPhaseOne(uint8_t event)
   // TODO if last MENU/SUBMENU numbers are 0 they may be skipped
 
   int8_t sub = m_posVert;
-  PhaseData *p = phaseaddress(s_currIdx);
+  PhaseData *phase = phaseaddress(s_currIdx);
 
   putsFlightPhase(18*FW, 0, s_currIdx+1, 0);
 
@@ -461,45 +468,44 @@ void menuProcPhaseOne(uint8_t event)
     switch(i) {
       case 0:
         lcd_puts_P(0, y, PSTR("Name"));
-        EditName(10*FW, y, p->name, sizeof(p->name), event, attr, m_posHorz);
+        EditName(10*FW, y, phase->name, sizeof(phase->name), event, attr, m_posHorz);
         break;
       case 1:
         lcd_puts_P(0, y, PSTR("Switch"));
-        putsSwitches(10*FW,  y, p->swtch, attr);
-        if(attr) CHECK_INCDEC_MODELVAR(event, p->swtch, -MAX_DRSWITCH, MAX_DRSWITCH);
+        putsSwitches(10*FW,  y, phase->swtch, attr);
+        if(attr) CHECK_INCDEC_MODELVAR(event, phase->swtch, -MAX_DRSWITCH, MAX_DRSWITCH);
         break;
       case 2:
         lcd_puts_P(0, y, PSTR("Trims"));
         for (uint8_t t=0; t<NUM_STICKS; t++) {
-          int16_t v = p->trim[t];
-          if (v > 125) v = -129;
-          if (v < -125) {
-            uint8_t c = v < 0 ? 129 + v : 0;
-            if (c >= s_currIdx) c++;
-            lcd_putcAtt((10+t)*FW, y, '0'+c, (attr && m_posHorz==t) ? (s_editMode ? BLINK : INVERS) : 0);
+          int16_t v = getTrimValue(s_currIdx, t);
+          if (v > TRIM_EXTENDED_MAX) {
+            uint8_t p = v - TRIM_EXTENDED_MAX - 1;
+            if (p >= s_currIdx) p++;
+            lcd_putcAtt((10+t)*FW, y, '0'+p, (attr && m_posHorz==t) ? (s_editMode ? BLINK : INVERS) : 0);
           }
           else {
-            v = -130;
+            v = TRIM_EXTENDED_MAX;
             putsChnLetter((10+t)*FW, y, t+1, (attr && m_posHorz==t) ? (s_editMode ? BLINK : INVERS) : 0);
           }
           if (attr && m_posHorz==t && (s_editMode || p1valdiff)) {
-            v = checkIncDec(event, v, -130, -126, EE_MODEL);
+            v = checkIncDec(event, v, TRIM_EXTENDED_MAX, TRIM_EXTENDED_MAX+MAX_PHASES-1, EE_MODEL);
             if (checkIncDec_Ret) {
-              if (v == -130) v = 0;
-              p->trim[t] = (int8_t)v;
+              if (v == TRIM_EXTENDED_MAX) v = 0;
+              setTrimValue(s_currIdx, t, v);
             }
           }
         }
         break;
       case 3:
-        lcd_puts_P(0, y, PSTR("Slow Down"));
-        lcd_outdezAtt(10*FW, y, p->speedDown, attr|LEFT);
-        if(attr) CHECK_INCDEC_MODELVAR(event, p->speedDown, 0, 15);
+        lcd_puts_P(0, y, PSTR("Fade In"));
+        lcd_outdezAtt(10*FW, y, phase->fadeIn, attr|LEFT);
+        if(attr) CHECK_INCDEC_MODELVAR(event, phase->fadeIn, 0, 15);
         break;
       case 4:
-        lcd_puts_P(0, y, PSTR("Slow Up"));
-        lcd_outdezAtt(10*FW, y, p->speedUp, attr|LEFT);
-        if(attr) CHECK_INCDEC_MODELVAR(event, p->speedUp, 0, 15);
+        lcd_puts_P(0, y, PSTR("Fade Out"));
+        lcd_outdezAtt(10*FW, y, phase->fadeOut, attr|LEFT);
+        if(attr) CHECK_INCDEC_MODELVAR(event, phase->fadeOut, 0, 15);
         break;
     }
   }
@@ -507,23 +513,28 @@ void menuProcPhaseOne(uint8_t event)
 
 void menuProcPhasesAll(uint8_t event)
 {
-  SIMPLE_MENU("FLIGHT PHASES", menuTabModel, e_PhasesAll, 6);
+  SIMPLE_MENU("FLIGHT PHASES", menuTabModel, e_PhasesAll, 1+MAX_PHASES+1);
 
   int8_t sub = m_posVert - 1;
 
   switch (event) {
-    case EVT_KEY_FIRST(KEY_RIGHT):
     case EVT_KEY_FIRST(KEY_MENU):
-      if (sub >= 0) {
+      if (sub == MAX_PHASES) {
+        trimsCheckTimer = 200; // 2 seconds
+      }
+      // no break
+    case EVT_KEY_FIRST(KEY_RIGHT):
+      if (sub >= 0 && sub < MAX_PHASES) {
         s_currIdx = sub;
         pushMenu(menuProcPhaseOne);
       }
       break;
   }
 
+  uint8_t att;
   for (uint8_t i=0; i<MAX_PHASES; i++) {
     uint8_t y=(i+1)*FH;
-    uint8_t att = i==sub ? INVERS : 0;
+    att = i==sub ? INVERS : 0;
     PhaseData *p = phaseaddress(i);
     putsFlightPhase(0, y, i+1, att);
     lcd_putsnAtt(4*FW, y, p->name, 6, ZCHAR);
@@ -533,10 +544,10 @@ void menuProcPhasesAll(uint8_t event)
     else {
       putsSwitches(11*FW+FW/2, y, p->swtch, 0);
       for (uint8_t t=0; t<NUM_STICKS; t++) {
-        int16_t v = p->trim[t];
-        if (v > 125) v = -129;
-        if (v < -125) {
-          uint8_t c = v < 0 ? 129 + v : 0;
+        // TODO duplicated code
+        int16_t v = getTrimValue(i, t);
+        if (v > TRIM_EXTENDED_MAX) {
+          uint8_t c = v - TRIM_EXTENDED_MAX - 1;
           if (c >= i) c++;
           lcd_putc((16+t)*FW-FW/2, y, '0'+c);
         }
@@ -545,10 +556,14 @@ void menuProcPhasesAll(uint8_t event)
         }
       }
     }
-    if (p->speedUp) lcd_putc(20*FW+2, y, 'U');
-    if (p->speedDown) lcd_putc(20*FW+2, y, 'D');
-    if (p->speedUp && p->speedDown) lcd_putc(20*FW+2, y, '*');
+    if (p->fadeIn) lcd_putc(20*FW+2, y, 'I');
+    if (p->fadeOut) lcd_putc(20*FW+2, y, 'O');
+    if (p->fadeIn && p->fadeOut) lcd_putc(20*FW+2, y, '*');
   }
+
+  att = (sub==MAX_PHASES && !trimsCheckTimer) ? INVERS : 0;
+  lcd_putsAtt(0, 7*FH, PSTR("Check     Trims"), att);
+  putsFlightPhase(6*FW, 7*FH, getFlightPhase()+1, att);
 }
 
 #ifdef HELI
@@ -1421,7 +1436,7 @@ void menuProcLimits(uint8_t event)
     if(attr && event==EVT_KEY_LONG(KEY_MENU)) {
       s_noHi = NO_HI_LEN;
       killEvents(event);
-      setStickCenter(); //if highlighted and menu pressed - copy trims
+      moveTrimsToOffsets(); // if highlighted and menu pressed - copy trims
     }
   }
 }

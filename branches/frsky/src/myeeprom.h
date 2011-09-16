@@ -41,7 +41,7 @@
 
 #define EEPROM_VER_r584  3
 #define EEPROM_VER_r751  5
-#define EEPROM_VER       105
+#define EEPROM_VER       106
 
 typedef struct t_TrainerMix {
   uint8_t srcChn:3; //0-7 = ch1-8
@@ -184,11 +184,16 @@ typedef struct t_SwashRingData { // Swash Ring data
 } __attribute__((packed)) SwashRingData;
 
 typedef struct t_PhaseData {
+#define TRIM_EXTENDED_MAX 500
+#define TRIM_EXTENDED_MIN (-TRIM_EXTENDED_MAX)
+#define TRIM_MAX 125
+#define TRIM_MIN (-TRIM_MAX)
   int8_t trim[4];     // -125..125 => trim value, 127 => use trim of phase 0, -128, -127, -126 => use trim of phases 1|2|3|4 instead
-  int8_t swtch;       // swtch of phase[0] is the trimSw
+  int8_t trim_ext:8;
+  int8_t swtch;       // swtch of phase[0] is not used
   char name[6];
-  uint8_t speedUp:4;
-  uint8_t speedDown:4;
+  uint8_t fadeIn:4;
+  uint8_t fadeOut:4;
 } __attribute__((packed)) PhaseData;
 
 #define MAX_MODELS 16
@@ -214,7 +219,8 @@ typedef struct t_ModelData {
   uint8_t   traineron:1;          // 0 disable trainer, 1 allow trainer
   uint8_t   pulsePol:1;
   uint8_t   extendedLimits:1;
-  uint8_t   spare:2;
+  uint8_t   extendedTrims:1;
+  uint8_t   spare:1;
   int8_t    ppmDelay;
   uint8_t   beepANACenter;        // 1<<0->A1.. 1<<6->A7
   int8_t    tmr2Mode:7;           // timer trigger source -> off, abs, stk, stk%, sw/!sw, !m_sw/!m_sw

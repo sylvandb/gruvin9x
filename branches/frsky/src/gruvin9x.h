@@ -487,6 +487,8 @@ bool    getSwitch(int8_t swtch, bool nc, uint8_t level=0);
 
 uint8_t getFlightPhase();
 uint8_t getTrimFlightPhase(uint8_t idx, int8_t phase=-1);
+extern int16_t getTrimValue(uint8_t phase, uint8_t idx);
+extern void setTrimValue(uint8_t phase, uint8_t idx, int16_t trim);
 
 extern uint16_t s_timeCumTot;
 extern uint16_t s_timeCumAbs;  //laufzeit in 1/16 sec
@@ -495,6 +497,8 @@ extern uint16_t s_timeCumThr;  //gewichtete laufzeit in 1/16 sec
 extern uint16_t s_timeCum16ThrP; //gewichtete laufzeit in 1/16 sec
 extern uint8_t  s_timerState;
 extern int16_t  s_timerVal;
+
+extern uint8_t trimsCheckTimer;
 
 #define TMR_OFF     0
 #define TMR_RUNNING 1
@@ -727,7 +731,9 @@ extern ExpoData *expoaddress(uint8_t idx);
 extern MixData *mixaddress(uint8_t idx);
 extern LimitData *limitaddress(uint8_t idx);
 
-extern void setStickCenter(); // copy state of 3 primary to subtrim
+extern void incSubtrim(uint8_t idx, int16_t inc);
+extern void instantTrim();
+extern void moveTrimsToOffsets(); // move state of 3 primary trims to offsets
 
 #define TELEM_SCREEN_BUFFER_SIZE 21
 extern char userDataDisplayBuf[TELEM_SCREEN_BUFFER_SIZE]; // text buffer for frsky telem. user data experiments

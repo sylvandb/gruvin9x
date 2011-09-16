@@ -108,6 +108,8 @@ uint8_t Translate()
           g_model.extendedLimits = 0;
           g_model.traineron = 0;
         }
+        g_model.extendedTrims = 0;
+        g_model.spare = 0;
         g_model.ppmDelay = v3->ppmDelay;
         g_model.beepANACenter = v3->beepANACenter;
         g_model.tmr2Mode = 0;
@@ -180,7 +182,8 @@ uint8_t Translate()
         }
         memset(&g_model.phaseData[0], 0, sizeof(g_model.phaseData));
         g_model.phaseData[0].swtch = trimSw;
-        memcpy(&g_model.phaseData[0].trim[0], &trims[0], 4);
+        for (uint8_t i=0; i<NUM_STICKS; i++)
+          setTrimValue(0, i, trims[i]);
         theFile.writeRlc(FILE_MODEL(id), FILE_TYP_MODEL, (uint8_t*)&g_model, sizeof(g_model), true);
       }
     }
