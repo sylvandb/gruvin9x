@@ -25,8 +25,6 @@
 #define VERS 1
 #define SUB_VERS 2
 
-#define ASYNC_WRITE
-
 #include <inttypes.h>
 #include <string.h>
 #include "ff.h"
