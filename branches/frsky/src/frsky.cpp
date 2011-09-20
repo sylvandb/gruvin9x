@@ -248,12 +248,12 @@ public:
 };
 FrskyRxParser frskyRxParser;
 
+#ifdef DISPLAY_USER_DATA
 /*
   Copies all available bytes (up to max bufsize) from frskyUserData circular 
   buffer into supplied *buffer. Returns number of bytes copied (or zero)
 */
-/* Not currently used
-   uint8_t frskyGetUserData(char *buffer, uint8_t bufSize)
+uint8_t frskyGetUserData(char *buffer, uint8_t bufSize)
 {
   uint8_t i = 0;
   while (!frskyUserData.isEmpty())
@@ -263,7 +263,8 @@ FrskyRxParser frskyRxParser;
   }
   return i;
 }
-*/
+#endif
+
 
 ///////////////////////////////////////
 /// Fr-Sky Telemetry Hub Processing ///

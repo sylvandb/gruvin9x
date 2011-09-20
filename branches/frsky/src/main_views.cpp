@@ -315,7 +315,8 @@ void menuMainView(uint8_t event)
       displayCount = (displayCount+1) % 50;
       if (g_eeGeneral.view == e_telemetry+ALTERNATE) { // if on first alternate telemetry view
 
-        // TODO -- this screen line buffer is currently always empty
+#ifdef DISPLAY_USER_DATA
+        // this screen line buffer is currently always empty
         // Write user data characters along line, scrolling horizontally
         // Not much use for telemetry. Maybe do hex chars instead or get 
         // rid of it altogether XXX
@@ -325,6 +326,7 @@ void menuMainView(uint8_t event)
           if (c) lcd_putc(ii*FW, 1*FH, c);
         }
         //////////////////////////////////////////
+#endif
 
         if (g_model.frsky.channels[0].ratio || g_model.frsky.channels[1].ratio) {
           x0 = 0;
@@ -356,14 +358,14 @@ void menuMainView(uint8_t event)
       }
       else if (g_eeGeneral.view == e_telemetry+2*ALTERNATE) { // if on second alternate telemetry view
         
-        // date
+        // Date
         lcd_outdezNAtt(1*FW, 1*FH, gTelem_GPSyear+2000, LEFT, 4);
         lcd_putc(lcd_lastPos, 1*FH, '-');
         lcd_outdezNAtt(lcd_lastPos+FW, 1*FH, gTelem_GPSmonth, LEFT|LEADING0, 2);
         lcd_putc(lcd_lastPos, 1*FH, '-');
         lcd_outdezNAtt(lcd_lastPos+FW, 1*FH, gTelem_GPSday, LEFT|LEADING0, 2);
 
-        // time
+        // Time
         lcd_outdezNAtt(FW*10+8, 1*FH, gTelem_GPShour, LEFT|LEADING0, 2);
         lcd_putc(lcd_lastPos, 1*FH, ':');
         lcd_outdezNAtt(lcd_lastPos+FW, 1*FH, gTelem_GPSmin, LEFT|LEADING0, 2);

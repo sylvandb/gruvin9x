@@ -68,6 +68,10 @@ DECIMALS = NO
 # Values = YES, NO
 TRANSLATIONS = YES
 
+# DISPLAY_USER_DATA to display on screen data from FrSky module (testing/demo purpose)
+# Values = YES, NO
+DISPLAY_USER_DATA = NO
+
 #------- END BUILD OPTIONS ---------------------------
 
 # MCU name
@@ -237,6 +241,9 @@ ifeq ($(TEMPLATES), YES)
  CPPSRC += templates.cpp
 endif
 
+ifeq ($(DISPLAY_USER_DATA), YES)
+ CPPDEFS += -DDISPLAY_USER_DATA
+endif
 
 #---------------- Compiler Options C ----------------
 #  -g*:          generate debugging information

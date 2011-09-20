@@ -741,8 +741,10 @@ inline bool isFunctionActive(uint8_t func)
   return active_functions & (1 << (func-1));
 }
 
+#ifdef DISPLAY_USER_DATA
 #define TELEM_SCREEN_BUFFER_SIZE 21
 extern char userDataDisplayBuf[TELEM_SCREEN_BUFFER_SIZE]; // text buffer for frsky telem. user data experiments
+#endif
 
 #if defined (PCBV3)
 extern char g_logFilename[21]; // pers.cpp::resetTelemetry()

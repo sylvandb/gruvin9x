@@ -33,7 +33,7 @@
 #endif
 
 #define FRSKY_RX_PACKET_SIZE 19
-#define FRSKY_TX_PACKET_SIZE 19
+#define FRSKY_TX_PACKET_SIZE 12
 
 enum AlarmLevel {
   alarm_off = 0,
@@ -80,7 +80,9 @@ void resetTelemetry();
 
 void frskyParseRxData();
 
+#ifdef DISPLAY_USER_DATA
 uint8_t frskyGetUserData(char *buffer, uint8_t bufSize);
+#endif
 
 #define TELEM_PKT_SIZE 3
 extern uint8_t telemPacket[TELEM_PKT_SIZE];

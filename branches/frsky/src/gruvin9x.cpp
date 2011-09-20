@@ -1459,7 +1459,9 @@ void perOut(int16_t *chanOut)
   }
 }
 
-char userDataDisplayBuf[TELEM_SCREEN_BUFFER_SIZE]; // TODO ifdef
+#ifdef DISPLAY_USER_DATA
+char userDataDisplayBuf[TELEM_SCREEN_BUFFER_SIZE];
+#endif
 
 void perMain()
 {
@@ -1599,8 +1601,8 @@ void perMain()
   }
 
 
-  /*
-  ////////////////
+#ifdef DISPLAY_USER_DATA
+    ////////////////
   // Write raw user data into on-screen display line buffer
 
   char userDataRxBuffer[21]; // Temp buffer used to collect fr-sky user data
@@ -1627,7 +1629,7 @@ void perMain()
 
   }
   ////////////////
-*/
+#endif
 
 /***** END TEST CODE - Fr-Sky User Data experiments *****/
 
