@@ -173,7 +173,7 @@ CPPDEFS = -DF_CPU=$(F_CPU)UL
 ifeq ($(PCB), STD)
 # STD PCB, so ...
 
-  CPPDEFS += -DPCBSTD -DEEPROM_ASYNC_WRITE
+  CPPDEFS += -DPCBSTD
   
 # If Hardware PPM mode ( PB0<->BP7) switch the Backlight output with the original PPM to use hardware facility to generate precise PPM (hardware mods)
 # G: TODO This prevents HARDPPM being used with FRSKY. HARDPPM needs its own option XXX
