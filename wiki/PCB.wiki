@@ -1,6 +1,8 @@
 #summary Custom PCB
 #labels Phase-Implementation,Phase-Design
-<img src="http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/pcbv4_photo.jpg" hspace="10" width="320" align="right">
+<table><tr><td><img src="http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/pcbv4_photo.jpg" hspace="10" width="320" align="right"></td>
+<tr>test</tr>
+</table>
 = Custom Main Board Development =
 
 == Why? ==
