@@ -4,8 +4,8 @@
  * - Bryan J. Rentoul (Gruvin) <gruvin@gmail.com>
  *
  * Original contributors
- * - Philip Moss Adapted first frsky functions from jeti.cpp code by 
- * - Karl Szmutny <shadow@privy.de> 
+ * - Philip Moss Adapted first frsky functions from jeti.cpp code by
+ * - Karl Szmutny <shadow@privy.de>
 
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License version 2 as published
@@ -38,6 +38,15 @@
 #define BYTESTUFF       0x7d
 #define STUFF_MASK      0x20
 
+#define FRSKY_RX_PACKET_SIZE 19
+#define FRSKY_TX_PACKET_SIZE 12
+
+uint8_t frskyRxBuffer[FRSKY_RX_PACKET_SIZE];   // Receive buffer. 9 bytes (full packet), worst case 18 bytes with byte-stuffing (+1)
+uint8_t frskyTxBuffer[FRSKY_TX_PACKET_SIZE];   // Ditto for transmit buffer
+uint8_t frskyTxBufferCount = 0;
+uint8_t FrskyRxBufferReady = 0;
+uint8_t frskyStreaming = 0;
+
 uint16_t frskyComputeVolts(uint8_t rawADC, uint16_t ratio/* max cirecuit designed input voltage */, uint8_t decimals/* 1 or 2. defaults to 1 */)
 {
   uint16_t val;
@@ -65,14 +74,6 @@ void frskyPutAValue(uint8_t x, uint8_t y, uint8_t channel, uint8_t value, uint8_
   }
 }
 
-// Fr-Sky Single Packet receive buffer. 9 bytes (full packet), worst case 18 bytes with byte-stuffing (+1). Ditto for tx buffer
-uint8_t frskyRxPacketBuf[FRSKY_RX_PACKET_SIZE];
-uint8_t frskyTxPacketBuf[FRSKY_TX_PACKET_SIZE];
-uint8_t frskyTxPacketCount = 0;
-uint8_t FrskyRxPacketReady = 0;
-uint8_t frskyStreaming = 0;
-uint8_t frskyTxISRIndex = 0;
-
 FrskyData frskyTelemetry[2];
 FrskyData frskyRSSI[2];
 
@@ -81,172 +82,28 @@ struct FrskyAlarm {
   uint8_t greater;  // 1 = 'if greater than'. 0 = 'if less than'
   uint8_t value;    // The threshold above or below which the alarm will sound
 };
+
 struct FrskyAlarm frskyAlarms[4];
 
-// Fr-Sky User Data receive and user data buffers. (Circular)
-#define FRSKY_BUFFER_SIZE 32
-class CircularBuffer
+#ifdef FRSKY_HUB
+FrskyHubData frskyHubData;
+#endif
+
+void frskyPushValue(uint8_t *&ptr, uint8_t value)
 {
-public:
-  uint8_t in;     // input / write index
-  uint8_t out;    // output / read index
-  char queue[FRSKY_BUFFER_SIZE];
-
-  CircularBuffer() // constructor
-  {
-    in = 0;
-    out = 0;
+  // byte stuff the only byte than might need it
+  if (value == START_STOP) {
+    *ptr++ = 0x5e;
+    *ptr++ = BYTESTUFF;
   }
-
-  inline void put(uint8_t byte)
-  {
-    if (((in + 1) % FRSKY_BUFFER_SIZE) != out) // if queue not full
-    {
-      queue[in] = byte;
-      in++;
-      in %= FRSKY_BUFFER_SIZE;
-    }
+  else if (value == BYTESTUFF) {
+    *ptr++ = 0x5d;
+    *ptr++ = BYTESTUFF;
   }
-
-  inline uint8_t get()
-  {
-    uint8_t data = 0;
-    if (out != in) // if queue not empty
-    {
-      data = queue[out];
-      out++;
-      out %= FRSKY_BUFFER_SIZE;
-    }
-    return data;
+  else {
+    *ptr++ = value;
   }
-
-  inline uint8_t isFull()
-  {
-    return (((in + 1) % FRSKY_BUFFER_SIZE) == out);
-  }
-
-  inline uint8_t isEmpty()
-  {
-    return (out == in);
-  }
-};
-
-CircularBuffer frskyUserData;
-
-// inherit and extend CircularBuffer to make parsing data more efficient
-class FrskyRxParser : public CircularBuffer {
-
-  uint8_t numPktBytes;
-  uint8_t dataState;
-
-public:
-// packet parser machine states
-#define frskyDataIdle    0
-#define frskyDataStart   1
-#define frskyDataInFrame 2
-#define frskyDataXOR     3
-  FrskyRxParser() : CircularBuffer() 
-  {
-    numPktBytes = 0;
-    dataState = frskyDataIdle;
-  };
-
-  /*
-    Fr-Sky telemtry packet parser, called from perMain() for each incoming serial byte
-    (State machine)
-    When a full packet has been collected, it is processed immediately from here with 
-    a call to processFrskyPacket()
-  */
-  void parseData()
-  {
-    while (out != in) // if queue not empty
-    {
-      uint8_t data = get(); // get() is inline to save stack etc
-
-      if (FrskyRxPacketReady == 0) // can't get more data if the buffer hasn't been cleared
-      {
-        switch (dataState) 
-        {
-          case frskyDataStart:
-            if (data == START_STOP) break; // Remain in userDataStart if possible 0x7e,0x7e doublet found.
-
-            frskyRxPacketBuf[numPktBytes++] = data;
-            dataState = frskyDataInFrame;
-            break;
-
-          case frskyDataXOR:
-            data ^= STUFF_MASK;
-            // drop through
-
-          case frskyDataInFrame:
-            if (dataState == frskyDataXOR)
-              dataState = frskyDataInFrame;
-            else if (data == BYTESTUFF)
-            { 
-                dataState = frskyDataXOR; // XOR next byte
-                break; 
-            }
-
-            if (data == START_STOP) // end of frame detected
-            {
-              // Process Fr-Sky Packet(uint8_t *frskyRxPacketBuf)
-
-              switch (frskyRxPacketBuf[0]) // What type of frskyRxPacketBuf?
-              {
-                case A22PKT:
-                case A21PKT:
-                case A12PKT:
-                case A11PKT:
-                  {
-                    struct FrskyAlarm *alarmptr ;
-                    alarmptr = &frskyAlarms[(frskyRxPacketBuf[0]-A22PKT)] ;
-                    alarmptr->value = frskyRxPacketBuf[1];
-                    alarmptr->greater = frskyRxPacketBuf[2] & 0x01;
-                    alarmptr->level = frskyRxPacketBuf[3] & 0x03;
-                  }
-                  break;
-
-                case LINKPKT: // A1/A2/RSSI values
-                  frskyTelemetry[0].set(frskyRxPacketBuf[1]);
-                  frskyTelemetry[1].set(frskyRxPacketBuf[2]);
-                  frskyRSSI[0].set(frskyRxPacketBuf[3]);
-                  frskyRSSI[1].set(frskyRxPacketBuf[4] / 2);
-                  break;
-
-                case USRPKT: // User Data frskyRxPacketBuf
-                  uint8_t numBytes = frskyRxPacketBuf[1] & 0x07; // sanitize in case of data corruption leading to buffer overflow
-                  for(uint8_t i=0; (i < numBytes) && (!frskyUserData.isFull()); i++)
-                      frskyUserData.put(frskyRxPacketBuf[3+i]);
-                  break;
-              }
-
-              FrskyRxPacketReady = 0;
-              frskyStreaming = FRSKY_TIMEOUT10ms; // reset counter only if valid frsky frskyRxPacketBufs are being detected
-
-              dataState = frskyDataIdle;
-              break;
-            }
-            else // not START_STOP
-            {
-              if (numPktBytes < FRSKY_RX_PACKET_SIZE)
-                frskyRxPacketBuf[numPktBytes++] = data;
-            }
-            break;
-
-          case frskyDataIdle:
-            if (data == START_STOP)
-            {
-              numPktBytes = 0;
-              dataState = frskyDataStart;
-            }
-            break;
-
-        } // switch
-      } // if (FrskyRxPacketReady == 0)
-    } // while
-  }; // parseData method
-};
-FrskyRxParser frskyRxParser;
+}
 
 #ifdef DISPLAY_USER_DATA
 /*
@@ -265,239 +122,235 @@ uint8_t frskyGetUserData(char *buffer, uint8_t bufSize)
 }
 #endif
 
-
-///////////////////////////////////////
-/// Fr-Sky Telemetry Hub Processing ///
-///////////////////////////////////////
-
-// Globbal vars to hold telemetry data for logging and display
-
-uint16_t gTelem_GPSaltitude[2];   // before.after
-uint16_t gTelem_GPSspeed[2];      // before.after
-uint16_t gTelem_GPSlongitude[2];  // before.after
-uint8_t  gTelem_GPSlongitudeEW;   // East West
-uint16_t gTelem_GPSlatitude[2];   // before.after
-uint8_t  gTelem_GPSlatitudeNS;    // North/South
-uint16_t gTelem_GPScourse[2];     // before.after (0..359.99 deg. -- seemingly 2-decimal precision)
-uint8_t  gTelem_GPSyear;
-uint8_t  gTelem_GPSmonth;
-uint8_t  gTelem_GPSday;
-uint8_t  gTelem_GPShour;
-uint8_t  gTelem_GPSmin;
-uint8_t  gTelem_GPSsec;
-int16_t  gTelem_AccelX;           // 1/256th gram (-8g ~ +8g)
-int16_t  gTelem_AccelY;           // 1/256th gram (-8g ~ +8g)
-int16_t  gTelem_AccelZ;           // 1/256th gram (-8g ~ +8g)
-int16_t  gTelem_Temperature1;     // -20 .. 250 deg. celcius
-uint16_t gTelem_RPM;              // 0..60,000 revs. per minute
-uint8_t  gTelem_FuelLevel;        // 0, 25, 50, 75, 100 percent
-int16_t  gTelem_Temperature2;     // -20 .. 250 deg. celcius
-uint16_t gTelem_Volts;            // 1/500V increments (0..4.2V)
-uint16_t gTelem_baroAltitude;     // 0..9,999 meters
-
-uint8_t telemPacket[TELEM_PKT_SIZE];
-inline void processTelemPacket(void)
+#ifdef FRSKY_HUB
+int8_t parseTelemHubIndex(uint8_t index)
 {
-  switch (telemPacket[0])
-  { 
-    case 0x02:    // Temperature 1 (deg. C ~ -20..250)
-      gTelem_Temperature1 = telemPacket[1] | (telemPacket[2] << 8);
-      break;
-
-    case 0x03:    // RPM (0..60000)
-      gTelem_RPM = telemPacket[1] | (telemPacket[2] << 8);
-      break;
-
-    case 0x04:    // Fuel Level (percentage 0, 25, 50, 75, 100)
-      gTelem_FuelLevel = telemPacket[1];
-      break;
-
-    case 0x05:    // Temperature 2 (deg. C ~ -20..250)
-      gTelem_Temperature2 = telemPacket[1] | (telemPacket[2] << 8);
-      break;
-
-    case 0x06:    // Volts (1/500v ~ 0..4.2v)
-      gTelem_Volts = (telemPacket[1] | (telemPacket[2] << 8)) / 5; // PREC2
-      break;
-
-    case 0x10:    // Barometric Altitude
-      gTelem_baroAltitude = telemPacket[1] | (telemPacket[2] << 8);
-      break;
-
-    // GPS altitude
-    case 0x01:    // before '.'
-      gTelem_GPSaltitude[0] = telemPacket[1] | (telemPacket[2] << 8);
-      break;
-    case 0x01+8:  // after '.'
-      gTelem_GPSaltitude[1] = telemPacket[1] | (telemPacket[2] << 8);
-      break;
-
-    // GPS speed
-    case 0x11:    // before '.'
-      gTelem_GPSspeed[0] = telemPacket[1] | (telemPacket[2] << 8);
-      break;
-    case 0x11+8:  // after '.'
-      gTelem_GPSspeed[1] = telemPacket[1] | (telemPacket[2] << 8);
-      break;
-
-    // GPS longitude
-    case 0x12:    // before '.'
-      gTelem_GPSlongitude[0] = telemPacket[1] | (telemPacket[2] << 8);
-      break;
-    case 0x12+8:  // after '.'
-      gTelem_GPSlongitude[1] = telemPacket[1] | (telemPacket[2] << 8);
-      break;
-    case 0x1a+8:  // East/West
-      gTelem_GPSlongitudeEW = telemPacket[1];
-      break;
-
-    // GPS latitude
-    case 0x13:    // before '.'
-      gTelem_GPSlatitude[0] = telemPacket[1] | (telemPacket[2] << 8);
-      break;
-    case 0x13+8:  // after '.'
-      gTelem_GPSlatitude[1] = telemPacket[1] | (telemPacket[2] << 8);
-      break;
-    case 0x1b+8:  // North/South
-      gTelem_GPSlatitudeNS = telemPacket[1];
-      break;
-
-    // GPS course
-    case 0x14:    // before '.'
-      gTelem_GPScourse[0] = telemPacket[1] | (telemPacket[2] << 8);
-      break;
-    case 0x14+8:  // after '.'
-      gTelem_GPScourse[1] = telemPacket[1] | (telemPacket[2] << 8);
-      break;
-
-    // GPS date
-    case 0x15:    // day/month
-      gTelem_GPSday = telemPacket[1];
-      gTelem_GPSmonth = telemPacket[2];
-      break;
-    case 0x16:    // year
-      gTelem_GPSyear = telemPacket[1];
-      break;
-    case 0x17:    // hour/minute
-      gTelem_GPShour = telemPacket[1];
-      gTelem_GPSmin = telemPacket[2];
-      break;
-    case 0x18:    // second
-      gTelem_GPSsec = telemPacket[1];
-      break;
-
-    // Accelerometer g-forces (leave raw / un-scaled)
-    case 0x24:    // x-axis
-      gTelem_AccelX = telemPacket[1] | (telemPacket[2] << 8);
-      break;
-    case 0x25:    // y-axis
-      gTelem_AccelY = telemPacket[1] | (telemPacket[2] << 8);
-      break;
-    case 0x26:    // z-axis
-      gTelem_AccelZ = telemPacket[1] | (telemPacket[2] << 8);
-      break;
-  }
+  if (index > 0x26)
+    index = 0; // invalid index
+  if (index > 0x21)
+    index -= 5;
+  if (index > 0x0f)
+    index -= 6;
+  if (index > 0x08)
+    index -= 2;
+  return 2*(index-1);
 }
 
 typedef enum {
-  TS_IDLE = 0,// waiting for 0x5e frame marker
-  TS_START,   // reset and start receiving data
-  TS_DATA,    // receive data byte
-  TS_FRAME,   // frame complete. Precess it. (Not used as there's no end of packet market to swallow)
-  TS_XOR      // decode stuffed byte
+  TS_IDLE = 0,  // waiting for 0x5e frame marker
+  TS_DATA_ID,   // waiting for dataID
+  TS_DATA_LOW,  // waiting for data low byte
+  TS_DATA_HIGH, // waiting for data high byte
+  TS_XOR = 0x80 // decode stuffed byte
 } TS_STATE;
 
-void parseTelemHubData()
+void parseTelemHubByte(uint8_t byte)
 {
-  static uint8_t telemIndex;
-  static TS_STATE telemState = TS_IDLE;
+  static int8_t structPos;
+  static TS_STATE state = TS_IDLE;
 
-  // Process all available bytes in frsky user data Buffer
-  while (!frskyUserData.isEmpty())
-  {
-    uint8_t data = frskyUserData.get();
-    
-    switch (telemState)
-    {
-      case TS_XOR:
-        data = data ^ 0x60;
-        // drop through
-        
-      case TS_DATA:
-
-        if (telemState == TS_XOR)
-          telemState = TS_DATA;
-        else if (data == 0x5d) // discard this byte and decode byte-stuff on next
-        {
-          telemState = TS_XOR;
-          break;
-        }
-
-        if (telemIndex < TELEM_PKT_SIZE)
-        {
-          telemPacket[telemIndex] = data;
-          telemIndex++;
-
-          if (telemIndex == TELEM_PKT_SIZE)
-          {
-            // process this packet
-            processTelemPacket(); // inline function just to make this code section easier to read
-            telemState = TS_IDLE;
-          }
-        }
-        break;
-
-      case TS_START:
-        if (data == 0x5e)
-          break; // swallow any 0x5e doublet, which DOES happen between frames (not packets)
-        
-        telemPacket[0] = data;
-        telemIndex = 1;
-        telemState = TS_DATA;
-        break;
-
-      case TS_IDLE:
-      default:
-        if (data == 0x5e)
-          telemState = TS_START;
-    }
+  if (byte == 0x5e) {
+    state = TS_DATA_ID;
+    return;
   }
+  if (state == TS_IDLE) {
+    return;
+  }
+  if (state & TS_XOR) {
+    byte = byte ^ 0x60;
+    state = (TS_STATE)(state - TS_XOR);
+  }
+  if (byte == 0x5d) {
+    state = (TS_STATE)(state | TS_XOR);
+    return;
+  }
+  if (state == TS_DATA_ID) {
+    structPos = parseTelemHubIndex(byte);
+    state = TS_DATA_LOW;
+    if (structPos < 0)
+      state = TS_IDLE;
+    return;
+  }
+  if (state == TS_DATA_LOW) {
+    ((uint8_t*)&frskyHubData)[structPos] = byte;
+    state = TS_DATA_HIGH;
+    return;
+  }
+  ((uint8_t*)&frskyHubData)[structPos+1] = byte;
+  state = TS_IDLE;
 }
-  
+#endif  
+
 /*
-  Empties any current USART0 receiver buffer content into the Fr-Sky packet
-  parser state machine. (Called from main loop.)
+   Called from somewhere in the main loop or a low priority interrupt
+   routine perhaps. This function processes FrSky telemetry data packets
+   assembled by he USART0_RX_vect) ISR function (below) and stores
+   extracted data in global variables for use by other parts of the program.
+
+   Packets can be any of the following:
+
+    - A1/A2/RSSI telemetry data
+    - Alarm level/mode/threshold settings for Ch1A, Ch1B, Ch2A, Ch2B
+    - User Data packets
 */
-char telemRxByteBuf[FRSKY_RX_BUFFER_SIZE];
-void frskyParseRxData()
+
+void processFrskyPacket(uint8_t *packet)
 {
-  UCSR0B &= ~(1 << RXCIE0); // disable USART RX interrupt
+  // What type of packet?
+  switch (packet[0])
+  {
+    case A22PKT:
+    case A21PKT:
+    case A12PKT:
+    case A11PKT:
+      {
+        struct FrskyAlarm *alarmptr ;
+        alarmptr = &frskyAlarms[(packet[0]-A22PKT)] ;
+        alarmptr->value = packet[1];
+        alarmptr->greater = packet[2] & 0x01;
+        alarmptr->level = packet[3] & 0x03;
+      }
+      break;
+    case LINKPKT: // A1/A2/RSSI values
+      frskyTelemetry[0].set(packet[1]);
+      frskyTelemetry[1].set(packet[2]);
+      frskyRSSI[0].set(packet[3]);
+      frskyRSSI[1].set(packet[4] / 2);
+      break;
 
-  frskyRxParser.parseData();
+    case USRPKT: // User Data packet
+#ifdef FRSKY_HUB
+      uint8_t numBytes = 3 + (packet[1] & 0x07); // sanitize in case of data corruption leading to buffer overflow
+      for (uint8_t i=3; i<numBytes; i++) {
+        parseTelemHubByte(packet[i]);
+      }
+      // TODO frskyUsrStreaming = FRSKY_TIMEOUT10ms*3; // reset counter only if valid frsky packets are being detected
+#endif
+      break;
+  }
 
-  UCSR0B |= (1 << RXCIE0); // enable USART RX interrupt
+  FrskyRxBufferReady = 0;
+  frskyStreaming = FRSKY_TIMEOUT10ms; // reset counter only if valid frsky packets are being detected
 }
 
+// Receive buffer state machine state defs
+#define frskyDataIdle    0
+#define frskyDataStart   1
+#define frskyDataInFrame 2
+#define frskyDataXOR     3
 /*
-   Receive USART0 data bytes, loading them into circular buffer
-   'frskyRxBuffer'. Swallows incoming bytes if buffer is full.
+   Receive serial (RS-232) characters, detecting and storing each Fr-Sky 
+   0x7e-framed packet as it arrives.  When a complete packet has been 
+   received, process its data into storage variables.  NOTE: This is an 
+   interrupt routine and should not get too lengthy. I originally had
+   the buffer being checked in the perMain function (because per10ms
+   isn't quite often enough for data streaming at 9600baud) but alas
+   that scheme lost packets also. So each packet is parsed as it arrives,
+   directly at the ISR function (through a call to frskyProcessPacket).
+   
+   If this proves a problem in the future, then I'll just have to implement
+   a second buffer to receive data while one buffer is being processed (slowly).
 */
+
 #ifndef SIMU
 ISR(USART0_RX_vect)
 {
-  UCSR0B &= ~(1 << RXCIE0); // disable (ONLY) USART RX interrupt
+  uint8_t stat;
+  uint8_t data;
+  
+  static uint8_t numPktBytes = 0;
+  static uint8_t dataState = frskyDataIdle;
+  
+  UCSR0B &= ~(1 << RXCIE0); // disable Interrupt
+  sei() ;
 
-  // Must read data byte regardless, to clear interrupt flag
-  char data = UDR0;  // USART0 received byte register
+  stat = UCSR0A; // USART control and Status Register 0 A
 
-  sei(); // un-block other interrupts. VITAL to allow TIMER1_COMPA (PPM_out) int to fire from here
+  /*
+              bit      7      6      5      4      3      2      1      0
+                      RxC0  TxC0  UDRE0    FE0   DOR0   UPE0   U2X0  MPCM0
+             
+              RxC0:   Receive complete
+              TXC0:   Transmit Complete
+              UDRE0:  USART Data Register Empty
+              FE0:    Frame Error
+              DOR0:   Data OverRun
+              UPE0:   USART Parity Error
+              U2X0:   Double Tx Speed
+              PCM0:   MultiProcessor Comms Mode
+   */
+  // rh = UCSR0B; //USART control and Status Register 0 B
 
-  // Ignore this byte if (frame | overrun | partiy) error
-  if ((UCSR0A & ((1 << FE0) | (1 << DOR0) | (1 << UPE0))) == 0)
-    frskyRxParser.put(data);
+    /*
+              bit      7      6      5      4      3      2      1      0
+                   RXCIE0 TxCIE0 UDRIE0  RXEN0  TXEN0 UCSZ02  RXB80  TXB80
+             
+              RxCIE0:   Receive Complete int enable
+              TXCIE0:   Transmit Complete int enable
+              UDRIE0:   USART Data Register Empty int enable
+              RXEN0:    Rx Enable
+              TXEN0:    Tx Enable
+              UCSZ02:   Character Size bit 2
+              RXB80:    Rx data bit 8
+              TXB80:    Tx data bit 8
+    */
 
-  UCSR0B |= (1 << RXCIE0); // enable (ONLY) USART RX interrupt
-  cli(); // As much as I hate to have this here for PPM_out's sake -- I really don't have a choice.
+  data = UDR0; // USART data register 0
+
+  if (stat & ((1 << FE0) | (1 << DOR0) | (1 << UPE0)))
+  { // discard buffer and start fresh on any comms error
+    FrskyRxBufferReady = 0;
+    numPktBytes = 0;
+  } 
+  else
+  {
+    if (FrskyRxBufferReady == 0) // can't get more data if the buffer hasn't been cleared
+    {
+      switch (dataState) 
+      {
+        case frskyDataStart:
+          if (data == START_STOP) break; // Remain in userDataStart if possible 0x7e,0x7e doublet found.
+
+          if (numPktBytes < FRSKY_RX_PACKET_SIZE)
+            frskyRxBuffer[numPktBytes++] = data;
+          dataState = frskyDataInFrame;
+          break;
+
+        case frskyDataInFrame:
+          if (data == BYTESTUFF)
+          { 
+              dataState = frskyDataXOR; // XOR next byte
+              break; 
+          }
+          if (data == START_STOP) // end of frame detected
+          {
+            processFrskyPacket(frskyRxBuffer); // FrskyRxBufferReady = 1;
+            dataState = frskyDataIdle;
+            break;
+          }
+          if (numPktBytes < FRSKY_RX_PACKET_SIZE)
+            frskyRxBuffer[numPktBytes++] = data;
+          break;
+
+        case frskyDataXOR:
+          if (numPktBytes < FRSKY_RX_PACKET_SIZE)
+            frskyRxBuffer[numPktBytes++] = data ^ STUFF_MASK;
+          dataState = frskyDataInFrame;
+          break;
+
+        case frskyDataIdle:
+          if (data == START_STOP)
+          {
+            numPktBytes = 0;
+            dataState = frskyDataStart;
+          }
+          break;
+
+      } // switch
+    } // if (FrskyRxBufferReady == 0)
+  }
+  cli() ;
+  UCSR0B |= (1 << RXCIE0); // enable Interrupt
 }
 
 /*
@@ -506,9 +359,8 @@ ISR(USART0_RX_vect)
 */
 ISR(USART0_UDRE_vect)
 {
-  if (frskyTxPacketCount > 0) {
-    UDR0 = frskyTxPacketBuf[frskyTxISRIndex++];
-    frskyTxPacketCount--;
+  if (frskyTxBufferCount > 0) {
+    UDR0 = frskyTxBuffer[--frskyTxBufferCount];
   }
   else {
     UCSR0B &= ~(1 << UDRIE0); // disable UDRE0 interrupt
@@ -518,48 +370,41 @@ ISR(USART0_UDRE_vect)
 
 /******************************************/
 
-void frskyPushValue(uint8_t & i, uint8_t value);
-
 void frskyTransmitBuffer()
 {
-  frskyTxISRIndex = 0;
-  UCSR0B |= (1 << UDRIE0); // enable  UDRE0 (data register empty) interrupt
+  UCSR0B |= (1 << UDRIE0); // enable  UDRE0 interrupt
 }
 
-
-uint8_t FrskyAlarmSendState = 0 ; // Which channel and alarm slot (1/2) to send
-                                  // Set to 4 to cause all four alarm setting to be sent to module
-
-void FRSKY10mspoll(void) // called from drivers.cpp if FrskyAlarmSendState > 0
+uint8_t FrskyAlarmSendState = 0 ;
+void FRSKY10mspoll(void)
 {
+  if (frskyTxBufferCount)
+    return; // we only have one buffer. If it's in use, then we can't send yet.
 
-    if (frskyTxPacketCount) // we only have one buffer. If it's in use, then we can't send yet.
-      return;               // drivers.cpp will have us back here in 50ms if needed.
+  uint8_t *ptr = &frskyTxBuffer[0];
 
-    uint8_t sendAlarmState = FrskyAlarmSendState - 1;
-    // Now send a packet
-    {
-      uint8_t channel = 1 - (sendAlarmState / 2);
-      uint8_t alarm = 1 - (sendAlarmState % 2);
+  *ptr++ = START_STOP;        // End of packet
+  *ptr++ = 0x00;
+  *ptr++ = 0x00;
+  *ptr++ = 0x00;
+  *ptr++ = 0x00;
+  *ptr++ = 0x00;
 
-      uint8_t i = 0;
-      frskyTxPacketBuf[i++] = START_STOP; // Start of packet
-      frskyTxPacketBuf[i++] = (A22PKT + sendAlarmState); // fc - fb - fa - f9
-      frskyPushValue(i, g_model.frsky.channels[channel].alarms_value[alarm]);
-      {
-        frskyTxPacketBuf[i++] = ALARM_GREATER(channel, alarm);
-        frskyTxPacketBuf[i++] = ALARM_LEVEL(channel, alarm);
-        frskyTxPacketBuf[i++] = 0x00 ;
-        frskyTxPacketBuf[i++] = 0x00 ;
-        frskyTxPacketBuf[i++] = 0x00 ;
-        frskyTxPacketBuf[i++] = 0x00 ;
-        frskyTxPacketBuf[i++] = 0x00 ;
-        frskyTxPacketBuf[i++] = START_STOP;        // End of packet
-      }
-      frskyTxPacketCount = i;
-      frskyTransmitBuffer(); 
-    }
-    FrskyAlarmSendState--;
+  // Now send a packet
+  FrskyAlarmSendState -= 1 ;
+  uint8_t alarm = 1 - (FrskyAlarmSendState % 2);
+  if (FrskyAlarmSendState < SEND_MODEL_ALARMS) {
+    uint8_t channel = 1 - (FrskyAlarmSendState / 2);
+    *ptr++ = ALARM_LEVEL(channel, alarm);
+    *ptr++ = ALARM_GREATER(channel, alarm);
+    frskyPushValue(ptr, g_model.frsky.channels[channel].alarms_value[alarm]);
+    *ptr++ = (A22PKT + FrskyAlarmSendState); // fc - fb - fa - f9
+  }
+
+  *ptr++ = START_STOP;        // Start of packet
+
+  frskyTxBufferCount = ptr - &frskyTxBuffer[0];
+  frskyTransmitBuffer();
 }
 
 bool FRSKY_alarmRaised(uint8_t idx)
@@ -581,8 +426,8 @@ bool FRSKY_alarmRaised(uint8_t idx)
 
 inline void FRSKY_EnableTXD(void)
 {
-  frskyTxPacketCount = 0;
-  UCSR0B |= (1 << TXEN0) | (1 << UDRIE0); // enable TX and TX interrupt
+  frskyTxBufferCount = 0;
+  UCSR0B |= (1 << TXEN0); // enable TX
 }
 
 inline void FRSKY_EnableRXD(void)
@@ -621,22 +466,6 @@ void FRSKY_Init(void)
   // These should be running right from power up on a FrSky enabled '9X.
   FRSKY_EnableTXD(); // enable FrSky-Telemetry reception
   FRSKY_EnableRXD(); // enable FrSky-Telemetry reception
-}
-
-void frskyPushValue(uint8_t & i, uint8_t value)
-{
-  // byte stuff the only byte than might need it
-  if (value == START_STOP) {
-    frskyTxPacketBuf[i++] = BYTESTUFF;
-    frskyTxPacketBuf[i++] = 0x5e;
-  }
-  else if (value == BYTESTUFF) {
-    frskyTxPacketBuf[i++] = BYTESTUFF;
-    frskyTxPacketBuf[i++] = 0x5d;
-  }
-  else {
-    frskyTxPacketBuf[i++] = value;
-  }
 }
 
 void FrskyData::set(uint8_t value)

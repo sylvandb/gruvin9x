@@ -26,15 +26,6 @@
 // .20 seconds
 #define FRSKY_TIMEOUT10ms 20
 
-#if defined (PCBV3) /* ATmega64A just doesn't have enough RAM */
-#define FRSKY_RX_BUFFER_SIZE 64
-#else
-#define FRSKY_RX_BUFFER_SIZE 20
-#endif
-
-#define FRSKY_RX_PACKET_SIZE 19
-#define FRSKY_TX_PACKET_SIZE 12
-
 enum AlarmLevel {
   alarm_off = 0,
   alarm_yellow = 1,
@@ -52,9 +43,47 @@ struct FrskyData {
   void set(uint8_t value);
 };
 
+#ifdef FRSKY_HUB
+struct FrskyHubData {
+  int16_t  gpsAltitude_bp;   // before punct
+  int16_t  temperature1;     // -20 .. 250 deg. celcius
+  uint16_t rpm;              // 0..60,000 revs. per minute
+  uint16_t fuelLevel;        // 0, 25, 50, 75, 100 percent
+  int16_t  temperature2;     // -20 .. 250 deg. celcius
+  uint16_t volts;            // 1/500V increments (0..4.2V)
+  int16_t  gpsAltitude_ap;   // after punct
+  uint16_t baroAltitude;     // 0..9,999 meters
+  uint16_t gpsSpeed_bp;      // before punct
+  uint16_t gpsLongitude_bp;  // before punct
+  uint16_t gpsLatitude_bp;   // before punct
+  uint16_t gpsCourse_bp;     // before punct (0..359.99 deg. -- seemingly 2-decimal precision)
+  uint8_t  day;
+  uint8_t  month;
+  uint16_t year;
+  uint8_t  hour;
+  uint8_t  min;
+  uint16_t sec;
+  uint16_t gpsSpeed_ap;
+  uint16_t gpsLongitude_ap;
+  uint16_t gpsLatitude_ap;
+  uint16_t gpsCourse_ap;
+  uint16_t gpsLongitudeEW;   // East/West
+  uint16_t gpsLatitudeNS;    // North/South
+  int16_t  accelX;           // 1/256th gram (-8g ~ +8g)
+  int16_t  accelY;           // 1/256th gram (-8g ~ +8g)
+  int16_t  accelZ;           // 1/256th gram (-8g ~ +8g)
+};
+
+extern FrskyHubData frskyHubData;
+#endif
+
 // Global Fr-Sky telemetry data variables
 extern uint8_t frskyStreaming; // >0 (true) == data is streaming in. 0 = nodata detected for some time
+
+#define SEND_MODEL_ALARMS 4
+#define SEND_RSSI_ALARMS  (SEND_MODEL_ALARMS + 2)
 extern uint8_t FrskyAlarmSendState;
+
 extern FrskyData frskyTelemetry[2];
 extern FrskyData frskyRSSI[2];
 extern uint8_t frskyRxBufferIn;
@@ -70,46 +99,12 @@ void FRSKY10mspoll(void);
 
 inline void FRSKY_setModelAlarms(void)
 {
-  FrskyAlarmSendState = 4;
+  FrskyAlarmSendState = SEND_MODEL_ALARMS;
 }
 
 bool FRSKY_alarmRaised(uint8_t idx);
 
 void resetTelemetry();
-
-
-void frskyParseRxData();
-
-#ifdef DISPLAY_USER_DATA
-uint8_t frskyGetUserData(char *buffer, uint8_t bufSize);
-#endif
-
-#define TELEM_PKT_SIZE 3
-extern uint8_t telemPacket[TELEM_PKT_SIZE];
-extern void parseTelemHubData();
-
-extern uint16_t gTelem_GPSaltitude[2];   // before,after decimal
-extern uint16_t gTelem_GPSspeed[2];      // before,after decimal
-extern uint16_t gTelem_GPSlongitude[2];  // before,after decimal
-extern uint8_t  gTelem_GPSlongitudeEW;   // East West
-extern uint16_t gTelem_GPSlatitude[2];   // before,after decimal
-extern uint8_t  gTelem_GPSlatitudeNS;    // North/South
-extern uint16_t gTelem_GPScourse[2];     // before.after (0..359 deg. -- unknown precision)
-extern uint8_t  gTelem_GPSyear;
-extern uint8_t  gTelem_GPSmonth;
-extern uint8_t  gTelem_GPSday;
-extern uint8_t  gTelem_GPShour;
-extern uint8_t  gTelem_GPSmin;
-extern uint8_t  gTelem_GPSsec;
-extern int16_t  gTelem_AccelX;           // 1/256th gram (-8g ~ +8g)
-extern int16_t  gTelem_AccelY;           // 1/256th gram (-8g ~ +8g)
-extern int16_t  gTelem_AccelZ;           // 1/256th gram (-8g ~ +8g)
-extern int16_t  gTelem_Temperature1;     // -20 .. 250 deg. celcius
-extern uint16_t gTelem_RPM;              // 0..60,000 revs. per minute
-extern uint8_t  gTelem_FuelLevel;        // 0, 25, 50, 75, 100 percent
-extern int16_t  gTelem_Temperature2;     // -20 .. 250 deg. celcius
-extern uint16_t gTelem_Volts;            // 1/500V increments (0..4.2V)
-extern uint16_t gTelem_baroAltitude;     // 0..9,999 meters
 
 #endif
 

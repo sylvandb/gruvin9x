@@ -188,6 +188,11 @@ ifeq ($(PCB), STD)
 
 # If FRSKY-Support is enabled
   ifeq ($(EXT), FRSKY)
+   CPPDEFS += -DFRSKY -DFRSKY_HUB
+  endif
+  
+# If FRSKY-Support is enabled
+  ifeq ($(EXT), FRSKY_NOHUB)
    CPPDEFS += -DFRSKY
   endif
 

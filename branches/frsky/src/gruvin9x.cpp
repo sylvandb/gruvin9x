@@ -1541,14 +1541,6 @@ void perMain()
 
 #if defined (FRSKY)
 
-  // parse whatever USART0 bytes are available in receive buffer
-  frskyParseRxData();  // Extracts Fr-Sky packets, alarm, user data, etc.
-
-  // parse fr-sky user data -- assuming Fr-Sky hub is plugged into remote receiver
-  parseTelemHubData(); // TODO: Should probably be conditional on type of data is
-                       //       unit connected. For now, only the Fr-Sky hub is supported.
-
-
 /***** TEST CODE - Fr-Sky SD/MMC card / User Data experiments *****/
 
 #if defined (PCBV3)
