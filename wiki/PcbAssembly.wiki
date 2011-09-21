@@ -17,3 +17,10 @@ Since a picture tells a thousand words and a video streams pictures at 15+ frame
 Thanks Cam!
 
 === More to come, as time allows ==
+
+= Patching PCB v4.0 =
+
+For those who have jumped ahead and got themselves one of the few v4.0 boards we had available, here's the patch work needed (as at 2011-09-21) to make your board v4.1 design compatible -- and in fact required to work with the v4.1 targetted code version /branches/darktrain.
+
+[PcbAssembly.attach/v4.0_fixes_detail.jpg]
+
