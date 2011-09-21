@@ -22,5 +22,5 @@ Thanks Cam!
 
 For those who have jumped ahead and got themselves one of the few v4.0 boards we had available, here's the patch work needed (as at 2011-09-21) to make your board v4.1 design compatible -- and in fact required to work with the v4.1 targetted code version /branches/darktrain.
 
-[PcbAssembly.attach/v4.0_fixes_detail.jpg]
+[http://gruvin9x.googlecode.com/svn/wiki/PcbAssembly.attach/v4.0_fixes_detail.jpg]
 
