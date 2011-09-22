@@ -14,7 +14,8 @@ Initial intentions were to ...
  * provide a programming header capable of supporting an onboard USB programming board. (For now, this header simply enables connection of an AVR ISP programmer.) *done* 
  * add RS-232 and TTL level telemetry serial data send/receive ports *done*
  * free up most of PORTB for use with an MM/SD card interface for mass storage *done*
- * upgrade the processor for more program, RAM and EEPROM storage memory *done*
+ * upgrade the processor for more program, RAM and EEPROM storage memory *done* (v3.2)
+ * upgrade processor yet again to 100-pin version, for even greater "plug'n'play" flexibility. *done* (v4.0)
 
 Thanks to the enthusiastic support of several people over the months, there have been many ideas to come along since those first intentions were realized. These include ...
 
