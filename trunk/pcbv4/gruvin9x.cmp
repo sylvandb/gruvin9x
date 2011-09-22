@@ -1,10 +1,10 @@
-Cmp-Mod V01 Created by CvPCB (2011-07-08 BZR 3044)-stable date = 01/08/2011 21:15:59
+Cmp-Mod V01 Genere par PcbNew le 22/09/2011 16:53:05
 
 BeginCmp
 TimeStamp = /4CE748AC;
 Reference = C1;
 ValeurCmp = 10uF;
-IdModule  = SM1206;
+IdModule  = SM1206_GRUVIN_POL;
 EndCmp
 
 BeginCmp
@@ -74,14 +74,14 @@ BeginCmp
 TimeStamp = /4D3246D5;
 Reference = C11;
 ValeurCmp = 10uF;
-IdModule  = SM1206;
+IdModule  = SM1206_GRUVIN_POL;
 EndCmp
 
 BeginCmp
 TimeStamp = /4CE74A4E;
 Reference = C12;
 ValeurCmp = 47uF;
-IdModule  = SM1206;
+IdModule  = SM1206_GRUVIN_POL;
 EndCmp
 
 BeginCmp
@@ -123,7 +123,7 @@ BeginCmp
 TimeStamp = /4DFF92E7;
 Reference = C18;
 ValeurCmp = 47uF;
-IdModule  = SM1206;
+IdModule  = SM1206_GRUVIN_POL;
 EndCmp
 
 BeginCmp
@@ -214,14 +214,14 @@ BeginCmp
 TimeStamp = /4DE3AC28;
 Reference = C31;
 ValeurCmp = 47uF;
-IdModule  = SM1206;
+IdModule  = SM1206_GRUVIN_POL;
 EndCmp
 
 BeginCmp
 TimeStamp = /4DDD61B4;
 Reference = C32;
 ValeurCmp = 22uF;
-IdModule  = SM1210;
+IdModule  = SM1210_GRUVIN_POL;
 EndCmp
 
 BeginCmp
@@ -242,7 +242,7 @@ BeginCmp
 TimeStamp = /4DFF92F5;
 Reference = C35;
 ValeurCmp = 47uF;
-IdModule  = SM1206;
+IdModule  = SM1206_GRUVIN_POL;
 EndCmp
 
 BeginCmp
@@ -480,13 +480,6 @@ BeginCmp
 TimeStamp = /4CEE07E6;
 Reference = D1;
 ValeurCmp = DIODESIL;
-IdModule  = SM0603_DIODE;
-EndCmp
-
-BeginCmp
-TimeStamp = /4E203397;
-Reference = D2;
-ValeurCmp = DIODESCH;
 IdModule  = SM0603_DIODE;
 EndCmp
 
@@ -869,6 +862,13 @@ IdModule  = SOT23-BCE;
 EndCmp
 
 BeginCmp
+TimeStamp = /4E7B4ABC;
+Reference = Q8;
+ValeurCmp = BC847C;
+IdModule  = SOT23-BCE;
+EndCmp
+
+BeginCmp
 TimeStamp = /4CE749EC;
 Reference = R1;
 ValeurCmp = 5K1;
@@ -1082,6 +1082,13 @@ BeginCmp
 TimeStamp = /4E00D15A;
 Reference = R31;
 ValeurCmp = 10K2;
+IdModule  = SM0603_GRUVIN;
+EndCmp
+
+BeginCmp
+TimeStamp = /4E7B4AFA;
+Reference = R32;
+ValeurCmp = 5K1;
 IdModule  = SM0603_GRUVIN;
 EndCmp
 
@@ -1571,14 +1578,14 @@ EndCmp
 BeginCmp
 TimeStamp = /4E2072D1;
 Reference = R102;
-ValeurCmp = 100R;
+ValeurCmp = 200R;
 IdModule  = SM0603_GRUVIN;
 EndCmp
 
 BeginCmp
 TimeStamp = /4E207322;
 Reference = R103;
-ValeurCmp = 100R;
+ValeurCmp = 200R;
 IdModule  = SM0603_GRUVIN;
 EndCmp
 
