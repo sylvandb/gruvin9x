@@ -634,8 +634,7 @@ void checkQuickSelect()
         lcd_clear();
         lcd_putsAtt(64-7*FW,0*FH,PSTR("LOADING"),DBLSIZE);
 
-        for(uint8_t i=0;i<sizeof(g_model.name);i++)
-            lcd_putcAtt(FW*2+i*2*FW-i-2, 3*FH, g_model.name[i],DBLSIZE);
+        putsModelName(2*FW, 3*FH, g_model.name, j, DBLSIZE);
 
         refreshDiplay();
         lcdSetRefVolt(g_eeGeneral.contrast);
