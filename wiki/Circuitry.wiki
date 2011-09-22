@@ -8,12 +8,12 @@
 The custom circuitry for Gruvin's '9X has gone through a number of evolutions, and continues to evolved. The following links show the path taken to date
 
 == Ongoing Design ==
-Ongoing custom circuit and PCB design currently takes place at [http://gruvin9x.googlecode.com/svn/trunk/pcbv4/]. There you'll find a [http://kicad.sourceforge.net/wiki/Main_Page KiCAD] project file named `gruvin9x.pro`, with internal references to [http://gruvin9x.googlecode.com/svn/trunk/pcbv4/gruvin9x.sch gruvin9x.sch] and [http://gruvin9x.googlecode.com/svn/trunk/pcbv4/gruvin9x.pcb gruvin9x.pcb]. (Work on the V3 board has already started.)
+Ongoing custom circuit and PCB design currently takes place at [http://gruvin9x.googlecode.com/svn/trunk/pcbv4/]. There you'll find a [http://kicad.sourceforge.net/wiki/Main_Page KiCAD] project file named `gruvin9x.pro`, with internal references to [http://gruvin9x.googlecode.com/svn/trunk/pcbv4/gruvin9x.sch gruvin9x.sch] and [http://gruvin9x.googlecode.com/svn/trunk/pcbv4/gruvin9x.pcb gruvin9x.pcb].
 
 == First Prototype (now obsolete!) ==
-The first prototype 'rev 2.14' PCB design, schematic and production files, as sent to the PCB fabrication factory in December of 2010, can be found at [http://gruvin9x.googlecode.com/svn/trunk/pcb/rev2.14-frozen]. For your convenience, there's a PDF version of the schematic, [http://gruvin9x.googlecode.com/svn/trunk/pcb/rev2.14-frozen/gruvin9x.pdf here].
+For historical interest's sake, the first physical prototype, 'rev 2.14' PCB design, schematic and production files, as sent to the PCB fabrication factory in December of 2010, can be found at [http://gruvin9x.googlecode.com/svn/trunk/pcb/rev2.14-frozen]. There's a PDF version of the schematic, [http://gruvin9x.googlecode.com/svn/trunk/pcb/rev2.14-frozen/gruvin9x.pdf here].
 
-*As at September 2011, we've progressed to v4.0* and are working hard to release a board for general consumption. It is our firm intention to finally do just that with v4.1, hopefully before December of the same year. Version 4.0, final prototypes are currently being assembled with a number of beta testers being lined up for the first few v4.1 production boards. We're going as fast as we can.
+*As at 22 September 2011, we've progressed to v4.0* and are working hard to release a board for general consumption. It is our firm intention to finally do just that with v4.1, hopefully before December, 2011. Version 4.0, final prototypes have been assembled (x4) and are being tested and debugged. A number of beta testers are being lined up for the first few v4.1 production boards. Simply put, we're going as fast as we can.
 
 Check out the source tree in the /trunk/pcb** folders for current design files.
 
