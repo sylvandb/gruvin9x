@@ -1657,6 +1657,15 @@ void perMain()
   g_menuStack[g_menuStackPtr](evt);
   refreshDiplay();
 
+#if defined (PCBV4)
+  // PPM signal on phono-jack. In or out? ...
+  if(checkSlaveMode()) {
+    PORTG |= (1<<OUT_G_SIM_CTL); // 1=ppm out
+  }
+  else{
+    PORTG &=  ~(1<<OUT_G_SIM_CTL); // 0=ppm in
+  }
+#else
   // PPM signal on phono-jack. In or out? ...
   if(checkSlaveMode()) {
     PORTG &= ~(1<<OUT_G_SIM_CTL); // 0=ppm out
@@ -1664,6 +1673,7 @@ void perMain()
   else{
     PORTG |=  (1<<OUT_G_SIM_CTL); // 1=ppm-in
   }
+#endif
 
   switch( get_tmr10ms() & 0x1f ) { //alle 10ms*32
 
@@ -1976,25 +1986,25 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
 // count delta values thus can range from about 1600 to 4400 counts (800us to 2200us),
 // corresponding to a PPM signal in the range 0.8ms to 2.2ms (1.5ms at center).
 // (The timer is free-running and is thus not reset to zero at each capture interval.)
-ISR(TIMER3_CAPT_vect, ISR_NOBLOCK) //capture ppm in 16MHz / 8 = 2MHz
+ISR(TIMER3_CAPT_vect) // G: High frequency noise can cause stack overflo with ISR_NOBLOCK
 {
   static uint16_t lastCapt;
 
   uint16_t capture=ICR3;
 
-  cli(); // gruvin: are these global int disables really needed? Consult data sheet.
+  // Prevent rentrance for this IRQ only
 #if defined (PCBV3)
   TIMSK3 &= ~(1<<ICIE3);
 #else
   ETIMSK &= ~(1<<TICIE3);
 #endif
-  sei();
+  sei(); // enable other interrupts
 
   uint16_t val = (capture - lastCapt) / 2;
 
-  // G: We prcoess g_ppmInsright here to make servo movement as smooth as possible
+  // G: We prcoess g_ppmIns immediately here, to make servo movement as smooth as possible
   //    while under trainee control
-  if (val>4000 && val < 16000) // G: Priorotise reset pulse. (Needed when less than 8 incoming pulses)
+  if (val>4000 && val < 16000) // G: Priorotize reset pulse. (Needed when less than 8 incoming pulses)
     ppmInState = 1; // triggered
   else
   {
@@ -2012,13 +2022,12 @@ ISR(TIMER3_CAPT_vect, ISR_NOBLOCK) //capture ppm in 16MHz / 8 = 2MHz
 
   lastCapt = capture;
 
-  cli();
+  cli(); // disable other interrupts for stack pops before this function's RETI
 #if defined (PCBV3)
   TIMSK3 |= (1<<ICIE3);
 #else
   ETIMSK |= (1<<TICIE3);
 #endif
-  sei();
 }
 
 #if defined (PCBV3)
@@ -2230,7 +2239,7 @@ int main(void)
   // not here ... TIMSK1 |= (1<<OCIE1A); ... enable immediately before mainloop
 
   // TCNT3 (2MHz) used for PPM_IN pulse width capture
-#if defined (PPMIN_MOD1) || defined (PCBV3) // XXX Is this still true with the V4 PCB's PPM circuitry?
+#if defined (PPMIN_MOD1) || defined (PCBV3) // G: Confirmed correct for V4 PCB also
   // Noise Canceller enabled, pos. edge, clock at 16MHz / 8 (2MHz)
   TCCR3B  = (1<<ICNC3) | (1<<ICES3) | (0b010 << CS30);
 #else
