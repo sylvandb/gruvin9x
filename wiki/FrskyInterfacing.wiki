@@ -32,13 +32,14 @@ Referring to the image below ...
 
 Fr-Sky, in their wisdom, decided to use RS-232 voltage levels for their interface, rather than provide a more modern 5V TTL-to-serial USB interface. We tried to talk them out of it, but they stuck to their guns. Oh well.
 
-What this means is that you need to invert and voltage shift the signals to and from the Fr-Sky transmitter module in order to make it play nice with the 5V TTL signals of the ATmega. There are specialised chips to do this "properly" -- that is, convert the RS-232 +/-12V to TTL 0-and-5V signals -- but there's simple and in fact advantageous 'hack' methods too. The latter is what Gruvin used.
+What this means is that you need to invert and voltage-shift the signals to and from the Fr-Sky transmitter module, in order to make them play nice with the 5V ATmega. There are specialised chips to do this "properly" -- that is, convert the RS-232 +/-12V to TTL 0-and-5V signals -- but there're simple and in fact advantageous 'hack' methods too. The latter is what Gruvin used.
 
-Advantageous? Well actually, yes. This method allows the transmitter module to still operate when connected to an external serial interface, say on a computer -- while not having to disconnect the internal wiring to the '9X. With the values shown, most computers will take precedence over the internal 9X ATmega micro in terms of sending )transmitting) data to the Fr-Sky module. Clever huh? :p
+Advantageous? Well actually, yes. The method shown below allows the transmitter module to still operate when connected to an external serial interface, say on a computer -- while not having to disconnect the internal wiring to the '9X. With the values shown, most computers will take precedence over the internal 9X ATmega micro in terms of sending (transmitting) data to the Fr-Sky module. More useful even, is that you don't have to disconnect the telemetry interface for re-Flashing, either. Clever huh? :p
 
 Here is the circuit ...
 
- [http://gruvin9x.googlecode.com/svn/wiki/FrskyInterfacing.attach/frsky-interface.png]
+ [http://gruvin9x.googlecode.com/svn/wiki/FrskyInterfacing.attach/frsky-interface.png]<br/>
+*NOTE* An earlier version of the above circuit had the collector and emitter of Q3 reversed. The circuit as shown here now is correct. (This circuit is clipped from the full schematic of the gruvin9x [CustomPCB custom controller board].)
 
 Any general purpose NPN and PNP transistors should work for the components marked Q2 and Q3, respectively. The BC847/857 devices are in fact SMD surface mount versions, as used in the new PCB design we're working on.
 
