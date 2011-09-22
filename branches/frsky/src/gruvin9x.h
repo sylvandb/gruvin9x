@@ -681,7 +681,7 @@ inline void _beep(uint8_t b) {
 }
 
 extern uint8_t toneFreq;
-#if defined (PCBV3)
+#if defined (PCBV3) && defined(BEEPSPKR)
 inline void _beepSpkr(uint8_t d, uint8_t f)
 {
   g_beepCnt=d;

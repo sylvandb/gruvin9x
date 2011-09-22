@@ -222,7 +222,14 @@ else
     CPPDEFS += -DPCBV3 -DFRSKY -DFRSKY_HUB -DBEEPSPKR
   endif
   ifeq ($(PCB), V4)
-    CPPDEFS += -DPCBV3 -DPCBV4 -DFRSKY -DFRSKY_HUB -DBEEPSPKR
+
+#   Temporary hack to get stock beeper working for testing, etc ... make BEEPER=BUZZER_MOD
+    ifeq ($(BEEPER), BUZZER_MOD)
+      CPPDEFS += -DPCBV3 -DPCBV4 -DFRSKY -DFRSKY_HUB -DBUZZER_MOD
+    else
+      CPPDEFS += -DPCBV3 -DPCBV4 -DFRSKY -DFRSKY_HUB -DBEEPSPKR
+    endif
+
   endif
 endif
 

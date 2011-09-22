@@ -1909,7 +1909,7 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
         }
     }
 
-#if defined (PCBV3)
+#if defined (PCBV3) && defined (BEEPSPKR)
     // G: use timer0 WGM mode tone generator for beeps
     if(beepOn)
     {
@@ -1950,7 +1950,7 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
       PORTE &= ~(1<<OUT_E_BUZZER);
     }
 #endif // BEEPSPKR
-#endif // PCBV3
+#endif // PCBV3 && BEEPSPKR
 
     per10ms();
 
