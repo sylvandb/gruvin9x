@@ -39,7 +39,7 @@ Advantageous? Well actually, yes. The method shown below allows the transmitter 
 Here is the circuit ...
 
  [http://gruvin9x.googlecode.com/svn/wiki/FrskyInterfacing.attach/frsky-interface.png]<br/>
-*NOTE* An earlier version of the above circuit had the collector and emitter of Q3 reversed. The circuit as shown here now is correct. (This circuit is clipped from the full schematic of the gruvin9x [CustomPCB custom controller board].)
+*NOTE* An earlier version of the above circuit had the collector and emitter of Q3 reversed. The circuit as shown here now is correct. (This circuit is clipped from the full schematic of the gruvin9x [PCB custom controller board].)
 
 Any general purpose NPN and PNP transistors should work for the components marked Q2 and Q3, respectively. The BC847/857 devices are in fact SMD surface mount versions, as used in the new PCB design we're working on.
 
