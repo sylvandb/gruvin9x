@@ -219,10 +219,10 @@ ifeq ($(PCB), STD)
 else
 # not PCB=STD, so ...
   ifeq ($(PCB), V3)
-    CPPDEFS += -DPCBV3 -DFRSKY -DBEEPSPKR
+    CPPDEFS += -DPCBV3 -DFRSKY -DFRSKY_HUB -DBEEPSPKR
   endif
   ifeq ($(PCB), V4)
-    CPPDEFS += -DPCBV3 -DPCBV4 -DFRSKY -DBEEPSPKR
+    CPPDEFS += -DPCBV3 -DPCBV4 -DFRSKY -DFRSKY_HUB -DBEEPSPKR
   endif
 endif
 

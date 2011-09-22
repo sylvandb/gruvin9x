@@ -410,6 +410,7 @@ void menuProcTrainer(uint8_t event)
 
   if (edit) {
     if (event==EVT_KEY_FIRST(KEY_MENU)){
+      // TODO: prevent actually entering edit mode
       memcpy(g_eeGeneral.trainer.calib, g_ppmIns, sizeof(g_eeGeneral.trainer.calib));
       eeDirty(EE_GENERAL);
       beepKey();
