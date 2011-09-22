@@ -86,28 +86,10 @@ Next step is probably going to be to take advantage of the extra Flash space (no
 
 2010-12-15: A first batch of 10 (MOQ) prototype PCB's ([http://gruvin9x.googlecode.com/svn/trunk/pcb/rev2.14-frozen rev2.14]) ordered.
 
-== Schematics ==
+== Schematics and PCB Design Files ==
 
-=== PostScript and PDF Files ===
+See the [Circuitry Custom Schematics] page for details.
 
- * New gruvin9x custom Main PCB rev2.14 (production frozen) - [http://gruvin9x.googlecode.com/svn/trunk/pcb/rev2.14-frozen/gruvin9x.pdf PDF] | [http://gruvin9x.googlecode.com/svn/trunk/pcb/rev2.14-frozen/gruvin9x.ps PS]
- * Stock V2 Main PCB - [http://gruvin9x.googlecode.com/svn/trunk/pcb/actual_v2_9x/gruvin9x_v2_actual.pdf PDF] | [http://gruvin9x.googlecode.com/svn/trunk/pcb/actual_v2_9x/gruvin9x_v2_actual.ps PS]
- * Hacked V2 Main PCB - [http://gruvin9x.googlecode.com/svn/trunk/pcb/hacked/gruvin9x-hacked.pdf PDF] | [http://gruvin9x.googlecode.com/svn/trunk/pcb/hacked/gruvin9x-hacked.ps PS] (Speaker, Fr-Sky telemetry RXD and USART1 freed - hacked unit IE. not a new PCB.)
-
-
-== KiCAD Circuit Schematic and PCB Files ==
-
-Ongoing circuit/PCB work (snapshots as and when uploaded) reside at [http://code.google.com/p/gruvin9x/source/browse/#svn/trunk/pcb/original /trunk/pcb/]
-
-To download all the PCB design related files only (without project source, docs, etc) ...
-
-{{{
-svn checkout http://gruvin9x.googlecode.com/svn/trunk/pcb gruvin9x-pcb
-}}}
-
-... or just check out or update the full trunk
-
-... or of course you can use the Google Code 'browse' link above to find them that way.
 
 == Preview ==
 
