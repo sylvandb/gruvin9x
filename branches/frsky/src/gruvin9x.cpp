@@ -2238,11 +2238,11 @@ int main(void)
   // not here ... TIMSK1 |= (1<<OCIE1A); ... enable immediately before mainloop
 
   // TCNT3 (2MHz) used for PPM_IN pulse width capture
-#if defined (PPMIN_MOD1) || defined (PCBV3) // G: Confirmed correct for V4 PCB also
+#if defined (PPMIN_MOD1) || (defined (PCBV3) && !defined (PCBV4)) 
   // Noise Canceller enabled, pos. edge, clock at 16MHz / 8 (2MHz)
   TCCR3B  = (1<<ICNC3) | (1<<ICES3) | (0b010 << CS30);
 #else
-  // Noise Canceller enabled, neg. edge, clock at 16MHz / 8 (2MHz)
+  // Noise Canceller enabled, neg. edge, clock at 16MHz / 8 (2MHz) (Correct for PCB V4.x+ also)
   TCCR3B  = (1<<ICNC3) | (0b010 << CS30);
 #endif
 

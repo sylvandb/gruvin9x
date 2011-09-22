@@ -222,6 +222,7 @@ else
     CPPDEFS += -DPCBV3 -DFRSKY -DFRSKY_HUB -DBEEPSPKR
   endif
   ifeq ($(PCB), V4)
+    CPPDEFS += -DEEPROM_ASYNC_WRITE
 
 #   Temporary hack to get stock beeper working for testing, etc ... make BEEPER=BUZZER_MOD
     ifeq ($(BEEPER), BUZZER_MOD)
