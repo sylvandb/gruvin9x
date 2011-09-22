@@ -20,8 +20,9 @@ Thanks Cam!
 
 = Patching PCB v4.0 =
 
-For those who have jumped ahead and got themselves one of the few v4.0 boards we had available, here's the patch work needed (as at 2011-09-21) to make your board v4.1 design compatible -- and in fact required to work with the v4.1 targetted code version /branches/darktrain.
+For those who have jumped ahead and got themselves one of the few v4.0 boards we had available, here's the patch work needed (as at 2011-09-21) to make your board v4.1 design compatible -- and in fact required to work with the v4.1 targeted code version /branches/darktrain.
+
+*NOTE* that the BC847 transistor in place of D2 is mounted *UPSIDE-DOWN*
 
 [http://gruvin9x.googlecode.com/svn/wiki/PcbAssembly.attach/v4.0_fixes_detail.jpg]<br/>
 -- Image provided by th9xer. Thanks Cam.
-
