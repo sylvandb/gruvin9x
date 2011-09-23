@@ -1,4 +1,4 @@
-Cmp-Mod V01 Genere par PcbNew le 22/09/2011 16:53:05
+Cmp-Mod V01 Created by CvPCB (2011-07-08 BZR 3044)-stable date = 23/09/2011 18:39:04
 
 BeginCmp
 TimeStamp = /4CE748AC;
@@ -509,6 +509,13 @@ TimeStamp = /4DFF927D;
 Reference = D17;
 ValeurCmp = DIODESCH;
 IdModule  = SM0603_DIODE;
+EndCmp
+
+BeginCmp
+TimeStamp = /4E7CC3EB;
+Reference = F1;
+ValeurCmp = FUSE;
+IdModule  = SM1206;
 EndCmp
 
 BeginCmp
@@ -1578,13 +1585,6 @@ EndCmp
 BeginCmp
 TimeStamp = /4E2072D1;
 Reference = R102;
-ValeurCmp = 200R;
-IdModule  = SM0603_GRUVIN;
-EndCmp
-
-BeginCmp
-TimeStamp = /4E207322;
-Reference = R103;
 ValeurCmp = 200R;
 IdModule  = SM0603_GRUVIN;
 EndCmp
