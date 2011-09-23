@@ -346,7 +346,7 @@ void menuProcTime(uint8_t event)
 
 void menuProcTrainer(uint8_t event)
 {
-  MENU("TRAINER", menuTabDiag, e_Trainer, 7, {0, 2, 2, 2, 2/*, 0, 0*/});
+  MENU("TRAINER", menuTabDiag, e_Trainer, 7, {0, 2, 2, 2, 2, 0/*, 0*/});
 
   int8_t  sub    = m_posVert;
   uint8_t subSub = m_posHorz;
@@ -410,7 +410,6 @@ void menuProcTrainer(uint8_t event)
 
   if (edit) {
     if (event==EVT_KEY_FIRST(KEY_MENU)){
-      // TODO: prevent actually entering edit mode
       memcpy(g_eeGeneral.trainer.calib, g_ppmIns, sizeof(g_eeGeneral.trainer.calib));
       eeDirty(EE_GENERAL);
       beepKey();
