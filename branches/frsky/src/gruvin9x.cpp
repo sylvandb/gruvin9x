@@ -858,7 +858,7 @@ void getADC_bandgap()
   ADCSRB &= ~(1<<MUX5);
 #endif
   ADMUX=0x1E|ADC_VREF_TYPE; // Switch MUX to internal 1.1V reference
-  _delay_us(300); // this somewhat costly delay is the only remedy for stable results on the Atmega2560/1 chips
+  _delay_us(400); // this somewhat costly delay is the only remedy for stable results on the Atmega2560/1 chips
   ADCSRA|=0x40; while ((ADCSRA & 0x10)==0); ADCSRA|=0x10; // again becasue first one is usually inaccurate
   BandGap=ADCW;
 #if defined (PCBV4)
