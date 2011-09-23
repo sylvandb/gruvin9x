@@ -22,7 +22,7 @@ There's silk-screen PDFs for the main board and the (gruvin version) sdcard boar
 
  * [http://gruvin9x.googlecode.com/svn/trunk/pcbv4.0-frozen/assembly/gruvin9x-SilkS_Front.pdf gruvin9x-SilkS_Front.pdf]
 
- * [http://code.google.com/p/gruvin9x/svn/trunk/pcbv4.0-frozen/assembly/sdcard-SilkS_Front.pdf sdcard-SilkS_Front.pdf]
+ * [http://gruvin9x.googlecode.com/svn/trunk/pcbv4.0-frozen/assembly/sdcard-SilkS_Front.pdf sdcard-SilkS_Front.pdf]
 
 = Patching PCB v4.0 =
 
