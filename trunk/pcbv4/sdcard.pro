@@ -1,4 +1,4 @@
-update=23/09/2011 2:14:29 p.m.
+update=23/09/2011 2:27:53 p.m.
 last_client=eeschema
 [pcbnew]
 version=1
@@ -92,5 +92,4 @@ LibName27=opto
 LibName28=atmel
 LibName29=contrib
 LibName30=valves
-LibName31=share/library/ds1338-rtc
-LibName32=share/library/sdc_mmc_socket
+LibName31=share/library/gruvin
