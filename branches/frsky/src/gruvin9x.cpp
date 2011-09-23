@@ -901,6 +901,7 @@ inline bool checkSlaveMode()
 {
   // no power -> only phone jack = slave mode
 
+// Issue 22: PCB=V4 => -DBEEPSPKR and V4 board also includes the hardware buzzer mod.
 #if defined(BUZZER_MOD) || defined(BEEPSPKR)
   return SLAVE_MODE;
 #else
