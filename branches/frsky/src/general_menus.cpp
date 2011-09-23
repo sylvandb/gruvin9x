@@ -475,7 +475,14 @@ void menuProcDiagAna(uint8_t event)
     lcd_putsn_P( 4*FW, y,PSTR("A1A2A3A4A5A6A7A8")+2*i,2);
     lcd_outhex4( 8*FW, y,anaIn(i));
     if(i<7)  lcd_outdez8(17*FW, y, (int32_t)calibratedStick[i]*100/1024);
-    if(i==7) putsVolts(17*FW, y, g_vbat100mV, (sub==1 ? INVERS : 0));
+    else {
+#if defined (PCBV4)
+      uint32_t batCalV = ((uint32_t)abRunningAvg*1390 + ((uint32_t)abRunningAvg*10*g_eeGeneral.vBatCalib)/4) /BandGap;
+      lcd_outdezNAtt(17*FW, y, batCalV, PREC2|(sub==1 ? INVERS : 0));
+#else
+      putsVolts(17*FW, y, g_vbat100mV, (sub==1 ? INVERS : 0));
+#endif
+    }
   }
   // lcd_outdezAtt( 21*FW, 3*FH, g_eeGeneral.vBatCalib, 0) ;
   // lcd_outdezAtt( 21*FW, 4*FH, abRunningAvg, 0) ;

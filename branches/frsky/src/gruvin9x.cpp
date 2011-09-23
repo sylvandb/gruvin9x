@@ -850,20 +850,31 @@ void getADC_bandgap()
   ADCSRA|=0x40; while ((ADCSRA & 0x10)==0); ADCSRA|=0x10; // again becasue first one is usually inaccurate
   BandGap=ADCW;
 #else
-  //BandGap=225; // gruvin: 1.1V internal Vref doesn't seem to work on the ATmega2561. :/ Weird.
-                 // See http://www.avrfreaks.net/index.php?name=PNphpBB2&file=viewtopic&p=847208#847208
-  // In the end, simply using a longer delay (presumably to account for the higher
-  // impedance Vbg internal source) solved the problem. NOTE: Does NOT adversely affect PPM_out latency.
-#if defined (PCBV4)
+  //BandGap=225; // G: bandgap ref. stability issues. See Issue 35.
+#  if defined (PCBV4)
+  // For PCB V4, use our own 1.2V, external reference (connected to ADC3)
   ADCSRB &= ~(1<<MUX5);
-#endif
-  ADMUX=0x1E|ADC_VREF_TYPE; // Switch MUX to internal 1.1V reference
-  _delay_us(400); // this somewhat costly delay is the only remedy for stable results on the Atmega2560/1 chips
-  ADCSRA|=0x40; while ((ADCSRA & 0x10)==0); ADCSRA|=0x10; // again becasue first one is usually inaccurate
+
+  ADMUX=0x03|ADC_VREF_TYPE; // Switch MUX to internal 1.1V reference
+  _delay_us(10); // tiny bit of stablisation time needed to allow capture-hold capacitor to charge
+  // For times over-sample with no divide, x2 to end at a half averaged, x8. DON'T ASK mmmkay? :P This is how I want it.
+  ADCSRA|=0x40; while ((ADCSRA & 0x10)==0); ADCSRA|=0x10;
   BandGap=ADCW;
-#if defined (PCBV4)
+  ADCSRA|=0x40; while ((ADCSRA & 0x10)==0); ADCSRA|=0x10;
+  BandGap+=ADCW;
+  ADCSRA|=0x40; while ((ADCSRA & 0x10)==0); ADCSRA|=0x10;
+  BandGap+=ADCW;
+  ADCSRA|=0x40; while ((ADCSRA & 0x10)==0); ADCSRA|=0x10;
+  BandGap+=ADCW;
+  BandGap *= 2;
+
   ADCSRB |= (1<<MUX5);
-#endif
+#  else
+  ADMUX=0x1E|ADC_VREF_TYPE; // Switch MUX to internal 1.1V reference
+ _delay_us(400); // this somewhat costly delay is the only remedy for stable results on the Atmega2560/1 chips
+  ADCSRA|=0x40; while ((ADCSRA & 0x10)==0); ADCSRA|=0x10; // take sample
+  BandGap=ADCW;
+#  endif
 #endif
 }
 
@@ -1693,8 +1704,23 @@ void perMain()
         // 1417*18/256 = 99 (actually 99.6) to represent 9.9 volts.
         // Erring on the side of low is probably best.
 
-        g_vbat100mV = (ab*16 + (ab*g_eeGeneral.vBatCalib)/8)/BandGap;
+#if defined (PCBV4)
+        // G: Doing this MY way. PLEASE don't mess with it. (Yes, it's overkill. Yes it's currently messy. But I want 
+        //    it at least this accurate and this is the only way I can find how to do it, so far.)
+        //    NOTE: For PCB V4, BadGap is the accumulation of 4 x 10-bit samples, x 2 (averaging is built-int)
+        //          I've also halved the step size for each calibration offset increment, to give more calibration resolution 
+        //          at two decimal places (Volts).
 
+        // The following computes vbatV in 10mV resolution (to match the ANA calibration screen), then divides by 10 
+        // *with rounding*, to arrive at 100mV resolution.
+        //
+        //   g_vbat100mV = ((((uint32_t)ab*1390 + ((uint32_t)ab*10*g_eeGeneral.vBatCalib)/4)+(5*BandGap))/10) / BandGap;
+        //
+        // Simplified, this becomes ...
+        g_vbat100mV = ((uint32_t)ab*556 + (uint32_t)ab*g_eeGeneral.vBatCalib + BandGap*2) / 4 / BandGap;
+#else
+        g_vbat100mV = (ab*16 + ab*g_eeGeneral.vBatCalib/8)/BandGap;
+#endif   
         static uint8_t s_batCheck;
         s_batCheck+=32;
         if(s_batCheck==0 && g_vbat100mV<g_eeGeneral.vBatWarn && g_vbat100mV>49) {
