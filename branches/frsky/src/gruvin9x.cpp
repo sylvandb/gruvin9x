@@ -1705,19 +1705,19 @@ void perMain()
         // Erring on the side of low is probably best.
 
 #if defined (PCBV4)
-        // G: Doing this MY way. PLEASE don't mess with it. (Yes, it's overkill. Yes it's currently messy. But I want 
-        //    it at least this accurate and this is the only way I can find how to do it, so far.)
-        //    NOTE: For PCB V4, BadGap is the accumulation of 4 x 10-bit samples, x 2 (averaging is built-int)
-        //          I've also halved the step size for each calibration offset increment, to give more calibration resolution 
-        //          at two decimal places (Volts).
-
-        // The following computes vbatV in 10mV resolution (to match the ANA calibration screen), then divides by 10 
-        // *with rounding*, to arrive at 100mV resolution.
+        // G: Doing this MY way, please. Yes, it may seem overkill. But I want BattVolts accurate to TWO decimal places,
+        //    because otherwise theerror can be the difference between 6.8V and 7.0V, which in LiFePO4 "life remaining" terms, 
+        //    can be "everything". Calibration on ANA screen is 2 decimal places. Main diplay is 1 decimal, rounded, not truncated.
         //
-        //   g_vbat100mV = ((((uint32_t)ab*1390 + ((uint32_t)ab*10*g_eeGeneral.vBatCalib)/4)+(5*BandGap))/10) / BandGap;
+        //    NOTE: For PCB V4, BadGap is the (effectively averaged) accumulation of 4 x 10-bit samples, x 2
+        //
+        // The following computes vbatV in 10mV resolution (to match the ANA calibration screen), then divides by 10 
+        // _with rounding_, to arrive at 100mV (rounded) resolution. EG. 704 = 7.04V => 7.0V and 705 = 7.05B => 7.1V
+        //
+        // g_vbat100mV = ((1390*(uint32_t)ab + (10*(int32_t)ab*g_eeGeneral.vBatCalib/8)+(5*BandGap))/10) / BandGap;
         //
         // Simplified, this becomes ...
-        g_vbat100mV = ((uint32_t)ab*556 + (uint32_t)ab*g_eeGeneral.vBatCalib + BandGap*2) / 4 / BandGap;
+        g_vbat100mV = (1112*(uint32_t)ab + (int32_t)ab*g_eeGeneral.vBatCalib + (BandGap<<2)) / (BandGap<<3);
 #else
         g_vbat100mV = (ab*16 + ab*g_eeGeneral.vBatCalib/8)/BandGap;
 #endif   

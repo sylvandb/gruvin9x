@@ -477,19 +477,19 @@ void menuProcDiagAna(uint8_t event)
     if(i<7)  lcd_outdez8(17*FW, y, (int32_t)calibratedStick[i]*100/1024);
     else {
 #if defined (PCBV4)
-      uint32_t batCalV = ((uint32_t)abRunningAvg*1390 + ((uint32_t)abRunningAvg*10*g_eeGeneral.vBatCalib)/4) /BandGap;
+      uint32_t batCalV = ((uint32_t)abRunningAvg*1390 + (10*(int32_t)abRunningAvg*g_eeGeneral.vBatCalib)/8) / BandGap;
       lcd_outdezNAtt(17*FW, y, batCalV, PREC2|(sub==1 ? INVERS : 0));
 #else
       putsVolts(17*FW, y, g_vbat100mV, (sub==1 ? INVERS : 0));
 #endif
     }
   }
-  // lcd_outdezAtt( 21*FW, 3*FH, g_eeGeneral.vBatCalib, 0) ;
-  // lcd_outdezAtt( 21*FW, 4*FH, abRunningAvg, 0) ;
+#ifdef DEBUG
   // Display raw BandGap result (debug)
   lcd_putsn_P( 19*FW, 5*FH,PSTR("BG"),2) ;
   lcd_outdezAtt(21*FW, 6*FH, BandGap, 0);
-  lcd_outdezAtt(21*FW, 7*FH, anaIn(7)*35/512, PREC1);
+#endif
+  lcd_outdezAtt(21*FW, 7*FH, g_vbat100mV, PREC1); // The /10 and rounded value on V4 boards.
 
   if(sub==1) CHECK_INCDEC_GENVAR(event, g_eeGeneral.vBatCalib, -127, 127);
 
