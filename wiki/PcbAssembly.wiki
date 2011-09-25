@@ -36,3 +36,10 @@ For those who have jumped ahead and got themselves one of the few v4.0 boards we
 There's another patch required for PPM_IN (trainer port input). I'm working on a better photo. But for now, this is the best focus I can manage, sorry ...
 
 [http://gruvin9x.googlecode.com/svn/wiki/PcbAssembly.attach/ppm_patch.jpg]<br/>
+
+== Second Version IDL2 Patch Required ==
+
+Here's a photo showing the latest (revised) IDL2 mod, (See issue 48.)
+
+[http://gruvin9x.googlecode.com/svn/wiki/PcbAssembly.attach/v4.0_IDL2_mod.jpg]
+
