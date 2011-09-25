@@ -37,7 +37,7 @@ There's another patch required for PPM_IN (trainer port input). I'm working on a
 
 [http://gruvin9x.googlecode.com/svn/wiki/PcbAssembly.attach/ppm_patch.jpg]<br/>
 
-== Second Version IDL2 Patch Required ==
+== Second Version IDL2 / SD_CS Patch Required ==
 
 Here's a photo showing the latest (revised) IDL2 mod, (See issue 48.)
 
