@@ -310,7 +310,6 @@ bool eeDuplicateModel(uint8_t id)
   while((len=theFile2.read(buf, 15)))
   {
     theFile.write(buf, len);
-    wdt_reset(); // TODO I don't know what it is
     if (errno() != 0) {
       return false;
     }
@@ -371,7 +370,7 @@ void eeCheck(bool immediately)
 {
 #ifdef EEPROM_ASYNC_WRITE
   if (immediately) {
-    theFile.flush();
+    eeFlush();
   }
   if (s_eeDirtyMsk & EE_GENERAL) {
     s_eeDirtyMsk -= EE_GENERAL;

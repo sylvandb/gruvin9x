@@ -678,6 +678,8 @@ void alert(const prog_char * s, bool defaults)
         BACKLIGHT_ON;
       else
         BACKLIGHT_OFF;
+
+    wdt_reset();
   }
 }
 
@@ -2030,7 +2032,7 @@ ISR(TIMER3_CAPT_vect) // G: High frequency noise can cause stack overflo with IS
 
   // G: We prcoess g_ppmIns immediately here, to make servo movement as smooth as possible
   //    while under trainee control
-  if (val>4000 && val < 16000) // G: Priorotize reset pulse. (Needed when less than 8 incoming pulses)
+  if (val>4000 && val < 16000) // G: Prioritize reset pulse. (Needed when less than 8 incoming pulses)
     ppmInState = 1; // triggered
   else
   {

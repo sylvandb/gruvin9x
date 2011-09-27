@@ -573,6 +573,9 @@ template<class t> inline int8_t sgn(t a){ return a>0 ? 1 : (a < 0 ? -1 : 0); }
 /// eeCheck ins EEPROM zurueckgeschrieben.
 void eeWriteBlockCmp(const void *i_pointer_ram, void *i_pointer_eeprom, size_t size);
 void eeDirty(uint8_t msk);
+#ifdef EEPROM_ASYNC_WRITE
+inline void eeFlush() { theFile.flush(); }
+#endif
 void eeCheck(bool immediately=false);
 //void eeWriteGeneral();
 void eeReadAll();

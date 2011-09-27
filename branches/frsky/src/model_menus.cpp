@@ -96,6 +96,11 @@ void menuProcModelSelect(uint8_t event)
   int8_t subOld  = m_posVert;
   if (!check_submenu_simple(event, MAX_MODELS-1)) return;
 
+#ifdef EEPROM_ASYNC_WRITE
+  // flush eeprom write so that it's possible to load model names
+  eeFlush();
+#endif
+
   lcd_puts_P(     9*FW, 0, PSTR("free"));
   lcd_outdezAtt(  17*FW, 0, EeFsGetFree(),0);
 
@@ -104,8 +109,6 @@ void menuProcModelSelect(uint8_t event)
   int8_t  sub    = m_posVert;
   static uint8_t sel_editMode;
   
-  eeCheck(true); // force writing of current model data before this is changed
-
   switch(event)
   {
     //case  EVT_KEY_FIRST(KEY_MENU):
@@ -114,6 +117,7 @@ void menuProcModelSelect(uint8_t event)
         sel_editMode = false;
         beepKey();
         killEvents(event);
+        eeCheck(true); // force writing of current model data before this is changed
         eeLoadModel(g_eeGeneral.currModel = m_posVert);
         STORE_GENERALVARS;
         break;
@@ -125,6 +129,7 @@ void menuProcModelSelect(uint8_t event)
       {
         killEvents(event);
         g_eeGeneral.currModel = m_posVert;
+        eeCheck(true); // force writing of current model data before this is changed
         eeLoadModel(g_eeGeneral.currModel);
         STORE_GENERALVARS;
         beepWarn1();
@@ -140,6 +145,7 @@ void menuProcModelSelect(uint8_t event)
     case  EVT_KEY_LONG(KEY_MENU):
       if(sel_editMode){
         // message(PSTR("Duplicating model"));
+        eeCheck(true); // force writing of current model data before this is changed
         if (eeDuplicateModel(sub)) {
           beepKey();
           sel_editMode = false;
@@ -152,10 +158,11 @@ void menuProcModelSelect(uint8_t event)
 
     case EVT_ENTRY:
       sel_editMode = false;
-      m_posVert = g_eeGeneral.currModel;
+      m_posVert = sub = g_eeGeneral.currModel;
       break;
   }
   if(sel_editMode && subOld!=sub){
+    eeCheck(true); // force writing of current model data before this is changed
 #ifdef EEPROM_ASYNC_WRITE
     s_sync_write = true;
 #endif
@@ -268,9 +275,14 @@ void menuProcModel(uint8_t _event)
   uint8_t event = (s_warning ? 0 : _event);
 
   if (s_confirmation) {
-    EFile::rm(FILE_MODEL(g_eeGeneral.currModel)); // delete file
+    uint8_t i = g_eeGeneral.currModel;
 
-    uint8_t i = g_eeGeneral.currModel; // loop to find next available model
+#ifdef EEPROM_ASYNC_WRITE
+    // flush eeprom write
+    eeFlush();
+#endif
+    EFile::rm(FILE_MODEL(i)); // delete file
+
     while (!EFile::exists(FILE_MODEL(i))) {
       i--;
       if (i>MAX_MODELS) i=MAX_MODELS-1;
@@ -284,6 +296,7 @@ void menuProcModel(uint8_t _event)
     eeLoadModel(i); // load default values
     s_confirmation = 0;
     chainMenu(menuProcModelSelect);
+    return;
   }
 
   MENU("SETUP", menuTabModel, e_Model, 15, {0,sizeof(g_model.name)-1,1,0,0,0,0,0,0,0,0,6,2/*,0, 0*/});
@@ -1609,8 +1622,8 @@ void menuProcFunctionSwitches(uint8_t event)
 
 void menuProcSafetySwitches(uint8_t event)
 {
-  MENU("SAFETY SWITCHES", menuTabModel, e_SafetySwitches, NUM_CHNOUT+1, {0, 2/*repeated*/});
-
+  MENU("SAFETY SWITCHES", menuTabModel, e_SafetySwitches, NUM_CHNOUT+1, {0, 1/*repeated*/});
+ 
   uint8_t y = 0;
   uint8_t k = 0;
 
@@ -1771,7 +1784,7 @@ void menuProcTelemetry(uint8_t event)
 #ifdef TEMPLATES
 void menuProcTemplates(uint8_t event)
 {
-  SIMPLE_MENU("TEMPLATES", menuTabModel, e_Templates, NUM_TEMPLATES+2);
+  SIMPLE_MENU("TEMPLATES", menuTabModel, e_Templates, 1+NUM_TEMPLATES+1);
 
   uint8_t y = 0;
   uint8_t k = 0;
@@ -1783,10 +1796,10 @@ void menuProcTemplates(uint8_t event)
       killEvents(event);
       //apply mixes or delete
       s_noHi = NO_HI_LEN;
-      if(sub==NUM_TEMPLATES+1)
-        clearMixes();
-      else if((sub>=0) && (sub<(int8_t)NUM_TEMPLATES))
+      if (sub>=0 && sub<(int8_t)NUM_TEMPLATES)
         applyTemplate(sub);
+      if (sub==NUM_TEMPLATES)
+        clearMixes();
       beepWarn1();
       break;
   }

@@ -27,7 +27,7 @@
 
 uint16_t eeprom_pointer;
 const char* eeprom_buffer_data;
-volatile size_t eeprom_buffer_size = 0;
+volatile int8_t eeprom_buffer_size = 0;
 
 inline void eeprom_write_byte()
 {
@@ -72,7 +72,9 @@ void eeWriteBlockCmp(const void *i_pointer_ram, void *i_pointer_eeprom, size_t s
   EECR |= (1<<EERIE);
 #endif
 
-  while (s_sync_write && eeprom_buffer_size > 0);
+  if (s_sync_write) {
+    while (eeprom_buffer_size > 0) wdt_reset();
+  }
 }
 
 #else
