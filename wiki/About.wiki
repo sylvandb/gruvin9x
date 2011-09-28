@@ -8,7 +8,7 @@ This project started out as a kind of 'place holder' for the author's personal c
 
 = Project Detail =
 
-The main focus to date has been around Fr-Sky support and the development of an [PCB upgraded main logic board] -- for [Telemetry telemetry] support in general, as well as a better ATmega chip and MMC/SDCARD support for model data and general mass storage in FAT16/32 format.
+The initial main focus was around adding and enhancing Fr-Sky telemetry support and the development of an [PCB upgraded main logic board] -- for [Telemetry telemetry] support in general, as well as a better ATmega chip and MMC/SDCARD support for model data and general mass storage in FAT16/32 format.
 
 Compatibility with the stock V2 '9X transmitter will be retained as far as possible. So fear not. There will "always" be a gruvin9x version available to run on the stock unit. There will also be different binary versions available to support the most common manual circuit hacks for telemetry (and other things) that do _not_ require the [PCB new PCB].
 
