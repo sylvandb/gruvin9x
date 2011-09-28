@@ -525,7 +525,7 @@ void doSplash()
     }
 }
 
-void checkMem()
+void checkLowEEPROM()
 {
   if(g_eeGeneral.disableMemoryWarning) return;
   if(EeFsGetFree() < 200)
@@ -851,9 +851,7 @@ void getADC_bandgap()
   // ADCSRA|=0x40; while ((ADCSRA & 0x10)==0); ADCSRA|=0x10; // grab a sample
   ADCSRA|=0x40; while ((ADCSRA & 0x10)==0); ADCSRA|=0x10; // again becasue first one is usually inaccurate
   BandGap=ADCW;
-#else
-  //BandGap=225; // G: bandgap ref. stability issues. See Issue 35.
-#  if defined (PCBV4)
+#elif defined (PCBV4)
   // For PCB V4, use our own 1.2V, external reference (connected to ADC3)
   ADCSRB &= ~(1<<MUX5);
 
@@ -871,12 +869,11 @@ void getADC_bandgap()
   BandGap *= 2;
 
   ADCSRB |= (1<<MUX5);
-#  else
+#else
   ADMUX=0x1E|ADC_VREF_TYPE; // Switch MUX to internal 1.1V reference
  _delay_us(400); // this somewhat costly delay is the only remedy for stable results on the Atmega2560/1 chips
   ADCSRA|=0x40; while ((ADCSRA & 0x10)==0); ADCSRA|=0x10; // take sample
   BandGap=ADCW;
-#  endif
 #endif
 }
 
@@ -2299,16 +2296,19 @@ int main(void)
   eeReadAll();
 
   uint8_t cModel = g_eeGeneral.currModel;
-  checkQuickSelect();
 
-  doSplash();
-  checkMem();
+  if (~MCUCSR & (1 << WDRF)) {
+    checkQuickSelect();
 
-  getADC_single();
-  checkTHR();
+    doSplash();
+    checkLowEEPROM();
 
-  checkSwitches();
-  checkAlarm();
+    getADC_single();
+    checkTHR();
+
+    checkSwitches();
+    checkAlarm();
+  }
 
   clearKeyEvents(); //make sure no keys are down before proceeding
 
