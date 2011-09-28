@@ -65,11 +65,3 @@ These and other requirements led to a state of temporary insanity and the commen
  * Support for other telemetry systems (ex. JETI)
 
  * ... more
-
-= Contacting Gruvin =
-
-Oops! As of this writing, I've discovered that the Google Code system for obtaining project owner email addresses is broken. Hopefully, Google will fix this very soon. Meanwhile, fret not ...
-
-Normally, you would visit my Google Projects user profile, then click the '...' in `gru...@gmail.com` to reveal the full address, after [http://en.wikipedia.org/wiki/CAPTCHA captcha] verification. On the other hand, if you're _very_ clever, you might just be able to work that out for yourself. *Hint* - my user alias is `gruvin`, not `gru...` ;-)
-
-*HOWEVER*, I'd really like you to please consider joining the [http://groups.google.com/group/gruvin9x-discuss gruvin9x discussion group] and communicating with the group there -- unless it's a personal matter, of course. Thanks :-D
