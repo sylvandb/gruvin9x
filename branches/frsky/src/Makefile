@@ -218,19 +218,18 @@ ifeq ($(PCB), STD)
 
 else
 # not PCB=STD, so ...
+  CPPDEFS += -DPCBV3 -DFRSKY -DFRSKY_HUB -DEEPROM_ASYNC_WRITE 
   ifeq ($(PCB), V3)
-    CPPDEFS += -DPCBV3 -DFRSKY -DFRSKY_HUB -DBEEPSPKR
+    CPPDEFS += -DBEEPSPKR
   endif
   ifeq ($(PCB), V4)
-    CPPDEFS += -DEEPROM_ASYNC_WRITE
-
+    CPPDEFS += -DPCBV4 
 #   Temporary hack to get stock beeper working for testing, etc ... make BEEPER=BUZZER_MOD
     ifeq ($(BEEPER), BUZZER_MOD)
-      CPPDEFS += -DPCBV3 -DPCBV4 -DFRSKY -DFRSKY_HUB -DBUZZER_MOD
+      CPPDEFS += -DBUZZER_MOD
     else
-      CPPDEFS += -DPCBV3 -DPCBV4 -DFRSKY -DFRSKY_HUB -DBEEPSPKR
+      CPPDEFS += -DBEEPSPKR
     endif
-
   endif
 endif
 
@@ -305,7 +304,6 @@ CPPFLAGS += -O$(OPT)
 #CPPFLAGS += -fshort-enums
 #CPPFLAGS += -fno-exceptions
 #CPPFLAGS += -fno-unit-at-a-time
-CPPFLAGS += -fno-inline-small-functions
 CPPFLAGS += -Wall
 CPPFLAGS += -Wno-strict-aliasing
 #CPPFLAGS += -Wstrict-prototypes
@@ -316,6 +314,7 @@ CPPFLAGS += -Wno-strict-aliasing
 CPPFLAGS += $(patsubst %,-I%,$(EXTRAINCDIRS))
 #CPPFLAGS += $(CSTANDARD)
 
+AVRGCCFLAGS = -fno-inline-small-functions
 
 
 #---------------- Assembler Options ----------------
@@ -513,7 +512,7 @@ GENDEPFLAGS = -MD -MP -MF .dep/$(@F).d
 # Combine all necessary flags and optional flags.
 # Add target processor to flags.
 ALL_CFLAGS = -mmcu=$(MCU) -I. $(CFLAGS) $(GENDEPFLAGS)
-ALL_CPPFLAGS = -mmcu=$(MCU) -I. -x c++ $(CPPFLAGS) $(GENDEPFLAGS)
+ALL_CPPFLAGS = -mmcu=$(MCU) -I. -x c++ $(CPPFLAGS) $(GENDEPFLAGS) $(AVRGCCFLAGS)
 ALL_ASFLAGS = -mmcu=$(MCU) -I. -x assembler-with-cpp $(ASFLAGS)
 
 SUB_VER = ${shell sh -c "grep \"SUB_VERS\" gruvin9x.h | cut -d\  -f3 | egrep -o \"[[:digit:]]\""}
