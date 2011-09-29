@@ -2266,7 +2266,11 @@ int main(void)
 
   uint8_t cModel = g_eeGeneral.currModel;
 
+#if defined (PCBV3)
+  if (~MCUSR & (1 << WDRF)) {
+#else
   if (~MCUCSR & (1 << WDRF)) {
+#endif
     doSplash();
     checkLowEEPROM();
 
