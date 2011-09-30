@@ -1,9 +1,13 @@
 #ifndef SIMU
 
+#include <avr/wdt.h>
+
 void StackPaint(void) __attribute__ ((naked)) __attribute__ ((section (".init1")));
 
 void StackPaint(void)
 {
+  wdt_reset();
+  wdt_disable();
 #if 0
   uint8_t *p = &_end;
 

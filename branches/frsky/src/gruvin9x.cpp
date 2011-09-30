@@ -1531,6 +1531,7 @@ void perMain()
 
   if(getSwitch(g_eeGeneral.lightSw,0))
   {
+    // while(1); // Test WDT
     if ((testLogOpen==0) // if we know we haven't started logging ...
         || ((testLogOpen==1) && !g_oLogFile.fs)) //  ... or we thought we had, but the file got closed
     {
@@ -2153,20 +2154,17 @@ void moveTrimsToOffsets() // copy state of 3 primary to subtrim
 #ifndef SIMU
 int main(void)
 {
-  wdt_reset();
-  wdt_enable(WDTO_500MS);
-
   // Set up I/O port data directions and initial states
   DDRA = 0xff;  PORTA = 0x00; // LCD data
 
 #if defined (PCBV4)
   DDRB = 0b11000111;  PORTB = 0b00111001; // 7:SPKR, 6:PPM_OUT,  5:TrainSW,  4:IDL2_SW, SDCARD[3:MISO 2:MOSI 1:SCK 0:CS]
-  DDRC = 0x3f;  PORTC = 0xc0; // 7:AilDR, 6:EleDR, LCD[5,4,3,2,1[, 0:BackLight
+  DDRC = 0x3f;  PORTC = 0xc0; // 7:AilDR, 6:EleDR, LCD[5,4,3,2,1], 0:BackLight
   DDRD = 0x00;  PORTD = 0xfc; // 7/6:Spare3/4, 5:RENC2_PUSH, 4:RENC1_PUSH, 3:RENC2_B, 2:RENC2_A, 1:I2C_SDA, 0:I2C_SCL
   DDRE = 0b00001010;  PORTE = 0b11110101; // 7:PPM_IN, 6: RENC1_B, 5:RENC1_A, 4:USB_DNEG, 3:BUZZER, 2:USB_DPOS, 1:TELEM_TX, 0:TELEM_RX
   DDRF = 0x00;  PORTF = 0x00; // 7-4:JTAG, 3:ADC_REF_1.2V input, 2-0:ADC_SPARE_2-0
   DDRG = 0b00010000;  PORTG = 0xff; // 7-6:N/A, 5:GearSW, 4: Sim_Ctrl[out], 3:IDL1_Sw, 2:TCut_Sw, 1:RF_Power[in], 0: RudDr_Sw 
-  DDRH = 0x00;  PORTH = 0xff; // 7:0 Spare port -- all inputer for now [Bit 2:VIB_OPTION -- setting to input for now]
+  DDRH = 0x00;  PORTH = 0xff; // 7:0 Spare port -- all inputs for now [Bit 2:VIB_OPTION -- setting to input for now]
   DDRJ = 0x00;  PORTJ = 0xff; // 7-0:Trim switch inputs
   DDRK = 0x00;  PORTK = 0x00; // anain. No pull-ups!
   DDRL = 0x00;  PORTL = 0xff; // 7-6:Spare6/5 (inputs), 5-0: User Button inputs
@@ -2331,6 +2329,7 @@ int main(void)
   TIMSK |= (1<<OCIE1A); // Pulse generator enable immediately before mainloop
 #endif
 
+  wdt_enable(WDTO_500MS);
 /*** Keep this code block directly before the main loop ****/
 /***********************************************************/
 
