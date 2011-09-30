@@ -2153,6 +2153,9 @@ void moveTrimsToOffsets() // copy state of 3 primary to subtrim
 #ifndef SIMU
 int main(void)
 {
+  wdt_reset();
+  wdt_enable(WDTO_500MS);
+
   // Set up I/O port data directions and initial states
   DDRA = 0xff;  PORTA = 0x00; // LCD data
 
@@ -2282,8 +2285,6 @@ int main(void)
   }
 
   clearKeyEvents(); //make sure no keys are down before proceeding
-
-  wdt_enable(WDTO_500MS);
 
   perOut(g_chans512);
 
