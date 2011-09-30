@@ -1,0 +1,52 @@
+#! /bin/bash
+echo "Updating svn tree with current repository version."
+echo "Use CTRL-C to escape if there are problems."
+svn update
+if [ $? != 0 ]; then
+  exit
+fi
+
+cd src
+
+# Build current development defaults version
+TARGET=gruvin9x
+make clean TARGET=$TARGET TRANSLATIONS=YES
+make TARGET=$TARGET
+mv $TARGET.hex ..
+make clean TARGET=$TARGET
+
+
+# Build stock and near-stock hardware versions ...
+TARGET=gruvin9x-stock
+make clean TARGET=$TARGET
+make TARGET=$TARGET PCB=STD EXT=STD BEEPER=BUZZER USART1=STD PPMIN=STD TRANSLATIONS=YES
+mv $TARGET.hex ..
+make clean TARGET=$TARGET
+
+TARGET=gruvin9x-std-speaker
+make clean TARGET=$TARGET
+make TARGET=$TARGET PCB=STD BEEPER=SPEAKER USART1=STD PPMIN=STD TRANSLATIONS=YES
+mv $TARGET.hex ..
+make clean TARGET=$TARGET
+
+TARGET=gruvin9x-frsky-nospeaker
+make clean TARGET=$TARGET
+make TARGET=$TARGET PCB=STD EXT=FRSKY BEEPER=BUZZER USART1=STD PPMIN=STD TRANSLATIONS=YES
+mv $TARGET.hex ..
+make clean TARGET=$TARGET
+
+TARGET=gruvin9x-frsky-speaker
+make clean TARGET=$TARGET
+make TARGET=$TARGET PCB=STD EXT=FRSKY BEEPER=SPEAKER USART1=STD PPMIN=STD TRANSLATIONS=YES
+mv $TARGET.hex ..
+make clean TARGET=$TARGET
+
+cd ..
+# Commit the new build
+echo "Committing latest .hex binary build ..."
+svn commit -m 'Committing latest .hex binary build'
+# Create version info gif file for Google wiki
+./svnversion.sh
+echo "Committing updated svnversion.gif for wiki"
+svn commit -m 'Updating svnversion.gif for wiki'
+
