@@ -7,24 +7,24 @@ There are four versions of binary .hex files you can download for flashing your 
 These versions carry the latest stable bug-fixes and new features. Each file relates to one of the four different hardware modification combinations. Download the one that matches what you've done to your 9X. :D
 
 === Version Info for Binary Files Below ... ===
-[http://gruvin9x.googlecode.com/svn/trunk/svnversion.gif]<br/>
+[http://gruvin9x.googlecode.com/svn/firmware/trunk/binaries/svnversion.gif]<br/>
 NOTE: The above may lag way behind actual project status. Latest development snapshot binary releases can be found on the [DevBinaries Development Binaries] page.  
 
 == Binary .hex Download Links ==
 
 NOTE: You may have to, "right-click / Save target/link as ..." to get these links to save as local files.
 
- * *[http://gruvin9x.googlecode.com/svn/trunk/gruvin9x-stock.hex gruvin9x-stock.hex]* -- For stock hardware (no internal re-wiring) -- includes the keypad auto-repeat and bat. voltage averaging patches, nicer fonts and much more.
+ * *[http://gruvin9x.googlecode.com/svn/firmware/trunk/binaries/gruvin9x-stock.hex gruvin9x-stock.hex]* -- For stock hardware (no internal re-wiring) -- includes the keypad auto-repeat and bat. voltage averaging patches, nicer fonts and much more.
 
- * *[http://gruvin9x.googlecode.com/svn/trunk/gruvin9x-std-speaker.hex gruvin9x-std-speaker.hex]* -- For [SpeakerReplacement speaker upgrade] only. No Fr-Sky wiring mods.
+ * *[http://gruvin9x.googlecode.com/svn/firmware/trunk/binaries/gruvin9x-std-speaker.hex gruvin9x-std-speaker.hex]* -- For [SpeakerReplacement speaker upgrade] only. No Fr-Sky wiring mods.
 
- * *[http://gruvin9x.googlecode.com/svn/trunk/gruvin9x-frsky-nospeaker.hex gruvin9x-frsky-nospeaker.hex]* -- [FrskyInterfacing Fr-Sky telemetry] mod, but no speaker upgrade.
+ * *[http://gruvin9x.googlecode.com/svn/firmware/trunk/binaries/gruvin9x-frsky-nospeaker.hex gruvin9x-frsky-nospeaker.hex]* -- [FrskyInterfacing Fr-Sky telemetry] mod, but no speaker upgrade.
 
- * *[http://gruvin9x.googlecode.com/svn/trunk/gruvin9x-frsky-speaker.hex gruvin9x-frsky-speaker.hex]* -- [FrskyInterfacing Fr-Sky telemetry] and [SpeakerReplacement speaker upgrade] mods in place.
+ * *[http://gruvin9x.googlecode.com/svn/firmware/trunk/binaries/gruvin9x-frsky-speaker.hex gruvin9x-frsky-speaker.hex]* -- [FrskyInterfacing Fr-Sky telemetry] and [SpeakerReplacement speaker upgrade] mods in place.
 
- * [http://gruvin9x.googlecode.com/svn/trunk/gruvin9x.hex gruvin9x.hex] -- *You probably _DON'T_ want this version!* Fully 'Gruvinvized' with [FrskyInterfacing Fr-Sky], [SpeakerReplacement speaker upgrade] and other 'random' gruvin9x features, such as moving LH_Trim_Up/Dwn away from USART1 to free same for secondary serial communications. (The latter mod is still experimental and no documentation exists for it.) 
+ * [http://gruvin9x.googlecode.com/svn/firmware/trunk/binaries/gruvin9x.hex gruvin9x.hex] -- *You probably _DON'T_ want this version!* Fully 'Gruvinvized' with [FrskyInterfacing Fr-Sky], [SpeakerReplacement speaker upgrade] and other 'random' gruvin9x features, such as moving LH_Trim_Up/Dwn away from USART1 to free same for secondary serial communications. (The latter mod is still experimental and no documentation exists for it.) 
 
 
 == Change Log ==
 
-A log of the most recent as well as previous changes (since r377) for the above binary versions can be found at [http://gruvin9x.googlecode.com/svn/trunk/src/CHANGELOG].
+A log of the most recent as well as previous changes (since r377) for the above binary versions can be found at [http://gruvin9x.googlecode.com/svn/firmware/trunk/binaries/src/CHANGELOG].
