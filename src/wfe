@@ -1,0 +1,2 @@
+avrdude -B1 -cusbtiny -pm64 -U flash:w:gruvin9x.hex:a
+avrdude -B1 -cusbtiny -pm64 -U eeprom:w:gruvin9x.bin:a
