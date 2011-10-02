@@ -50,11 +50,12 @@ TEMPLATES = YES
 
 # gruvin: BEEPER. Values = BUZZER, BUZZER_MOD or SPEAKER
 # (without a mod, BUZZER can make PPM jack output switch from output to input at random)
+# SPEAKER mode actually works on the stock radio, using the stock beeper. Sort of sound OK(ish).
 BEEPER = SPEAKER
 
 # gruvin: Legacy support freeing of USART1 TX/RX pins [DEPRECATED]
 # OPTIONS STD or FREED
-USART1 = FREED
+USART1 = STD
 
 # gruvin: PCM-in circuit mod for JR/Spektrum (and others) compatability
 # Values = STD, MOD1
