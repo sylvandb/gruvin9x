@@ -525,7 +525,7 @@ const prog_char *get_switches_string() ;
 uint16_t getTmr16KHz();
 unsigned int stack_free();
 
-void checkMem();
+void checkLowEEPROM();
 void checkTHR();
 void checkSwitches();
 
