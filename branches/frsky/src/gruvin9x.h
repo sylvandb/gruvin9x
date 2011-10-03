@@ -29,10 +29,6 @@
 #include <string.h>
 #include "ff.h"
 
-#if defined(PCBV3)
-#include "time.h"
-#endif
-
 #ifdef SIMU
   #include "simpgmspace.h"
   #define APM
@@ -70,6 +66,24 @@
 #endif
 
 #include "file.h"
+
+#include "lcd.h"
+#include "myeeprom.h"
+
+#ifdef JETI
+// Jeti-DUPLEX Telemetry
+extern uint16_t jeti_keys;
+#include "jeti.h"
+#endif
+
+#if defined (FRSKY)
+// FrSky Telemetry
+#include "frsky.h"
+#endif
+
+#if defined(PCBV3)
+#include "time.h"
+#endif
 
 extern RlcFile theFile;  //used for any file operation
 
@@ -630,24 +644,11 @@ void setupPulsesTracerCtp1009();
 
 void initTemplates();
 
-#include "lcd.h"
 extern const char stamp1[];
 extern const char stamp2[];
 extern const char stamp3[];
 extern const char stamp4[];
 extern const char stamp5[];
-#include "myeeprom.h"
-
-#ifdef JETI
-// Jeti-DUPLEX Telemetry
-extern uint16_t jeti_keys;
-#include "jeti.h"
-#endif
-
-#if defined (FRSKY)
-// FrSky Telemetry
-#include "frsky.h"
-#endif
 
 extern uint16_t           abRunningAvg;
 extern uint8_t            g_vbat100mV;

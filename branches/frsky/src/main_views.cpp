@@ -146,6 +146,7 @@ void menuMainView(uint8_t event)
 
   ///////////////////////////////////////////////////////////////////////
   /// Upper Section of Display common to all but telemetry alt. views ///
+#if defined (FRSKY)
   if (view == e_telemetry && ((g_eeGeneral.view & 0xf0) >= ALTERNATE)) { // If view is a telemetry ALTERNATE view
     putsModelName(0, 0, g_model.name, g_eeGeneral.currModel, 0);
     uint8_t att = (g_vbat100mV < g_eeGeneral.vBatWarn ? BLINK : 0);
@@ -160,7 +161,9 @@ void menuMainView(uint8_t event)
     }
     lcd_filled_rect(0, 0, DISPLAY_W, 8);
   }
-  else { // not in a telemetry ALTERNATE view
+  else 
+#endif
+  { // not in a telemetry ALTERNATE view
     uint8_t phase = getFlightPhase();
     lcd_putsnAtt(6*FW+4, 2*FH, g_model.phaseData[phase].name, sizeof(g_model.phaseData[phase].name), ZCHAR);
 
