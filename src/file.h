@@ -29,12 +29,12 @@
 // bs=32   64 blocks    verlust link: 64  16files:16*16 256     sum 320
 //
 #if defined(PCBV3)
-#define EESIZE   4096
-#define BS       32
+// 4096 - 16 bytes to give 255 blocks, since we can't address 256 block in an 8-bit register
+#define EESIZE   4080
 #else
 #define EESIZE   2048
-#define BS       16
 #endif
+#define BS       16
 
 /// fileId of general file
 #define FILE_GENERAL   0

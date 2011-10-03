@@ -38,7 +38,7 @@ PCB = V4
 # For this option you need to modify your hardware!
 # More information at [insertURLhere]
 # Values = STD, JETI, FRSKY
-EXT = FRSKY
+EXT = STD
 
 # Enable heli menu
 # Values = YES, NO
@@ -103,10 +103,6 @@ CPPSRC = gruvin9x.cpp stamp.cpp menus.cpp model_menus.cpp general_menus.cpp main
 
 ifeq ($(EXT), JETI)
  CPPSRC += jeti.cpp
-endif
-
-ifeq ($(EXT), FRSKY)
- CPPSRC += frsky.cpp
 endif
 
 # Disk IO support (PCB V2+ only)
@@ -190,11 +186,13 @@ ifeq ($(PCB), STD)
 # If FRSKY-Support is enabled
   ifeq ($(EXT), FRSKY)
    CPPDEFS += -DFRSKY -DFRSKY_HUB
+   CPPSRC += frsky.cpp
   endif
   
 # If FRSKY-Support is enabled
   ifeq ($(EXT), FRSKY_NOHUB)
    CPPDEFS += -DFRSKY
+   CPPSRC += frsky.cpp
   endif
 
 # gruvin: If buzzer speaker replacment supported 
@@ -219,6 +217,7 @@ ifeq ($(PCB), STD)
 
 else
 # not PCB=STD, so ...
+  CPPSRC += frsky.cpp
   CPPDEFS += -DPCBV3 -DFRSKY -DFRSKY_HUB -DEEPROM_ASYNC_WRITE 
   ifeq ($(PCB), V3)
     CPPDEFS += -DBEEPSPKR
