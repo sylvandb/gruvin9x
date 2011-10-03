@@ -190,11 +190,11 @@ uint8_t Translate()
         }
         for (uint8_t i=0; i<NUM_STICKS; i++)
           setTrimValue(0, i, trims[i]);
-        theFile.writeRlc(FILE_MODEL(id), FILE_TYP_MODEL, (uint8_t*)&g_model, sizeof(g_model), true);
+        theFile.writeRlc(FILE_MODEL(id), FILE_TYP_MODEL, (uint8_t*)&g_model, sizeof(g_model), 200);
       }
     }
     g_eeGeneral.myVers = EEPROM_VER;
-    theFile.writeRlc(FILE_GENERAL, FILE_TYP_GENERAL, (uint8_t*)&g_eeGeneral, sizeof(EEGeneral), true);
+    theFile.writeRlc(FILE_GENERAL, FILE_TYP_GENERAL, (uint8_t*)&g_eeGeneral, sizeof(EEGeneral), 200);
     return sizeof(EEGeneral);
   }
 
