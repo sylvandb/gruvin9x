@@ -757,8 +757,8 @@ extern FIL g_oLogFile; // pers.cpp::resetTelemetry()
 
 #if defined (PCBV4)
 // Global rotary encoer registers -- 8-bit, 0-255
-extern uint8_t g_rotenc1;
-extern uint8_t g_rotenc2;
+extern volatile uint8_t g_rotenc1;
+extern volatile uint8_t g_rotenc2;
 #endif
 
 
