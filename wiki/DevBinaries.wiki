@@ -27,7 +27,7 @@ NOTE: You may need to "right-click, save target/link as ..." to save these files
  NOTE: The _speaker_ versions will work on the stock radio with no speaker, giving softer, frequency variable tones through the standard piezo beeper/buzzer. You may prefer this to the otherwise (sometimes) ear-rattling, default beeps or squeals, depending on the nature of your particular radio.
 
 === Custom PC Board Based Versions ===
- * *[http://gruvin9x.googlecode.com/svn/branches/frsky/gruvin9x.hex gruvin9x.hex]* -- *You probably _DON'T_ want this version!* -- Latest development version for custom PCB hardware. (PCB V3 as at 2011-06-29) 
+ * *[http://gruvin9x.googlecode.com/svn/branches/frsky/gruvin9x.hex gruvin9x.hex]* -- *You probably _DON'T_ want this version!* -- Latest development version for custom PCB hardware. (PCB V4.1 from 2011-11-04) 
 
 
 == Change Log ==
