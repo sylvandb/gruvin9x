@@ -2153,31 +2153,27 @@ void moveTrimsToOffsets() // copy state of 3 primary to subtrim
 
 #if defined (PCBV4)
 // Rotary encoder interrupts
-uint8_t g_rotenc1, g_rotenc2 = 0;
+uint8_t volatile g_rotenc1, g_rotenc2 = 0;
 ISR(INT2_vect)
 {
-//  g_rotenc2=1;
   uint8_t input = PIND & 0b00001100;
-  if (input == 0 || input == 0b00001100) g_rotenc2++;
+  if (input == 0 || input == 0b00001100) g_rotenc1--;
 }
 ISR(INT3_vect)
 {
-//  g_rotenc2=4;
   uint8_t input = PIND & 0b00001100;
-  if (input == 0 || input == 0b00001100) g_rotenc2--;
+  if (input == 0 || input == 0b00001100) g_rotenc1++;
 }
 
 ISR(INT5_vect)
 {
-//  g_rotenc1=1;
   uint8_t input = PINE & 0b01100000;
-  if (input == 0 || input == 0b01100000) g_rotenc1++;
+  if (input == 0 || input == 0b01100000) g_rotenc2++;
 }
 ISR(INT6_vect)
 {
-//  g_rotenc1=4;
   uint8_t input = PINE & 0b01100000;
-  if (input == 0 || input == 0b01100000) g_rotenc1--;
+  if (input == 0 || input == 0b01100000) g_rotenc2--;
 }
 #endif
 
@@ -2346,14 +2342,14 @@ int main(void)
 EIMSK = 0; // disable ALL external interrupts.
 
 // encoder 1
-EICRB = (1<<ISC60) || (1<<ISC50); // dot he same for encoder 1
-// EIFR = (3<<INTF5);
+EICRB = (1<<ISC60) | (1<<ISC50); // 01 = interrupt on any edge
+EIFR = (3<<INTF5); // clear the int. flag in case it got set when changing modes
 
 // encoder 2
-EICRA = (1<<ISC30) || (1<<ISC20); // 01 = interrupt on any edge
-//EIFR = (3<<INTF2); // clear the int. flag in case it got set when changing modes
+EICRA = (1<<ISC30) | (1<<ISC20); // do the same for encoder 1
+EIFR = (3<<INTF2);
 
-EIMSK = (3<<INT5) || (3<<INT2); // enable the two rot. enc. ext. int. pairs.
+EIMSK = (3<<INT5) | (3<<INT2); // enable the two rot. enc. ext. int. pairs.
 /***************************************************/
 #endif
 
