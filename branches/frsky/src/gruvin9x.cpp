@@ -2151,6 +2151,37 @@ void moveTrimsToOffsets() // copy state of 3 primary to subtrim
   beepWarn1();
 }
 
+#if defined (PCBV4)
+// Rotary encoder interrupts
+uint8_t g_rotenc1, g_rotenc2 = 0;
+ISR(INT2_vect)
+{
+//  g_rotenc2=1;
+  uint8_t input = PIND & 0b00001100;
+  if (input == 0 || input == 0b00001100) g_rotenc2++;
+}
+ISR(INT3_vect)
+{
+//  g_rotenc2=4;
+  uint8_t input = PIND & 0b00001100;
+  if (input == 0 || input == 0b00001100) g_rotenc2--;
+}
+
+ISR(INT5_vect)
+{
+//  g_rotenc1=1;
+  uint8_t input = PINE & 0b01100000;
+  if (input == 0 || input == 0b01100000) g_rotenc1++;
+}
+ISR(INT6_vect)
+{
+//  g_rotenc1=4;
+  uint8_t input = PINE & 0b01100000;
+  if (input == 0 || input == 0b01100000) g_rotenc1--;
+}
+#endif
+
+
 #ifndef SIMU
 int main(void)
 {
@@ -2160,7 +2191,7 @@ int main(void)
 #if defined (PCBV4)
   DDRB = 0b11000111;  PORTB = 0b00111001; // 7:SPKR, 6:PPM_OUT,  5:TrainSW,  4:IDL2_SW, SDCARD[3:MISO 2:MOSI 1:SCK 0:CS]
   DDRC = 0x3f;  PORTC = 0xc0; // 7:AilDR, 6:EleDR, LCD[5,4,3,2,1], 0:BackLight
-  DDRD = 0x00;  PORTD = 0xfc; // 7/6:Spare3/4, 5:RENC2_PUSH, 4:RENC1_PUSH, 3:RENC2_B, 2:RENC2_A, 1:I2C_SDA, 0:I2C_SCL
+  DDRD = 0x00;  PORTD = 0b11111101; // 7/6:Spare3/4, 5:RENC2_PUSH, 4:RENC1_PUSH, 3:RENC2_B, 2:RENC2_A, 1:I2C_SDA, 0:I2C_SCL
   DDRE = 0b00001010;  PORTE = 0b11110101; // 7:PPM_IN, 6: RENC1_B, 5:RENC1_A, 4:USB_DNEG, 3:BUZZER, 2:USB_DPOS, 1:TELEM_TX, 0:TELEM_RX
   DDRF = 0x00;  PORTF = 0x00; // 7-4:JTAG, 3:ADC_REF_1.2V input, 2-0:ADC_SPARE_2-0
   DDRG = 0b00010000;  PORTG = 0xff; // 7-6:N/A, 5:GearSW, 4: Sim_Ctrl[out], 3:IDL1_Sw, 2:TCut_Sw, 1:RF_Power[in], 0: RudDr_Sw 
@@ -2304,6 +2335,26 @@ int main(void)
   utm.tm_sec =  rtc.sec;
   utm.tm_wday = rtc.wday - 1;
   g_unixTime = mktime(&utm);
+#endif
+
+#if defined (PCBV4)
+/***************************************************/
+/* Rotary encoder interrupt set-up (V4 board only) */
+
+// All external interrupts initialise to disabled. But maybe not after 
+// a WDT or BOD event? So to be safe ...
+EIMSK = 0; // disable ALL external interrupts.
+
+// encoder 1
+EICRB = (1<<ISC60) || (1<<ISC50); // dot he same for encoder 1
+// EIFR = (3<<INTF5);
+
+// encoder 2
+EICRA = (1<<ISC30) || (1<<ISC20); // 01 = interrupt on any edge
+//EIFR = (3<<INTF2); // clear the int. flag in case it got set when changing modes
+
+EIMSK = (3<<INT5) || (3<<INT2); // enable the two rot. enc. ext. int. pairs.
+/***************************************************/
 #endif
 
 /***********************************************************/

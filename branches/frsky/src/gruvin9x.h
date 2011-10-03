@@ -755,5 +755,12 @@ extern FATFS FATFS_Obj; // pers.cpp::resetTelemetry()
 extern FIL g_oLogFile; // pers.cpp::resetTelemetry()
 #endif
 
+#if defined (PCBV4)
+// Global rotary encoer registers -- 8-bit, 0-255
+extern uint8_t g_rotenc1;
+extern uint8_t g_rotenc2;
+#endif
+
+
 #endif // gruvin9x_h
 /*eof*/
