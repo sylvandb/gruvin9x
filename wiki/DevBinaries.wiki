@@ -1,6 +1,6 @@
 #summary Binaries for download from the trunk/stable repository
 
-= Latest Development Snaphot Binaries (.HEX files) =
+= Latest Development Snapshot Binaries (.HEX files) =
 
 There are five versions of pre-compiled development binary .hex files you can download for flashing your '9X without needing to compile from source. WARNING: Serious bugs can exist in these versions at any time, without warning. Exercise extreme caution.
 
@@ -24,6 +24,7 @@ NOTE: You may need to "right-click, save target/link as ..." to save these files
 
  * *[http://gruvin9x.googlecode.com/svn/branches/frsky/gruvin9x-frsky-speaker.hex gruvin9x-frsky-speaker]* -- [FrskyInterfacing Fr-Sky telemetry] and [SpeakerReplacement speaker upgrade] mods in place.
 
+ NOTE: The _speaker_ versions will work on the stock radio with no speaker, giving softer, frequency variable tones through the standard piezo beeper/buzzer. You may prefer this to the otherwise (sometimes) ear-rattling, default beeps or squeals, depending on the nature of your particular radio.
 
 === Custom PC Board Based Versions ===
  * *[http://gruvin9x.googlecode.com/svn/branches/frsky/gruvin9x.hex gruvin9x.hex]* -- *You probably _DON'T_ want this version!* -- Latest development version for custom PCB hardware. (PCB V3 as at 2011-06-29) 
