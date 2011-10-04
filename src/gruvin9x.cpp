@@ -750,7 +750,7 @@ uint16_t anaIn(uint8_t chan)
   //                        Google Translate (German): // if table already, then it must also be worthwhile
   static prog_char APM crossAna[]={3,1,2,0,4,5,6,7};
   volatile uint16_t *p = &s_anaFilt[pgm_read_byte(crossAna+chan)];
-  AutoLock autoLock;
+  AutoLock autoLock; // <-- G: ER9X commented this out. Why?
   return *p;
 }
 
