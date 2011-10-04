@@ -1836,9 +1836,9 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
 #endif
 {
   cli();
+#if defined (PCBV3)
   static uint8_t accuracyWarble = 4; // becasue 16M / 1024 / 100 = 156.25. So bump every 4.
   uint8_t bump = (!(accuracyWarble++ & 0x03)) ? 157 : 156;
-#if defined (PCBV3)
   TIMSK2 &= ~(1<<OCIE2A); //stop reentrance
   OCR2A += bump;
 #else
@@ -1846,6 +1846,8 @@ ISR(TIMER0_COMP_vect, ISR_NOBLOCK) //10ms timer
 #if defined (BEEPSPKR)
   OCR0 += 2; // run much faster, to generate speaker tones
 #else
+  static uint8_t accuracyWarble = 4; // becasue 16M / 1024 / 100 = 156.25. So bump every 4.
+  uint8_t bump = (!(accuracyWarble++ & 0x03)) ? 157 : 156;
   OCR0 += bump;
 #endif
 #endif
@@ -2089,7 +2091,7 @@ extern uint16_t __stack;
 uint16_t stack_free()
 {
   uint16_t *p ;
-  uint16_t c;
+  uint16_t c = 0;
   p = &__stack; // start of stack (usually the end of SRAM)
   while ( *p-- != 0xc5c5); // scan downwards for bottom of used stack
   while ( *p-- == 0xc5c5 && p > &__bss_end) c++;
