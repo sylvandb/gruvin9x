@@ -167,6 +167,8 @@ CPPDEFS = -DF_CPU=$(F_CPU)UL
 # NOTE: PCB version now overrides all the earlier individual settings
 #       These individual settings work only for PCB=STD
 
+CPPDEFS += -DEEPROM_ASYNC_WRITE
+
 ifeq ($(PCB), STD)
 # STD PCB, so ...
 
@@ -218,7 +220,7 @@ ifeq ($(PCB), STD)
 else
 # not PCB=STD, so ...
   CPPSRC += frsky.cpp
-  CPPDEFS += -DPCBV3 -DFRSKY -DFRSKY_HUB -DEEPROM_ASYNC_WRITE 
+  CPPDEFS += -DPCBV3 -DFRSKY -DFRSKY_HUB
   ifeq ($(PCB), V3)
     CPPDEFS += -DBEEPSPKR
   endif
