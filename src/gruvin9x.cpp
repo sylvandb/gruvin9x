@@ -1745,6 +1745,9 @@ ISR(TIMER1_COMPA_vect) //2MHz pulse generation
     i++;
   }while(dt<1 && i<5);
 
+  g_tmr1Latency_max = max(dt,g_tmr1Latency_max);
+  g_tmr1Latency_min = min(dt,g_tmr1Latency_min);
+
 //vinceofdrink@gmail harwared ppm
 //Orginal bitbang for PPM
 #if !defined (DPPMPB7_HARDWARE) && !defined (PCBV4)
@@ -1756,20 +1759,30 @@ ISR(TIMER1_COMPA_vect) //2MHz pulse generation
     PORTB &= ~(1<<OUT_B_PPM); // GCC optimisation should result in a single CBI instruction
     pulsePol = 1;
   }
-  g_tmr1Latency_max = max(dt,g_tmr1Latency_max);    // max has leap, therefore vary in length
-  g_tmr1Latency_min = min(dt,g_tmr1Latency_min);    // min has leap, therefore vary in length
 #endif
   OCR1A = *pulsePtr; // Schedule next interrupt vector (to this handler)
 
 #if defined (PCBV4)
   OCR1B = *pulsePtr; /* G: Using timer in CTC mode, restricted to using OCR1A for interrupt triggering.  
                         So we actually have to handle the OCR1B register separately in this way. */
-#else
+
+  // We cannot read the status of the PPM_OUT pin when OC1B is connected to it on the ATmega2560.
+  // So the only way to set polarity is to manually control set/reset mode in COM1B0/1
+  if (pulsePol)
+  {
+    TCCR1A = (3<<COM1B0); // SET the state of PB6(OC1B) on next TCNT1==OCR1B
+    pulsePol = 0;
+  }
+  else
+  {
+    TCCR1A = (2<<COM1B0); // CLEAR the state of PB6(OC1B) on next TCNT1==OCR1B
+    pulsePol = 1;
+  }
+
 //vinceofdrink@gmail harwared ppm
-#  if defined (DPPMPB7_HARDWARE)
+#elif defined (DPPMPB7_HARDWARE)
   OCR1C = *pulsePtr;  // just copy the value of the OCR1A to OCR1C to test PPM out without too 
                       // much change in the code not optimum but will not alter ppm precision
-#  endif
 #endif
 
   *pulsePtr++;
@@ -1789,6 +1802,14 @@ ISR(TIMER1_COMPA_vect) //2MHz pulse generation
     sei();
 
     setupPulses();
+
+#if !defined (PCBV3) && defined (DPPMPB7_HARDWARE)
+  // G: NOTE: This strategy does not work on the '2560 becasue you can't 
+  //          read the PPM out pin when connected to OC1B. Vincent says
+  //          it works on the '64A. I haven't personally tested it.
+  if(PINB & (1<<OUT_B_PPM) && g_model.pulsePol)
+       TCCR1C=(1<<FOC1C);
+#endif
 
     cli();
 #if defined (PCBV3)
@@ -2363,7 +2384,8 @@ EIMSK = (3<<INT5) | (3<<INT2); // enable the two rot. enc. ext. int. pairs.
 #if defined (PCBV4)
     OCR1B = 0xffff; /* Prevent any PPM_PUT pin toggle before the TCNT1 interrupt 
                        fires for the first time and sets up the pulse period. */
-    TCCR1A |= (1<<COM1B0); // (COM1B1=0 and COM1B0=1 in TCCR1A)  toogle the state of PB6(OC1B) on each TCNT1==OCR1B
+    // TCCR1A |= (1<<COM1B0); // (COM1B1=0 and COM1B0=1 in TCCR1A)  toogle the state of PB6(OC1B) on each TCNT1==OCR1B
+    TCCR1A = (3<<COM1B0); // Connect OC1B to PPM_OUT pin (SET the state of PB6(OC1B) on next TCNT1==OCR1B)
 #else
 //addon Vinceofdrink@gmail (hardware ppm)
 #  if defined (DPPMPB7_HARDWARE)
