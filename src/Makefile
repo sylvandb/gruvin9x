@@ -598,6 +598,7 @@ AVRMEM = avr-mem.sh $(TARGET).elf $(MCU)
 
 sizebefore:
 	@echo "CPPDEFS=$(CPPDEFS)"
+	@echo "CPPSRC=$(CPPSRC)"
 	@if test -f $(TARGET).elf; then echo; echo $(MSG_SIZE_BEFORE); $(ELFSIZE); \
 	$(AVRMEM) 2>/dev/null; echo; fi
 
