@@ -2113,11 +2113,14 @@ uint16_t stack_free()
 {
   uint16_t *p ;
   uint16_t c = 0;
-  p = &__stack; // start of stack (usually the end of SRAM)
+  p = &__stack - 32; // start of stack (usually the end of SRAM)
   while ( *p-- != 0xc5c5); // scan downwards for bottom of used stack
   while ( *p-- == 0xc5c5 && p > &__bss_end) c++;
 
-  return c;
+  return c+32; // XXX TODO. G: Using 32 byte offset due to strange 
+               // stackpinter-with-no-write issue messing this up 
+               // near top of stack. But need to find out WHY this
+               // is happening.
 }
 
 #endif
