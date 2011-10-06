@@ -1466,17 +1466,17 @@ void perMain()
 
   perOut(next_chans512);
 
-  cli();
-  if (fading_out_timer) {
-    for (uint8_t i=0; i<NUM_CHNOUT; i++) {
+  for (uint8_t i=0; i<NUM_CHNOUT; i++) {
+    cli();
+    if (fading_out_timer) {
       g_chans512[i] = last_chans512[i] + (next_chans512[i] - last_chans512[i]) / fading_out_timer;
+      fading_out_timer--;
     }
-    fading_out_timer--;
+    else {
+      g_chans512[i] = next_chans512[i];
+    }
+    sei();
   }
-  else {
-    memcpy(g_chans512, next_chans512, sizeof(g_chans512));
-  }
-  sei();
 
 #ifdef EEPROM_ASYNC_WRITE
   if (!eeprom_buffer_size) {
