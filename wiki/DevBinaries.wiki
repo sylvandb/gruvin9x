@@ -2,6 +2,8 @@
 
 = Latest Development Snapshot Binaries (.HEX files) =
 
+*PLEASE READ the VERY VERY important note, below!*
+
 There are five versions of pre-compiled development binary .hex files you can download for flashing your '9X without needing to compile from source. WARNING: Serious bugs can exist in these versions at any time, without warning. Exercise extreme caution.
 
 These versions all carry the latest development code changes, untested features, new bug and also recent bug-fixes.
@@ -25,6 +27,13 @@ NOTE: You may need to "right-click, save target/link as ..." to save these files
  * *[http://gruvin9x.googlecode.com/svn/branches/frsky/gruvin9x-frsky-speaker.hex gruvin9x-frsky-speaker]* -- [FrskyInterfacing Fr-Sky telemetry] and [SpeakerReplacement speaker upgrade] mods in place.
 
  NOTE: The _speaker_ versions will work on the stock radio with no speaker, giving softer, frequency variable tones through the standard piezo beeper/buzzer. You may prefer this to the otherwise (sometimes) ear-rattling, default beeps or squeals, depending on the nature of your particular radio.
+
+=NOTE!=
+*VERY VERY IMPORTANT!!* This development version can change EEPROM file format at ANY time, causing you to lose ALL settings and model data and have to re-enter everything from scratch. Also, it *does NOT work with eePe* and should not ever be expected to. As of September 2011, it is probable that even future stable versions of gruinv9x firmware will _not_ work with eePe, either. 
+
+We will be producing our own flavour of eePe, with numerous extensions, named comapnion9x. Our goals include taking on the responsibility to have companion9x handle translation of settings and model data to and from eePe and therefore ER9X, without placing that burden on Erez (the ER9X project owner. Erez's very fine eePe may or may not be upgraded for compatibility with companion9x, in his own time and at his sole discretion.) 
+
+We apologise for any inconvenience this may cause and would like it known that we would not have done this had it not seemed necessary.
 
 === Custom PC Board Based Versions ===
  * *[http://gruvin9x.googlecode.com/svn/branches/frsky/gruvin9x.hex gruvin9x.hex]* -- *You probably _DON'T_ want this version!* -- Latest development version for custom PCB hardware. (PCB V4.1 from 2011-11-04) 
