@@ -295,14 +295,14 @@ void eeLoadModel(uint8_t id)
   }
 }
 
-bool eeDuplicateModel(uint8_t id)
+int8_t eeDuplicateModel(uint8_t id, bool down)
 {
-  uint8_t i;
-  for( i=id+1; i<MAX_MODELS; i++)
-  {
-    if(! EFile::exists(FILE_MODEL(i))) break;
+  int8_t i = id;
+  for (;;) {
+    i = (MAX_MODELS + (down ? i+1 : i-1)) % MAX_MODELS;
+    if (!EFile::exists(FILE_MODEL(i))) break;
+    if (i == id) return -1; // no free space in directory left
   }
-  if(i==MAX_MODELS) return false; // no free space in directory left
 
   EFile theFile2;
   theFile2.openRd(FILE_MODEL(id));
@@ -322,8 +322,9 @@ bool eeDuplicateModel(uint8_t id)
     }
   }
   theFile.close();
-  return true;
+  return i;
 }
+
 void eeReadAll()
 {
   if(!EeFsOpen() ||
