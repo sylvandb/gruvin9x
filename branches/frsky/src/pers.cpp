@@ -75,6 +75,9 @@ uint8_t Translate()
       if (g_eeGeneral.lightSw == -MAX_SWITCH+6)
         g_eeGeneral.lightSw -= 6;
     }
+    else {
+      g_eeGeneral.inactivityTimer += 10;
+    }
     g_eeGeneral.view = 0; // will not translate the view index
     EEPROM_V3::EEGeneral *old = (EEPROM_V3::EEGeneral *)&g_eeGeneral;
     g_eeGeneral.disableMemoryWarning = old->disableMemoryWarning;
