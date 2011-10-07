@@ -303,7 +303,7 @@ void menuProcModelSelect(uint8_t event)
     if (s_copyMode && k==sub) {
       if (s_copyMode == COPY_MODE)
         lcd_putc(20*FW+2, y, '+');
-      lcd_rect(8, y-1, DISPLAY_W-1-7, 9);
+      lcd_rect(8, y-1, DISPLAY_W-1-7, 9, s_copyMode == COPY_MODE ? 0xff : 0x55);
       lcd_filled_rect(9, y, DISPLAY_W-1-9, 7);
     }
   }
