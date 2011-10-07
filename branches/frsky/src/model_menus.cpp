@@ -301,7 +301,9 @@ void menuProcModelSelect(uint8_t event)
     }
     if (k==g_eeGeneral.currModel) lcd_putc(1, y, '*');
     if (s_copyMode && k==sub) {
-      lcd_rect(8, y-1, DISPLAY_W-1-7, 9, s_copyMode == COPY_MODE ? 0xff : 0x55);
+      if (s_copyMode == COPY_MODE)
+        lcd_putc(20*FW+2, y, '+');
+      lcd_rect(8, y-1, DISPLAY_W-1-7, 9);
       lcd_filled_rect(9, y, DISPLAY_W-1-9, 7);
     }
   }
