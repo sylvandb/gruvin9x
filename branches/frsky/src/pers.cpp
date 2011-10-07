@@ -57,6 +57,12 @@ void generalDefault()
 #ifdef TRANSLATIONS
 uint8_t Translate()
 {
+  if (g_eeGeneral.myVers == 0) {
+    if (theFile.readRlc1((uint8_t*)&g_eeGeneral, 1) != 1)
+      return 0;
+    theFile.openRlc(FILE_GENERAL);
+  }
+
   if (g_eeGeneral.myVers == EEPROM_VER_r584 || (g_eeGeneral.myVers >= EEPROM_ER9X_MIN && g_eeGeneral.myVers <= EEPROM_ER9X_MAX)) {
     alert(g_eeGeneral.myVers == EEPROM_VER_r584 ? PSTR("EEprom Data v3") : PSTR("EEprom Data Er9x"), true);
     message(PSTR("EEPROM Converting"));
