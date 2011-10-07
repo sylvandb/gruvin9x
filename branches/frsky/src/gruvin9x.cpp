@@ -723,19 +723,6 @@ uint8_t checkTrim(uint8_t event)
 }
 
 #ifndef SIMU
-class AutoLock
-{
-  uint8_t m_saveFlags;
-public:
-  AutoLock(){
-    m_saveFlags = SREG;
-    cli();
-  };
-  ~AutoLock(){
-    if(m_saveFlags & (1<<SREG_I)) sei();
-    //SREG = m_saveFlags;// & (1<<SREG_I)) sei();
-  };
-};
 
 // #define STARTADCONV (ADCSRA  = (1<<ADEN) | (1<<ADPS0) | (1<<ADPS1) | (1<<ADPS2) | (1<<ADSC) | (1 << ADIE))
 // G: Note that the above would have set the ADC prescaler to 128, equating to
@@ -750,7 +737,6 @@ uint16_t anaIn(uint8_t chan)
   //                        Google Translate (German): // if table already, then it must also be worthwhile
   static prog_char APM crossAna[]={3,1,2,0,4,5,6,7};
   volatile uint16_t *p = &s_anaFilt[pgm_read_byte(crossAna+chan)];
-  AutoLock autoLock; // <-- G: ER9X commented this out. Why?
   return *p;
 }
 
