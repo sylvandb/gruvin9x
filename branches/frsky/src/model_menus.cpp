@@ -181,6 +181,7 @@ void menuProcModelSelect(uint8_t event)
         m_posVert = sub = g_eeGeneral.currModel;
         s_copyMode = 0;
         s_copyTgtOfs = 0;
+        s_copySrcRow = -1;
         break;
       case EVT_KEY_LONG(KEY_EXIT):
         if (s_copyMode && s_copyTgtOfs == 0 && g_eeGeneral.currModel != sub && EFile::exists(FILE_MODEL(sub))) {
