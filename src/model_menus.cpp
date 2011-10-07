@@ -299,7 +299,7 @@ void menuProcModel(uint8_t _event)
     return;
   }
 
-  MENU("SETUP", menuTabModel, e_Model, 15, {0,sizeof(g_model.name)-1,1,0,0,0,0,0,0,0,0,6,2/*,0, 0*/});
+  MENU("SETUP", menuTabModel, e_Model, 14, {0,sizeof(g_model.name)-1,1,0,0,0,0,0,0,0,6,2/*,0, 0*/});
 
   uint8_t  sub    = m_posVert;
   uint8_t y = 1*FH;
@@ -375,13 +375,6 @@ void menuProcModel(uint8_t _event)
     lcd_puts_P(    0,    y, PSTR("Trim Inc"));
     lcd_putsnAtt(  10*FW, y, PSTR("Exp   ExFineFine  MediumCoarse")+6*g_model.trimInc,6,(sub==subN ? INVERS:0));
     if(sub==subN) CHECK_INCDEC_MODELVAR(event,g_model.trimInc,0,4);
-    if((y+=FH)>7*FH) return;
-  }subN++;
-
-  if(s_pgOfs<subN) {
-    lcd_puts_P(    0,    y, PSTR("Trim Sw"));
-    putsSwitches(10*FW,y,g_model.phaseData[0].swtch,sub==subN ? INVERS:0);
-    if(sub==subN) CHECK_INCDEC_MODELVAR(event,g_model.phaseData[0].swtch,-MAX_SWITCH, MAX_SWITCH);
     if((y+=FH)>7*FH) return;
   }subN++;
 
