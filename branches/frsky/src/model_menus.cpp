@@ -202,7 +202,13 @@ void menuProcModelSelect(uint8_t event)
               s_copyTgtOfs--;
               m_posVert = (m_posVert+1) % MAX_MODELS;
             }
+#ifdef EEPROM_ASYNC_WRITE
+            s_sync_write = true;
+#endif
             EFile::swap(FILE_MODEL(sub), FILE_MODEL(m_posVert));
+#ifdef EEPROM_ASYNC_WRITE
+            s_sync_write = false;
+#endif
             if (m_posVert == g_eeGeneral.currModel) {
               g_eeGeneral.currModel = sub;
               STORE_GENERALVARS;
@@ -273,7 +279,13 @@ void menuProcModelSelect(uint8_t event)
           }
           else {
             // only swap the model with its neighbor
+#ifdef EEPROM_ASYNC_WRITE
+            s_sync_write = true;
+#endif
             EFile::swap(FILE_MODEL(oldSub), FILE_MODEL(sub));
+#ifdef EEPROM_ASYNC_WRITE
+            s_sync_write = false;
+#endif
             if (oldSub == g_eeGeneral.currModel) {
               g_eeGeneral.currModel = sub;
               STORE_GENERALVARS;
