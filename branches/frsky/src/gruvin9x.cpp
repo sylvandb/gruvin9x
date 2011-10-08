@@ -2093,22 +2093,6 @@ uint16_t DEBUG1 = 0;
 uint16_t DEBUG2 = 0;
 #endif
 
-extern uint16_t __bss_end;
-extern uint16_t __stack;
-uint16_t stack_free()
-{
-  uint16_t *p ;
-  uint16_t c = 0;
-  p = &__stack - 32; // start of stack (usually the end of SRAM)
-  while ( *p-- != 0xc5c5); // scan downwards for bottom of used stack
-  while ( *p-- == 0xc5c5 && p > &__bss_end) c++;
-
-  return c+32; // XXX TODO. G: Using 32 byte offset due to strange 
-               // stackpinter-with-no-write issue messing this up 
-               // near top of stack. But need to find out WHY this
-               // is happening.
-}
-
 #endif
 
 
@@ -2189,6 +2173,19 @@ ISR(INT6_vect)
 }
 #endif
 
+extern unsigned char __bss_end ;
+
+uint16_t stack_free()
+{
+  unsigned char *p ;
+
+  p = &__bss_end + 1 ;
+  while ( *p == 0x55 )
+  {
+    p+= 1 ;
+  }
+  return p - &__bss_end ;
+}
 
 #ifndef SIMU
 int main(void)
@@ -2286,6 +2283,22 @@ int main(void)
 #else
   ETIMSK |= (1<<TICIE3);
 #endif
+
+
+  // Init Stack while interrupts are disabled
+#define STACKPTR     _SFR_IO16(0x3D)
+  {
+    unsigned char *p ;
+    unsigned char *q ;
+
+    p = (unsigned char *) STACKPTR ;
+    q = &__bss_end ;
+    p -= 2 ;
+    while ( p > q )
+    {
+      *p-- = 0x55 ;
+    }
+  }
 
   sei(); // interrupts needed for eeReadAll function (soon).
 
