@@ -936,7 +936,7 @@ bool swapExpoMix(uint8_t expo, uint8_t &idx, uint8_t up)
   return result;
 }
 
-void editExpoVals(uint8_t event, uint8_t which, bool edit, uint8_t y, uint8_t idt)
+inline void editExpoVals(uint8_t event, uint8_t which, bool edit, uint8_t y, uint8_t idt)
 {
   uint8_t invBlk = edit ? INVERS : 0;
   // if(edit && stopBlink) invBlk = INVERS;
@@ -976,20 +976,12 @@ void editExpoVals(uint8_t event, uint8_t which, bool edit, uint8_t y, uint8_t id
       lcd_putsnAtt(6*FW, y, PSTR("---PosNeg")+9-3*ed->mode, 3, invBlk);
       if(edit) ed->mode = 4 - checkIncDecModel(event, 4-ed->mode, 1, 3);
       break;
-    case 6:
-      lcd_putsAtt(0*FW, y, PSTR("Delete"), invBlk);
-      if(edit && event==EVT_KEY_FIRST(KEY_MENU)) {
-        deleteExpoMix(1, idt);
-        killEvents(event);
-        popMenu();
-      }
-      break;
   }
 }
 
 void menuProcExpoOne(uint8_t event)
 {
-  SIMPLE_SUBMENU("EXPO/DR", 7);
+  SIMPLE_SUBMENU("EXPO/DR", 6);
 
   ExpoData *ed = expoaddress(s_currIdx);
 
@@ -1034,7 +1026,7 @@ void menuProcExpoOne(uint8_t event)
 
 void menuProcMixOne(uint8_t event)
 {
-  SIMPLE_SUBMENU_NOTITLE(14);
+  SIMPLE_SUBMENU_NOTITLE(13);
   TITLEP(s_currCh ? PSTR("INSERT MIX ") : PSTR("EDIT MIX "));
   MixData *md2 = mixaddress(s_currIdx) ;
   putsChn(lcd_lastPos+1*FW,0,md2->destCh,0);
@@ -1117,14 +1109,6 @@ void menuProcMixOne(uint8_t event)
         lcd_puts_P(  2*FW,y,PSTR("Slow  Up"));
         lcd_outdezAtt(FW*16,y,md2->speedUp,attr);
         if(attr)  CHECK_INCDEC_MODELVAR( event, md2->speedUp, 0,15);
-        break;
-      case 13:   lcd_putsAtt(  2*FW,y,PSTR("DELETE MIX [MENU]"),attr);
-        if(attr && event==EVT_KEY_LONG(KEY_MENU)){
-          killEvents(event);
-          deleteExpoMix(0, s_currIdx);
-          beepWarn1();
-          popMenu();
-        }
         break;
     }
   }
