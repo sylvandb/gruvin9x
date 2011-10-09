@@ -229,34 +229,33 @@ void menuProcModelSelect(uint8_t event)
         killEvents(_event);
         break;
       case EVT_KEY_BREAK(KEY_MENU):
-        if (EFile::exists(FILE_MODEL(sub)) && !s_copyTgtOfs) {
+        if (s_copyTgtOfs) {
+          s_copyTgtOfs = 0;
+          s_copyMode = 0;
+        }
+        else if (EFile::exists(FILE_MODEL(sub))) {
           s_copyMode = (s_copyMode == COPY_MODE ? MOVE_MODE : COPY_MODE);
           s_copySrcRow = -1;
-          break;
         }
-        // no break
+        break;
       case EVT_KEY_LONG(KEY_MENU):
         if (s_copyTgtOfs) {
           s_copyTgtOfs = 0;
+          s_copyMode = 0;
         }
         else {
           eeCheck(true); // force writing of current model data before this is changed
-          eeLoadModel(sub);
           if (g_eeGeneral.currModel != sub) {
             g_eeGeneral.currModel = sub;
             STORE_GENERALVARS;
           }
+          eeLoadModel(sub);
         }
-        s_copyMode = 0;
         killEvents(_event);
         break;
       case EVT_KEY_FIRST(KEY_LEFT):
       case EVT_KEY_FIRST(KEY_RIGHT):
         if (sub == g_eeGeneral.currModel) {
-          if (!EFile::exists(FILE_MODEL(sub))) {
-            eeCheck(true); // force writing of current model data before this is changed
-            eeLoadModel(sub);
-          }
           chainMenu(_event == EVT_KEY_FIRST(KEY_RIGHT) ? menuProcModel : menuTabModel[DIM(menuTabModel)-1]);
           return;
         }
