@@ -2173,6 +2173,8 @@ ISR(INT6_vect)
 }
 #endif
 
+#ifndef SIMU
+
 extern unsigned char __bss_end ;
 
 uint16_t stack_free()
@@ -2187,7 +2189,6 @@ uint16_t stack_free()
   return p - &__bss_end ;
 }
 
-#ifndef SIMU
 int main(void)
 {
   // Set up I/O port data directions and initial states
