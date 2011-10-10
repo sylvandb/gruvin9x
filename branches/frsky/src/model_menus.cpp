@@ -1123,7 +1123,7 @@ static uint8_t s_copySrcIdx;
 static uint8_t s_copySrcCh;
 
 #define FIRST 0x10
-void displayMixerLine(uint8_t row, uint8_t mix, uint8_t ch, uint8_t idx, uint8_t cur, uint8_t event)
+inline void displayMixerLine(uint8_t row, uint8_t mix, uint8_t ch, uint8_t idx, uint8_t cur, uint8_t event)
 {
   uint8_t y = (row-s_pgOfs)*FH;
   MixData *md = mixaddress(mix);
@@ -1160,7 +1160,7 @@ void displayMixerLine(uint8_t row, uint8_t mix, uint8_t ch, uint8_t idx, uint8_t
   }
 }
 
-void displayExpoLine(uint8_t row, uint8_t expo, uint8_t ch, uint8_t idx, uint8_t cur, uint8_t event)
+inline void displayExpoLine(uint8_t row, uint8_t expo, uint8_t ch, uint8_t idx, uint8_t cur, uint8_t event)
 {
   uint8_t y = (row-s_pgOfs)*FH;
   ExpoData *ed = expoaddress(expo);
@@ -1838,8 +1838,7 @@ void menuProcTemplates(uint8_t event)
 
     //write mix names here
     lcd_outdezNAtt(3*FW, y, k+1, (sub==k ? INVERS : 0)|LEADING0, 2);
-    // lcd_putsAtt(  4*FW, y, n_Templates[k], BSS | (s_noHi ? 0 : (sub==k ? INVERS  : 0)));
-    lcd_putsAtt(  4*FW, y, (prog_char *)pgm_read_word(&(n_Templates[k])), (s_noHi ? 0 : (sub==k ? INVERS  : 0)));
+    lcd_putsnAtt(4*FW, y, PSTR(TEMPLATES_STR)+TEMPLATES_LEN*k, TEMPLATES_LEN, (s_noHi ? 0 : (sub==k ? INVERS  : 0)));
     y+=FH;
   }
   if(y>7*FH) return;
