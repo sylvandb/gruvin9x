@@ -64,6 +64,22 @@ const prog_char APM modi12x3[]=
 
 const prog_char APM s_charTab[] = "_-.,";
 
+//R=1
+//E=2
+//T=3
+//A=4
+const prog_uint8_t APM chout_ar[24][4] = { //First number is 0..23 -> template setup,  Second is relevant channel out
+{1,2,3,4},{1,2,4,3},{1,3,2,4},{1,3,4,2},{1,4,2,3},{1,4,3,2},
+{2,1,3,4},{2,1,4,3},{2,3,1,4},{2,3,4,1},{2,4,1,3},{2,4,3,1},
+{3,1,2,4},{3,1,4,2},{3,2,1,4},{3,2,4,1},{3,4,1,2},{3,4,2,1},
+{4,1,2,3},{4,1,3,2},{4,2,1,3},{4,2,3,1},{4,3,1,2},{4,3,2,1}    };
+
+const prog_uint8_t APM modn12x3[4][4]= {
+  {1, 2, 3, 4},
+  {1, 3, 2, 4},
+  {4, 2, 3, 1},
+  {4, 3, 2, 1} };
+
 #ifdef TRANSLATIONS
 int8_t char2idx(char c)
 {
