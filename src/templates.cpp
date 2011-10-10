@@ -49,22 +49,22 @@
 #include "gruvin9x.h"
 #include "templates.h"
 
-const prog_char t1[] =  "Simple 4-CH";
-const prog_char t2[] =  "T-Cut";
-const prog_char t3[] =  "V-Tail";
-const prog_char t4[] =  "Elevon\\Delta";
-const prog_char t5[] =  "eCCPM";
-const prog_char t6[] =  "Heli Setup";
-const prog_char t7[] =  "Servo Test";
-const prog_char* n_Templates[] = 
+const char stn1[] APM =  "Simple 4-CH";
+const char stn2[] APM =  "T-Cut";
+const char stn3[] APM =  "V-Tail";
+const char stn4[] APM =  "Elevon\\Delta";
+const char stn5[] APM =  "eCCPM";
+const char stn6[] APM =  "Heli Setup";
+const char stn7[] APM =  "Servo Test";
+const prog_char* n_Templates[] PROGMEM = 
 {
-  t1,
-  t2,
-  t3,
-  t4,
-  t5,
-  t6,
-  t7
+  stn1,
+  stn2,
+  stn3,
+  stn4,
+  stn5,
+  stn6,
+  stn7
 };
 
 MixData* setDest(uint8_t dch)
@@ -95,9 +95,9 @@ void clearCurves()
 void setCurve(uint8_t c, const prog_int8_t ar[])
 {
     if(c<MAX_CURVE5) //5 pt curve
-        for(uint8_t i=0; i<5; i++) g_model.curves5[c][i] = ar[i];
+        for(uint8_t i=0; i<5; i++) g_model.curves5[c][i] = pgm_read_byte(&ar[i]);
     else  //9 pt curve
-        for(uint8_t i=0; i<9; i++) g_model.curves9[c-MAX_CURVE5][i] = ar[i];
+        for(uint8_t i=0; i<9; i++) g_model.curves9[c-MAX_CURVE5][i] = pgm_read_byte(&ar[i]);
 }
 
 void setSwitch(uint8_t idx, uint8_t func, int8_t v1, int8_t v2)
@@ -107,13 +107,13 @@ void setSwitch(uint8_t idx, uint8_t func, int8_t v1, int8_t v2)
     g_model.customSw[idx-1].v2   = v2;
 }
 
+const prog_int8_t APM heli_ar1[] = {-100, 20, 50, 70, 90};
+const prog_int8_t APM heli_ar2[] = {90, 70, 50, 70, 90};
+const prog_int8_t APM heli_ar3[] = {-20, -20, 0, 60, 100};
+const prog_int8_t APM heli_ar4[] = {-100, -60, 0, 60, 100};
+const prog_int8_t APM heli_ar5[] = {-100, 0, 0, 0, 100};
 void applyTemplate(uint8_t idx)
 {
-    const prog_int8_t heli_ar1[] = {-100, 20, 50, 70, 90};
-    const prog_int8_t heli_ar2[] = {90, 70, 50, 70, 90};
-    const prog_int8_t heli_ar3[] = {-20, -20, 0, 60, 100};
-    const prog_int8_t heli_ar4[] = {-100, -60, 0, 60, 100};
-    const prog_int8_t heli_ar5[] = {-100, 0, 0, 0, 100};
 
     MixData *md = &g_model.mixData[0];
 
