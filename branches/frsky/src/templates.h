@@ -77,14 +77,14 @@
 
 
 // G: Moved these strings to Flash data space to save a BUNCH of SRAM
-extern const prog_char t1[];
-extern const prog_char t2[];
-extern const prog_char t3[];
-extern const prog_char t4[];
-extern const prog_char t5[];
-extern const prog_char t6[];
-extern const prog_char t7[];
-extern const prog_char* n_Templates[];
+extern const char stn1[] APM;
+extern const char stn2[] APM;
+extern const char stn3[] APM;
+extern const char stn4[] APM;
+extern const char stn5[] APM;
+extern const char stn6[] APM;
+extern const char stn7[] APM;
+extern const prog_char* n_Templates[] PROGMEM;
 
 
 void clearMixes();
