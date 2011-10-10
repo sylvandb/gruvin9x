@@ -49,7 +49,9 @@
 #define TEMPLATES_H
 
 #include <inttypes.h>
-
+#ifndef SIMU
+#include <avr/pgmspace.h>
+#endif
 
 #define STK_RUD  1
 #define STK_ELE  2
@@ -58,9 +60,9 @@
 #define STK_P1   5
 #define STK_P2   6
 #define STK_P3   7
-#define NUM_TEMPLATES    DIM(n_Templates)
+#define NUM_TEMPLATES  7 // G: can't use this with prog_char  DIM(n_Templates)
 #define NUM_TEMPLATE_MIX 8
-#define TEMPLATE_NLEN    15
+// G: Don't need this now. #define TEMPLATE_NLEN    15
 
 #define TRIM_ON  0
 #define TRIM_OFF 1
@@ -73,17 +75,16 @@
 #define CURVE5(x) ((x)-1)
 #define CURVE9(x) (MAX_CURVE5+(x)-1)
 
-const char n_Templates[][TEMPLATE_NLEN] = {
-  "Simple 4-CH",
-  "T-Cut",
-  "V-Tail",
-  "Elevon\\Delta",
-  "eCCPM",
-  "Heli Setup",
-  "Servo Test"
-};
 
-
+// G: Moved these strings to Flash data space to save a BUNCH of SRAM
+extern const prog_char t1[];
+extern const prog_char t2[];
+extern const prog_char t3[];
+extern const prog_char t4[];
+extern const prog_char t5[];
+extern const prog_char t6[];
+extern const prog_char t7[];
+extern const prog_char* n_Templates[];
 
 
 void clearMixes();

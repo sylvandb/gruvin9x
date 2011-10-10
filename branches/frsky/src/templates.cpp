@@ -49,6 +49,24 @@
 #include "gruvin9x.h"
 #include "templates.h"
 
+const prog_char t1[] =  "Simple 4-CH";
+const prog_char t2[] =  "T-Cut";
+const prog_char t3[] =  "V-Tail";
+const prog_char t4[] =  "Elevon\\Delta";
+const prog_char t5[] =  "eCCPM";
+const prog_char t6[] =  "Heli Setup";
+const prog_char t7[] =  "Servo Test";
+const prog_char* n_Templates[] = 
+{
+  t1,
+  t2,
+  t3,
+  t4,
+  t5,
+  t6,
+  t7
+};
+
 MixData* setDest(uint8_t dch)
 {
     uint8_t i = 0;
@@ -74,7 +92,7 @@ void clearCurves()
     memset(g_model.curves9,0,sizeof(g_model.curves9)); //clear all curves
 }
 
-void setCurve(uint8_t c, int8_t ar[])
+void setCurve(uint8_t c, const prog_int8_t ar[])
 {
     if(c<MAX_CURVE5) //5 pt curve
         for(uint8_t i=0; i<5; i++) g_model.curves5[c][i] = ar[i];
@@ -91,12 +109,11 @@ void setSwitch(uint8_t idx, uint8_t func, int8_t v1, int8_t v2)
 
 void applyTemplate(uint8_t idx)
 {
-    int8_t heli_ar1[] = {-100, 20, 50, 70, 90};
-    int8_t heli_ar2[] = {90, 70, 50, 70, 90};
-    int8_t heli_ar3[] = {-20, -20, 0, 60, 100};
-    int8_t heli_ar4[] = {-100, -60, 0, 60, 100};
-    int8_t heli_ar5[] = {-100, 0, 0, 0, 100};
-
+    const prog_int8_t heli_ar1[] = {-100, 20, 50, 70, 90};
+    const prog_int8_t heli_ar2[] = {90, 70, 50, 70, 90};
+    const prog_int8_t heli_ar3[] = {-20, -20, 0, 60, 100};
+    const prog_int8_t heli_ar4[] = {-100, -60, 0, 60, 100};
+    const prog_int8_t heli_ar5[] = {-100, 0, 0, 0, 100};
 
     MixData *md = &g_model.mixData[0];
 
@@ -186,11 +203,11 @@ void applyTemplate(uint8_t idx)
         md=setDest(11); md->srcRaw=CM(STK_THR);  md->weight=100; md->swtch=DSW_THR; md->curve=CV(5); md->carryTrim=TRIM_OFF;  md->mltpx=MLTPX_REP;
 
         //Set up Curves
-        setCurve(CURVE5(1),heli_ar1);
-        setCurve(CURVE5(2),heli_ar2);
-        setCurve(CURVE5(3),heli_ar3);
-        setCurve(CURVE5(4),heli_ar4);
-        setCurve(CURVE5(5),heli_ar5);
+        setCurve(CURVE5(1), heli_ar1);
+        setCurve(CURVE5(2), heli_ar2);
+        setCurve(CURVE5(3), heli_ar3);
+        setCurve(CURVE5(4), heli_ar4);
+        setCurve(CURVE5(5), heli_ar5);
         break;
 
         //Servo Test
