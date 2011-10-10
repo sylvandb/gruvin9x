@@ -49,6 +49,8 @@ uint8_t tabViews[] = {
 void menuMainView(uint8_t event)
 {
   static bool instantTrimSwLock;
+  static bool trim2OfsSwLock;
+  
   uint8_t view = g_eeGeneral.view & 0x0f; // mask out ALTERNATE views
 
   switch(event)
@@ -137,6 +139,7 @@ void menuMainView(uint8_t event)
       killEvents(KEY_UP);
       killEvents(KEY_DOWN);
       instantTrimSwLock = true;
+      trim2OfsSwLock = true;
       break;
   }
 
@@ -144,6 +147,10 @@ void menuMainView(uint8_t event)
   if (!instantTrimSwLock && trimSw) instantTrim();
   instantTrimSwLock = trimSw;
 
+  trimSw = isFunctionActive(FUNC_TRIMS_2_OFS);
+  if (!trim2OfsSwLock && trimSw) moveTrimsToOffsets();
+  trim2OfsSwLock = trimSw;
+  
   ///////////////////////////////////////////////////////////////////////
   /// Upper Section of Display common to all but telemetry alt. views ///
 #if defined (FRSKY)
