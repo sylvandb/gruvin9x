@@ -262,9 +262,12 @@ void applyExpos(int16_t *anas)
 
   uint8_t phase = getFlightPhase();
 
+  int8_t cur_chn = -1;
   for (uint8_t i=0; i<DIM(g_model.expoData); i++) {
     ExpoData &ed = g_model.expoData[i];
     if (ed.mode==0) break; // end of list
+    if (ed.chn == cur_chn)
+      continue;
     if (ed.phase != 0) {
       if (ed.negPhase) {
         if (phase+1 == -ed.phase)
@@ -276,17 +279,18 @@ void applyExpos(int16_t *anas)
       }
     }
     if (getSwitch(ed.swtch, 1)) {
-      int16_t v = anas2[ed.chn];
+      cur_chn = ed.chn;
+      int16_t v = anas2[cur_chn];
       if((v<0 && ed.mode&1) || (v>=0 && ed.mode&2)) {
         int16_t k = ed.expo;
-        if (IS_THROTTLE(ed.chn) && g_model.thrExpo)
+        if (IS_THROTTLE(cur_chn) && g_model.thrExpo)
           v = 2*expo((v+RESX)/2, k);
         else
           v = expo(v, k);
         if (ed.curve) v = applyCurve(v, ed.curve, 0);
         v = ((int32_t)v * ed.weight) / 100;
-        if (IS_THROTTLE(ed.chn) && g_model.thrExpo) v -= RESX;
-        anas[ed.chn] = v;
+        if (IS_THROTTLE(cur_chn) && g_model.thrExpo) v -= RESX;
+        anas[cur_chn] = v;
       }
     }
   }
