@@ -158,7 +158,8 @@ typedef struct t_SafetySwData { // Safety Switches data
 #define FUNC_TRAINER_THR    4
 #define FUNC_TRAINER_AIL    5
 #define FUNC_INSTANT_TRIM   6
-#define FUNC_LAST           6
+#define FUNC_TRIMS_2_OFS    7
+#define FUNC_LAST           7
 
 typedef struct t_FuncSwData { // Function Switches data
   int8_t  swtch; //input
