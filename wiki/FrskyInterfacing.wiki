@@ -9,9 +9,11 @@ Below, you'll find similar and extra detail of exactly how I hooked up my Fr-Sky
 
 The ATmega RXD and TXD special-purpose pins are used for simple switch inputs in the factory '9X -- namely, Throttle-Cut and Aileron-D/R, respectively. 
 
-To free these pins of for serial data, we need to move those two switches elsewhere. The two pins chosen for their new home were pins 41 and 42, or PC6 and PC7 respectively.
+To free these pins up for use with serial data, we need to move those two switches elsewhere. The two pins chosen for their new home were pins 41 and 42, or PC6 and PC7 respectively.
 
-The modification requires the use of FINE wire. I used 0.2mm, enamelled copper wire. You can also use insulated wires salvaged from the newer (but old now) high-density IDE cables used for (ancient :P) computer IDE hard drives. This is a single-core, insulated wire. You do NOT want to try and use any kind of multi-strand wire -- no matter how fine it it is.
+The modification requires the use of _really fine_ wire. I used 0.2mm, enamelled copper wire. You can also use fine, insulated wire, salvaged from the newer (yet now old) high-density computer IDE cables. Each of these wires is a _single-core_, PVC insulated wire. You most definitely do _not_ want to try and use any kind of multi-strand wire -- no matter how fine it it is.
+
+*IMPORTANT*: The main reason to use _really_ fine wire may not be what you think. It is certainly possible (though more difficult) to use heavier, stronger wire. But doing so will increase the risk of accidentally damaging the delicate ATmega chip's pins. (Think of it as using a wrecking bar to pick your teeth -- or something like that! :P) In practice, the slightest accidental tug by 'big fat, shaky, human hands on a big fat wire', can quite literally rip an ATmega pin right of the chip. Trust me -- _use really fine wire!_
 
 === Re-wiring Procedure ===
 
@@ -50,3 +52,6 @@ For the prototype, Gruvin actually used a dremel too to carve up the mostly unus
 == Ground Loops ==
 
 Gruvin found that the Fr-Sky module refused to operate correctly if a ground (GND) wire was connected between the Fr-Sky module's rear RX/TX/GND pins and the level-shifting circuit above. The problem was probably RF energy pick-up through the ground-loop created by having two ground wires -- one where the module plugs into the 9X and the other from the serial data port. *Solution:* simply do not connect the ground wire as shown as pin-1 on the connector-K2 in the circuit above. Others have since said that they had no such problem. YMMV
+
+*ER9X Compatible*
+In case you're wondering, this wiring modification is 100% compatible with the JETI and Fr-Sky telemetry extensions in the [http://er9x.googlecode.com/ ER9X] firmware, too. In fact, that's pretty much where we learned it in the first place. :-D
