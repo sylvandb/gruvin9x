@@ -8,7 +8,7 @@
 The custom circuitry for Gruvin's '9X has gone through a number of versions, and continues to evolve.
 
 == Current Design ==
-Ongoing schematic and PCB design currently takes place at [http://gruvin9x.googlecode.com/svn/trunk/pcbv4/]. There you'll find a [http://kicad.sourceforge.net/wiki/Main_Page KiCAD] project file named `gruvin9x.pro`, with internal references to [http://gruvin9x.googlecode.com/svn/trunk/pcbv4/gruvin9x.sch gruvin9x.sch] and [http://gruvin9x.googlecode.com/svn/trunk/pcbv4/gruvin9x.pcb gruvin9x.pcb].
+Ongoing schematic and PCB design currently takes place at [http://gruvin9x.googlecode.com/svn/trunk/hrdware/pcb/]. There you'll find a [http://kicad.sourceforge.net/wiki/Main_Page KiCAD] project file named `gruvin9x.pro`, with internal references to [http://gruvin9x.googlecode.com/svn/trunk/pcbv4/gruvin9x.sch gruvin9x.sch] and [http://gruvin9x.googlecode.com/svn/trunk/hardware/pcb/gruvin9x.pcb gruvin9x.pcb].
 
 *As at 22 September 2011, we've progressed to v4.0* and are working hard to release a board for general consumption. It is our firm intention to finally do just that with v4.1, hopefully before December, 2011. Version 4.0, final prototypes have been assembled (x4) and are being tested and debugged. A number of beta testers are being lined up for the first few v4.1 production boards. Simply put, we're going as fast as we can.
 
@@ -17,7 +17,7 @@ Check out the source tree in the /trunk/pcbv4 folder for current design files.
 = Historical Data =
 
 == First Prototype ==
-The first physical prototype, 'rev 2.14' PCB design, schematic and production files, as sent to the PCB fabrication factory in December of 2010, can be found at [http://gruvin9x.googlecode.com/svn/trunk/pcb/rev2.14-frozen]. There's a PDF version of the schematic, [http://gruvin9x.googlecode.com/svn/trunk/pcb/rev2.14-frozen/gruvin9x.pdf here].
+The first physical prototype, 'rev 2.14' PCB design, schematic and production files, as sent to the PCB fabrication factory in December of 2010, can be found at [http://gruvin9x.googlecode.com/svn/archive/pcb/pcb-v2.14-frozen]. There's a PDF version of the schematic, [http://gruvin9x.googlecode.com/svn/trunk/pcb/rev2.14-frozen/gruvin9x.pdf here].
 
 === Original 'Hacked' Radio ===
-Gruvin's original '9X radio has been the test bed for much of the work to date, and has been chopped up and re-wired in several ways. A (generally) up to date reference schematic for that can be found at [http://gruvin9x.googlecode.com/svn/trunk/pcb/hacked]. For your convenience, there's a PDF version of the schematic, [http://gruvin9x.googlecode.com/svn/trunk/pcb/hacked/gruvin9x-hacked.pdf here].
+Gruvin's original '9X radio has been the test bed for much of the work to date, and has been chopped up and re-wired in several ways. A (generally) up to date reference schematic for that can be found at [http://code.google.com/p/gruvin9x/source/browse/?r=800#svn%2Ftrunk%2Fpcb%2Fhacked here]. There's a PDF version of the schematic, [http://code.google.com/p/gruvin9x/source/browse/?r=800#svn%2Ftrunk%2Fpcb%2Fhacked/gruvin9x-hacked.pdf here].
