@@ -11,7 +11,7 @@ The ATmega RXD and TXD special-purpose pins are used for simple switch inputs in
 
 To free these pins of for serial data, we need to move those two switches elsewhere. The two pins chosen for their new home were pins 41 and 42, or PC6 and PC7 respectively.
 
-The modification requires the use of FINE wire. I used 0.2mm enabled copper wire. You can also use insulated wires salvaged from the newer (but old now) high-density IDE cables used for (ancient) computer hard drives. This is a single-core, insulated wire. You do NOT want to try and use any kind of multi-strand wire -- no matter how fine it it is.
+The modification requires the use of FINE wire. I used 0.2mm, enamelled copper wire. You can also use insulated wires salvaged from the newer (but old now) high-density IDE cables used for (ancient :P) computer IDE hard drives. This is a single-core, insulated wire. You do NOT want to try and use any kind of multi-strand wire -- no matter how fine it it is.
 
 === Re-wiring Procedure ===
 
