@@ -274,8 +274,8 @@ extern const prog_uint8_t APM modn12x3[4][4];
 
 //convert from mode 1 to mode g_eeGeneral.stickMode
 //NOTICE!  =>  1..4 -> 1..4
-#define CONVERT_MODE(x)  (((x)<=4) ? pgm_read_byte(modn12x3+g_eeGeneral.stickMode*4+(x)-1) : (x))
-#define CHANNEL_ORDER(x) pgm_read_byte(chout_ar+g_eeGeneral.templateSetup*4+(x)-1)
+#define CONVERT_MODE(x)  (((x)<=4) ? pgm_read_byte(&(modn12x3[g_eeGeneral.stickMode][((x)-1)])) : (x) )
+#define CHANNEL_ORDER(x) pgm_read_byte(&(chout_ar[g_eeGeneral.templateSetup][(x)-1]))
 #define THR_STICK        (2-(g_eeGeneral.stickMode&1))
 #define ELE_STICK        (1+(g_eeGeneral.stickMode&1))
 #define AIL_STICK        ((g_eeGeneral.stickMode&2) ? 0 : 3)
