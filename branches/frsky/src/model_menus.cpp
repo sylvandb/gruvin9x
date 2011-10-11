@@ -969,6 +969,10 @@ inline void editExpoVals(uint8_t event, uint8_t which, bool edit, uint8_t y, uin
       if(edit) CHECK_INCDEC_MODELVAR(event, ed->swtch, -MAX_DRSWITCH, MAX_DRSWITCH);
       break;
     case 4:
+      lcd_putsnAtt(6*FW, y, PSTR("---x>0x<0")+9-3*ed->mode, 3, invBlk);
+      if(edit) ed->mode = 4 - checkIncDecModel(event, 4-ed->mode, 1, 3);
+      break;
+    case 5:
       lcd_putsnAtt(6*FW, y, PSTR(CURV_STR)+3*(ed->curve+(ed->curve >= CURVE_BASE+4 ? 4 : 0)), 3, invBlk);
       if(invBlk) CHECK_INCDEC_MODELVAR(event, ed->curve, 0, 15);
       if(invBlk && ed->curve>=CURVE_BASE && event==EVT_KEY_FIRST(KEY_MENU)) {
@@ -976,16 +980,12 @@ inline void editExpoVals(uint8_t event, uint8_t which, bool edit, uint8_t y, uin
         pushMenu(menuProcCurveOne);
       }
       break;
-    case 5:
-      lcd_putsnAtt(6*FW, y, PSTR("---x>0x<0")+9-3*ed->mode, 3, invBlk);
-      if(edit) ed->mode = 4 - checkIncDecModel(event, 4-ed->mode, 1, 3);
-      break;
   }
 }
 
 void menuProcExpoOne(uint8_t event)
 {
-  SIMPLE_SUBMENU("EXPO/DR", 6);
+  SIMPLE_SUBMENU("DR/EXPO", 6);
 
   ExpoData *ed = expoaddress(s_currIdx);
 
@@ -996,7 +996,7 @@ void menuProcExpoOne(uint8_t event)
   uint8_t  y = FH;
 
   for (uint8_t i=0; i<7; i++) {
-    lcd_putsnAtt(0, y, PSTR("Expo  WeightPhase Swtch Curve When        ")+6*i, 6, 0);
+    lcd_putsnAtt(0, y, PSTR("Expo  WeightPhase Swtch When  Curve       ")+6*i, 6, 0);
     editExpoVals(event, i, sub==i, y, s_currIdx);
     y+=FH;
   }
@@ -1165,19 +1165,20 @@ inline void displayExpoLine(uint8_t row, uint8_t expo, uint8_t ch, uint8_t idx, 
   uint8_t y = (row-s_pgOfs)*FH;
   ExpoData *ed = expoaddress(expo);
 
-  lcd_outdezAtt(6*FW+3, y, ed->expo, 0);
-
   uint8_t attr = ((s_copyMode || cur != row) ? 0 : INVERS);
-  lcd_outdezAtt(9*FW+2, y, ed->weight, attr);
+  lcd_outdezAtt(6*FW-2, y, ed->weight, attr);
   if (attr != 0)
     CHECK_INCDEC_MODELVAR(event, ed->weight, 0, 100);
+
+  lcd_outdezAtt(9*FW+1, y, ed->expo, 0);
 
   int8_t phase = ed->negPhase ? -ed->phase : +ed->phase;
   putsFlightPhase(10*FW, y, phase, 0);
   putsSwitches(13*FW+4, y, ed->swtch, 0); // normal switches
 
-  if (ed->curve) lcd_putsnAtt(17*FW, y, PSTR(CURV_STR)+ed->curve*3, 3, 0);
-  if (ed->mode!=3) lcd_putc(20*FW+2, y, ed->mode == 2 ? 127 : 126);//'|' : (stkVal[i] ? '<' : '>'),0);*/
+  if (ed->mode!=3) lcd_putc(17*FW, y, ed->mode == 2 ? 127 : 126);//'|' : (stkVal[i] ? '<' : '>'),0);*/
+
+  if (ed->curve) lcd_putsnAtt(18*FW+2, y, PSTR(CURV_STR)+ed->curve*3, 3, 0);
 
   if (s_copyMode) {
     if ((s_copyMode==COPY_MODE || s_copyTgtOfs == 0) && s_copySrcCh == ch && expo == (s_copySrcIdx + (s_copyTgtOfs<0))) {
@@ -1204,7 +1205,7 @@ void menuProcExpoMix(uint8_t expo, uint8_t __event)
   }
 
   SIMPLE_MENU_NOTITLE(menuTabModel, expo ? e_ExposAll : e_MixAll, s_maxLines);
-  TITLEP(expo ? PSTR("EXPO/DR") : PSTR("MIXER"));
+  TITLEP(expo ? PSTR("DR/EXPO") : PSTR("MIXER"));
 
   uint8_t sub = m_posVert;
 
