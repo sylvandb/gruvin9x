@@ -47,4 +47,4 @@ For the prototype, Gruvin actually used a dremel too to carve up the mostly unus
 
 == Ground Loops ==
 
-Gruvin found that the Fr-Sky module refused to operate correctly if a ground (GND) wire was connected between the Fr-Sky module's rear RX/TX/GND pins and the level-shifting circuit above. It was assumed that the problem was RF pick-up through the ground-loop created by having two ground wires -- one where the module plugs into the 9X and the other from the serial data port. *Solution:* simply do not connect the ground wire as shown as pin-1 on the connector-K2 in the circuit above.
+Gruvin found that the Fr-Sky module refused to operate correctly if a ground (GND) wire was connected between the Fr-Sky module's rear RX/TX/GND pins and the level-shifting circuit above. The problem was probably RF energy pick-up through the ground-loop created by having two ground wires -- one where the module plugs into the 9X and the other from the serial data port. *Solution:* simply do not connect the ground wire as shown as pin-1 on the connector-K2 in the circuit above. Others have since said that they had no such problem. YMMV
