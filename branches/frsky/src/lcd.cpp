@@ -429,16 +429,16 @@ void putsSwitches(uint8_t x,uint8_t y,int8_t idx,uint8_t att)
     case  MAX_SWITCH: lcd_putsAtt(x,y,PSTR("ON "),att);return;
     case -MAX_SWITCH: lcd_putsAtt(x,y,PSTR("OFF"),att);return;
   }
-  if (idx<0) lcd_putcAtt(x-FW, y, '!', att);
+  if (idx<0) lcd_vlineStip(x-2, y, 8, 0x5E/*'!'*/);
   lcd_putsnAtt(x,y,get_switches_string()+3*(abs(idx)-1),3,att);
 }
 
 void putsFlightPhase(uint8_t x, uint8_t y, int8_t idx, uint8_t att)
 {
   if (idx==0) { lcd_putsAtt(x,y,PSTR("---"),att); return; }
-  if (idx < 0) { lcd_putcAtt(x-FW, y, '!', att); idx = -idx; }
+  if (idx < 0) { lcd_vlineStip(x-2, y, 8, 0x5E/*'!'*/); idx = -idx; }
   lcd_putsAtt(x, y, PSTR("FP"), att);
-  lcd_putcAtt(x+2*FW, y, '0'+idx-1, att);
+  lcd_putcAtt(x+2*FW-1, y, '0'+idx-1, att);
 }
 
 void putsTmrMode(uint8_t x, uint8_t y, uint8_t attr)
