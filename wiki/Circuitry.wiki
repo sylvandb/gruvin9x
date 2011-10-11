@@ -12,7 +12,9 @@ Ongoing schematic and PCB design currently takes place at [http://gruvin9x.googl
 
 *As at 22 September 2011, we've progressed to v4.0* and are working hard to release a board for general consumption. It is our firm intention to finally do just that with v4.1, hopefully before December, 2011. Version 4.0, final prototypes have been assembled (x4) and are being tested and debugged. A number of beta testers are being lined up for the first few v4.1 production boards. Simply put, we're going as fast as we can.
 
-Check out the source tree in the /trunk/pcbv4 folder for current design files.
+You can find detailed information about the new board's intentions, current functionality and progress on the [PCB Custom PCB] wiki page.
+
+Check out the source tree in the [http://code.google.com/p/gruvin9x/source/browse/#svn%2Ftrunk%2Fhardware%2Fpcb /trunk/hardware/pcb] folder for the latest work-in-progress design files.
 
 = Historical Data =
 
@@ -20,4 +22,6 @@ Check out the source tree in the /trunk/pcbv4 folder for current design files.
 The first physical prototype, 'rev 2.14' PCB design, schematic and production files, as sent to the PCB fabrication factory in December of 2010, can be found at [http://gruvin9x.googlecode.com/svn/archive/pcb/pcb-v2.14-frozen]. There's a PDF version of the schematic, [http://gruvin9x.googlecode.com/svn/trunk/pcb/rev2.14-frozen/gruvin9x.pdf here].
 
 === Original 'Hacked' Radio ===
-Gruvin's original '9X radio has been the test bed for much of the work to date, and has been chopped up and re-wired in several ways. A (generally) up to date reference schematic for that can be found at [http://code.google.com/p/gruvin9x/source/browse/?r=800#svn%2Ftrunk%2Fpcb%2Fhacked here]. There's a PDF version of the schematic, [http://code.google.com/p/gruvin9x/source/browse/?r=800#svn%2Ftrunk%2Fpcb%2Fhacked/gruvin9x-hacked.pdf here].
+Gruvin's original '9X radio was the original test bed for much of pre-v3-PCB work. As such, it remains a reference for people wishing to manually modify factory stock '9X radios for use with Fr-Sky telemetry. There's an historical PDF version of the schematic for this 'hacked' board, [http://gruvin9x.googlecode.com/svn-history/r800/trunk/pcb/hacked/gruvin9x-hacked.pdf here]. 
+
+If you have a stock '9X radio and would just like to add basic Fr-Sky telemetry functionality to it, then there are (hopefully) easy to follow instructions on the [FrskyInterfacing Fr-Sky Interfacing] wiki page.
