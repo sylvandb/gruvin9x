@@ -32,9 +32,11 @@ Referring to the image below ...
 
 Fr-Sky, in their wisdom, decided to use RS-232 voltage levels for their interface, rather than provide a more modern 5V TTL-to-serial USB interface. We tried to talk them out of it, but they stuck to their guns. Oh well.
 
-What this means is that you need to invert and voltage-shift the signals to and from the Fr-Sky transmitter module, in order to make them play nice with the 5V ATmega. There are specialised chips to do this "properly" -- that is, convert the RS-232 +/-12V to TTL 0-and-5V signals -- but there're simple and in fact advantageous 'hack' methods too. The latter is what Gruvin used.
+What this means is that you need to invert and voltage-shift the signals to and from the Fr-Sky transmitter module, so they can play happily with the 5 Volt ATmega chip. There are specialised chips to do this, "properly". But there is a simple and in fact advantageous discrete transistor method too.
 
-Advantageous? Well actually, yes. The method shown below allows the transmitter module to still operate when connected to an external serial interface, say on a computer -- while not having to disconnect the internal wiring to the '9X. With the values shown, most computers will take precedence over the internal 9X ATmega micro in terms of sending (transmitting) data to the Fr-Sky module. More useful even, is that you don't have to disconnect the telemetry interface for re-Flashing, either. Clever huh? :p
+Advantageous? Well actually, yes. The method shown below allows the transmitter module to still operate when connected to an external serial interface, say on a computer -- while not having to disconnect the internal wiring to the '9X. With the values shown, most computers will take precedence over the internal 9X ATmega micro in terms of sending (transmitting) data to the Fr-Sky module. *More useful even*, is that you don't have to disconnect the telemetry interface for re-Flashing. Clever huh! (In truth, this was a lucky fluke! :P) 
+
+ _That said, be careful not to have your Fr-Sky two-way receiver switched on during re-flashing, as the stream of data _will_ collide with the ISP programming signals and could mess up your ATmega chip._
 
 Here is the circuit ...
 
