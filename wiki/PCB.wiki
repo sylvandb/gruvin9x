@@ -59,6 +59,8 @@ Here's a recent V4 3D visualization from KiCAD...
 
 == Current Status ==
 
+2011-10-11: We are satisfied that the v4.1 board is ready for its first test factory production run of ten Beta test boards. All of the testing is finished and the bugs found have been corrected. Meanwhile, we continue to develop and test on the three existing and working v4.0 boards, which have all been patched using track-cuts and wire links to the new v4.1 bug-fixed design version. It is likely that Cam will finalise the decision to freeze and deliver the v4.1 design to Leo for factory processing within the next 24 hours.
+
 2011-09-22: A number of circuitry bugs have been found and corrected, as testing continues on schedule. Four v4.0 boards are known to exist at this time. We expect to be ordering the first small factory test batch by mid October, but will not rush the date if all testing has not been completed satisfactorily.
 
 2011-09-13: The first v4.0 beta test board was assembled and powered up by Gruvin in New Zealand, who was excited to see it perform all its primary functions without fault, right from the get go! :-D The additional v4 features are yet to be tested. There are two or three others at different locations around the globe also building the same v4 board as this is being typed. Assuming all goes well, thanks to a generous donation offered by Swiss supporter, Leo, ten v4.1 boards are planed to be factory assembled in China, with about half of those being offered at near cost to the first group of beta testers outside of the core project team. If all that goes well, then we plan to try and raise funds for assembly batches of 50 to 100 boards at a time, with a target retail price of around USD$149. No promises can be made at this stage.
