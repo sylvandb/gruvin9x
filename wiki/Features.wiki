@@ -6,7 +6,6 @@ We'll add a bunch of screen shots here at first and maybe flesh out some text ar
 
 = Screen Shots =
 
-Examples images ... *REPLACE ME*
 
 === Main Screen ===
 ||[http://gruvin9x.googlecode.com/svn/wiki/Features.attach/mainscreen_01.jpg] || [http://gruvin9x.googlecode.com/svn/wiki/Features.attach/mainscreen_02.jpg] || [http://gruvin9x.googlecode.com/svn/wiki/Features.attach/mainscreen_03.jpg] ||
