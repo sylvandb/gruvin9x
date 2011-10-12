@@ -47,7 +47,11 @@ Version 3.2 used the same ATmega2561 chip, which was an upgrade over the origina
 - - - -
 
   I was asked to make a video of the actual v3.2 board that I had hand constructed.
-  Here it is: [http://www.youtube.com/watch?v=V-QUrYAcJOU] -- Gruvin
+  Here it is ...
+
+  <wiki:video url=http://www.youtube.com/watch?v=V-QUrYAcJOU/> -- gruvin (on a bad hair day.)
+
+  Note: Video is X-Y mirrored, for some strange reason.
 
 
 == Progress ==
