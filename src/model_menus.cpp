@@ -950,12 +950,12 @@ inline void editExpoVals(uint8_t event, uint8_t which, bool edit, uint8_t y, uin
   switch(which)
   {
     case 0:
-      lcd_outdezAtt(9*FW, y, ed->expo, invBlk);
-      if(edit) CHECK_INCDEC_MODELVAR(event, ed->expo,-100, 100);
-      break;
-    case 1:
       lcd_outdezAtt(9*FW, y, ed->weight, invBlk);
       if(edit) CHECK_INCDEC_MODELVAR(event, ed->weight, 0, 100);
+      break;
+    case 1:
+      lcd_outdezAtt(9*FW, y, ed->expo, invBlk);
+      if(edit) CHECK_INCDEC_MODELVAR(event, ed->expo,-100, 100);
       break;
     case 2:
       {
@@ -996,7 +996,7 @@ void menuProcExpoOne(uint8_t event)
   uint8_t  y = FH;
 
   for (uint8_t i=0; i<7; i++) {
-    lcd_putsnAtt(0, y, PSTR("Expo  WeightPhase Swtch When  Curve       ")+6*i, 6, 0);
+    lcd_putsnAtt(0, y, PSTR("WeightExpo  Phase Swtch When  Curve       ")+6*i, 6, 0);
     editExpoVals(event, i, sub==i, y, s_currIdx);
     y+=FH;
   }
