@@ -32,6 +32,12 @@ Thanks to the enthusiastic support of several people over the months, there have
  
 ... and more besides.
 
+*Why not an ARM chip?* 
+
+We looked at basing the new board around a STM32 ARM based chip. But we decided against this, for a number of reasons. The ATmega2560 chip will do everything we need with the confidence that our highly timing-sensitive code is already tested and reliable on the ATmega platform. 
+
+When we want more CPU power, say for on-board wireless video feed processing and other advanced features we have in mind, then we're more likely to add a second processor, so as to maintain the required high reliability of the core function -- that is, solid and safe remote control of our models.
+
 == License ==
 
 The custom board design is licensed under the [http://www.tapr.org/TAPR_Open_Hardware_License_v1.0.txt TAPR Open Hardware License v1.0]. The license is very similar to the GPL of this project's related firmware source code, but includes additional protection against what your author terms, 'hostile patent acts'. In other words, like the GPL license for software source code, the TAPR Open Hardware License seeks to ensure that the openness of the design will endure. The license is NOT a non-commercial license. This design _is_ able to be used by licensees for commercial purposes, under the terms of the [http://www.tapr.org/TAPR_Open_Hardware_License_v1.0.txt OHL License].
