@@ -1,6 +1,7 @@
 #summary Table Of Contents
 
  * [About About gruvin9x]
+ * [Features G9X Features]
  * [ReProgram Re-progamming Your Radio]
   * [TrunkBinaries Latest Stable Binaries]
   * [DevBinaries Development Binaries]
