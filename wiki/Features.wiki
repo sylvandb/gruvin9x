@@ -8,6 +8,13 @@ We'll add a bunch of screen shots here at first and maybe flesh out some text ar
 
 Examples images ... *REPLACE ME*
 
+=== Main Screen ===
+||[http://gruvin9x.googlecode.com/svn/wiki/Features.attach/mainscreen_01.png] ||[http://gruvin9x.googlecode.com/svn/wiki/Features.attach/mainscreen_02.png] || [http://gruvin9x.googlecode.com/svn/wiki/Features.attach/mainscreen_03.png] ||
+[http://gruvin9x.googlecode.com/svn/wiki/Features.attach/mainscreen_04.png] ||
+[http://gruvin9x.googlecode.com/svn/wiki/Features.attach/mainscreen_05.png] ||
+|||||| Here we see several copies of the same image, showing a random mixer screen. ||
+
+
 === Mixer Screen ===
 ||[http://gruvin9x.googlecode.com/svn/wiki/Features.attach/snapshot_01.png] ||[http://gruvin9x.googlecode.com/svn/wiki/Features.attach/snapshot_01.png] || [http://gruvin9x.googlecode.com/svn/wiki/Features.attach/snapshot_01.png] ||
 |||||| Here we see several copies of the same image, showing a random mixer screen. ||
