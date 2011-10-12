@@ -1693,6 +1693,8 @@ void menuProcTelemetry(uint8_t event)
   int8_t  sub    = m_posVert;
   uint8_t blink;
   uint8_t y;
+  uint8_t ch = 0;
+  uint16_t ratio;
 
   switch(event) {
 
@@ -1701,20 +1703,29 @@ void menuProcTelemetry(uint8_t event)
         g_model.frsky.channels[0].ratio = ((g_model.frsky.channels[0].ratio + 100) % 4096)/100*100;
       else if (sub == 9)
         g_model.frsky.channels[1].ratio = ((g_model.frsky.channels[1].ratio + 100) % 4096)/100*100;
+      if (sub == 3 || sub == 9) eeDirty(EE_MODEL);
       break;
 
     case EVT_KEY_LONG(KEY_MENU): // press [MENU_LONG] to select standard 2:1 or 4:1 resistor divder (max volts)
-      if (sub == 3)
-        g_model.frsky.channels[0].ratio = (g_model.frsky.channels[0].ratio == 700) ? 1320 : 660;
-      else if (sub == 9)
-        g_model.frsky.channels[1].ratio = (g_model.frsky.channels[1].ratio == 700) ? 1320 : 660;
+
+      if (sub == 3) ch = 0;
+      else if (sub == 9) ch = 1;
+      else break;
+
+      ratio = g_model.frsky.channels[ch].ratio;  
+      if (ratio < 660) ratio = 660;
+      else if (ratio < 1320) ratio = 1320;
+      else ratio = 0;
+      g_model.frsky.channels[ch].ratio = ratio;
+      eeDirty(EE_MODEL);
+      
       break;
 
     case EVT_KEY_BREAK(KEY_DOWN):
     case EVT_KEY_BREAK(KEY_UP):
     case EVT_KEY_BREAK(KEY_LEFT):
     case EVT_KEY_BREAK(KEY_RIGHT):
-      if(s_editMode) // only fr-sky alarm fields have an edit mode
+      if(s_editMode && (sub != 4 && sub != 10)) // gbar lines are only other edit mode fields
         FRSKY_setModelAlarms(); // update Fr-Sky module when edit mode exited
   }
 
@@ -1738,6 +1749,7 @@ void menuProcTelemetry(uint8_t event)
     }
     subN++;
 
+    // subN == 3
     if(s_pgOfs<subN) {
       y=(subN-s_pgOfs)*FH;
       lcd_putsAtt(4, y, PSTR("MaxV"), 0);
@@ -1758,6 +1770,7 @@ void menuProcTelemetry(uint8_t event)
     }
     subN++;
 
+    // subN == 4
     if(s_pgOfs<subN) {
       y=(subN-s_pgOfs)*FH;
       lcd_puts_P(4, y, PSTR("G.Bar"));
