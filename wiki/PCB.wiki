@@ -19,7 +19,7 @@ Initial intentions were to ...
 
 Thanks to the enthusiastic support of several people over the months, there have been many ideas to come along since those first intentions were realized. These include ...
 
- * USB boot loader for flashing new firmware without the need of a special AVR programmer (v4 board has connector port but this is yet to be coded.)
+ * USB port for potential 'game controller' interface -- for use with PC flight simulators, giving access to all switches and rotary inputs controls. _`[` Sadly, a USB boot loader cannot happen due to space needed for SD card version of the same.`]`_
  * SD card boot loader. This would allow re-Flashing by simply copying the firmware file to the SD card. No more programmers or cables to connect and get working.
  * Two continuous rotation control dials with push switch action (rotary encoders) for improved menu navigation, value settings and in flight adjustment (yet to be coded.)
  * At least eleven (11) spare I/O ports including three ADC inputs for uses mostly not even planned yet.
