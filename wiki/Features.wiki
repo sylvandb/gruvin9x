@@ -1,0 +1,9 @@
+#summary G9X Features
+
+= G9X Features =
+
+We'll add a bunch of screen shots here at first and maybe flesh out some text around them later on.
+
+= Screen Shots =
+
+[http://gruvin9x.googlecode.com/svn/wiki/Features.attach/snapshot-01.png]
