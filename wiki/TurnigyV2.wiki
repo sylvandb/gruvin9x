@@ -19,19 +19,7 @@ Some [ReferenceImages reference images] of the internals of the '9X hardware are
 A TH/ER9X project contributor(?) provided PDF circuit schematics of the V1(?) stock transmitter and receiver. You can find this [http://gruvin9x.googlecode.com/svn/trunk/doc/9X_Schematic.pdf here]. 
 
 The V2 circuitry is almost identical, except it has a new 3.3V LCD display plus supporting components. [Circuitry More information], including a [http://gruvin9x.googlecode.com/svn/trunk/pcb/actual_v2_9x/gruvin9x_v2_actual.pdf new V2 schematic] for the V2 hardware is [Circuitry here].
-
-.
-----
-
-== Custom Main Board ==
-[http://gruvin9x.googlecode.com/svn/wiki/TurnigyV2.attach/custompcb_thm.jpg][http://gruvin9x.googlecode.com/svn/wiki/TurnigyV2.attach/custompcb3d_thm.jpg]
-
-
-Hacking the '9X circuit board with hair-fine wires and hot glue is fun, but can be tedious and risks damage. 
-
-What if we had a whole new replacement PCB with connectors for two-way telemetry data and MMC/SDCard for mass storage etc designed right in? Once again crossing that fine line between hobby and insanity, such a design and subsequent production is under way.
-
-The first prototype PCB batch was ordered from the manufacturer 2010-12-15. Improved and extended versions followed. See [PCB here] for details, including where to find the latest custom PCB design and circuit schematics.
+ 
 
 = Turnigy V2 Firmware Backup =
 
