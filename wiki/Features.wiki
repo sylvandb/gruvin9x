@@ -19,5 +19,5 @@ We'll add a bunch of screen shots here at first and maybe flesh out some text ar
 
 
 === Flight Phases ===
-||[http://gruvin9x.googlecode.com/svn/wiki/Features.attach/snapshot_01.png] ||[http://gruvin9x.googlecode.com/svn/wiki/Features.attach/snapshot_01.png] || [http://gruvin9x.googlecode.com/svn/wiki/Features.attach/snapshot_01.png] ||
-|||||| And here, the same random mixer screen images. How odd! ||
+||[http://gruvin9x.googlecode.com/svn/wiki/Features.attach/flightphases_01.png] ||[http://gruvin9x.googlecode.com/svn/wiki/Features.attach/flightphases_02.png] ||  ||
+|||||| The flight phases screen. Too much to explain here. ||
