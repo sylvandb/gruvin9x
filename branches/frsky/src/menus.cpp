@@ -272,8 +272,8 @@ void popMenu()
   if (g_menuStackPtr>0) {
     g_menuStackPtr = g_menuStackPtr-1;
     beepKey();
-    m_posHorz = g_menuPos[g_menuStackPtr] & 0x0F;
-    m_posVert = g_menuPos[g_menuStackPtr] >> 4;
+    m_posHorz = 0;
+    m_posVert = g_menuPos[g_menuStackPtr];
     (*g_menuStack[g_menuStackPtr])(EVT_ENTRY_UP);
   }
   else {
@@ -290,7 +290,7 @@ void chainMenu(MenuFuncP newMenu)
 
 void pushMenu(MenuFuncP newMenu)
 {
-  g_menuPos[g_menuStackPtr] = (m_posVert << 4) + m_posHorz;
+  g_menuPos[g_menuStackPtr] = m_posVert;
 
   g_menuStackPtr++;
   if(g_menuStackPtr >= DIM(g_menuStack))
