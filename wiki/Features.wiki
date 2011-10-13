@@ -27,3 +27,7 @@ We'll add a bunch of screen shots here at first and maybe flesh out some text ar
 ||[http://gruvin9x.googlecode.com/svn/wiki/Features.attach/drexpo_01.png] || [http://gruvin9x.googlecode.com/svn/wiki/Features.attach/drexpo_02.png] || [http://gruvin9x.googlecode.com/svn/wiki/Features.attach/drexpo_03.png] ||
 || [http://gruvin9x.googlecode.com/svn/wiki/Features.attach/drexpo_04.png] || [http://gruvin9x.googlecode.com/svn/wiki/Features.attach/drexpo_05.png] || ||
 |||||| The dual rates and expos screens. All lines  can be copied, moved, deleted. ||
+
+=== Calibration ===
+||[http://gruvin9x.googlecode.com/svn/wiki/Features.attach/calibration_01.png] ||[http://gruvin9x.googlecode.com/svn/wiki/Features.attach/calibration_02.png] || [http://gruvin9x.googlecode.com/svn/wiki/Features.attach/calibration_03.png] ||
+|||||| The calibration of sticks and pots. ||
