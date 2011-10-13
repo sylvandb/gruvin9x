@@ -296,11 +296,6 @@ void applyExpos(int16_t *anas)
   }
 }
 
-const prog_char *get_switches_string()
-{
-  return PSTR(SWITCHES_STR);
-}
-
 static bool s_noStickInputs = false;
 inline int16_t getValue(uint8_t i)
 {
