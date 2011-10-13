@@ -47,6 +47,7 @@ void DisplayScreenIndex(uint8_t index, uint8_t count, uint8_t attr);
 
 extern uint8_t s_pgOfs;
 extern uint8_t s_noHi;
+extern uint8_t s_noScroll;
 
 // extern int16_t expo(int16_t x, int16_t k);
 
@@ -57,17 +58,18 @@ extern MenuFuncP g_menuStack[5];
 extern uint8_t g_menuStackPtr;
 
 /// goto given Menu, but substitute current menu in menuStack
-void    chainMenu(MenuFuncP newMenu);
+void chainMenu(MenuFuncP newMenu);
 /// goto given Menu, store current menu in menuStack
-void    pushMenu(MenuFuncP newMenu);
+void pushMenu(MenuFuncP newMenu);
 /// return to last menu in menustack
-void    popMenu();
+void popMenu();
 ///deliver address of last menu which was popped from
 inline MenuFuncP lastPopMenu()
 {
   return g_menuStack[g_menuStackPtr+1];
 }
 
+void doMainScreenGrphics();
 void menuMainView(uint8_t event);
 void menuProcSetup(uint8_t event);
 void menuProcModelSelect(uint8_t event);

@@ -1119,10 +1119,14 @@ uint8_t evalSticks()
     // normalization [0..2048] -> [-1024..1024]
 
     int16_t v = anaIn(i);
+
+#ifndef SIMU
     v -= g_eeGeneral.calibMid[i];
     v  =  v * (int32_t)RESX /  (max((int16_t)100,(v>0 ?
                                      g_eeGeneral.calibSpanPos[i] :
                                      g_eeGeneral.calibSpanNeg[i])));
+#endif
+
     if(v <= -RESX) v = -RESX;
     if(v >=  RESX) v =  RESX;
     calibratedStick[i] = v; //for show in expo
