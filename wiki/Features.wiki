@@ -24,6 +24,6 @@ We'll add a bunch of screen shots here at first and maybe flesh out some text ar
 
 
 === DR/Expos Screen ===
-||[http://gruvin9x.googlecode.com/svn/wiki/Features.attach/drexpos_01.png] || [http://gruvin9x.googlecode.com/svn/wiki/Features.attach/drexpos_02.png] || [http://gruvin9x.googlecode.com/svn/wiki/Features.attach/drexpos_03.png] ||
-|| [http://gruvin9x.googlecode.com/svn/wiki/Features.attach/drexpos_04.png] || [http://gruvin9x.googlecode.com/svn/wiki/Features.attach/drexpos_05.png] || ||
+||[http://gruvin9x.googlecode.com/svn/wiki/Features.attach/drexpo_01.png] || [http://gruvin9x.googlecode.com/svn/wiki/Features.attach/drexpo_02.png] || [http://gruvin9x.googlecode.com/svn/wiki/Features.attach/drexpo_03.png] ||
+|| [http://gruvin9x.googlecode.com/svn/wiki/Features.attach/drexpo_04.png] || [http://gruvin9x.googlecode.com/svn/wiki/Features.attach/drexpo_05.png] || ||
 |||||| The dual rates and expos screens. All lines  can be copied, moved, deleted. ||
