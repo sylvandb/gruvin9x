@@ -973,7 +973,7 @@ inline void editExpoVals(uint8_t event, uint8_t which, bool edit, uint8_t y, uin
       if(edit) ed->mode = 4 - checkIncDecModel(event, 4-ed->mode, 1, 3);
       break;
     case 5:
-      lcd_putsnAtt(6*FW+5, y, PSTR(CURV_STR)+3*(ed->curve+(ed->curve >= CURVE_BASE+4 ? 4 : 0)), 3, invBlk);
+      putsCurve(6*FW+5, y, ed->curve+(ed->curve >= CURVE_BASE+4 ? 4 : 0), invBlk);
       if(invBlk) CHECK_INCDEC_MODELVAR(event, ed->curve, 0, 15);
       if(invBlk && ed->curve>=CURVE_BASE && event==EVT_KEY_FIRST(KEY_MENU)) {
         s_curveChan = ed->curve - (ed->curve >= CURVE_BASE+4 ? CURVE_BASE-4 : CURVE_BASE);
@@ -1064,7 +1064,7 @@ void menuProcMixOne(uint8_t event)
         break;
       case 4:
         lcd_putsAtt(  2*FW,y,PSTR("Curves"),0);
-        lcd_putsnAtt( FW*10,y,PSTR(CURV_STR)+md2->curve*3,3,attr);
+        putsCurve(FW*10, y, md2->curve, attr);
         if(attr) CHECK_INCDEC_MODELVAR( event, md2->curve, 0,MAX_CURVE5+MAX_CURVE9+7-1);
         if(attr && md2->curve>=CURVE_BASE && event==EVT_KEY_FIRST(KEY_MENU)){
           s_curveChan = md2->curve-CURVE_BASE;
@@ -1137,8 +1137,8 @@ inline void displayMixerLine(uint8_t row, uint8_t mix, uint8_t ch, uint8_t idx, 
   if (attr != 0)
     CHECK_INCDEC_MODELVAR(event, md->weight, -125, 125);
 
-  if (md->curve) lcd_putsnAtt(12*FW+7, y, PSTR(CURV_STR)+md->curve*3, 3, 0);
-  if (md->swtch) putsSwitches(16*FW+6, y, md->swtch, 0);
+  if (md->curve) putsCurve(12*FW+7, y, md->curve);
+  if (md->swtch) putsSwitches(16*FW+6, y, md->swtch);
 
   char cs = ' ';
   if (md->speedDown || md->speedUp)
@@ -1169,24 +1169,20 @@ inline void displayExpoLine(uint8_t row, uint8_t expo, uint8_t ch, uint8_t idx, 
   lcd_outdezAtt(6*FW-2, y, ed->weight, attr);
   if (attr != 0)
     CHECK_INCDEC_MODELVAR(event, ed->weight, 0, 100);
-
   lcd_outdezAtt(9*FW+1, y, ed->expo, 0);
-
   putsFlightPhase(10*FW, y, ed->negPhase ? -ed->phase : +ed->phase);
   putsSwitches(13*FW+4, y, ed->swtch, 0); // normal switches
   if (ed->mode!=3) lcd_putc(17*FW, y, ed->mode == 2 ? 127 : 126);//'|' : (stkVal[i] ? '<' : '>'),0);*/
-
-  if (ed->curve) lcd_putsnAtt(18*FW+2, y, PSTR(CURV_STR)+ed->curve*3, 3, 0);
+  if (ed->curve) putsCurve(18*FW+2, y, ed->curve+(ed->curve >= CURVE_BASE+4 ? 4 : 0));
 
   if (s_copyMode) {
     if ((s_copyMode==COPY_MODE || s_copyTgtOfs == 0) && s_copySrcCh == ch && expo == (s_copySrcIdx + (s_copyTgtOfs<0))) {
       /* draw a border around the raw on selection mode (copy/move) */
-      lcd_rect(22, y-1, DISPLAY_W-1-21, 9, s_copyMode == COPY_MODE ? 0xff : 0x55);
+      lcd_rect(18, y-1, DISPLAY_W-18, 9, s_copyMode == COPY_MODE ? 0xff : 0x55);
     }
-
     if (row == cur) {
       /* invert the raw when it's the current one */
-      lcd_filled_rect(23, y, DISPLAY_W-1-23, 7);
+      lcd_filled_rect(19, y, DISPLAY_W-20, 7);
     }
   }
 }
