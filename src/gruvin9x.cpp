@@ -20,7 +20,11 @@
  */
 
 #include "gruvin9x.h"
+#if defined (PCBV4)
+#include "s9xsplashv4.lbm"
+#else
 #include "s9xsplash.lbm"
+#endif
 #include "menus.h"
 #include <stdlib.h>
 
@@ -505,7 +509,11 @@ void doSplash()
         BACKLIGHT_OFF;
 
       lcd_clear();
+#if defined (PCBV4)
+      lcd_img(0, 0, s9xsplashv4,0,0);
+#else
       lcd_img(0, 0, s9xsplash,0,0);
+#endif
       refreshDiplay();
       lcdSetRefVolt(g_eeGeneral.contrast);
       clearKeyEvents();
