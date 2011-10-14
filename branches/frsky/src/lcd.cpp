@@ -389,7 +389,8 @@ void putsVBat(uint8_t x, uint8_t y, uint8_t att)
 
 void putsStrIdx(uint8_t x, uint8_t y, const prog_char *str, uint8_t idx, uint8_t att)
 {
-  lcd_putsAtt(x, y, str, att);
+  lcd_putsAtt(x, y, str, att /*i62*/&~BSS/**/); // Issue 62. G: Temporary fix? Permanent maybe, if we never use 
+                                                //              putsStrIdx for SRAM based strings? 
   lcd_outdezNAtt(lcd_lastPos, y, idx, att|LEFT, 2);
 }
 
