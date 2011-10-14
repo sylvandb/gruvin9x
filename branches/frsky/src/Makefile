@@ -528,11 +528,18 @@ else
   THEUSER=$(USER)
 endif
 
+ifneq ($(PCB), STD)
+  SPLASH=s9xsplashv4
+else
+  SPLASH=s9xsplash
+endif
+
 # Default target.
 all: begin gccversion sizebefore build sizeafter end
 
 # Change the build target to build a HEX file or a library.
-build: stamp font.lbm font_dblsize.lbm sticks.lbm s9xsplash.lbm elf hex eep lss sym
+build: stamp font.lbm font_dblsize.lbm sticks.lbm $(SPLASH).lbm elf hex eep lss sym
+	@echo SPLASH = $(SPLASH)
 #build: lib
 
 
@@ -572,9 +579,9 @@ sticks.lbm: sticks_4x1.xbm
 	@echo "Convert font from xbm to lbm:"
 	$(XBM2LBM) $<
 
-s9xsplash.lbm: s9xsplash.xbm
+$(SPLASH).lbm: $(SPLASH).xbm
 	@echo
-	@echo "Convert font from xbm to lbm:"
+	@echo "Convert splash screen from xbm to lbm:"
 	$(XBM2LBM) $<
 
 # Eye candy.
