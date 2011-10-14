@@ -1,5 +1,9 @@
 #!/bin/sh
-# builds for Gruvin's old, regional hacked up 9X -- the one used for at field flying
+# builds for Gruvin's old, original, hacked up 9X -- the one used for field flying while V4 under development
 
 make clean TARGET=gruvin9x_old
-make TARGET=gruvin9x_old PCB=STD EXT=FRSKY BEEPER=SPEAKER USART1=FREED PPMIN=MOD1 TRANSLATIONS=YES
+make TARGET=gruvin9x_old PCB=STD EXT=FRSKY BEEPER=SPEAKER USART1=FREED PPMIN=MOD1 TRANSLATIONS=YES TEMPLATES=YES
+
+if [ $? == 0 ]; then
+  avrdude -p m64 -c avrispmkII -P usb -B1 -U flash:w:gruvin9x_old.hex:i
+fi
