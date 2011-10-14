@@ -4,9 +4,11 @@
 <img src="http://gruvin9x.googlecode.com/svn/wiki/About.attach/turnigy9x_v4.gif" align="right">
 = Introduction =
 
-This project started out as a kind of 'place holder' for the author's personal circuitry upgrades, hacks and mods to his [http://code.google.com/p/er9x/ ER9X]-powered Turnigy 9X V2 RC transmitter. As time wears on, more and more supporting documentation and other data got added, mostly just to keep it all in one place for Gruvin. 
+This project started out just as a kind of 'place holder' for the author's personal circuitry upgrades, hacks and mods to his [http://code.google.com/p/er9x/ ER9X]-powered Turnigy 9X V2 RC transmitter. As time marched on, more supporting documentation and other stuff got added. As of this writing (Oct 2011), there's a tonne of disorganised information on the site, which really could do with a complete re-design and re-write. But not yet -- too busy writing code and making boards! :P
 
 = Project Detail =
+
+(Somewhat historical now ...)
 
 The initial main focus was around adding and enhancing Fr-Sky telemetry support and the development of an [PCB upgraded main logic board] -- for [Telemetry telemetry] support in general, as well as a better ATmega chip and MMC/SDCARD support for model data and general mass storage in FAT16/32 format.
 
