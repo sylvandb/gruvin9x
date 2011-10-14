@@ -1,7 +1,7 @@
 #summary About this project / Contact information
 #labels Featured
 
-<img src="http://gruvin9x.googlecode.com/svn/wiki/About.attach/turnigy9x.jpg" align="right">
+<img src="http://gruvin9x.googlecode.com/svn/wiki/About.attach/turnigy9x_v4.gif" align="right">
 = Introduction =
 
 This project started out as a kind of 'place holder' for the author's personal circuitry upgrades, hacks and mods to his [http://code.google.com/p/er9x/ ER9X]-powered Turnigy 9X V2 RC transmitter. As time wears on, more and more supporting documentation and other data got added, mostly just to keep it all in one place for Gruvin. 
