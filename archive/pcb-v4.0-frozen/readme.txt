@@ -1,16 +1,5 @@
 This PCB is a rework of Bryan's V3.0 PCB to use the 100pin ATMega 2560. It was primarily done to enable the 
-This PCB is a rework of Bryan's V3.0 PCB to use the 100pin ATMega 2560. It was primarily done to enable the 
 use of JTAG debugging and also to free up some pins for future fun.
-
-If anyone spots any mistakes I want to know, it's not optional, you have to tell, it's the law !
-Just respond in the group discussion.
-
-========
-= Todo =
-========
-
-* Get it made !
-
 
 ===========================
 = Differences V3.0 - V4.0 =
@@ -61,6 +50,21 @@ Minor
   it can't find 
 * Amalgamated the projects KiCAD libraries, and restructured their directories to better reflect KiCAD's own 
   library structure. (They confuse me less this way)
+  
+  
+=======================================
+= For reference V2.14 to V3.0 changes =
+=======================================
+
+* Change of speaker to PWM pin (provides MUCH cleaner tonnes, too.)
+* Existing speaker output retained on original pin also -- this was in fact intended for vibrating motor (optionally.)
+* Added breakout of I2C (This was more of a change to the SDcard interface)
+* Added transistor in PPM_IN linen (Principal reason was for buffering/amplification.)
+* Added breakout of Back Light signal, Vcc, and GND to 3 pin header
+* Rearranged stick/trim switch interface wiring to remove awkward/stuffed-up cross-over bug. (This is a biggie!)
+* Fix of reversed Collector and Emitter connections on Q3
+* Small corrections to hole and switch positions. V2.14 was well within acceptable tolerances though.
+
 
 =====================
 = Component changes =
@@ -90,17 +94,3 @@ Schematic components
 ATMEGA2560-A  -> ATMEGA2560-A_GRUVIN   Would you believe the standard KiCAD part has two power pins missing !
 ATMEGA64      -> ATMEGA64_GRUVIN       Not sure, need to ask Bryan
 CONN_30       -> CONN_30_LCD_GRUVIN    Added the tabs of the SMT LCD connector in, also put LCD in the name.
- 
-
-=======================================
-= For reference V2.14 to V3.0 changes =
-=======================================
-
-* Change of speaker to PWM pin (provides MUCH cleaner tonnes, too.)
-* Existing speaker output retained on original pin also -- this was in fact intended for vibrating motor (optionally.)
-* Added breakout of I2C (This was more of a change to the SDcard interface)
-* Added transistor in PPM_IN linen (Principal reason was for buffering/amplification.)
-* Added breakout of Back Light signal, Vcc, and GND to 3 pin header
-* Rearranged stick/trim switch interface wiring to remove awkward/stuffed-up cross-over bug. (This is a biggie!)
-* Fix of reversed Collector and Emitter connections on Q3
-* Small corrections to hole and switch positions. V2.14 was well within acceptable tolerances though.
