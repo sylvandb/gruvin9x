@@ -1,0 +1,6 @@
+#summary Sold-old page for PayPal button
+= Sold Out =
+
+Place-holder page for PayPal Button's "sold out" redirect.
+
+Will fill with meaningful information before testing completed.
