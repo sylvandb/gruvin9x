@@ -10,7 +10,7 @@ cd src
 
 # Build current development defaults version
 TARGET=gruvin9x
-make clean TARGET=$TARGET TRANSLATIONS=YES
+make clean TARGET=$TARGET
 make TARGET=$TARGET
 mv $TARGET.hex ..
 make clean TARGET=$TARGET
