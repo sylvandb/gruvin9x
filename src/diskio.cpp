@@ -59,8 +59,13 @@
 
 /* Port Controls  (Platform dependent) */
 // GCC optimisation should result in a single CBI/SBI instructions here
-#define CS_LOW()	PORTB &= ~0x01    	/* MMC CS = L */
-#define	CS_HIGH()	PORTB |= 0x01		/* MMC CS = H */
+#if defined (PCBV4)
+#  define CS_LOW()  PORTB &= ~0x01    /* MMC CS = L */
+#  define CS_HIGH() PORTB |= 0x01     /* MMC CS = H */
+#else
+#  define CS_LOW()  PORTB &= ~0x10    /* MMC CS = L */
+#  define CS_HIGH() PORTB |= 0x10     /* MMC CS = H */
+#endif
 
 #define SOCKPORT	PINB			/* Socket contact port */
 #define SOCKWP		0x00 // not implemented /* Write protect switch */
