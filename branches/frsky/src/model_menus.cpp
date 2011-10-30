@@ -1276,6 +1276,7 @@ void menuProcExpoMix(uint8_t expo, uint8_t __event)
         insertExpoMix(expo, s_currIdx);
         pushMenu(expo ? menuProcExpoOne : menuProcMixOne);
         s_copyMode = 0;
+        killEvents(_event);
         return;
       }
       break;
