@@ -689,7 +689,7 @@ void menuProcCurveOne(uint8_t event)
   bool    cv9 = s_curveChan >= MAX_CURVE5;
 
   SUBMENU("CURVE", 2+(cv9 ? 9 : 5), { 9, 0/*repeated...*/});
-  lcd_outdezAtt(6*FW, 0, s_curveChan+1, INVERS);
+  lcd_outdezAtt(5*FW+1, 0, s_curveChan+1, INVERS|LEFT);
 
   int8_t *crv = cv9 ? g_model.curves9[s_curveChan-MAX_CURVE5] : g_model.curves5[s_curveChan];
 
@@ -1509,17 +1509,16 @@ void menuProcCurvesAll(uint8_t event)
     if(cv9 && (yd>6)) break;
     if(yd>7) break;
     if(!m) m = attr;
-    lcd_putsAtt(   FW*0, y,PSTR("CV"),attr);
-    lcd_outdezAtt( (k<9) ? FW*3 : FW*4-1, y,k+1 ,attr);
+    putsStrIdx(0, y, PSTR("CV"), k+1, attr);
 
     int8_t *crv = cv9 ? g_model.curves9[k-MAX_CURVE5] : g_model.curves5[k];
     for (uint8_t j = 0; j < (5); j++) {
-      lcd_outdezAtt( j*(3*FW+3) + 7*FW, y, crv[j], 0);
+      lcd_outdezAtt( j*(3*FW+3) + 7*FW + 2, y, crv[j], 0);
     }
     y += FH;yd++;
     if(cv9){
       for (uint8_t j = 0; j < 4; j++) {
-        lcd_outdezAtt( j*(3*FW+3) + 7*FW, y, crv[j+5], 0);
+        lcd_outdezAtt( j*(3*FW+3) + 7*FW + 2, y, crv[j+5], 0);
       }
       y += FH;yd++;
     }
