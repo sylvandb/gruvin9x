@@ -291,7 +291,7 @@ void applyExpos(int16_t *anas)
           v = 2*expo((v+RESX)/2, k);
         else
           v = expo(v, k);
-        if (ed.curve) v = applyCurve(v, ed.curve, 0);
+        if (ed.curve) v = applyCurve(v, ed.curve > 10 ? ed.curve + 4 : ed.curve, 0);
         v = ((int32_t)v * ed.weight) / 100;
         if (IS_THROTTLE(cur_chn) && g_model.thrExpo) v -= RESX;
         anas[cur_chn] = v;
