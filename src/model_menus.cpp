@@ -1177,7 +1177,7 @@ inline void displayExpoLine(uint8_t row, uint8_t expo, uint8_t ch, uint8_t idx, 
   lcd_outdezAtt(9*FW+1, y, ed->expo, 0);
   putsFlightPhase(10*FW, y, ed->negPhase ? -ed->phase : +ed->phase);
   putsSwitches(13*FW+4, y, ed->swtch, 0); // normal switches
-  if (ed->mode!=3) lcd_putc(17*FW, y, ed->mode == 2 ? 127 : 126);//'|' : (stkVal[i] ? '<' : '>'),0);*/
+  if (ed->mode!=3) lcd_putc(17*FW, y, ed->mode == 2 ? 126 : 127);//'|' : (stkVal[i] ? '<' : '>'),0);*/
   if (ed->curve) putsCurve(18*FW+2, y, ed->curve+(ed->curve >= CURVE_BASE+4 ? 4 : 0));
 
   if (s_copyMode) {
