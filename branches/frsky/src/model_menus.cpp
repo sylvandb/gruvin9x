@@ -1406,7 +1406,7 @@ void menuProcLimits(uint8_t event)
   {
     case EVT_KEY_LONG(KEY_MENU):
       if(sub>=0 && sub<NUM_CHNOUT) {
-          int16_t v = g_chans512[sub - s_pgOfs];
+          int16_t v = g_chans512[sub];
           LimitData *ld = limitaddress(sub);
           switch (m_posHorz) {
           case 0:
