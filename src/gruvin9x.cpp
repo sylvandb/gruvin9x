@@ -301,7 +301,7 @@ void applyExpos(int16_t *anas)
 }
 
 static bool s_noStickInputs = false;
-inline int16_t getValue(uint8_t i)
+static inline int16_t __attribute__ ((always_inline)) getValue(uint8_t i)
 {
     if(i<NUM_STICKS+NUM_POTS) return (s_noStickInputs ? 0 : calibratedStick[i]);
     else if(i<MIX_FULL/*srcRaw is shifted +1!*/) return 1024; //FULL/MAX
