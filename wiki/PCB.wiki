@@ -69,6 +69,8 @@ Here's a recent V4 3D visualization from KiCAD...
 
 == Current Status ==
 
+2011-11-16: v4.1 blank production boards have arrived. Also, v4.1 factory assembled 'beta' boards are underway and expected before Christmas.
+
 2011-10-11: We are satisfied that the v4.1 board is ready for its first test factory production run of ten Beta test boards. All of the testing is finished and the bugs found have been corrected. Meanwhile, we continue to develop and test on the three existing and working v4.0 boards, which have all been patched using track-cuts and wire links to the new v4.1 bug-fixed design version. It is likely that Cam will finalise the decision to freeze and deliver the v4.1 design to Leo for factory processing within the next 24 hours.
 
 2011-09-22: A number of circuitry bugs have been found and corrected, as testing continues on schedule. Four v4.0 boards are known to exist at this time. We expect to be ordering the first small factory test batch by mid October, but will not rush the date if all testing has not been completed satisfactorily.
