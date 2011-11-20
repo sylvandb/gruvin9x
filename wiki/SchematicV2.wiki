@@ -1,4 +1,4 @@
-#summary Circuit Scematic of V2 '9X radio
+#summary Circuit Schematic of V2 '9X radio
 
 <img src="http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/schematic_thm.jpg" align="right">
 
