@@ -6,4 +6,4 @@
 
 There exists (in trunk/doc) a PDF circuit schematic, which appears to be from the version 1 radio. Here is link to a V2 schematic, which includes a couple of changes, most notable being the addition of a regulator and voltage-splitter resistor network to drive a 3.3V LCD display.
 
-Here is a link to the [http://gruvin9x.googlecode.com/svn/trunk/pcb/actual_v2_9x/gruvin9x_v2_actual.pdf new V2 schematic]
+Here is a link to the our version of the [http://gruvin9x.googlecode.com/svn/reference/v2_stock_9x/ factory stock 9X schematic] files.
