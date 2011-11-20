@@ -250,6 +250,13 @@ TEST(getSwitch, circularCSW) {
   EXPECT_EQ(getSwitch(-(1+MAX_SWITCH-NUM_CSW), 0), true);
 }
 
+TEST(getSwitch, nullSW) {
+  memset(&g_model, 0, sizeof(g_model));
+  EXPECT_EQ(getSwitch(0, 0), false);
+  EXPECT_EQ(getSwitch(0, true), true);
+  EXPECT_EQ(getSwitch(0, 0), false);
+}
+
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
