@@ -12,7 +12,6 @@ These versions carry the latest stable bug-fixes and new features. Each file rel
 
 === Version Info for Binary Files Below ... ===
 [http://gruvin9x.googlecode.com/svn/branches/base/binaries/svnversion.gif]<br/>
-NOTE: The above may lag way behind actual project status. Latest development snapshot binary releases can be found on the [DevBinaries Development Binaries] page.  
 
 == Binary .hex Download Links ==
 
@@ -27,4 +26,3 @@ NOTE: You may have to, "right-click / Save target/link as ..." to get these link
  * *[http://gruvin9x.googlecode.com/svn/branches/base/binaries/gruvin9x-frsky-speaker.hex gruvin9x-frsky-speaker.hex]* -- [FrskyInterfacing Fr-Sky telemetry] and [SpeakerReplacement speaker upgrade] mods in place.
 
  * [http://gruvin9x.googlecode.com/svn/branches/base/binaries/gruvin9x.hex gruvin9x.hex] -- *You probably _DON'T_ want this version!* Fully 'Gruvinvized' with [FrskyInterfacing Fr-Sky], [SpeakerReplacement speaker upgrade] and other 'random' gruvin9x features, such as moving LH_Trim_Up/Dwn away from USART1 to free same for secondary serial communications. (The latter mod is still experimental and no documentation exists for it.) 
-
