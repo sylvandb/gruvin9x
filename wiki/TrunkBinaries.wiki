@@ -2,6 +2,10 @@
 
 = Latest Stable Pre-Compiled Binaries =
 
+The latest, stable public maintenance release of gruvin9x firmware is code-named 'base' and lives at [http://code.google.com/p/gruvin9x/source/browse/#svn%2Fbranches%2Fbase /branches/base].
+
+NOTE: As of this writing, the long awaited 'frsky' version has still not been tested stable enough for public release. The 'base' version is quite old and does not include any Fr-Sky telemetry support. However, it known to be stable.
+
 There are four versions of binary .hex files you can download for flashing your '9X, without needing to compile from source.
 
 These versions carry the latest stable bug-fixes and new features. Each file relates to one of the four different hardware modification combinations. Download the one that matches what you've done to your 9X. :D
