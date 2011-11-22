@@ -1,6 +1,6 @@
 #summary Binaries for download from the trunk/stable repository
 
-= Latest Stable Pre-Compiled Binaries =
+= Latest Stable Pre-Compiled Binaries (version 'base') =
 
 The latest, stable public maintenance release of gruvin9x firmware is code-named 'base' and lives at [http://code.google.com/p/gruvin9x/source/browse/#svn%2Fbranches%2Fbase /branches/base].
 
