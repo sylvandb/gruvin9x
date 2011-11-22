@@ -28,7 +28,3 @@ NOTE: You may have to, "right-click / Save target/link as ..." to get these link
 
  * [http://gruvin9x.googlecode.com/svn/branches/base/binaries/gruvin9x.hex gruvin9x.hex] -- *You probably _DON'T_ want this version!* Fully 'Gruvinvized' with [FrskyInterfacing Fr-Sky], [SpeakerReplacement speaker upgrade] and other 'random' gruvin9x features, such as moving LH_Trim_Up/Dwn away from USART1 to free same for secondary serial communications. (The latter mod is still experimental and no documentation exists for it.) 
 
-
-== Change Log ==
-
-A log of the most recent as well as previous changes (since r377) for the above binary versions can be found at [http://gruvin9x.googlecode.com/svn/trunk/firmware/binaries/src/CHANGELOG].
