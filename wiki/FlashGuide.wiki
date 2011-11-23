@@ -2,6 +2,9 @@
 #labels Phase-Implementation,Featured
 = Getting Wired =
 
+*UPDATE* 2011-11-24: Current versions of AVRDUDE do not seem to work well with the Sparkfun USB Pocket Programmer. I have switched to a USBasp based USB programmer and it is now working flawlessly. Original article (to be updated) continues ...
+
+ 
 <img src="http://gruvin9x.googlecode.com/svn/wiki/FlashGuide.attach/usbpktprog.jpg" align="left">The first thing you will need is one of the many available AVR programmer kits. Perhaps you already have an AVR programmer? I purchased a [http://www.sparkfun.com/commerce/product_info.php?products_id=9825 USB Pocket Programmer] from Spark Fun. It works really well and is not at all expensive. ([http://sparkfun.com SparkFun] have a some really cool stuff by the way. Stop by for a while and check them out!)
 
 You'll need to connect your programmer's ICP (In-Circuit Programming) cable to your '9X. There are a few options available.
