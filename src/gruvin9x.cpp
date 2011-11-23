@@ -1474,7 +1474,7 @@ void perMain()
   for (uint8_t i=0; i<NUM_CHNOUT; i++) {
     int16_t output;
     if (fading_out_timer) {
-      last_chans512[i] += (100*next_chans512[i] - last_chans512[i]) / fading_out_timer;
+      last_chans512[i] += ((int32_t)next_chans512[i]*100 - last_chans512[i]) / fading_out_timer;
       output = last_chans512[i] / 100;
     }
     else {
