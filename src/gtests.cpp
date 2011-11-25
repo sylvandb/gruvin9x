@@ -140,7 +140,7 @@ TEST(EEPROM, eeCheckImmediately) {
   EXPECT_EQ(sz, 300);
 }
 
-TEST(EEPROM, eeDuplicateModel) {
+TEST(EEPROM, copy) {
   eepromFile = NULL; // in memory
 
   uint8_t buf[1000];
@@ -151,7 +151,7 @@ TEST(EEPROM, eeDuplicateModel) {
 
   theFile.writeRlc(5, 6, buf, 300, true);
 
-  eeDuplicateModel(4);
+  theFile.copy(6, 5);
 
   theFile.openRd(6);
   uint16_t sz=0;
