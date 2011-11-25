@@ -53,19 +53,16 @@ static uint8_t EeFsRead(uint8_t blk,uint8_t ofs)
   return ret;
 }
 
-static void EeFsWrite(uint8_t blk, uint8_t ofs, uint8_t val)
-{
-  eeWriteBlockCmp(&val, (void*)(blk*BS+ofs), 1);
-}
-
 static uint8_t EeFsGetLink(uint8_t blk)
 {
   return EeFsRead( blk,0);
 }
 
-static void EeFsSetLink(uint8_t blk,uint8_t val)
+static void EeFsSetLink(uint8_t blk, uint8_t val)
 {
-  EeFsWrite( blk,0,val);
+  static uint8_t s_link; // we write asynchronously, then nothing on the stack!
+  s_link = val;
+  eeWriteBlockCmp(&s_link, (void*)(blk*BS), 1);
 }
 
 static uint8_t EeFsGetDat(uint8_t blk,uint8_t ofs)
