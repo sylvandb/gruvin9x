@@ -2,6 +2,24 @@
 
 = Building Your Own G9X PC Board =
 
+== Preliminary Information ==
+
+The V4.1 PCB is available for purchase at [http://gruvin9x.com].
+
+Be sure to watch these two videos, showing how to almost effortlessly solder tiny SMD parts ...
+
+[http://www.youtube.com/watch?v=nMZq0CZ67WY Soldering SMD 0603 sized parts]
+
+[http://www.youtube.com/watch?v=r69WvRybgCU Soldering the TQFP 0.5mm pitch, 100-pin ATmega2560 chip]
+
+
+There is a silk-screen PDF for the main V4.1 board, to use as a parts placement guide here ... [http://gruvin9x.googlecode.com/svn/archive/pcb-v4.1-frozen/assembly/gruvin9x-SilkS_Front.pdf gruvin9x-SilkS_Front.pdf]
+
+The SDCARD board has not changed sinve V4.0. Please see below.
+
+
+== Previous v4.0 Assembly Information ==
+
 With more people beginning to show an interest in assembling (soldering) their own gruvin9x printed circuit boards, I thought we'd start a wiki page on the topic.
 
 Eventually, this page should contain detailed instructions of where to buy the parts, get the blank PCB board made or purchased ready-made and other relevant information. For now though, ...
@@ -20,13 +38,13 @@ Thanks Cam!
 
 There's silk-screen PDFs for the main board and the (gruvin version) sdcard board in {{{/trunk/pcbv4.0-frozen/assembly}}} to help with puting the right parts in the right place.
 
- * [http://gruvin9x.googlecode.com/svn/trunk/pcbv4.0-frozen/assembly/gruvin9x-SilkS_Front.pdf gruvin9x-SilkS_Front.pdf]
+ * [http://gruvin9x.googlecode.com/svn/archive/pcb-v4.0-frozen/assembly/gruvin9x-SilkS_Front.pdf gruvin9x-SilkS_Front.pdf]
 
- * [http://gruvin9x.googlecode.com/svn/trunk/pcbv4.0-frozen/assembly/sdcard-SilkS_Front.pdf sdcard-SilkS_Front.pdf]
+ * [http://gruvin9x.googlecode.com/svn/archive/pcb-v4.0-frozen/assembly/sdcard-SilkS_Front.pdf sdcard-SilkS_Front.pdf]
 
 = Patching PCB v4.0 =
 
-For those who have jumped ahead and got themselves one of the few v4.0 boards we had available, here's the patch work needed (as at 2011-09-21) to make your board v4.1 design compatible -- and in fact required to work with the v4.1 targeted code version /branches/darktrain.
+For those who have jumped ahead and got themselves one of the few v4.0 boards we had available, here's the patch work needed (as at 2011-09-21) to make your board v4.1 design compatible -- and in fact required to work with the latest (/trunk) code.
 
 *NOTE* that the BC847 transistor in place of D2 is mounted *UPSIDE-DOWN*
 
@@ -42,4 +60,3 @@ There's another patch required for PPM_IN (trainer port input). I'm working on a
 Here's a photo showing the latest (revised) IDL2 mod, (See issue 48.)
 
 [http://gruvin9x.googlecode.com/svn/wiki/PcbAssembly.attach/v4.0_IDL2_mod.jpg]
-
