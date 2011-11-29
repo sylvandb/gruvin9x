@@ -29,6 +29,11 @@ uint8_t displayBuf[DISPLAY_W*DISPLAY_H/8];
 #include "font_dblsize.lbm"
 #define font_10x16_x20_x7f (font_dblsize+3)
 
+#ifdef SIMU
+bool lcd_refresh = true;
+uint8_t lcd_buf[DISPLAY_W*DISPLAY_H/8];
+#endif
+
 void lcd_clear()
 {
   memset(displayBuf, 0, sizeof(displayBuf));
@@ -290,9 +295,10 @@ void lcd_plot(uint8_t x,uint8_t y, uint8_t att)
     lcd_mask(p, BITMASK(y%8), att);
 }
 
-void lcd_hlineStip(int8_t x, uint8_t y, uint8_t w, uint8_t pat, uint8_t att)
+void lcd_hlineStip(int8_t x, uint8_t y, int8_t w, uint8_t pat, uint8_t att)
 {
   if (y >= DISPLAY_H) return;
+  if (w<0) { x+=w; w=-w; }
   if (x<0) { w+=x; x=0; }
   if (x+w > DISPLAY_W) { w = DISPLAY_W - x; }
 
@@ -311,13 +317,15 @@ void lcd_hlineStip(int8_t x, uint8_t y, uint8_t w, uint8_t pat, uint8_t att)
   }
 }
 
-void lcd_hline(uint8_t x,uint8_t y, uint8_t w, uint8_t att)
+void lcd_hline(uint8_t x,uint8_t y, int8_t w, uint8_t att)
 {
   lcd_hlineStip(x, y, w, 0xff, att);
 }
 
 void lcd_vlineStip(uint8_t x, int8_t y, int8_t h, uint8_t pat)
 {
+  if (x >= DISPLAY_W) return;
+  if (h<0) { y+=h; h=-h; }
   if (y<0) { h+=y; y=0; }
   if (y+h > DISPLAY_H) { h = DISPLAY_H - y; }
 
@@ -550,8 +558,12 @@ void lcdSetRefVolt(uint8_t val)
   lcdSendCtl(val);
 }
 
-void refreshDiplay()
+void refreshDisplay()
 {
+#ifdef SIMU
+  memcpy(lcd_buf, displayBuf, sizeof(displayBuf));
+  lcd_refresh = true;
+#else
   uint8_t *p=displayBuf;
   for(uint8_t y=0; y < 8; y++) {
     lcdSendCtl(0x04);
@@ -571,4 +583,5 @@ void refreshDiplay()
     PORTC_LCD_CTRL |=  (1<<OUT_C_LCD_A0);
     PORTC_LCD_CTRL |=  (1<<OUT_C_LCD_CS1);
   }
+#endif
 }

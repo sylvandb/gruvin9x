@@ -531,6 +531,6 @@ void menuMainView(uint8_t event)
   {
     putsTime(33+FW+2, FH*5, timer2, DBLSIZE, DBLSIZE);
   }
-  /// Lower section of display                                        ///
-  ///////////////////////////////////////////////////////////////////////
+
+  theFile.DisplayProgressBar(20*FW+1);
 }

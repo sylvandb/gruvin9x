@@ -17,6 +17,7 @@
  *
  */
 
+#define PROGRESS_VERTICAL_BAR
 
 #include "gruvin9x.h"
 #include "stdio.h"
@@ -46,48 +47,48 @@ struct EeFs{
 }__attribute__((packed)) eeFs;
 
 
-static uint8_t EeFsRead(uint8_t blk,uint8_t ofs)
+static uint8_t EeFsRead(uint8_t blk, uint8_t ofs)
 {
   uint8_t ret;
-  eeprom_read_block(&ret,(const void*)(blk*BS+ofs),1);
+  eeprom_read_block(&ret, (const void*)(blk*BS+ofs), 1);
   return ret;
 }
 
 static uint8_t EeFsGetLink(uint8_t blk)
 {
-  return EeFsRead( blk,0);
+  return EeFsRead(blk, 0);
 }
 
 static void EeFsSetLink(uint8_t blk, uint8_t val)
 {
   static uint8_t s_link; // we write asynchronously, then nothing on the stack!
   s_link = val;
-  eeWriteBlockCmp(&s_link, (void*)(blk*BS), 1);
+  eeWriteBlockCmp(&s_link, (blk*BS), 1);
 }
 
 static uint8_t EeFsGetDat(uint8_t blk,uint8_t ofs)
 {
-  return EeFsRead( blk,ofs+1);
+  return EeFsRead(blk, ofs+1);
 }
 
 static void EeFsSetDat(uint8_t blk,uint8_t ofs,uint8_t*buf,uint8_t len)
 {
-  eeWriteBlockCmp(buf, (void*)(blk*BS+ofs+1), len);
+  eeWriteBlockCmp(buf, blk*BS+ofs+1, len);
 }
 
 static void EeFsFlushFreelist()
 {
-  eeWriteBlockCmp(&eeFs.freeList,&((EeFs*)0)->freeList ,sizeof(eeFs.freeList));
+  eeWriteBlockCmp(&eeFs.freeList, offsetof(EeFs, freeList), sizeof(eeFs.freeList));
 }
 
 static void EeFsFlushDirEnt(uint8_t i_fileId)
 {
-  eeWriteBlockCmp(&eeFs.files[i_fileId], &((EeFs*)0)->files[i_fileId], sizeof(DirEnt));
+  eeWriteBlockCmp(&eeFs.files[i_fileId], offsetof(EeFs, files) + sizeof(DirEnt)*i_fileId, sizeof(DirEnt));
 }
 
 static void EeFsFlush()
 {
-  eeWriteBlockCmp(&eeFs, 0,sizeof(eeFs));
+  eeWriteBlockCmp(&eeFs, 0, sizeof(eeFs));
 }
 
 uint16_t EeFsGetFree()
@@ -334,7 +335,7 @@ void RlcFile::write(uint8_t *buf, uint8_t i_len)
 
 void RlcFile::nextWriteStep()
 {
-  if(!m_currBlk && m_pos==0) {
+  if (!m_currBlk && m_pos==0) {
     eeFs.files[FILE_TMP].startBlk = m_currBlk = eeFs.freeList;
     if (m_currBlk) {
       eeFs.freeList = EeFsGetLink(m_currBlk);
@@ -357,7 +358,8 @@ void RlcFile::nextWriteStep()
     }
     if (m_ofs >= (BS-1)) {
       m_ofs = 0;
-      if (!EeFsGetLink(m_currBlk)) {
+      uint8_t nextBlk = EeFsGetLink(m_currBlk);
+      if (!nextBlk) {
         if (!eeFs.freeList) {
           s_write_err = ERR_FULL;
           break;
@@ -366,7 +368,7 @@ void RlcFile::nextWriteStep()
         EeFsSetLink(m_currBlk, eeFs.freeList);
         return;
       }
-      m_currBlk = EeFsGetLink(m_currBlk);
+      m_currBlk = nextBlk;
     }
     switch (m_write_step & 0x0f) {
       case WRITE_NEXT_LINK_1:
@@ -437,14 +439,14 @@ bool RlcFile::copy(uint8_t i_fileDst, uint8_t i_fileSrc)
   if (m_currBlk && (fri=EeFsGetLink(m_currBlk)))
     EeFsSetLink(m_currBlk, 0);
 
+  if (fri) EeFsFree(fri);  //chain in
+
   eeFs.files[FILE_TMP].size = m_pos;
   EFile::swap(m_fileId, FILE_TMP);
 
-  if (fri) EeFsFree(fri);  //chain in
-
   assert(!m_write_step);
 
-  s_sync_write = false;
+  // s_sync_write is set to false in swap();
   return true;
 }
 
@@ -456,6 +458,11 @@ void RlcFile::writeRlc(uint8_t i_fileId, uint8_t typ, uint8_t*buf, uint16_t i_le
   m_rlc_buf = buf;
   m_rlc_len = i_len;
   m_cur_rlc_len = 0;
+#if defined (PROGRESS_CIRCLE)
+  m_ratio = (typ == FILE_TYP_MODEL ? 60 : 6);
+#elif defined (PROGRESS_VERTICAL_BAR)
+  m_ratio = (typ == FILE_TYP_MODEL ? 100 : 10);
+#endif
 
   do {
     nextRlcWriteStep();
@@ -571,4 +578,32 @@ void RlcFile::flush()
   s_sync_write = false;
 }
 
-
+void RlcFile::DisplayProgressBar(uint8_t x)
+{
+  if (s_eeDirtyMsk || isWriting() || eeprom_buffer_size) {
+#if defined (PROGRESS_BAR)
+    uint8_t len = (s_eeDirtyMsk ? 123 : min((uint8_t)123, (uint8_t)((m_rlc_len) / 5 + eeprom_buffer_size)));
+    lcd_filled_rect(2, 1, 125, 5, WHITE);
+    lcd_filled_rect(3, 2, 123-len, 3);
+#elif defined (PROGRESS_CIRCLE)
+    lcd_filled_rect(x-1, 0, 7, 7, WHITE);
+    uint8_t len = s_eeDirtyMsk ? 1 : limit(1, 12 - (uint8_t)(m_rlc_len/m_ratio), 12);
+    lcd_hline(x+1, 1, min((uint8_t)3, len));
+    if (len >= 3) {
+      lcd_vline(x+4, 2, min(3, len-3));
+      if (len >= 6) {
+        lcd_hline(x+4, 1+4, -min(3, len-6));
+        if (len >= 9) {
+          lcd_vline(x, 5, -min(3, len-9));
+        }
+      }
+    }
+#elif defined (PROGRESS_VERTICAL_BAR)
+    uint8_t len = s_eeDirtyMsk ? 1 : limit((uint8_t)1, (uint8_t)(7 - (m_rlc_len/m_ratio)), (uint8_t)7);
+    lcd_filled_rect(x+1, 0, 5, FH, WHITE);
+    lcd_filled_rect(x+2, 7-len, 3, len);
+#elif defined (PROGRESS_FIXED_CIRCLE)
+    lcd_square(x, 1, 5);
+#endif
+  }
+}
