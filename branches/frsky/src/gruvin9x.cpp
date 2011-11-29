@@ -2384,6 +2384,8 @@ int main(void)
 
   lcdSetRefVolt(25);
 
+  sei(); // interrupts needed for FRSKY_Init and eeReadAll functions.
+
 #if defined (FRSKY)
   FRSKY_Init();
 #endif
