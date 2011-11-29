@@ -19,9 +19,16 @@
  *
  */
 
+#ifndef simpgmspace_h
+#define simpgmspace_h
+
 #include <assert.h>
 #include <inttypes.h>
 #include <stdio.h>
+#include <pthread.h>
+#include <semaphore.h>
+
+#define APM
 
 typedef unsigned char prog_uchar;
 typedef const char prog_char;
@@ -30,7 +37,7 @@ typedef const uint8_t prog_uint8_t;
 typedef const int16_t prog_int16_t;
 typedef const int8_t prog_int8_t;
 
-
+extern sem_t eeprom_write_sem;
 
 #define PROGMEM
 #define pgm_read_byte(address_short) (*(uint8_t*)(address_short))
@@ -76,6 +83,8 @@ typedef const int8_t prog_int8_t;
 extern volatile unsigned char pinb,pinc,pind,pine,ping;
 extern unsigned char portb,dummyport;
 
+void InitEepromThread();
+
 extern const char *eepromFile;
 void eeprom_read_block (void *pointer_ram,
                    const void *pointer_eeprom,
@@ -84,3 +93,5 @@ void eeprom_read_block (void *pointer_ram,
 #undef offsetof
 #define offsetof(st, m) ((size_t) ( (char *)&((st *)(0))->m - (char *)0 ))
 #define wdt_reset()
+
+#endif

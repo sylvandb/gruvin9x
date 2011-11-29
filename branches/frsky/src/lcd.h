@@ -103,8 +103,8 @@ extern void putsTelemetry(uint8_t x, uint8_t y, uint8_t val, uint8_t unit, uint8
 #endif
 
 extern void lcd_plot(unsigned char x, unsigned char y, uint8_t att=0);
-extern void lcd_hline(unsigned char x,unsigned char y, uint8_t w, uint8_t att=0);
-extern void lcd_hlineStip(int8_t x, uint8_t y, uint8_t  w, uint8_t pat, uint8_t att=0);
+extern void lcd_hline(unsigned char x, unsigned char y, int8_t w, uint8_t att=0);
+extern void lcd_hlineStip(int8_t x, uint8_t y, int8_t w, uint8_t pat, uint8_t att=0);
 extern void lcd_vline(uint8_t x, int8_t y, int8_t h);
 extern void lcd_vlineStip(uint8_t x, int8_t y, int8_t h, uint8_t pat);
 
@@ -129,11 +129,15 @@ extern void lcdSetRefVolt(unsigned char val);
 extern void lcd_init();
 extern void lcd_clear();
 
-extern void refreshDiplay();
+extern void refreshDisplay();
 
 #define BLINK_ON_PHASE (g_blinkTmr10ms & (1<<6))
 #define BLINK_SYNC      g_blinkTmr10ms = (3<<5)
 
 
+#ifdef SIMU
+extern bool lcd_refresh;
+extern uint8_t lcd_buf[DISPLAY_W*DISPLAY_H/8];
+#endif
 #endif
 /*eof*/
