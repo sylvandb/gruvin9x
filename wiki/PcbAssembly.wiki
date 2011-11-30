@@ -12,6 +12,8 @@ Be sure to watch these two videos, showing how to almost effortlessly solder tin
 
 [http://www.youtube.com/watch?v=r69WvRybgCU Soldering the TQFP 0.5mm pitch, 100-pin ATmega2560 chip]
 
+There's also a very nicely made [http://www.youtube.com/watch?v=3NN7UGWYmBY video by Curious Inventor] over at YouTube. The techniques are roughly the same and some additional options and information is offered.
+
 
 There is a silk-screen PDF for the main V4.1 board, to use as a parts placement guide here ... [http://gruvin9x.googlecode.com/svn/archive/pcb-v4.1-frozen/assembly/gruvin9x-SilkS_Front.pdf gruvin9x-SilkS_Front.pdf]
 
