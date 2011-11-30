@@ -4,7 +4,13 @@
 
 == Preliminary Information ==
 
-The V4.1 PCB is available for purchase at [http://gruvin9x.com].
+This page has been thrown together quickly to help you get started. The information is probably not well laid out and also incomplete in places.
+
+== Where to get your PCB ==
+
+The V4.1 PCB is now available for purchase at [http://gruvin9x.com].
+
+== Construction Advice ==
 
 Be sure to watch these two videos, showing how to almost effortlessly solder tiny SMD parts ...
 
