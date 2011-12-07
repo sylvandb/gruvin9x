@@ -73,6 +73,12 @@ The v4.1 (final v4 production version) board is now available for purchase at [h
 
 A high resolution version of the above photo is available [http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/pcbv41_photo_fs.jpg here].
 
+Interestingly, this board was mainly constructed through concurrent, ambidextrous use of two hand soldering irons (one in each hand), to transfer components from the v4.0 prototype to the new v4.1 PCB. The process took about four hours in total. One resistor was apparently heat-damaged and needed replacing. Everything else seems to be working 100%. Yay \o/
+
+The back of the board has the HobbyKing LED back-light kit supplied self-adhesive foam pad stuck to it. I would recommend that specific LED back-light kit to all V4.1 board adopters. There's a dedicated driver output for it at the upper right of the board. _Be SURE to use the center GND and *RIGHT*-hand pin to get the current limited LED-safe connection_ -- because the left terminal is a full current, 5V supply!
+
+[http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/pcbv41_photo_back.jpg]
+
 === The v4.0 Prototype Board ===
 
 Here's a recent V4.0 3D visualization from KiCAD...
