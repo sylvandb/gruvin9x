@@ -3,6 +3,8 @@
 <img src="http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/pcbv4_photo.jpg" hspace="10" width="320" align="right">
 = Custom Main Board Development =
 
+Finally -- PCB V4.1 boards are now in stock and available for purchase at [http://gruvin9x.com/shop].
+
 == Why? ==
 
 The primary intention with this new main board is to provide a more powerful and flexible platform for the TH/ER/gruvin9x/(RadioClone?) open source firmware to run on – basically, because we want to and we can. :p (See project home page if you don't know what that even is :-)
@@ -61,13 +63,23 @@ Version 3.2 used the same ATmega2561 chip, which was an upgrade over the origina
 
 
 == Progress ==
-=== The V4 Board (to be produced for resale as soon as possible) ===
+=== The V4.1 Board ===
 
-Here's a recent V4 3D visualization from KiCAD...
+The v4.1 (final production) board is now available for purchase at [http://gruvin9x.com/shop]. We encourage all early adopters and home builders to grab a board or two and get building. We'll be here to assist with any problems.
+
+[http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/pcbv41_photo.jpg]
+
+A high resolution, straight-on view photo is [http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/pcbv41_photo_fs.jpg here].
+
+=== The v4.0 Prototype Board ===
+
+Here's a recent V4.0 3D visualization from KiCAD...
 
 [http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/pcb_v4.x_3d_top.gif]
 
 == Current Status ==
+
+2011-12-08: First v4.1 board fully built and tested all OK. Boards in stock and available for purchase at [http://gruvin9x.com/shop]
 
 2011-11-16: v4.1 blank production boards have arrived. Also, v4.1 factory assembled 'beta' boards are underway and expected before Christmas.
 
