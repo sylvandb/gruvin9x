@@ -71,7 +71,7 @@ The v4.1 (final v4 production version) board is now available for purchase at [h
 
 [http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/pcbv41_photo.jpg]
 
-A high resolution, straight-on view photo is [http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/pcbv41_photo_fs.jpg here].
+A high resolution version of the above photo is available [http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/pcbv41_photo_fs.jpg here].
 
 === The v4.0 Prototype Board ===
 
