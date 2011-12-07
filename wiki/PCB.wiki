@@ -5,6 +5,8 @@
 
 Finally -- PCB V4.1 boards are now in stock and available for purchase at [http://gruvin9x.com/shop].
 
+_Photo to the right is the v4.0 prototype (R.I.P). An image of the V4.1 board can be found below, in the 'Progress' section._
+
 == Why? ==
 
 The primary intention with this new main board is to provide a more powerful and flexible platform for the TH/ER/gruvin9x/(RadioClone?) open source firmware to run on – basically, because we want to and we can. :p (See project home page if you don't know what that even is :-)
@@ -63,9 +65,9 @@ Version 3.2 used the same ATmega2561 chip, which was an upgrade over the origina
 
 
 == Progress ==
-=== The V4.1 Board ===
+=== The V4.1 Board -- Now Available ===
 
-The v4.1 (final production) board is now available for purchase at [http://gruvin9x.com/shop]. We encourage all early adopters and home builders to grab a board or two and get building. We'll be here to assist with any problems.
+The v4.1 (final v4 production version) board is now available for purchase at [http://gruvin9x.com/shop]. We encourage all early adopters and home electronics constructors to grab yourselves a board or two and get building. :-D We'll be here to assist with any problems.
 
 [http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/pcbv41_photo.jpg]
 
