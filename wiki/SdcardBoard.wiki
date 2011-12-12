@@ -19,3 +19,5 @@ shorts out on something. Probably not required.
 || The original piezo "beeper" is removed and re-soldered as shown, to make room. ||
 
 I probably over-did the hot glue a little. :-D
+
+Oh by the way ... do NOT put a fancy, bulky, plastic connector on the SD card board where the wiring terminates. There isn't room for it. Just solder wires directly and apply some hot-glue to prevent them breaking over time.
