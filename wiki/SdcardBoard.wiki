@@ -4,8 +4,18 @@
 
 Here's some pictures showing where Gruvin installed his SD card board -- and where it was designed to fit from the start, if that helps. :-D
 
-[http://gruvin9x.googlecode.com/svn/wiki/PcbAssembly.attach/sdcard_inst1.jpg"]
+|| [http://gruvin9x.googlecode.com/svn/wiki/PcbAssembly.attach/sdcard_inst1.jpg] ||
+|| Almost flush. Could have done better with more care. ||
 
-[http://gruvin9x.googlecode.com/svn/wiki/PcbAssembly.attach/sdcard_inst2.jpg"]
+|| [http://gruvin9x.googlecode.com/svn/wiki/PcbAssembly.attach/sdcard_inst2.jpg] ||
+|| Speaker is lowest, then SD card, then original power switch board. ||
 
-[http://gruvin9x.googlecode.com/svn/wiki/PcbAssembly.attach/sdcard_inst3.jpg"]
+I put tape over the button battery holder, just in case it 
+shorts out on something. Probably not required.
+
+ 
+
+|| [http://gruvin9x.googlecode.com/svn/wiki/PcbAssembly.attach/sdcard_inst3.jpg] ||
+|| The original piezo "beeper" is removed and re-soldered as shown, to make room. ||
+
+I probably over-did the hot glue a little. :-D
