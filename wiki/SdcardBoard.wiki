@@ -1,0 +1,11 @@
+#summary SD Card / RTC Board Installation
+
+= SD Card / RTC Board Installation =
+
+Here's some pictures showing where Gruvin installed his SD card board -- and where it was designed to fit from the start, if that helps. :-D
+
+[http://gruvin9x.googlecode.com/svn/wiki/PcbAssembly.attach/sdcard_inst1.jpg"]
+
+[http://gruvin9x.googlecode.com/svn/wiki/PcbAssembly.attach/sdcard_inst2.jpg"]
+
+[http://gruvin9x.googlecode.com/svn/wiki/PcbAssembly.attach/sdcard_inst3.jpg"]
