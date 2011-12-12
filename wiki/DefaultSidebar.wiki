@@ -12,6 +12,7 @@
  * [PCB Custom PCB]
   * [Circuitry Custom Schematics]
   * [PcbAssembly Build Your Own Board]
+  * [SdcardBoard SD Card Installation]
   * [TurnigyV2 9X Reference Data]
    * [ReferenceImages Reference Images]
    * [SchematicV2 V2 Circuit Schematic]
