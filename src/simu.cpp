@@ -143,7 +143,6 @@ Gruvin9xSim::Gruvin9xSim(FXApp* a)
   bmf = new FXBitmapFrame(this,bmp,0,0,0,0,0,0,0,0,0);
   bmf->setOnColor(FXRGB(0,0,0));
 
-  //getApp()->addChore(this,1);
   getApp()->addTimeout(this,2,100);
 }
 
@@ -187,7 +186,6 @@ void Gruvin9xSim::makeSnapshot(const FXDrawable* drawable)
 }
 void Gruvin9xSim::doEvents()
 {
-  //getApp()->addChore(this,1);
   getApp()->runOneEvent(false);
 }
 
@@ -269,21 +267,25 @@ void Gruvin9xSim::refreshDiplay()
 
   if(hasFocus()) {
     static FXuint keys1[]={
-      KEY_Return,    INP_B_KEY_MEN,
-      KEY_Page_Up,   INP_B_KEY_MEN,
-      KEY_KP_1,      INP_B_KEY_MEN,
-      KEY_Page_Down, INP_B_KEY_EXT,
-      KEY_BackSpace, INP_B_KEY_EXT,
-      KEY_KP_0,      INP_B_KEY_EXT,
-      KEY_Down,      INP_B_KEY_DWN,
-      KEY_Up,        INP_B_KEY_UP,
-      KEY_Right,     INP_B_KEY_RGT,
-      KEY_Left,      INP_B_KEY_LFT
+      KEY_Return,    INP_B_KEY_MEN, INP_P_KEY_MEN,
+      KEY_Page_Up,   INP_B_KEY_MEN, INP_P_KEY_MEN,
+      KEY_KP_1,      INP_B_KEY_MEN, INP_P_KEY_MEN,
+      KEY_Page_Down, INP_B_KEY_EXT, INP_P_KEY_EXT,
+      KEY_BackSpace, INP_B_KEY_EXT, INP_P_KEY_EXT,
+      KEY_KP_0,      INP_B_KEY_EXT, INP_P_KEY_EXT,
+      KEY_Down,      INP_B_KEY_DWN, INP_P_KEY_DWN,
+      KEY_Up,        INP_B_KEY_UP,  INP_P_KEY_UP,
+      KEY_Right,     INP_B_KEY_RGT, INP_P_KEY_RGT,
+      KEY_Left,      INP_B_KEY_LFT, INP_P_KEY_LFT
     };
 
     pinb &= ~ 0x7e;
-    for(unsigned i=0; i<DIM(keys1);i+=2){
-      if(getApp()->getKeyState(keys1[i])) pinb |= (1<<keys1[i+1]);
+    pinl &= ~ 0x3f; // for v4
+    for(unsigned i=0; i<DIM(keys1);i+=3) {
+      if (getApp()->getKeyState(keys1[i])) {
+        pinb |= (1<<keys1[i+1]);
+        pinl |= (1<<keys1[i+2]);
+      }
     }
 
 #ifdef __APPLE__
@@ -344,30 +346,11 @@ void Gruvin9xSim::refreshDiplay()
       k5st = ks;
     }
     switch(id){
-      case 0: ping |=  (1<<INP_G_ID1);  pine &= ~(1<<INP_E_ID2); break;
-      case 1: ping &= ~(1<<INP_G_ID1);  pine &= ~(1<<INP_E_ID2); break;
-      case 2: ping &= ~(1<<INP_G_ID1);  pine |=  (1<<INP_E_ID2); break;
+      case 0: setSwitch(DSW_ID0); break;
+      case 1: setSwitch(DSW_ID1); break;
+      case 2: setSwitch(DSW_ID2); break;
     }
   }
-}
-
-void *main_thread(void *)
-{
-  g_menuStack[0] = menuMainView;
-  g_menuStack[1] = menuProcModelSelect;
-
-  eeReadAll(); //load general setup and selected model
-  doSplash();
-  checkLowEEPROM();
-  checkTHR();
-  checkSwitches();
-  checkAlarm();
-
-  while(1) {
-    perMain();
-    usleep(1000);
-  }
-  return 0;
 }
 
 Gruvin9xSim *th9xSim;
@@ -383,7 +366,6 @@ int main(int argc,char **argv)
   if(argc>=2){
     eepromFile = argv[1];
   }
-  printf("eeprom = %s\n", eepromFile);
 
   // Each FOX GUI program needs one, and only one, application object.
   // The application objects coordinates some common stuff shared between
@@ -417,10 +399,8 @@ int main(int argc,char **argv)
   th9xSim->show(); // Otherwise the main window gets centred across my two monitors, split down the middle.
 #endif
 
-  InitEepromThread();
-
-  pthread_t pid;
-  pthread_create(&pid, NULL, &main_thread, NULL);
+  StartEepromThread();
+  StartMainThread();
 
   return application.run();
 }
