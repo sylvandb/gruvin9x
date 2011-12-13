@@ -492,7 +492,11 @@ inline uint8_t keyDown()
 
 void clearKeyEvents()
 {
+#ifdef SIMU
+    while (keyDown() && main_thread_running);
+#else
     while(keyDown());  // loop until all keys are up
+#endif
     putEvent(0);
 }
 
@@ -528,7 +532,9 @@ void doSplash()
       uint16_t tgtime = get_tmr10ms() + SPLASH_TIMEOUT;  //2sec splash screen
       while(tgtime != get_tmr10ms())
       {
-#ifndef SIMU
+#ifdef SIMU
+        if (!main_thread_running) return;
+#else
         getADC_filt();
 #endif
         uint16_t tsum = 0;
@@ -587,7 +593,9 @@ void checkTHR()
   //loop until all switches are reset
   while (1)
   {
-#ifndef SIMU
+#ifdef SIMU
+      if (!main_thread_running) return;
+#else
       getADC_single();
 #endif
       int16_t v = anaIn(thrchn);
@@ -622,6 +630,10 @@ void checkSwitches()
   //loop until all switches are reset
   while (1)
   {
+#ifdef SIMU
+    if (!main_thread_running) return;
+#endif
+
     uint8_t i;
     for(i=SW_BASE; i<SW_Trainer; i++)
     {
@@ -661,6 +673,9 @@ void alert(const prog_char * s, bool defaults)
   clearKeyEvents();
   while(1)
   {
+#ifdef SIMU
+    if (!main_thread_running) return;
+#endif
     if(keyDown())   return;  //wait for key release
 
     if(getSwitch(g_eeGeneral.lightSw,0) || g_eeGeneral.lightAutoOff || defaults)
@@ -1461,6 +1476,7 @@ void perMain()
 
 #define MAX_ACT 0xffff
   static uint16_t fp_act[MAX_PHASES] = {0};
+  static uint16_t delta = 0;
   static uint8_t s_fade_flight_phases = 0;
   static uint8_t s_last_phase = 255;
   uint8_t phase = getFlightPhase();
@@ -1470,23 +1486,18 @@ void perMain()
       fp_act[phase] = MAX_ACT;
     }
     else {
-      if (g_model.phaseData[s_last_phase].fadeOut) {
-        s_fade_flight_phases |= (1<<s_last_phase);
+      uint8_t fadeTime = max(g_model.phaseData[s_last_phase].fadeOut, g_model.phaseData[phase].fadeIn);
+      if (fadeTime) {
+        s_fade_flight_phases |= (1<<s_last_phase) + (1<<phase);
+        delta = (MAX_ACT / 100) / fadeTime;
       }
       else {
         fp_act[s_last_phase] = 0;
-        s_fade_flight_phases &= ~(1<<s_last_phase);
-      }
-      if (g_model.phaseData[phase].fadeIn) {
-        s_fade_flight_phases |= (1<<phase);
-      }
-      else {
         fp_act[phase] = MAX_ACT;
-        s_fade_flight_phases &= ~(1<<phase);
+        s_fade_flight_phases &= ~((1<<s_last_phase) + (1<<phase));
       }
     }
     s_last_phase = phase;
-    // printf("s_fade_flight_phases=%d\n", s_fade_flight_phases); fflush(stdout);
   }
 
   int16_t next_chans512[NUM_CHNOUT];
@@ -1533,10 +1544,8 @@ void perMain()
 
   if (s_fade_flight_phases) {
     for (uint8_t p=0; p<MAX_PHASES; p++) {
-      // printf("f_act[%d]=%d\n", p, fp_act[p]);
       if (s_fade_flight_phases & (1<<p)) {
         if (p == phase) {
-          uint16_t delta = (MAX_ACT / 100) / g_model.phaseData[p].fadeIn;
           if (MAX_ACT - fp_act[p] > delta)
             fp_act[p] += delta;
           else {
@@ -1545,7 +1554,6 @@ void perMain()
           }
         }
         else {
-          uint16_t delta = (MAX_ACT / 100) / g_model.phaseData[p].fadeOut;
           if (fp_act[p] > delta)
             fp_act[p] -= delta;
           else {
