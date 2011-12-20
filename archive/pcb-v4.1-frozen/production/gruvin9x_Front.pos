@@ -1,4 +1,4 @@
-### Module positions - created on 17/12/2011 4:17:34 p.m. ###
+### Module positions - created on 21/12/2011 7:03:42 a.m. ###
 ### Printed by Pcbnew version pcbnew (2011-11-27 BZR 3249)-stable
 ## Unit = inches, Angle = deg.
 ## Side : Front
@@ -228,6 +228,9 @@ R113     100K                 3.8224     1.6512      90.0    Front
 R114     5K1                  3.7933     1.7370     180.0    Front
 R115     100k                 3.6469     1.7567     180.0    Front
 R116     NC                   3.5047     1.6913     270.0    Front
+U1       78L05                3.3669     1.6106       0.0    Front
+U2       78L05                6.2012     1.7173      90.0    Front
+U3       LN-6206-30           3.3701     1.8789       0.0    Front
 U4       TPS77601             1.7669     2.7346       0.0    Front
 U5       REF3012              3.3028     3.1287       0.0    Front
 X1       16MHz                5.1094     2.6035       0.0    Front
