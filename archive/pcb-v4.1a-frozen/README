@@ -1,4 +1,4 @@
-pcb-v4.1a-frozen
+2012-12-22: Folder renamed from pcb-v4.1-frozen to pcb-v4.1a-frozen
 
 This folder contains the original pcb-v4.1-frozen files, plus a nuber of miniro
 changes that were made after the 'freeze' date to correct problems pointed out
@@ -9,4 +9,6 @@ placement cooordinates and the like.
 The folder's name was changed to 4.1a as a safe-guard, just in case others has
 downloaded the original frozen folder and did not realise changes had been
 made.
+
+SEE ALSO readme.txt
 
