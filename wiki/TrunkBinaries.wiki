@@ -34,4 +34,4 @@ You may have to, "right-click / Save target/link as ..." to get these links to s
 .
 === Other Versions ===
 
-For this with v3.2 or other legacy hardware versions, you will need to compile from source code.
+For this with v3.2 or other legacy hardware versions, you will need to [CompilingFromSource compile from source code].
