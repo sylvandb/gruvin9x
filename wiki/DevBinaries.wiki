@@ -1,44 +1,12 @@
-#summary Release Candidate Binaries for version 'frisky'
+#summary Development Binaries No Longer Available
 
-= Frisky Release Candidate Binaries (.HEX files) =
+== Development Binaries No Longer Produced ==
+Since the public release of the first fully tested gruvin9x firmware was made in December, 2011, we are not longer building development binaries for direct download. This is partly to try and prevent accidents occurring from the use of incomplete, potentially buggy software and partly because we simply see no point in doing so.
 
-The next stable release of gruvin9x firmware has been dubbed, 'frisky' (though still spelled 'frsky'). It is the long awaited, stable release of our new code, which started out with the simple goal of adding Fr-Sky telemetry features, but ended up with a lot more besides.
+== Follow the Latest via Source Code ==
+We encourage those interested in following our latest developments (mostly for the v4.1 or later custom controller boards and accessories) to check out the project source code, as described at the "Source" menu link, above.
 
-*SERIOUS BUGS MAY EXIST*
+== DO NOT FLY with development code ==
+PLEASE do not fly with development code unless you truly know what you are doing and without being very careful to ground test all functions thoroughly before flight. ASSUME NOTHING -- *SAFETY FIRST*!
 
-Serious bugs can exist in this pre-release version at any time, without warning. You MUST exercise extreme caution by thoroughly testing air craft, restrained and on the ground before committing to flight. Of course, you do so entirely at your own risk.
-
-
-=== Version Information ===
-[http://gruvin9x.googlecode.com/svn/branches/frsky/svnversion.gif]
-
-== UNSTABLE Pre-Release Snapshot Binary .hex Download Links ==
-
-There are five versions of pre-compiled binary .hex files you can download for flashing your '9X without needing to compile from source. 
-
-Each version pertains to the various combinations of hardware modifications that you may or may not have performed on the target '9X radio.
-
-*DOWNLOADING*: You may need to "right-click, save target/link as ..." to save these files to local disk.
-
-=== Factory Original PC Board Based Versions ===
- * *[http://gruvin9x.googlecode.com/svn/branches/frsky/gruvin9x-stock.hex gruvin9x-stock.hex]* -- For stock hardware (no internal re-wiring) -- includes the keypad auto-repeat and bat. voltage averaging patches, nicer fonts and much more.
-
- * *[http://gruvin9x.googlecode.com/svn/branches/frsky/gruvin9x-std-speaker.hex gruvin9x-std-speaker.hex]* -- For [SpeakerReplacement speaker upgrade] only. No Fr-Sky wiring mods.
-
- * *[http://gruvin9x.googlecode.com/svn/branches/frsky/gruvin9x-frsky-nospeaker.hex gruvin9x-frsky-nospeaker.hex]* -- [FrskyInterfacing Fr-Sky telemetry] mod, but no speaker upgrade.
-
- * *[http://gruvin9x.googlecode.com/svn/branches/frsky/gruvin9x-frsky-speaker.hex gruvin9x-frsky-speaker]* -- [FrskyInterfacing Fr-Sky telemetry] and [SpeakerReplacement speaker upgrade] mods in place.
-
- NOTE: The _speaker_ versions will work on the stock radio with no speaker, giving softer, frequency variable tones through the standard piezo beeper/buzzer. You may prefer this to the otherwise (sometimes) ear-rattling, default beeps or squeals, depending on the nature of your particular radio.
-
-=EEPROM FORMAT CAN CHANGE WITHOUT NOTICE!=
-*VERY VERY IMPORTANT!* This pre-release version can change EEPROM file format at ANY time, causing you to lose ALL settings and model data and have to re-enter everything from scratch. Also, it *does NOT work with eePe* and should not ever be expected to. Instead, please take a look at the [http://companion9x.googlecode.com companio9x project].
-
-
-=== Custom PC Board Based Versions ===
- * *[http://gruvin9x.googlecode.com/svn/branches/frsky/gruvin9x.hex gruvin9x.hex]* -- *You probably _DON'T_ want this version!* -- Latest development version for custom PCB hardware. (PCB V4.1 from 2011-11-04) 
-
-
-== Change Log ==
-
-A often not updated log of the most recent as well as previous changes for the above binary versions can be found at [http://gruvin9x.googlecode.com/svn/branches/frsky/src/CHANGELOG].
+(The same advice also goes for the stable public release -- *SAFETY FIRST*. But it's especially important for development code. PLEASE be very, very careful, as we will accept no responsibility for any use of this code, what-so-ever.)
