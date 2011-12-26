@@ -1,28 +1,37 @@
 #summary Binaries for download from the trunk/stable repository
 
-= Latest Stable Pre-Compiled Binaries (version 'base') =
+= Latest Stable Pre-Compiled Binaries -- version codename 'Frisky' =
 
-The latest, stable public maintenance release of gruvin9x firmware is code-named 'base' and lives at [http://code.google.com/p/gruvin9x/source/browse/#svn%2Fbranches%2Fbase /branches/base].
+The latest, stable public maintenance release of gruvin9x firmware is code-named 'Frisky' and lives at [http://code.google.com/p/gruvin9x/source/browse/#svn%2Fbranches%2Ffrsky /branches/frsky].
 
-NOTE: As of this writing, the long awaited 'frsky' version has still not been tested stable enough for public release. The 'base' version is quite old and does not include any Fr-Sky telemetry support. However, it known to be stable.
+There are four versions of binary (.hex) files you can download for flashing your '9X, without needing to compile from source.
 
-There are four versions of binary .hex files you can download for flashing your '9X, without needing to compile from source.
-
-These versions carry the latest stable bug-fixes and new features. Each file relates to one of the four different hardware modification combinations. Download the one that matches what you've done to your 9X. :D
+These versions carry the latest bug-fixes and stable new features. Each file relates to one of the four most common hardware modification configurations -- including the stock standard, unmodified radio.
 
 === Version Info for Binary Files Below ... ===
-[http://gruvin9x.googlecode.com/svn/branches/base/binaries/svnversion.gif]<br/>
+[http://gruvin9x.googlecode.com/svn/branches/frsky/svnversion.gif]<br/>
 
 == Binary .hex Download Links ==
+You may have to, "right-click / Save target/link as ..." to get these links to save as local files.
 
-NOTE: You may have to, "right-click / Save target/link as ..." to get these links to save as local files.
+=== Custom  Controller Board v4.1 ===
+ * *[http://gruvin9x.googlecode.com/svn/branches/frsky/gruvin9x.hex gruvin9x.hex]* -- V4.1 Custom PCB -- current stable release.
 
- * *[http://gruvin9x.googlecode.com/svn/branches/base/binaries/gruvin9x-stock.hex gruvin9x-stock.hex]* -- For stock hardware (no internal re-wiring) -- includes the keypad auto-repeat and bat. voltage averaging patches, nicer fonts and much more.
+.
+=== Unmodified '9X Radio Version ===
 
- * *[http://gruvin9x.googlecode.com/svn/branches/base/binaries/gruvin9x-std-speaker.hex gruvin9x-std-speaker.hex]* -- For [SpeakerReplacement speaker upgrade] only. No Fr-Sky wiring mods.
+ * *[http://gruvin9x.googlecode.com/svn/branches/frsky/gruvin9x-stock.hex gruvin9x-stock.hex]* -- For stock hardware with no internal re-wiring.
 
- * *[http://gruvin9x.googlecode.com/svn/branches/base/binaries/gruvin9x-frsky-nospeaker.hex gruvin9x-frsky-nospeaker.hex]* -- [FrskyInterfacing Fr-Sky telemetry] mod, but no speaker upgrade.
+.
+=== Modified (Stock) '9X Radio Versions ===
 
- * *[http://gruvin9x.googlecode.com/svn/branches/base/binaries/gruvin9x-frsky-speaker.hex gruvin9x-frsky-speaker.hex]* -- [FrskyInterfacing Fr-Sky telemetry] and [SpeakerReplacement speaker upgrade] mods in place.
+ * *[http://gruvin9x.googlecode.com/svn/branches/frsky/gruvin9x-std-speaker.hex gruvin9x-std-speaker.hex]* -- For [SpeakerReplacement speaker upgrade] only. No other wiring modification. (This version also works with the stock beeper, for softer sounding tones.)
 
- * [http://gruvin9x.googlecode.com/svn/branches/base/binaries/gruvin9x.hex gruvin9x.hex] -- *You probably _DON'T_ want this version!* Fully 'Gruvinvized' with [FrskyInterfacing Fr-Sky], [SpeakerReplacement speaker upgrade] and other 'random' gruvin9x features, such as moving LH_Trim_Up/Dwn away from USART1 to free same for secondary serial communications. (The latter mod is still experimental and no documentation exists for it.) 
+ * *[http://gruvin9x.googlecode.com/svn/branches/frsky/gruvin9x-frsky-nospeaker.hex gruvin9x-frsky-nospeaker.hex]* -- [FrskyInterfacing Fr-Sky telemetry] mod, but no speaker upgrade.
+
+ * *[http://gruvin9x.googlecode.com/svn/branches/frsky/gruvin9x-frsky-speaker.hex gruvin9x-frsky-speaker.hex]* -- [FrskyInterfacing Fr-Sky telemetry] and [SpeakerReplacement speaker upgrade] mods in place.
+
+.
+=== Other Versions ===
+
+For this with v3.2 or other legacy hardware versions, you will need to compile from source code.
