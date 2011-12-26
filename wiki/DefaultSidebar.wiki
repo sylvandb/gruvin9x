@@ -4,7 +4,7 @@
  * [Features G9X Features]
  * [Features Screen Shots]
  * [ReProgram Re-progamming Your Radio]
-  * [TrunkBinaries Latest Stable Binaries]
+  * [LatestRelease Latest Stable Binaries]
   * [DevBinaries Development Binaries]
   * [FlashGuide Flashing Binary Versions]
   * [CompilingFromSource Compiling from Source]
