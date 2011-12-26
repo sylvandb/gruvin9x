@@ -63,6 +63,12 @@ Version 3.2 used the same ATmega2561 chip, which was an upgrade over the origina
 
   Note: Video is X-Y mirrored, for some strange reason.
 
+  - - - -
+
+  And here I am again, flipped 'round the right way this time, showing the v4.1 board ...
+
+  <wiki:video url=http://www.youtube.com/watch?v=msiBt5J-OHc/>
+
 
 == Progress ==
 === The V4.1 Board -- Now Available ===
