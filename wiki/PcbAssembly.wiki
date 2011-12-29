@@ -14,17 +14,17 @@ The V4.1 PCB is now available for purchase at [http://gruvin9x.com].
 
 In short, DigiKey or Farnell (element14.com, outside the UK). If you're in the UK, Farnell is probably the cheaper choice (free shipping for online orders.) Everywhere else will probably have better luck with DigiKey.
 
-For parts details, please see the three BOM (bill of materials) files at [http://code.google.com/p/gruvin9x/source/browse/#svn%2Farchive%2Fpcb-v4.1a-frozen archive/pcb-v4.1a-frozen]. (If you're using just a web browser, you'll need to use the "View raw file" link, found at the lower right of the page, after clicking a BOM file link, to download the Excel spreadsheet file.)
+For parts details, please see the three BOM (bill of materials) files at [http://code.google.com/p/gruvin9x/source/browse/#svn%2Farchive%2Fpcb-v4.1a-frozen/assembly archive/pcb-v4.1a-frozen/assembly]. (If you're using just a web browser, you'll need to use the "View raw file" link, found at the lower right of the page, after clicking a BOM file link, to download the Excel spreadsheet file.)
 
 The BOM files are Excel spreadsheet format. You can view them in Open Office or using Google Docs.
 
-Another way to get the BOM files -- along with a lot of other stuff -- would be to do an svn check-out of the entire pcb-v4.1a-frozen folder, using the command (assuming you have Subversion installed) ...
+Another way to get the BOM files would be to do an svn check-out of the `pcb-v4.1a-frozen/assembly` folder, using the command (assuming you have Subversion installed) ...
 
 {{{
-svn co https://gruvin9x.googlecode.com/svn/archive/pcb-v4.1a-frozen .
+svn co https://gruvin9x.googlecode.com/svn/archive/pcb-v4.1a-frozen/assembly g9x-assembly
 }}}
 
-... which will create a local folder named `pcb-v4.1a-frozen`.
+... which will create a local folder named `g9x-assembly`.
 
 == Construction Advice ==
 
