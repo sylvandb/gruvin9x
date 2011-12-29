@@ -30,3 +30,15 @@ Be sure to watch these two videos, showing how to almost effortlessly solder tin
 There's also a very nicely made [http://www.youtube.com/watch?v=3NN7UGWYmBY video by Curious Inventor] over at YouTube. The techniques are roughly the same. But some additional options and informational gems are offered.
 
 There is a silk-screen PDF for the main V4.1 board, to use as a parts placement guide here ... [http://gruvin9x.googlecode.com/svn/archive/pcb-v4.1a-frozen/assembly/gruvin9x-SilkS_Front.pdf gruvin9x-SilkS_Front.pdf]
+
+
+Here's a reference photo of Gruvin's 2nd build. (Note that some of the larger capacitors here (22u, 47u) are ceramic, whereas the BOM parts list may call for tantalum. Either will be OK.)
+
+
+<a href="http://gruvin9x.googlecode.com/svn/wiki/PcbAssembly.attach/v41-reference.jpg">http://gruvin9x.googlecode.com/svn/wiki/PcbAssembly.attach/v41-reference-small.jpg</a>
+
+Click the above image for full-size view.
+
+----
+
+Old v4.0 assembly notes can be found [V40Assembly here].
