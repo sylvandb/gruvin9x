@@ -18,6 +18,13 @@ For parts details, please see the three BOM (bill of materials) files at [http:/
 
 The BOM files are Excel spreadsheet format. You can view them in Open Office or using Google Docs.
 
+Another way to get the BOM files -- along with a lot of other stuff -- would be to do an svn check-out of the entire pcb-v4.1a-frozen folder, using the command (assuming you have Subversion installed) ...
+
+{{{
+svn co https://gruvin9x.googlecode.com/svn/archive/pcb-v4.1a-frozen .
+}}}
+
+... which will create a local folder named `pcb-v4.1a-frozen`.
 
 == Construction Advice ==
 
@@ -29,6 +36,7 @@ Be sure to watch these two videos, showing how to almost effortlessly solder tin
 
 There's also a very nicely made [http://www.youtube.com/watch?v=3NN7UGWYmBY video by Curious Inventor] over at YouTube. The techniques are roughly the same. But some additional options and informational gems are offered.
 
+=== Parts Placement ===
 There is a silk-screen PDF for the main V4.1 board, to use as a parts placement guide here ... [http://gruvin9x.googlecode.com/svn/archive/pcb-v4.1a-frozen/assembly/gruvin9x-SilkS_Front.pdf gruvin9x-SilkS_Front.pdf]
 
 
