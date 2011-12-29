@@ -10,6 +10,15 @@ This page has been thrown together quickly to help you get started. The informat
 
 The V4.1 PCB is now available for purchase at [http://gruvin9x.com].
 
+== Where to get the parts ==
+
+In short, DigiKey or Farnell (element14.com, outside the UK). If you're in the UK, Farnell is probably the cheaper choice (free shipping for online orders.) Everywhere else will probably have better luck with DigiKey.
+
+For parts details, please see the three BOM (bill of materials) files at [http://code.google.com/p/gruvin9x/source/browse/#svn%2Farchive%2Fpcb-v4.1a-frozen archive/pcb-v4.1a-frozen]. (If you're using just a web browser, you'll need to use the "View raw file" link, found at the lower right of the page, after clicking a BOM file link, to download the Excel spreadsheet file.)
+
+The BOM files are Excel spreadsheet format. You can view them in Open Office or using Google Docs.
+
+
 == Construction Advice ==
 
 Be sure to watch these two videos, showing how to almost effortlessly solder tiny SMD parts ...
@@ -20,51 +29,4 @@ Be sure to watch these two videos, showing how to almost effortlessly solder tin
 
 There's also a very nicely made [http://www.youtube.com/watch?v=3NN7UGWYmBY video by Curious Inventor] over at YouTube. The techniques are roughly the same. But some additional options and informational gems are offered.
 
-
-There is a silk-screen PDF for the main V4.1 board, to use as a parts placement guide here ... [http://gruvin9x.googlecode.com/svn/archive/pcb-v4.1-frozen/assembly/gruvin9x-SilkS_Front.pdf gruvin9x-SilkS_Front.pdf]
-
-The SDCARD board has not changed sinve V4.0. Please see below.
-
-
-== Previous v4.0 Assembly Information ==
-
-With more people beginning to show an interest in assembling (soldering) their own gruvin9x printed circuit boards, I thought we'd start a wiki page on the topic.
-
-Eventually, this page should contain detailed instructions of where to buy the parts, get the blank PCB board made or purchased ready-made and other relevant information. For now though, ...
-
-Cam (in the UK) has graciously made some videos of his soldering techniques, using a standard iron, which I will here and now formally endorse as the official, 'gruvin9x way'. :-P
-
-Since a picture tells a thousand words and a video streams pictures at 15+ frames per second, here are the links to Cam's two videos ...
-
-[http://www.youtube.com/watch?v=nMZq0CZ67WY Soldering SMD 0603 sized parts]
-
-[http://www.youtube.com/watch?v=r69WvRybgCU Soldering the TQFP 0.5mm pitch, 100-pin ATmega2560 chip]
-
-Thanks Cam!
-
-=== More to come, as time allows ==
-
-There's silk-screen PDFs for the main board and the (gruvin version) sdcard board in {{{/trunk/pcbv4.0-frozen/assembly}}} to help with puting the right parts in the right place.
-
- * [http://gruvin9x.googlecode.com/svn/archive/pcb-v4.0-frozen/assembly/gruvin9x-SilkS_Front.pdf gruvin9x-SilkS_Front.pdf]
-
- * [http://gruvin9x.googlecode.com/svn/archive/pcb-v4.0-frozen/assembly/sdcard-SilkS_Front.pdf sdcard-SilkS_Front.pdf]
-
-= Patching PCB v4.0 =
-
-For those who have jumped ahead and got themselves one of the few v4.0 boards we had available, here's the patch work needed (as at 2011-09-21) to make your board v4.1 design compatible -- and in fact required to work with the latest (/trunk) code.
-
-*NOTE* that the BC847 transistor in place of D2 is mounted *UPSIDE-DOWN*
-
-[http://gruvin9x.googlecode.com/svn/wiki/PcbAssembly.attach/v4.0_fixes_detail.jpg]<br/>
--- Image provided by th9xer. Thanks Cam.
-
-There's another patch required for PPM_IN (trainer port input). I'm working on a better photo. But for now, this is the best focus I can manage, sorry ...
-
-[http://gruvin9x.googlecode.com/svn/wiki/PcbAssembly.attach/ppm_patch.jpg]<br/>
-
-== Second Version IDL2 / SD_CS Patch Required ==
-
-Here's a photo showing the latest (revised) IDL2 mod, (See issue 48.)
-
-[http://gruvin9x.googlecode.com/svn/wiki/PcbAssembly.attach/v4.0_IDL2_mod.jpg]
+There is a silk-screen PDF for the main V4.1 board, to use as a parts placement guide here ... [http://gruvin9x.googlecode.com/svn/archive/pcb-v4.1a-frozen/assembly/gruvin9x-SilkS_Front.pdf gruvin9x-SilkS_Front.pdf]
