@@ -39,6 +39,13 @@ Here's a reference photo of Gruvin's 2nd build. (Note that some of the larger ca
 
 Click the above image for full-size view.
 
+
+=== LCD Padding Foam ===
+
+No one seems to know where to get the foam used to pad between the PCB and the LCD display. However, the best solution I know of is to simply buy the HobbyKing.com [http://www.hobbyking.com/hobbyking/store/uh_viewItem.asp?idProduct=16720 LCD back-light kits] and use the appropriately thinner foam pad that comes with it. (Also available at HobbyKing in white and green light colouring.)
+
+By the way, that is also the LED back-light intended for the upper right connector (K5) on the G9X board, with J1 pads 1&2 bridged, as in the above photo.
+
 ----
 
 Old v4.0 assembly notes can be found [V40Assembly here].
