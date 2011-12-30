@@ -52,7 +52,7 @@ Click the above image for full-size view.
 
 No one seems to know where to get the foam used to pad between the PCB and the LCD display. However, the best solution I know of is to simply buy the HobbyKing.com [http://www.hobbyking.com/hobbyking/store/uh_viewItem.asp?idProduct=16720 LCD back-light kits] and use the appropriately thinner foam pad that comes with it. (Also available at HobbyKing in white and green coloured lighting.)
 
-By the way, that is also the LED back-light intended for the upper right connector (K5) on the G9X board, with J1 pads 1&2 bridged, as in the above photo.
+By the way, that is also the LED back-light intended for the upper right connector (K5) on the G9X board, with J1 pads 1&2 bridged, as in the above photo. BE SURE TO USE THE RIGHT-HAND TWO PINS of K5 for the LED back-light. (The left pin is full-current, 5 Volts.)
 
 ----
 
