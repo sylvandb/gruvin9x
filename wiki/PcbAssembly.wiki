@@ -28,7 +28,17 @@ svn co https://gruvin9x.googlecode.com/svn/archive/pcb-v4.1a-frozen/assembly g9x
 
 == Construction Advice ==
 
-Be sure to watch these two videos, showing how to almost effortlessly solder tiny SMD parts ...
+*YOU _can_ solder 0.5mm pitch SMD parts. It's amazingly easy, once you know how!*
+
+These parts were hand soldered in just minutes using an average soldering iron, with a typical hobbyist size tip, ordinary 0.7mm solder wire, no special flux and finally, some de-soldering braid. There's practically no challenge at all in reality, with similar results being easily repeated, time after time. You just need to know how! ...
+
+[http://gruvin9x.googlecode.com/svn/wiki/PcbAssembly.attach/smd-parts-macro.jpg]
+
+(The board was washed with eco-friendly PC board cleaning solution (available from most electronics supply stores) to remove all flux residues. HINT: Don't judge your work until the board has been cleaned!)
+
+
+  
+*Be sure to watch these two videos, showing how to almost effortlessly solder tiny SMD parts ...*
 
 [http://www.youtube.com/watch?v=nMZq0CZ67WY Soldering SMD 0603 sized parts]
 
