@@ -64,6 +64,22 @@ No one seems to know where to get the foam used to pad between the PCB and the L
 
 By the way, that is also the LED back-light intended for the upper right connector (K5) on the G9X board, with J1 pads 1&2 bridged, as in the above photo. BE SURE TO USE THE RIGHT-HAND TWO PINS of K5 for the LED back-light. (The left pin is full-current, 5 Volts.)
 
+
+== AVR Fuse Bits ==
+
+See fuses.txt in the source folder for further details. Briefly, ...
+
+Preferred values for ATmega2560 in this project are:
+ lfuse = 0xd7
+
+ hfuse = 0x11
+
+ efuse = 0xfc
+
+There's a nice [http://www.frank-zhao.com/fusecalc/fusecalc.php?chip=atmega2560&LOW=D7&HIGH=11&EXTENDED=FC&LOCKBIT=FF online JavaScript AVR fuse calculator], which you could use to see details or make any custom changes. (<-- that link loads with the correct fuse bits already pre-selected.)
+
+BE CAREFUL not to select the wrong type of oscillator. You could end up 'bricking' the chip, which requires an external oscillator to be connected to get back to normal operation.
+
 ----
 
 Old v4.0 assembly notes can be found [V40Assembly here].
