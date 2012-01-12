@@ -14,9 +14,9 @@ The initial main focus was around adding and enhancing Fr-Sky telemetry support 
 
 Compatibility with the stock V2 '9X transmitter will be retained as far as possible. So fear not. There will "always" be a gruvin9x version available to run on the stock unit. There will also be different binary versions available to support the most common manual circuit hacks for telemetry (and other things) that do _not_ require the [PCB new PCB].
 
-Efforts will be made to keep up with new features and bug fixes from the ER9X project. Please see or use the [http://code.google.com/p/gruvin9x/issues/list Issue tracker] (link on menu above) to request features or bug-fixes not their yet but of interest to you.
+The first true stable, public release of gruvin9x was made in January, 2012. The release is code named, 'Frisky', is community verified 'stable' and thus believed to be essentially 'bug free'. (I hope I haven't jinxed anything by typing that! :-P)
 
-On the other hand, if you intend sticking only with the stock hardware indefinitely -- leaving the screws in the case and not altering circuitry -- then you may be best advised to follow either the TH9X or ER9X projects, since those respective crews continue working hard to bring all kinds of neat features and improvements to their code.
+Work continues for the next version, being mostly focussed on the new V4 custom controller board, though with improvements and added features also slated for the stock radio controller board.
 
 == Beginnings ===
 The project started off with a few relatively minor tweaks to ER9X, as it was back at ER9X revision 262.
