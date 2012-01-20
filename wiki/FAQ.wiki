@@ -1,0 +1,32 @@
+#summary Frequently Asked Questions
+
+= FAQ =
+<b>F</b>requently <b>A</b>sked <b>Q</b>uestions
+
+----
+
+*Q.* How do I delete a DR/EXPO, MIXER line or model?
+
+*A.* Click `[MENU]` once on the line/model you want to delete, so that is becomes 'selected', as if you were going to copy or move it. Then, while it is still selected, press `[EXIT LONG]`. 
+
+This same procedure should work for deleting lines in all similar menus. In the models menu, you get an 'Are you sure?' type pop-up, for extra safety.
+
+NOTE: You cannot delete the currently active model. (It's a safety feature.)
+
+----
+
+*Q.* Is there a support forum for gruvin9x?
+
+*A.* No and there never will be. But there is a [http://groups.google.com/group/gruvin9x-discuss gruvin9x email list] hosted by Google Groups.
+
+The reason for no forum is that we intend to create a structured,  online help section using the project wiki -- as well as a PDF user manual, which we believe will be hugely more efficient for the intended purpose.
+
+----
+
+*Q.* Where is the updated PDF user manual for gruvin9x?
+
+*A.* It's still under development. No time frame for a first edition is yet known. 
+
+In the mean time, please refer to this FAQ or consult the members of the gruvin9x Google discussion group (email <i>gruvin9x-discuss</i> `[at]` <i>google</i>`[delete_no_spam]`<i>groups.com</i>) for answers to any mysteries.
+
+----
