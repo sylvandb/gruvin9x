@@ -1,6 +1,6 @@
 #summary Frequently Asked Questions
 
-= FAQ =
+= G9X FAQ =
 <b>F</b>requently <b>A</b>sked <b>Q</b>uestions
 
 ----
