@@ -5,14 +5,14 @@
 ----
 *Q*. *HOw do I connect an LED back-light to connector K5?*
 
-*A*. *VERY CAREFULLY* Seriously. The centre pin is GND and the RIGHT-hand pin (labelled '1') is +ve output power for an LED back-light. It includes a 200 ohm series current limiting resistor, which gives a comfortable and practical brightness on the HobbyKing LED abck-light module. 
+*A*. *VERY CAREFULLY* Seriously. The centre pin is GND and the RIGHT-hand pin (labelled '1') is +ve output power for an LED back-light. It includes a 200 ohm series current limiting resistor, which gives a comfortable and practical brightness on the HobbyKing LED back-light module. 
 
-The left hand pin (3) is a 5V switched (same switch as LED BL) output option, which if connected to an LED back-light without a series current limiting resistor, would almost certainly blow it. This pins exists an a software switchable 5V supply, with its own regulator. At the time of this writing, there is no code written to utilise it. (It came about when we were using EL back-lights.)
+If you need a different brightness, you could use your own series current limiting resistor off the left hand pin (3), which is a switched 5V output, utilising its own regulator and on-board safety fuse. It can be used to drive any load, up to a maximum of 100mA for short bursts or about 30mA continuous. (The 5V regulator is usually a 100mA device but with no heat sink.)
 
 ----
-*Q*. *How should I set jumpers J1 and J4?*
+*Q*. *How should I set jumpers J1 (back-light control) and J4 (Vibrator control)?*
 
 *A*. By default, pins 1 & 2 are shorted together on both J1 and J4. For J1, that's the left hand two pads. For J4, it's the upper two pads.
 
-You may need to refer to the circuit schematic to learn what the other positions are good for.
+You may want to refer to the circuit schematic to learn what the other positions might be good for.
 ----
