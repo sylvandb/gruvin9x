@@ -3,7 +3,7 @@
 <b>F</b>requently <b>A</b>sked <b>Q</b>uestions
 
 ----
-*Q*. *HOw do I connect an LED back-light to connector K5?*
+*Q*. *How do I connect an LED back-light to connector K5?*
 
 *A*. *VERY CAREFULLY* Seriously. The centre pin is GND and the RIGHT-hand pin (labelled '1') is +ve output power for an LED back-light. It includes a 200 ohm series current limiting resistor, which gives a comfortable and practical brightness on the HobbyKing LED back-light module. 
 
@@ -15,4 +15,20 @@ If you need a different brightness, you could use your own series current limiti
 *A*. By default, pins 1 & 2 are shorted together on both J1 and J4. For J1, that's the left hand two pads. For J4, it's the upper two pads.
 
 You may want to refer to the circuit schematic to learn what the other positions might be good for.
+
+----
+
+*Q*. *How do I set the v4 board's ATmega2560 MCU option fuses, before the first Flash programming?*
+
+*A*. If you have purchased a ready-made board, the fuses will already be set correctly. There should be no need to set them again.
+
+If you have built your own board and assuming you have the cross-compiler environment and project source code installed, along with a `Makefile` set up for your particular AVRDUDE programming device, then you can execute the following command from the `src/` directory ...
+
+  `$ make wfuses`
+
+
+If you wish to install a pre-compiled .HEX binary firmware version, rather than building from source, you can use AVRDUDE manually to set  MCU fuses, in a similar way to the following ...
+
+  `$ avrdude -c usbasp -P usb -p atmega2560 -U hfuse:w:0x11:m -U lfuse:w:0xd7:m -U efuse:w:0xfc:m`
+
 ----
