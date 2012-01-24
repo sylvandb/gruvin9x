@@ -17,6 +17,7 @@
   * [TurnigyV2 9X Reference Data]
    * [ReferenceImages Reference Images]
    * [SchematicV2 V2 Circuit Schematic]
+  * [V41FAQ v4.1 Board FAQ]
  * [KitAvailably Kit Availability]
  * [Telemetry]
   * [FrSky Fr-Sky Support]
