@@ -3,7 +3,7 @@
 <img src="http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/pcbv4_photo.jpg" hspace="10" width="320" align="right">
 = Custom Main Board Development =
 
-Finally -- PCB V4.1 boards are now in stock and available for purchase at [http://gruvin9x.com/shop].
+Finally -- blank v4.1 boards are now in stock and available for purchase at [http://gruvin9x.com/shop]. There also a version with the MCU and LCD ZIF socket pre-soldered, while stocks last.
 
 _Photo to the right is the v4.0 prototype (R.I.P). An image of the V4.1 board can be found below, in the 'Progress' section._
 
