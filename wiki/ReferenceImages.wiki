@@ -8,7 +8,24 @@ Here are some annotated photos of various '9X hardware components to assist with
 Note: Some of the images are fairly high resolution on purpose.
 
 == LCD Screen ==
-I do not know the controller chip for the LCD screen off the top of my head. There may be a comment in the source code and/or in the various forums/discussion groups.
+We believe the following are the main specifications of this display ...
+ * Dimensions: 76.9x x 47.85mm (roughly 3" x 1.9") -- as measured. Manufacturer's dimensions probably 77.0 x 48mm.
+ * View Area Size: 66.52mm x 33.24mm (as far as we can tell)
+ * Front Polariser: Transmissive (Adhesive)
+ * Back Polariser: Transflective (Adhesive)
+ * Display Mode: FSTN
+ * Viewing Angle: 90-degrees (6:00 o'clock)
+ * Controller IC: *ST7565P* (very common) -- "chip on glass" version (very clever!)
+ * Operating Voltage: 3.3V (not 3.0V)
+ * Connector: COG+FPC (30-pin)
+ * Manufacturer: Unknown
+ * *Replacement part availability* ...
+  * [http://www.r2hobbies.com/eng/proddetail.php?prod=rcps2845001 R2hobbies Eurgle ... LCD monitor].
+  * Still looking for other sources for cheaper shipping outside USA.
+
+A similar, but not quite exact (it's 3.0V) display datasheet can be found [http://www.hwdisplay.com/admin/products/up_img/20064271359888913.pdf here].
+
+- - -
 
 I've not personally owned a V1 '9X, but apparently the V2 changed from a 5V LCD screen to a 3.3V version. An additional 3.3V regulator and a bunch of voltage-divider resistors are used to interface this to the 5V ATmega64A MCU.
 
@@ -21,6 +38,7 @@ See the PCB reference images for approx. dimensions. (Ignore the strange looking
 
 <img src="http://gruvin9x.googlecode.com/svn/wiki/ReferenceImages.attach/connector-ref2.jpg" width="300">
 
+Japanese "JST" brand -- 2mm pitch (there's a larger version as well.) Quite common.
 
 == Inside ==
 
