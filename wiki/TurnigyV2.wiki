@@ -8,7 +8,7 @@ _Also marketed under brand names: Eurgle, iMax, FlySky and others_
 The author purchased his '9X radio set from [http://hobbyking.com HobbyKing.com], where they sell it under the brand name 'Turnigy'.
 
 == Reference Images == 
-Some [ReferenceImages reference images] of the internals of the '9X hardware are posted [ReferenceImages here] for convenient reference. (It saves opening up the case every time we need to check some minor detail.)
+Some [ReferenceImages reference images] of the internals of the '9X hardware (including some detail about the LCD display) are posted [ReferenceImages here] for convenient reference. (It saves opening up the case every time we need to check some minor detail.)
 
 [http://code.google.com/p/gruvin9x/wiki/ReferenceImages http://gruvin9x.googlecode.com/svn/wiki/TurnigyV2.attach/refimages_thm.jpg]
 ----
