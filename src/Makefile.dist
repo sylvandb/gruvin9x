@@ -50,12 +50,30 @@
 
 #----------- BUILD OPTIONS ---------------------------
 
-#gruvin: PCB version -- OVERRIDES the following settings if not STD
-# Values: STD, V3, V4
+#gruvin: PCB version. Values: STD, V3, V4
 PCB = V4
-#NOTE!: V4 adds to V3, such that both PCBV3 and PCBV4 get defined
+#NOTE!: V4 adds to V3, such that both PCBV3 and PCBV4 get defined. This is to
+#       keep backward compatibilty with the v3.2 board.
 
-# Following options for PCB=STD only (ignored otherwise) ...
+#####################################
+# GLOBAL OPTIONS (all PCB versions) #
+#####################################
+
+# Decimals display in the main view (PPM calibration, 
+# Values = YES, NO
+DECIMALS = NO
+
+# TRANSLATIONS from previous EEPROM formats 
+# Values = YES, NO
+TRANSLATIONS = YES
+
+# DISPLAY_USER_DATA to display on screen data from FrSky module (testing/demo purpose)
+# Values = YES, NO
+DISPLAY_USER_DATA = NO
+
+##############################################################
+# Following options for PCB=STD only (ignored otherwise) ... #
+##############################################################
 
 # Enable JETI-Telemetry or FrSky Telemetry reception on UART0
 # For this option you need to modify your hardware!
@@ -83,18 +101,6 @@ USART1 = STD
 # gruvin: PCM-in circuit mod for JR/Spektrum (and others) compatability
 # Values = STD, MOD1
 PPMIN =  STD
-
-# Decimals display in the main view (PPM calibration, 
-# Values = YES, NO
-DECIMALS = NO
-
-# TRANSLATIONS from previous EEPROM formats 
-# Values = YES, NO
-TRANSLATIONS = YES
-
-# DISPLAY_USER_DATA to display on screen data from FrSky module (testing/demo purpose)
-# Values = YES, NO
-DISPLAY_USER_DATA = NO
 
 #------- END BUILD OPTIONS ---------------------------
 
