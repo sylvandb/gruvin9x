@@ -32,3 +32,32 @@ If you wish to install a pre-compiled .HEX binary firmware version, rather than 
   `$ avrdude -c usbasp -P usb -p atmega2560 -U hfuse:w:0x11:m -U lfuse:w:0xd7:m -U efuse:w:0xfc:m`
 
 ----
+
+*Q*. *How are the rotary encoded supposed to be wired?*
+
+*A*. Viewed from the back of the encoder, the wires going to controller board pin number 1, 2, 3 and 4 respectively should look like this ...
+
+{{{
+
+  3   2
+  | | |
+     \
+  |   |
+  4   1
+}}}
+
+... where the upper-middle terminal is connected to the lower right terminal, as shown. (This is the GND or 0V wire.)
+
+This wiring will make it so that pushing the top of the encoder knob away from you will increase its value -- the same both left and right encoders. If you prefer to have the encoders operate the other way around, then swap wires 2 & 3 -- but I suggest wiring as follows, to keep the cable flat, with no twists ...
+
+{{{
+
+  2   3
+  | | |
+   /
+  |   |
+  1   4
+}}}
+
+
+----
