@@ -29,6 +29,8 @@ The reason for no forum is that we intend to create a structured,  online help s
 
 In the mean time, please refer to this FAQ or consult the members of the gruvin9x Google discussion group (email <i>gruvin9x-discuss</i> `[at]` <i>google</i>`[delete_no_spam]`<i>groups.com</i>) for answers to any mysteries.
 
+As a filler or for different wording on the same topic of how the multiplexing mixer stuff works you could refer to [http://www.parkflyers.org.nz/modules/newbb/viewtopic.php?post_id=48056#forumpost48056 this forum post] (by Gruvin). Skip past the heli-setup part.
+
 ----
 
 *Q.* *How to use the Telemetry A1/2. It's Confusing!*
