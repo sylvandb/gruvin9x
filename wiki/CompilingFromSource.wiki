@@ -27,22 +27,28 @@ cp Makefile.dist Makefile
 To build the correct version of gruvin9x to work on an not-modified, factory standard '9X, use ...
 
 {{{
-make PCB=STD
+make clean; make PCB=STD
 }}}
 
 or, if you want variable tone frequency beeps etc., this will also work without installing a speaker ...
 
 {{{
-make PCB=STD BEEPER-SPEAKER
+make clean; make PCB=STD BEEPER-SPEAKER
 }}}
 
+
+To build for the v4.1 custom controller board (with all default feature options) ...
+
+{{{
+make clean; make PCB=V4
+}}}
 
 Running make with no parameters is not really encouraged. Doing so will build the project in such a way as matches the latest development controller board and Gruvin's default options.
 
 To build gruvin9x for a modified stock controller board, with the [TelemetryMod telemetry] and [SpeakerReplacement speaker] mods enabled ...
 
 {{{
-make PCB=STD EXT=FRSKY BEEPER=SPEAKER
+make clean; make PCB=STD EXT=FRSKY BEEPER=SPEAKER
 }}}
 
 Please see the comments throughout `Makefile.dist` itself or the [MakeOptions Make Options] wiki page for more detail. 
