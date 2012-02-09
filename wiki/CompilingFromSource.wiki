@@ -4,11 +4,6 @@
 = Compiling gruvin9x from Source =
 *NOTE:* Intended for Mac OS X audiences. Details for Windows (and mention of Linux) can be found in the original TH/ER9X project document [http://gruvin9x.googlecode.com/svn/trunk/doc/Flashing%20the%209x.pdf Flashing the 9x.pdf].
 
-*ER9X.C/H FILENAME CHANGE NOTICE* -- As of gruvin9x revision 179, all occurrences or 'er9x' have been changed to 'gruvin9x'. I had planned to leave er9x in place, as I figured it did no harm. But things started getting too confusing when switching between versions. I ended up accidentally editing the wrong file in the wrong directory. So it is done. 
-
-=== IMPORTANT: Makefile Changes ===
-The addition of a few hardware mods and the authors default preferences have resulted in a number of changes to the TH/ER9X Makefile. In brief, running `make` with no arguments builds an gruvin9x.hex file containing ALL of Gruvin's default features -- Fr-Sky, Speaker upgrade, key delay, etc. But each of these options _can_ be turned off individually. Please see the [MakeOptions Make Options] wiki page for details. 
-
 == Downloading the gruvin9x Source Code ==
 
 The gruvin9x project is fully version-tracked using Subversion, or `svn`. There are various way s of getting Subversion installed on your Mac, but in the author's opinion, the best way for a OS X based code developer is to simply install Apple's Xcode AKA Apple Developer Tools, with the Unix Dev option ticked. Xcode comes free with each version of OS X on the installation DVD. Subversion will be installed as part of all that. 
@@ -23,19 +18,34 @@ This will create a folder named `gruvin9x` in the folder you were in when you ra
 
 To build the firmware code ready for programming (having first installed [http://www.obdev.at/products/crosspack/ CrossPack] for that purpose), change to the `gruvin9x/src/` directory and execute `make`. Briefly ...
 
-As of revision 46, to build the best version of gruvin9x to work on an un-modified, factory standard '9X, use ...
+Our default Makefile is supplied as Makefile.dist. So you should initially copy that to Makefile ...
 
 {{{
-make EXT=STD BEEPER=BUZZER
+cp Makefile.dist Makefile
 }}}
 
-To build gruvin9x with the gruvin9x flavour [TelemetryMod telemetry] and [SpeakerReplacement speaker] mods enabled, simply ...
+To build the correct version of gruvin9x to work on an not-modified, factory standard '9X, use ...
 
 {{{
-make
+make PCB=STD
 }}}
 
-Please see the [MakeOptions Make Options] wiki page for more options. 
+or, if you want variable tone frequency beeps etc., this will also work without installing a speaker ...
+
+{{{
+make PCB=STD BEEPER-SPEAKER
+}}}
+
+
+Running make with no parameters is not really encouraged. Doing so will build the project in such a way as matches the latest development controller board and Gruvin's default options.
+
+To build gruvin9x for a modified stock controller board, with the [TelemetryMod telemetry] and [SpeakerReplacement speaker] mods enabled ...
+
+{{{
+make PCB=STD EXT=FRSKY BEEPER=SPEAKER
+}}}
+
+Please see the comments throughout `Makefile.dist` itself or the [MakeOptions Make Options] wiki page for more detail. 
 
 == Flashing the 9X Using Make ==
 
