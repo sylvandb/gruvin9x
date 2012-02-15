@@ -1,6 +1,24 @@
 This PCB is a rework of Bryan's V3.0 PCB to use the 100pin ATMega 2560. It was primarily done to enable the 
 use of JTAG debugging and also to free up some pins for future fun.
 
+=============================
+= Differences V4.1 to V4.1a =
+=============================
+
+*** No copper or schematic changes at all ***
+
+This folder contains the original pcb-v4.1-frozen files, plus the minor corrections that 
+were made after the original 'freeze' date. This was all due to mistakes spotted by the assembly factory.
+
+The folder's name was changed to 4.1a as a safe-guard, just in case others had downloaded the original 
+frozen folder and did not realise changes had been made.
+
+. Switches moved to the correct side of the board. 
+. Factory also requested a module position file. The first file we made for them had components missing. 
+  I've since learned that component (footprint/module) properties need to be set to "Normal+Insert" in
+  order to be included in the positions file.  
+
+
 ============================
 = Differences V4.0 to V4.1 =
 ============================
