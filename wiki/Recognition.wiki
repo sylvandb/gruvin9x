@@ -1,0 +1,20 @@
+#summary Financial Assistance Recognition
+
+= Financial Contributors / Donators =
+
+A number of people have contributed financially to the gruvin9x project by way of cash donations, consignment stock cost assistance and more.
+
+This page is intended to list the first names or initials and country of those who have helped to date. (In rough chronological order.)
+
+== The gruvin9x Hall of Recognition ==
+
+|| *Name* || *Country* ||
+|| Keith || New Zealand ||
+|| Cameron || United Kingdom ||
+|| Jim || United States ||
+|| Leo || Switzerland ||
+|| Romolo || Italy ||
+|| Brano || Canada ||
+|| James || Canada ||
+
+Many others have contributed their time and spread praise about the project within their circle of contact, including many we have never heard from ourselves. We offer thanks to you all!
