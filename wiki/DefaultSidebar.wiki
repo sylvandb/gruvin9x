@@ -25,6 +25,7 @@
   * [FrskyInterfacing Fr-Sky Interfacing]
   * [FrSkyTerminalOSX Fr-Sky on your Mac]
   * [FrskyToER9X Porting to ER9X]
+ * [Recognition Donator Recognition]
  * [RandomNotes Random Notes]
   * [AoA AoA / LRI Notes/Ideas]
   * [BackLight Backlight Information]
