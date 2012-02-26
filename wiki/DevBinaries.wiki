@@ -7,6 +7,6 @@ Since the public release of the first fully tested gruvin9x firmware was made in
 We encourage those interested in following our latest developments (mostly for the v4.1 or later custom controller boards and accessories) to check out the project source code, as described at the "Source" menu link, above.
 
 == DO NOT FLY with development code ==
-PLEASE do not fly with development code unless you truly know what you are doing and without being very careful to ground test all functions thoroughly before flight. ASSUME NOTHING -- *SAFETY FIRST*!
+PLEASE do not fly with development code unless you truly know what you're doing and religiously conduct ground tests of all functions thoroughly before flight. ASSUME NOTHING -- *SAFETY FIRST*! Flying of helicopters or larger air craft with development is especially discouraged!
 
-(The same advice also goes for the stable public release -- *SAFETY FIRST*. But it's especially important for development code. PLEASE be very, very careful, as we will accept no responsibility for any use of this code, what-so-ever.)
+(The same advice actually also goes for the stable public release -- *SAFETY FIRST*. But it's especially important for development code. PLEASE be very, very careful, as we can not accept any responsibility for use of our code for any purpose what-so-ever, express or implied.)
