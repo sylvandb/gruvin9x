@@ -9,14 +9,12 @@ Two principal options exist for getting gruvin9x into your '9X radio.
 
 === Using Pre-compiled Binary Distributions ===
 
-If you just want to load in the latest firmware version and run, this option is for you.  
+If you just want to load in the latest firmware version and run, this option is for you. There are however several version of the firmware available, depending on which hardware modifications you've made -- if any.
 
-There are several version of the firmware available, depending on which hardware modes you have made -- if any.
-
-Please see [FlashGuide Flash Guide] for details
+See the wiki [FlashGuide Flash Guide] page for details
 
 === Compiling from source ===
 
-If you'd like to get a look at the source code, maybe make a few changes of your own or otherwise have a tinker, then please take a look at [CompilingFromSource Compiling From Source]. 
+If you'd like to get a look at the source code, maybe make a few changes of your own, then take a look at [CompilingFromSource Compiling From Source]. 
 
-The focus for gruvin9x is on Mac based platforms, since that's what Gruvin happen to use and enjoy. However, Windows and Linux are also fully supported by `avr-dude` (the programmer software) and `GCC`, the optimising compiler of choice.
+Gruvin happens to do all his development work on an Apple Mac. However, Windows and Linux are also fully supported by the compiler toolchain we're using (AVR-GCC and AVRDUDE for physical programming.)
