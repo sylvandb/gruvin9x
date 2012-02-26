@@ -35,10 +35,9 @@ If you wish to install a pre-compiled .HEX binary firmware version, rather than 
 
 *Q*. *How are the rotary encoded supposed to be wired?*
 
-*A*. Viewed from the back of the encoder, the wires going to controller board pin number 1, 2, 3 and 4 respectively should look like this ...
+*A*. Viewed from the back of the encoder, the wires going to controller board pin numbers 1, 2, 3 and 4 respectively, should look like this ...
 
 {{{
-
   3   2
   | | |
      \
@@ -51,7 +50,6 @@ If you wish to install a pre-compiled .HEX binary firmware version, rather than 
 This wiring will make it so that pushing the top of the encoder knob away from you will increase its value -- the same both left and right encoders. If you prefer to have the encoders operate the other way around, then swap wires 2 & 3 -- but I suggest wiring as follows, to keep the cable flat, with no twists ...
 
 {{{
-
   2   3
   | | |
    /
