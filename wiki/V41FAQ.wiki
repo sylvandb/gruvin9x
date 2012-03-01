@@ -7,7 +7,27 @@
 
 *A*. *VERY CAREFULLY* Seriously. The centre pin is GND and the RIGHT-hand pin (labelled '1') is +ve output power for an LED back-light. It includes a 200 ohm series current limiting resistor, which gives a comfortable and practical brightness on the HobbyKing LED back-light module. 
 
-If you need a different brightness, you could use your own series current limiting resistor off the left hand pin (3), which is a switched 5V output, utilising its own regulator and on-board safety fuse. It can be used to drive any load, up to a maximum of 100mA for short bursts or about 30mA continuous. (The 5V regulator is usually a 100mA device but with no heat sink.)
+If you need a different brightness, you could use your own series current limiting resistor off the left hand pin (3), which is a switched 5V output, utilising its own dedicated regulator as well as a safety fuse. The regulator is rated at _maximum_ 100mA and fused for safety at 250mA (if it gets fried and shorts out, it shouldn't take out the radio. This has not been tested.) 
+
+*CAUTION*: There is no series current limiting resistor on the the left-hand, pin-3!
+
+----
+*Q*. *How do I use an electro luminescent (EL) back-light?*
+
+*A*. You will need a [http://www.smartieparts.com/shop/index.php?main_page=product_info&cPath=3&products_id=333 SmartieParts] or equivalent EL driver board, to provide the correct type of power for an electro luminescent (EL) back-light.
+
+There are three terminals labelled 'EL B/lite', in the upper left area of the main board. These were originally designed to allow the SmartieParts EL driver board to be mounted directly atop of them, using individual header pins -- using the right-hand three of five driver board pads, when view with same at the top of the board. I'll try to draw it. Pads/holes labelled 1,2 and 3 connect to the v4.1 main board ...
+{{{
++-----------+
+| o o o o o |
+.     1 2 3 .
+.           .
+.           .
++-----------+
+}}}
+The left-hand two pads on the driver board then go off to the EL back-light itself. Once wired so, the EL back light should just work.
+
+The driver board should sit about 5mm above the main board, to remain well clear of the MENU/EXIT push button leads sticking up out of the board. If standard, high-tensile header pins are used for the connection, then no further insulation will be required. If soft wire of some kind is used instead, then some double-sided sticky padding or something could be used to mount the driver board to the main board. 
 
 ----
 *Q*. *How should I set jumpers J1 (back-light control) and J4 (Vibrator control)?*
@@ -26,16 +46,15 @@ If you have built your own board and assuming you have the cross-compiler enviro
 
   `$ make wfuses`
 
-
 If you wish to install a pre-compiled .HEX binary firmware version, rather than building from source, you can use AVRDUDE manually to set  MCU fuses, in a similar way to the following ...
 
   `$ avrdude -c usbasp -P usb -p atmega2560 -U hfuse:w:0x11:m -U lfuse:w:0xd7:m -U efuse:w:0xfc:m`
 
 ----
 
-*Q* *Why doesn't the internal piezo beeper work?*
+*Q*. *Why doesn't the internal piezo beeper work?*
 
-*A* Because the v4 firmware currently only supports a 'speaker' (usually a cheap headphone element) connected to the 'Spkr' port on the PCB. This is the 2-pin header, labelled 'Spkr' if the upper center-right area of the PC board. 
+*A*. Because the v4 firmware currently only supports a 'speaker' (usually a cheap headphone element) connected to the 'Spkr' port on the PCB. This is the 2-pin header, labelled 'Spkr' if the upper center-right area of the PC board. 
 
 The factory installed piezo beeper (shrieker in some cases! :p) should work just fine, once code exists to turn it on and off.
 
