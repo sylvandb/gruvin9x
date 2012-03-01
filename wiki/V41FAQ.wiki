@@ -20,7 +20,7 @@ You may want to refer to the circuit schematic to learn what the other positions
 
 *Q*. *How do I set the v4 board's ATmega2560 MCU option fuses, before the first Flash programming?*
 
-*A*. If you have purchased a ready-made board, the fuses will already be set correctly. There should be no need to set them again.
+*A*. If you have purchased a ready-made board, the fuses will already be set correctly.
 
 If you have built your own board and assuming you have the cross-compiler environment and project source code installed, along with a `Makefile` set up for your particular AVRDUDE programming device, then you can execute the following command from the `src/` directory ...
 
@@ -33,9 +33,18 @@ If you wish to install a pre-compiled .HEX binary firmware version, rather than 
 
 ----
 
-*Q*. *How are the rotary encoded supposed to be wired?*
+*Q* *Why doesn't the internal piezo beeper work?*
 
-*A*. Viewed from the back of the encoder, the wires going to controller board pin numbers 1, 2, 3 and 4 respectively, should look like this ...
+*A* Because the v4 firmware currently only supports a 'speaker' (usually a cheap headphone element) connected to the 'Spkr' port on the PCB. This is the 2-pin header, labelled 'Spkr' if the upper center-right area of the PC board. 
+
+The factory installed piezo beeper (shrieker in some cases! :p) should work just fine, once code exists to turn it on and off.
+
+The same is true of the Vibrator output. Although the port has been tested to provide the correct, regulated voltage under firmware control, there hasn't actually been any real code written for it yet.
+
+----
+*Q*. *How are the rotary encoders supposed to be wired?*
+
+*A*. Viewed from the back of the encoder, the wires going to controller board pin numbers 1, 2, 3 and 4 should look something like this ...
 
 {{{
   3   2
@@ -47,8 +56,7 @@ If you wish to install a pre-compiled .HEX binary firmware version, rather than 
 
 ... where the upper-middle terminal is connected to the lower right terminal, as shown. (This is the GND or 0V wire.)
 
-This wiring will make it so that pushing the top of the encoder knob away from you will increase its value -- the same both left and right encoders. If you prefer to have the encoders operate the other way around, then swap wires 2 & 3 -- but I suggest wiring as follows, to keep the cable flat, with no twists ...
-
+The above wiring will make it such that pushing the top of the encoder knob away from you will increase its value -- the same for both left and right encoders. If you prefer to have the encoders operate in the opposite direction, then swap wires 2 & 3. Might I also suggest wiring as follows, ...
 {{{
   2   3
   | | |
@@ -56,17 +64,11 @@ This wiring will make it so that pushing the top of the encoder knob away from y
   |   |
   1   4
 }}}
+... to keep cable flat, with no twists, should you be using ribbon cable. (It doesn't really matter for individual wires as shown in the images below.)
 
-Here are some images of Cam's installation ...
+Here are some images of Cam's nice and tidy installation ...
 
-[http://code.google.com/p/gruvin9x/wiki/V41FAQ.attach/rot-enc-inside1.jpg]
-
-[http://code.google.com/p/gruvin9x/wiki/V41FAQ.attach/rot-enc-inside2.jpg]
-
-[http://code.google.com/p/gruvin9x/wiki/V41FAQ.attach/rot-enc-outside.jpg]
-
-[http://code.google.com/p/gruvin9x/wiki/V41FAQ.attach/rot-enc-wiring.jpg]
-
-
+|| [http://gruvin9x.googlecode.com/svn/wiki/V41FAQ.attach/rot-enc-inside1.jpg] || [http://gruvin9x.googlecode.com/svn/wiki/V41FAQ.attach/rot-enc-inside2.jpg] || 
+|| [http://gruvin9x.googlecode.com/svn/wiki/V41FAQ.attach/rot-enc-outside.jpg] || [http://gruvin9x.googlecode.com/svn/wiki/V41FAQ.attach/rot-enc-wiring.jpg] ||
 
 ----
