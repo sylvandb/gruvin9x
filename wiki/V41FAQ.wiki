@@ -16,7 +16,7 @@ If you need a different brightness, you could use your own series current limiti
 
 *A*. You will need a [http://www.smartieparts.com/shop/index.php?main_page=product_info&cPath=3&products_id=333 SmartieParts] or equivalent EL driver board, to provide the correct type of power for an electro luminescent (EL) back-light.
 
-There are three terminals labelled 'EL B/lite', in the upper left area of the main board. These were originally designed to allow the SmartieParts EL driver board to be mounted directly atop of them, using individual header pins -- using the right-hand three of five driver board pads, when view with same at the top of the board. I'll try to draw it. Pads/holes labelled 1,2 and 3 connect to the v4.1 main board ...
+There are three terminals labelled 'EL B/lite', in the upper left area of the main board. These were originally designed to allow the SmartieParts EL driver board to be mounted directly atop of them, using individual header pins as dual-purpose stand-off and electrical connections. The board is placed such that the right-hand three driver board pads are soldered to the header stand-off pins, as viewed with the pads at the top of the board. Clear as mud? ... I'll try to draw it ...
 {{{
 +-----------+
 | o o o o o |
@@ -25,9 +25,15 @@ There are three terminals labelled 'EL B/lite', in the upper left area of the ma
 .           .
 +-----------+
 }}}
-The left-hand two pads on the driver board then go off to the EL back-light itself. Once wired so, the EL back light should just work.
+Pads/holes labelled 1, 2 and 3 on the EL driver board connect to the v4.1 main board. The left-hand two pads on the driver board then go off to the EL back-light itself. Once wired so, the EL back light should just work.
+ 
+The driver board should sit about *5mm above the main board* -- *not* down on the header-pin insulators -- to remain well clear of the MENU/EXIT push button leads sticking up from the board.  
 
-The driver board should sit about 5mm above the main board, to remain well clear of the MENU/EXIT push button leads sticking up out of the board. If standard, high-tensile header pins are used for the connection, then no further insulation will be required. If soft wire of some kind is used instead, then some double-sided sticky padding or something could be used to mount the driver board to the main board. 
+If standard, high-tensile header pins / stand-offs are used for the connection, then no further insulation will be required. 
+
+If soft wire of some kind is used instead, then some double-sided sticky padding or something could be used to mount the driver board to the main board.
+
+Either way, there should be just enough clearance at the bottom left of the driver board for a screw driver to access the main board mounting screw, located near-by.
 
 ----
 *Q*. *How should I set jumpers J1 (back-light control) and J4 (Vibrator control)?*
