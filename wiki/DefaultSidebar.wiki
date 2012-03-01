@@ -10,7 +10,7 @@
   * [FlashGuide Flashing Binary Versions]
   * [CompilingFromSource Compiling from Source]
   * [MakeOptions Make Options]
- * [PCB Custom PCB]
+ * [PCB Custom PCB (v4.1 etc)]
   * [Circuitry Custom Schematics]
   * [PcbAssembly Build Your Own Board]
   * [SdcardBoard SD Card Installation]
