@@ -1,5 +1,5 @@
 #summary v4.1 Custom Board FAQ
-= Custom Board FAQ =
+= Custom Board v4.1 FAQ =
 <b>F</b>requently <b>A</b>sked <b>Q</b>uestions
 
 ----
