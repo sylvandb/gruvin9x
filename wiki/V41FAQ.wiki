@@ -57,5 +57,16 @@ This wiring will make it so that pushing the top of the encoder knob away from y
   1   4
 }}}
 
+Here are some images of Cam's installation ...
+
+[http://code.google.com/p/gruvin9x/wiki/V41FAQ.attach/rot-enc-inside1.jpg]
+
+[http://code.google.com/p/gruvin9x/wiki/V41FAQ.attach/rot-enc-inside2.jpg]
+
+[http://code.google.com/p/gruvin9x/wiki/V41FAQ.attach/rot-enc-outside.jpg]
+
+[http://code.google.com/p/gruvin9x/wiki/V41FAQ.attach/rot-enc-wiring.jpg]
+
+
 
 ----
