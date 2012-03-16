@@ -3,7 +3,7 @@
  * [About About gruvin9x]
  * [Features G9X Features]
  * [Features Screen Shots]
- * [FAQ FAQ]
+ * [FAQ General FAQ]
  * [ReProgram Re-progamming Your Radio]
   * [LatestRelease Latest Stable Binaries]
   * [DevBinaries Development Binaries]
