@@ -10,6 +10,8 @@ This page has been thrown together quickly to help you get started. The informat
 
 The V4.1 PCB is now available for purchase at [http://gruvin9x.com].
 
+You are also welcome to use the Gerber files from the project source repository and have your own PCB's made. 
+
 == Where to get the parts ==
 
 In short, DigiKey or Farnell (element14.com, outside the UK). If you're in the UK, Farnell is probably the cheaper choice (free shipping for online orders.) Everywhere else will probably have better luck with DigiKey.
