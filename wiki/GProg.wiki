@@ -6,12 +6,12 @@
 
 *gprog* is a freely published part of our open hardware project. It is based on the popular [http://www.fischl.de/usbasp/ USBasp open source project]. This AVR programmer board is designed to be used with [http://companion9x.googlecode.com companion9x] or any other AVRDUDE compatible system. With it, you can upload and download EEPROM stored model data as well as perform firmware upgrades. The device is designed for the [PCB G9X v4.1 custom controller board], but could also be used as a generic AVR flash programmer.
 
-You can build your own gprog or buy one from our online [http://gruvin9x.com/ gruvin9x online store]
+You can build your own gprog or buy one from our online [http://gruvin9x.com/ gruvin9x online store].
 
 [http://gruvin9x.googlecode.com/svn/wiki/GProg.Attach/gprog-v1.1.jpg]
 
 [http://gruvin9x.googlecode.com/svn/wiki/GProg.Attach/g9x-prog%20installed.jpg]
 
-The stand-off shown in the above image is 10.5mm in length -- PVC 2.5mm I.D. tubing, available from most model shops. The machine screw is an M2x20mm. (0.075" works well, too.) A 2mm self-tapping screw, similar to the ones used elsewhere in the radio (but longer) would be preferable. But as yet, a source has not been found.
+The stand-off shown in the above image is 10.5mm in length -- PVC 2.5mm I.D. tubing, available from most model shops. The machine screw is a (USA standard?) 2-56 (2.2mm) x 3/4 inch. (A 2mm x 20mm self-tapping screw, similar to the ones used elsewhere in the radio -- but longer -- would be preferable. But as yet, a source for such has not been found.)
 
 [http://gruvin9x.googlecode.com/svn/wiki/GProg.Attach/g9x-prog%20USB%20socket.jpg]
