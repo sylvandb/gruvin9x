@@ -18,9 +18,11 @@ In short, DigiKey or Farnell (element14.com, outside the UK). If you're in the U
 
 For parts details, please see the three BOM (bill of materials) files at [http://code.google.com/p/gruvin9x/source/browse/#svn%2Farchive%2Fpcb-v4.1a-frozen/assembly archive/pcb-v4.1a-frozen/assembly]. (If you're using just a web browser, you'll need to use the "View raw file" link, found at the lower right of the page, after clicking a BOM file link, to download the Excel spreadsheet file.)
 
-The BOM files are Excel spreadsheet format. You can view them in Open Office or using Google Docs.
+NOTE: The production version *RTC/SD-card board BOM* is included at the bottom of the main board BOM file.
 
-Another way to get the BOM files would be to do an svn check-out of the `pcb-v4.1a-frozen/assembly` folder, using the command (assuming you have Subversion installed) ...
+The BOM files are Excel spreadsheet format. You can also view them in Open Office or using Google Docs. 
+
+Another (better) way to get the BOM files would be to do an svn check-out of the `pcb-v4.1a-frozen/assembly` folder, using the command (assuming you have Subversion installed) ...
 
 {{{
 svn co https://gruvin9x.googlecode.com/svn/archive/pcb-v4.1a-frozen/assembly g9x-assembly
@@ -48,16 +50,14 @@ These parts were hand soldered in just minutes using an average soldering iron, 
 
 There's also a very nicely made [http://www.youtube.com/watch?v=3NN7UGWYmBY video by Curious Inventor] over at YouTube. The techniques are roughly the same. But some additional options and informational gems are offered.
 
-=== Parts Placement ===
-There is a silk-screen PDF for the main V4.1 board, to use as a parts placement guide here ... [http://gruvin9x.googlecode.com/svn/archive/pcb-v4.1a-frozen/assembly/gruvin9x-SilkS_Front.pdf gruvin9x-SilkS_Front.pdf]
+=== Parts Placement Guide ===
+
+Look for PDF files [http://code.google.com/p/gruvin9x/source/browse/archive/pcb-v4.1a-frozen/assembly/gruvin9x-SilkS_Front.pdf gruvin9x-SilkS_Front.pdf] and [http://code.google.com/p/gruvin9x/source/browse/archive/pcb-v4.1a-frozen/assembly/9xLABEL.pdf 9xLABEL.pdf] (contributed, colour-coded version) in the [http://code.google.com/p/gruvin9x/source/browse/#svn%2Farchive%2Fpcb-v4.1a-frozen%2Fassembly archive/pcb-v4.1a-frozen/assembly] folder. 
 
 
-Here's a reference photo of Gruvin's 2nd build. (Note that some of the larger capacitors here (22u, 47u) are ceramic, whereas the BOM parts list may call for tantalum. Either will be OK.)
-
+Here's a reference photo of Gruvin's 2nd build. (Note that some of the larger capacitors here (22u, 47u) are ceramic, whereas the BOM parts list may call for tantalum. Either will be OK.) *Click the image for full-size view.*
 
 <a href="http://gruvin9x.googlecode.com/svn/wiki/PcbAssembly.attach/v41-reference.jpg">http://gruvin9x.googlecode.com/svn/wiki/PcbAssembly.attach/v41-reference-small.jpg</a>
-
-Click the above image for full-size view.
 
 
 === LCD Padding Foam ===
@@ -84,4 +84,4 @@ BE CAREFUL not to select the wrong type of oscillator. You could end up 'brickin
 
 ----
 
-Old v4.0 assembly notes can be found [V40Assembly here].
+Archived v4.0 PCB assembly notes can be found [V40Assembly here].
