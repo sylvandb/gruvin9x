@@ -3,6 +3,11 @@
 <b>F</b>requently <b>A</b>sked <b>Q</b>uestions
 
 ----
+*Q*. Where do I find v4.1 board construction tips and advice?
+
+*A*. There's a separate [PcbAssembly Build Your Own Board] wiki page for that, [PcbAssembly here]. What follows in this FAQ is more aimed at completed v4.1 boards, being installed into a '9X transmitter housing.
+
+----
 *Q*. *How do I connect an LED back-light to connector K5?*
 
 *A*. *VERY CAREFULLY* Seriously. The centre pin is GND and the RIGHT-hand pin (labelled '1') is +ve output power for an LED back-light. It includes a 200 ohm series current limiting resistor, which gives a comfortable and practical brightness on the HobbyKing LED back-light module. 
