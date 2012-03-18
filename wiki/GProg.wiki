@@ -15,3 +15,7 @@ You can build your own gprog or buy one from our online [http://gruvin9x.com/ gr
 The stand-off shown in the above image is 10.5mm in length -- PVC 2.5mm I.D. tubing, available from most model shops. The machine screw is a (USA standard?) 2-56 (2.2mm) x 3/4 inch. (A 2mm x 20mm self-tapping screw, similar to the ones used elsewhere in the radio -- but longer -- would be preferable. But as yet, a source for such has not been found.)
 
 [http://gruvin9x.googlecode.com/svn/wiki/GProg.Attach/g9x-prog%20USB%20socket.jpg]
+
+== Wiring gProg to a stock standard '9X ... ==
+
+[http://gruvin9x.googlecode.com/svn/wiki/GProg.Attach/gprog-stock-wiring.jpg]
