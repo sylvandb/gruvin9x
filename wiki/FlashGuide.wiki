@@ -23,6 +23,9 @@ When I ordered my SparkFun Pocket Programmer, I had them add a spare programming
 
  * *NOTE:* The two little hot-glued resistors to the left, with their respective fine wires comprise the re-wiring necessary to free up the ATmega serial comms port (RXD/TXD) for telemetry data. Those pins are otherwise connected to the Throttle-Hold and Aileron-DR switches. For telemetry support, the switches get moved to two spare pins (PC6/7). *This mod is only necessary if* you intend using a Fr-Sky enabled [TrunkBinaries binary] image -- or specifying the EXT=JETI or EXT=FRSKY `make` attributes, when building from source. *See [FrskyInterfacing here] details of what to connect where and how*.
 
+== Programmers with 6-pin ISP Connectors ==
+
+If you have a more modern AVR programmer with a 6-pin ISP connector, you can find more appropriate wiring information on the [GProg gProg wiki page].
 
 = Flashing the Firmware =
 
