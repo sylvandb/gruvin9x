@@ -767,7 +767,7 @@ uint8_t checkTrim(uint8_t event)
 // G: Note that the above would have set the ADC prescaler to 128, equating to
 // 125KHz sample rate. We now sample at 500KHz, with oversampling and other
 // filtering options to produce 11-bit results.
-uint16_t BandGap ;
+uint16_t BandGap = 255;
 static uint16_t s_anaFilt[8];
 uint16_t anaIn(uint8_t chan)
 {
@@ -842,30 +842,31 @@ void getADC_bandgap()
 {
 #if defined(PCBSTD)
   ADMUX = 0x1E|ADC_VREF_TYPE; // Switch MUX to internal 1.22V reference
-  _delay_us(7); // short delay to stabilise reference voltage (Issue 76)
+  _delay_us(10); // short delay to stabilise reference voltage (Issue 76)
   ADCSRA |= 0x40;
   while ((ADCSRA & 0x10)==0);
   ADCSRA |= 0x10; // again becasue first one is usually inaccurate
-  BandGap = ADCW;
+  BandGap = (BandGap * 3 + ADCW) >> 2; // low pass filter to remove jitter.
 #elif defined (PCBV4)
   // For PCB V4, use our own 1.2V, external reference (connected to ADC3)
+  
+  static uint8_t bgCount=0; // used for over-sampling low pass filter
+  static uint16_t tmpBandgap=0;
   ADCSRB &= ~(1<<MUX5);
 
   ADMUX=0x03|ADC_VREF_TYPE; // Switch MUX to internal 1.1V reference
-  _delay_us(10); // tiny bit of stablisation time needed to allow capture-hold capacitor to charge
-  // For times over-sample with no divide, x2 to end at a half averaged, x8. DON'T ASK mmmkay? :P This is how I want it.
-  ADCSRA|=0x40; while ((ADCSRA & 0x10)==0); ADCSRA|=0x10;
-  BandGap=ADCW;
-  ADCSRA|=0x40; while ((ADCSRA & 0x10)==0); ADCSRA|=0x10;
-  BandGap+=ADCW;
-  ADCSRA|=0x40; while ((ADCSRA & 0x10)==0); ADCSRA|=0x10;
-  BandGap+=ADCW;
-  ADCSRA|=0x40; while ((ADCSRA & 0x10)==0); ADCSRA|=0x10;
-  BandGap+=ADCW;
-  BandGap *= 2;
+  _delay_us(10); // stablisation time needed to allow ADC capture-hold capacitor to complelyte charge
+
+  ADCSRA|=0x40; while ((ADCSRA & 0x10)==0); ADCSRA|=0x10; // take a single 10-bit sample
+  tmpBandgap += ADCW; 
+  if (!(++bgCount % 8)) // 8 x over-sampling for v4 board (effectively 13-bit resolution)
+  {
+    BandGap = tmpBandgap;
+    tmpBandgap = 0; 
+  }
 
   ADCSRB |= (1<<MUX5);
-#else
+#else // v2.14 and v3.x prototype board
   ADMUX=0x1E|ADC_VREF_TYPE; // Switch MUX to internal 1.1V reference
  _delay_us(400); // this somewhat costly delay is the only remedy for stable results on the Atmega2560/1 chips
   ADCSRA|=0x40; while ((ADCSRA & 0x10)==0); ADCSRA|=0x10; // take sample
@@ -874,7 +875,7 @@ void getADC_bandgap()
 }
 
 #else
-uint16_t BandGap = 225;
+uint16_t BandGap = 225; // for SIMU (refer ifndef(SIMU) ... way above here.)
 #endif
 
 uint16_t abRunningAvg = 0;
@@ -1579,7 +1580,8 @@ void perMain()
   evalFunctions();
   
   if (s_noHi) s_noHi--;
-  if (g_eeGeneral.inactivityTimer && g_vbat100mV>49) {
+  if (g_eeGeneral.inactivityTimer
+        && !SLAVE_MODE) { // G: disable inactivity timer when in SLAVE mode (or when powered only from Flash programmer.)
     inacCounter++;
     uint16_t tsum = 0;
     for(uint8_t i=0;i<4;i++) tsum += anaIn(i)/64;  // reduce sensitivity
@@ -1769,7 +1771,15 @@ void perMain()
 #endif   
         static uint8_t s_batCheck;
         s_batCheck+=32;
-        if(s_batCheck==0 && g_vbat100mV<g_eeGeneral.vBatWarn && g_vbat100mV>49) {
+        if(s_batCheck==0 && g_vbat100mV<g_eeGeneral.vBatWarn 
+            && (!SLAVE_MODE && g_vbat100mV>49)) // g: If main power switch is off (SLAVE_MODE) then we're probably
+                                                // running on Flash programmer power, so silence the alarm if batt+
+                                                // reading below 4.9V, as it should be in this scenario. If in fact
+                                                // running in slave mode for a trainee, then low batt alarm should 
+                                                // have been sounding for along time by now, plus the trainer 
+                                                // can take back control of of the model, if needed. So I think 
+                                                // it's OK.
+        {
           beepErr();
           if (g_eeGeneral.flashBeep) g_LightOffCounter = FLASH_DURATION;
         }
