@@ -1,8 +1,23 @@
-Changes in v1.2
+Changes in v1.2 -- Newest at top
+
+
+Committed r1549
+
++ Improved bandgap efficiency on v4 boards.
+
++ Improved bandgap reference voltage stability for stock boards.
+
++ Improved low battery and inactivity alarm handling for voltages under 5.0V.
+
+- - - -
 
 + Improved battery voltage calibrartion system. Changes are now instant (instead
   of waiting for the running average to kick in) and accurate to 2 decimal places,
   like most digital multimeters.
+
+  NOTE: This got inadvertently broken by Bertrand and I (gruvin) haven't got around to fixing it again.
+
+- - - -
 
 Committed r485 (/branches/frsky)
 
