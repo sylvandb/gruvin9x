@@ -21,7 +21,7 @@ If you need a different brightness, you could use your own series current limiti
 
 *A*. You will need a [http://www.smartieparts.com/shop/index.php?main_page=product_info&cPath=3&products_id=333 SmartieParts] or equivalent EL driver board, to provide the correct type of power for an electro luminescent (EL) back-light.
 
-There are three terminals labelled 'EL B/lite', in the upper left area of the main board. These were originally designed to allow the SmartieParts EL driver board to be mounted directly atop of them, using individual header pins as dual-purpose stand-off and electrical connections. The board is placed such that the right-hand three driver board pads are soldered to the header stand-off pins, as viewed with the pads at the top of the board. Clear as mud? ... I'll try to draw it ...
+There are three terminals labelled 'EL B/lite', in the upper left area of the main board. These were originally designed to allow the SmartieParts EL driver board to be mounted directly over them, using individual header pins as dual-purpose stand-off and electrical connections. The board is placed such that the right-hand three driver board pads are soldered to the header stand-off pins, as viewed with the pads at the top of the board. Clear as mud? ... I'll try to draw it ...
 {{{
 +-----------+
 | o o o o o |
