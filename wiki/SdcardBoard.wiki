@@ -11,12 +11,12 @@ Here's some pictures showing where Gruvin installed his SD card board -- and whe
 || Speaker is lowest, then SD card, then original power switch board. ||
 
 I put tape over the button battery holder, just in case it 
-shorts out on something. Probably not required.
-
- 
+shorts out on something. Probably not required. 
 
 || [http://gruvin9x.googlecode.com/svn/wiki/PcbAssembly.attach/sdcard_inst3.jpg] ||
 || The original piezo "beeper" is removed and re-soldered as shown, to make room. ||
+
+*NOTE*: A recent Turnigy branded '9X was converted and found to have slightly *different piezo beeper circuitry* (a different switching transistor and PCB design around it) which doesn't quite match the photo above. In this case, the piezo was changed by simply 'swapping sides' of the board, such that it end up pointing 'up' (toward the back of the case.)
 
 I probably over-did the hot glue a little. :-D
 
