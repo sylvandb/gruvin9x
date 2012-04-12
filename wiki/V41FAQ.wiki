@@ -30,15 +30,11 @@ There are three terminals labelled 'EL B/lite', in the upper left area of the ma
 .           .
 +-----------+
 }}}
-Pads/holes labelled 1, 2 and 3 on the EL driver board connect to the v4.1 main board. The left-hand two pads on the driver board then go off to the EL back-light itself. Once wired so, the EL back light should just work.
+Pads labelled 1, 2 & 3 in the above EL board diagram connect via header pins to the v4.1 main board. The left-hand two pads on the driver board go to the EL back-light itself.
  
-The driver board should sit about *5mm above the main board* -- *not* down on the header-pin insulators -- to remain well clear of the MENU/EXIT push button leads sticking up from the board.  
+The driver board should sit about *5mm above the main board* -- *not* down on the header-pin insulators -- so that it remains well clear of the MENU/EXIT push button leads sticking up from the board. 
 
-If standard, high-tensile header pins / stand-offs are used for the connection, then no further insulation will be required. 
-
-If soft wire of some kind is used instead, then some double-sided sticky padding or something could be used to mount the driver board to the main board.
-
-Either way, there should be just enough clearance at the bottom left of the driver board for a screw driver to access the main board mounting screw, located near-by.
+Header pins are made of high-tensile metal, so the board should be held quite rigidly in place. If you use some other kind of connecting wire instead, then you may need to use something like thick, double-sided adhesive tape to secure and insulate the EL board -- or simply mount it somewhere else entirely.
 
 ----
 
