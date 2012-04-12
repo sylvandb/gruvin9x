@@ -59,9 +59,9 @@ The same is true of the Vibrator output. Although the port has been tested to pr
 
 *A*. This one can actually be a bit of a problem, as it turns out.
 
-The first few headphone elements used by Gruvin for the several prototype builds all produced plenty of sound volume. He thus believed that this would be the more common case. However since then, we have all (including Gruvin) been having difficulty finding new elements that produce a reasonable sound level. (It is possible, though unlikely, that the change to the ATmega2560 chip might somehow have something to do with this.) 
+The first few headphone elements used by Gruvin, over several prototype builds, all produced plenty of audio volume. He thus concluded that this would be the most common case. However since then, we have all (including Gruvin) had difficulty finding new elements that make enough noise. (It is possible, though unlikely, that the change to the ATmega2560 chip might somehow have something to do with this?) 
 
-That said, the 'speaker' element from cheap headphones is what was intended. These are the roughly 1 inch (25mm) diameter types, with the clear plastic diaphragm. They're usually rated somewhere around 32-ohm and are to be found in most computer or portable music headphones, other than the ones the go inside your ear, of course.
+That said, the 'speaker' element from one side of some cheap headphones is what was intended. These are the commonly used, roughly 1 inch (25mm) diameter types, with the clear plastic diaphragm. They're usually rated somewhere around 32-ohm impedance and are to be found in most computer or portable music headphones (other than the type that plug inside your ear canal, of course.) Old laptops are another potential source.
 
 There are also two 200-ohm resistors near the 'Spkr' socket on the v4.x boards. These are in fact wired in parallel, to provide 100-ohms total. The intention here was to allow for variations in available speaker elements. You can either short the resistors out with a fine wire link for more volume or carefully remove one resistor to reduce sound output. (Removal is unlikely to be needed.) 
 
