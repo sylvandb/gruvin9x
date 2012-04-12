@@ -104,6 +104,11 @@ Here are some images of Cam's nice and tidy installation ...
 || [http://gruvin9x.googlecode.com/svn/wiki/V41FAQ.attach/rot-enc-outside.jpg] || [http://gruvin9x.googlecode.com/svn/wiki/V41FAQ.attach/rot-enc-wiring.jpg] ||
 
 ----
+*Q*. How should I install the RTC/SD-card Board?
+
+*A*. Any way you like, really. But [SdcardBoard please see here] for how Gruvin does it.
+
+----
 
 *Q*. *How do I set the v4 board's ATmega2560 MCU option fuses, before the first Flash programming?*
 
