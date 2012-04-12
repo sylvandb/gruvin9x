@@ -17,7 +17,7 @@
   * [TurnigyV2 9X Reference Data]
    * [ReferenceImages Reference Images]
    * [SchematicV2 V2 Circuit Schematic]
-  * [V41FAQ v4.1 Custom Board FAQ]
+  * *[V41FAQ v4.1 Custom Board FAQ]*
  * [GProg USB Programmer]
  * [Telemetry]
   * [FrSky Fr-Sky Support]
