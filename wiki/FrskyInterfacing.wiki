@@ -34,13 +34,13 @@ Referring to the image below ...
 
 Fr-Sky, in their wisdom, decided to use RS-232 voltage levels for their interface, rather than provide a more modern 5V TTL-to-serial USB interface. We tried to talk them out of it, but they stuck to their guns. Oh well.
 
-What this means is that you need to invert and voltage-shift the signals to and from the Fr-Sky transmitter module, so they can play happily with the 5 Volt ATmega chip. There are specialised chips to do this, "properly". But there is a simple and in fact advantageous discrete transistor method too.
+What this means is that you need to invert and voltage-shift the signals to and from the Fr-Sky transmitter module, so they can play happily with the 5 Volt ATmega chip. There are specialised 5V TTL to RS-232 chips to do this, "properly". But we show here is a simple and in fact _advantageous_, discrete transistor method.
 
-Advantageous? Well actually, yes. The method shown below allows the transmitter module to still operate when connected to an external serial interface, say on a computer -- while not having to disconnect the internal wiring to the '9X. With the values shown, most computers will take precedence over the internal 9X ATmega micro in terms of sending (transmitting) data to the Fr-Sky module. *More useful even*, is that you don't have to disconnect the telemetry interface for re-Flashing. Clever huh! (In truth, this was a lucky fluke! :P) 
+ _Advantageous? Well yes, actually. The method shown below allows the transmitter module to still operate -- for both hosts simultaneously -- when connected to an external serial interface, say on a computer -- while not having to disconnect the internal wiring to the '9X. With the values shown, most computers will take precedence over the internal 9X ATmega micro in terms of sending (transmitting) data to the Fr-Sky module. *More useful even*, is that you don't have to disconnect the telemetry interface for re-Flashing. Clever huh! (In truth, this was a lucky fluke! :P)_ 
 
  _That said, be careful not to have your Fr-Sky two-way receiver switched on during re-flashing, as the stream of data _will_ collide with the ISP programming signals and could mess up your ATmega chip._
 
-Here is the circuit ...
+Here is the discrete transistor circuit ...
 
  [http://gruvin9x.googlecode.com/svn/wiki/FrskyInterfacing.attach/frsky-interface.png]<br/>
 *NOTE* An earlier version of the above circuit had the collector and emitter of Q3 reversed. The circuit as shown here now is correct. (This circuit is clipped from the full schematic of the gruvin9x [PCB custom controller board].)
@@ -49,10 +49,12 @@ Any general purpose NPN and PNP transistors should work for the components marke
 
 For the prototype, Gruvin actually used a dremel too to carve up the mostly unused, legacy PCB mounted inside the '9X rear casing to build the above circuit 'dead bug' style. (A photo is not presently available.)
 
-== Ground Loops ==
+*ADDENDUM*: A future version of this circuit (v4.2) uses 5.1K-Ohm resistors in place of all the 10K and a 1K across Q3's E/C leads to improve the 'squareness' of the TX signal for use with DSM2 modules at 125,000bps. This change is in no way required for 9600 Baud Fr-Sky operation however.
+ 
+== Ground Loops (WARNING) ==
 
 Gruvin found that the Fr-Sky module refused to operate correctly if a ground (GND) wire was connected between the Fr-Sky module's rear RX/TX/GND pins and the level-shifting circuit above. The problem was probably RF energy pick-up through the ground-loop created by having two ground wires -- one where the module plugs into the 9X and the other from the serial data port. *Solution:* simply do not connect the ground wire as shown as pin-1 on the connector-K2 in the circuit above. Others have since said that they had no such problem. YMMV
 
 === ER9X Compatible ===
 
-In case you're wondering, this wiring modification is 100% compatible with the JETI and Fr-Sky telemetry extensions in the [http://er9x.googlecode.com/ ER9X] firmware, too. In fact, that's pretty much where we learned it in the first place. :-D
+In case you're wondering, this wiring modification is 100% compatible with the JETI and Fr-Sky telemetry extensions in the [http://er9x.googlecode.com/ ER9X] firmware, too.
