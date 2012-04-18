@@ -33,6 +33,16 @@ As a filler or for different wording on the same topic of how the multiplexing m
 
 ----
 
+*Q.* *How do I calibrate the '9X battery voltage reading? It's reading half a volt or more off what it should!*
+
+*A.* Some variance from radio to radio in this respect is normal and to be expected. Just like the sticks and pot's, *you need to calibrate the battery voltage reading*.
+
+On the ANA screen -- in the set-up menus accessed from `[LEFT long]` -- if you press `[DOWN]`, you'll end up at the battery voltage (not labelled so) down the bottom of the screen. You can then adjust the value up and down to have it match what your volt meter says the battery voltage really is.
+
+It's a good idea to take a backup of the EEPROM (which includes this calibration setting) straight away. If you're using eePe or companion9x for model configuration etc, then you should take care to use this most recent backup as the base for all your future EEPROM data. If in doubt later on, get your volt meter out and check the calibration again.
+
+----
+
 *Q.* *How to use the Telemetry A1/2. It's Confusing!*
 
 *A.* Yes, it is confusing. The current ('Frisky') version really only supports voltages -- though you can set "MaxV" to the maximum value of some other unit, like Km/h, if it makes sense in your case. There's no offset capability however (for going down into negative numbers.)
