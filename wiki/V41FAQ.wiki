@@ -8,6 +8,13 @@
 *A*. There's a separate [PcbAssembly Build Your Own Board] wiki page for that, [PcbAssembly here]. What follows in this FAQ is more aimed at completed v4.1 boards, being installed into a '9X transmitter housing.
 
 ----
+*Q*. The JST PH connectors are fiddly to make. Is there an easier way.
+
+*A*. Yes! We found [http://stores.ebay.com/HobbyMart-Shop/2-0-PH-Connector-/_i.html?_fsub=3233409018&_sid=1029096428&_trksid=p4634.c0.m322 this eBay store], which has ready-made JST 2.0mm connectors (2, 3, 4, 5, 6, 7 and 8 pin) with wires attached and at very good prices.
+
+You can probably find the same products in other eBay store languages / locations. Search for "JST Micro 2.0."
+
+----
 *Q*. *How do I connect an LED back-light to connector K5?*
 
 *A*. *VERY CAREFULLY* Seriously. The centre pin is GND and the RIGHT-hand pin (labelled '1') is +ve output power for an LED back-light. It includes a 200 ohm series current limiting resistor, which gives a comfortable and practical brightness on the HobbyKing LED back-light module. 
