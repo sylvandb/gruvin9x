@@ -45,15 +45,13 @@ It's a good idea to take a backup of the EEPROM (which includes this calibration
 
 *Q.* *How to use the Telemetry A1/2. It's Confusing!*
 
-*A.* Yes, it is confusing. The current ('Frisky') version really only supports voltages -- though you can set "MaxV" to the maximum value of some other unit, like Km/h, if it makes sense in your case. There's no offset capability however (for going down into negative numbers.)
+*A.* Yes, it is confusing. We're working on it, slowly. There's no offset capability however (for going down into negative numbers.)
 
-A better system is being thrashed out. Right now (2011-01-26) it's most likely going to allow you to specify your own unit for display (ex. Km/h) and to set values _b_ and _c_ in the classic linear translation formula, _r = mb + c_ -- multiplier and offset, in other words. Calibration will be given lower priority, possibly hidden behind a magic button, like `[MENU LONG]`.
+We intend changing to the simple system currently used by the open9x project, where MaxV etc are replaced by just two fields, "Range" and "Offset". 
 
-With the proposed new system, if you had a gadget that converts Km/h wind speed over a range of zero to 100Km/hr, to a voltage between 0V and 3.3V, then your multiplier would be (100/3.3=) 30.30 and your offset 0.0.
+So for example, if you had a gadget that converts Km/h wind speed over a range of zero to 100Km/hr, to a voltage between 0V and 3.3V, then you'd simply set the range to 100 and offset to 0.
 
-Another example might be temperature, from -20C to +80C, also output as 0V to 3.3V over that range. This would also require a multiplier of 30.30 (the range is also 100 units) and an offset of -20.0.
-
-_I was going to extend the present "mode" selection to do all that for us, only for common and known available sensors. I've since been convinced to change it to the above scheme and provide a selection of common templates to take away the math for those cold, winter flying days when the brain don't work so well._ (Gruvin)
+Another example could be temperature, where the sensor might out voltage from 0V to 3.3V over the range -20C to +80C. This would equate to a settings of range = 100 with an offset = -20.
 
 ----
  
