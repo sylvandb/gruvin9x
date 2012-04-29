@@ -20,7 +20,7 @@ You can probably find the same products in other eBay store languages / location
 *A*. *VERY CAREFULLY* Seriously. The centre pin is GND and the RIGHT-hand pin (labelled '1') is +ve output power for an LED back-light. It includes a 200 ohm series current limiting resistor, which gives a comfortable and practical brightness on the HobbyKing LED back-light module. 
 
 If you need a different brightness, you could use your own series current limiting resistor off the left hand pin (3), which is a switched 5V output, utilising its own dedicated regulator as well as a safety fuse. The regulator is rated at _maximum_ 100mA and fused for safety at 250mA (if it gets fried and shorts out, it shouldn't take out the radio. This has not been tested.) 
-
+1145
 *CAUTION*: There is no series current limiting resistor on the the left-hand, pin-3!
 
 ----
@@ -132,6 +132,6 @@ If you wish to install a pre-compiled .HEX binary firmware version, rather than 
 
 *A*. Apart from actually liking KiCAD, this is an open and more importantly FREE for ALL project. KiCAD does everything we need and is free and open source. Eagle on the other hand, demands a hugely expensive (minimum USD$1,145 ATOW) "Pro" license for boards of this size and complexity. So really, it's a no-brainer. Eagle is of no practical use to us what-so-ever. 
 
-KiCAD was chosen over another alternative only because we found that it is easy to download and install on both Linux and Windows (the latter still being the most commonly used platform, for who on Earth knows why. :P)
+KiCAD was chosen over another alternative because we (well, gruvin) found that it is easy to download and install on both Linux and Windows (the latter still being the most commonly used platform, for who on Earth knows why, right? :P)
 
 ----
