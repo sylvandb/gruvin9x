@@ -1,8 +1,8 @@
-update=22/05/2011 19:36:55
+update=13/05/2012 19:30:39
 last_client=eeschema
 [eeschema]
 version=1
-LibDir=../share/library
+LibDir=../../trunk/hardware/pcb/share/library
 NetFmt=1
 HPGLSpd=20
 HPGLDm=15
