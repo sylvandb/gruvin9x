@@ -3,11 +3,26 @@
 <img src="http://gruvin9x.googlecode.com/svn/wiki/PCB.attach/pcbv4_photo.jpg" hspace="10" width="320" align="right">
 = Custom Main Board Development =
 
-Finally -- blank v4.1 boards are now in stock and available for purchase at [http://gruvin9x.com/shop]. There also a version with the MCU and LCD ZIF socket pre-soldered, while stocks last.
-
 _Photo to the right is the v4.0 prototype (R.I.P). An image of the V4.1 board can be found below, in the 'Progress' section._
 
-== Why? ==
+== Update 2012-05-14 ==
+The first test run of v4.1 fully assembled boards is sold out. We are in the quoting phase with the factory over the latest v4.2 design. (Very little difference from v4.1.) We hope to have some stock of the v4.2 boards by the end of July. Timing is very difficult to predict, due to several factors.
+
+Blank v4.1 boards are still available for purchase at [http://gruvin9x.com/shop]. There's also still the "pre-soldered tricky parts" version, with the MCU and LCD ZIF socket pre-soldered, while stocks last.
+
+*Firmware development at gruvin9x has all but compeltely stopped*, due to all active code committers having migrated to [http://open9x.googlecode.com open9x], where many features and changes are happening all the time -- all in concert with [http://companion9x.googlecode.com companion9x], of course. We may port various features from time to time, with a view to maintaining a more static or stable release under our banner. However, this and other aspects of the gruvin9x project are not clear at this time.
+
+Meanwhile, the ersky9x project (an ARM based custom controller board) is well underway and making good progress. As far as I know, they have no website or wiki for the board itself -- just forum posts, scattered about the Internet. (Try googling.) The PC design has not been open sourced and, from what I  (gruvin) can tell, is authored in very expensive and thus generally inaccessible CAD software. That sad point (IMHO) aside, the design itself looks pretty good and shows great proimise for the future of our hobby.
+
+For the foreseeable future, we do intend to continue with our hardward designs, such as the receiver multiplexer and possibly more. We are also waiting to see what Fr-Sky will actually come up with, in terms of their much rumoured full transmitter offering for the near future. "Your move, Fr-Sky." :-D Depending what happens there and elsewhere, we may entertain a more powerful platform for a kind of "next generation" RC transmitter. But these ideas are mere dreams, at this stage.
+
+Whatever happens, it seems the future of RC in general is set for great expansion. Yay \o/  
+
+_Gruvin_
+
+----
+
+== Why a custom PCB? ==
 
 The primary intention with this new main board is to provide a more powerful and flexible platform for the TH/ER/gruvin9x/(RadioClone?) open source firmware to run on – basically, because we want to and we can. :p (See project home page if you don't know what that even is :-)
 
