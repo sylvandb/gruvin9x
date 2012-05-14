@@ -10,14 +10,14 @@
   * [FlashGuide Flashing Binary Versions]
   * [CompilingFromSource Compiling from Source]
   * [MakeOptions Make Options]
- * [PCB Custom PCB (v4.1 etc)]
+ * [PCB Custom PCB (v4.x)]
   * [Circuitry Custom Schematics]
   * [PcbAssembly Build Your Own Board]
   * [SdcardBoard SD Card Installation]
   * [TurnigyV2 9X Reference Data]
    * [ReferenceImages Reference Images]
    * [SchematicV2 V2 Circuit Schematic]
-  * *[V41FAQ v4.1 Custom Board FAQ]*
+  * *[V41FAQ v4.x Custom Board FAQ]*
  * [GProg USB Programmer]
  * [Telemetry]
   * [FrSky Fr-Sky Support]
