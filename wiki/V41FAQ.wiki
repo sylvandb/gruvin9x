@@ -3,6 +3,18 @@
 <b>F</b>requently <b>A</b>sked <b>Q</b>uestions
 
 ----
+*Q*. How do I get a local copy of the PCB design files?
+
+*A*. Install [http://subversion.apache.org/ Subversion], then "check out" (download) the entire pcb-v4.1-frozen directory.
+
+Instructions for doing that (command line version) are on the standard Google "Source" page (see menu, above.) You'll need to change the source path though ...
+{{{
+    svn checkout https://gruvin9x.googlecode.com/svn/archive/pcb-v4.1a-frozen g9x-pcb-v4.1
+}}}
+
+That will create a directory named `g9x-pcb-v4.1/`, containing all the files and subdirectories. You can of course use whatever folder name you please. Various bill-of-materials (BOM) files can be found in the `assembly/` sub-folder.
+
+----
 *Q*. Where do I find v4.1 board construction tips and advice?
 
 *A*. There's a separate [PcbAssembly Build Your Own Board] wiki page for that, [PcbAssembly here]. What follows in this FAQ is more aimed at completed v4.1 boards, being installed into a '9X transmitter housing.
