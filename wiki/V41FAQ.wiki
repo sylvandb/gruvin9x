@@ -138,7 +138,7 @@ If you wish to install a pre-compiled .HEX binary firmware version, rather than 
   `$ avrdude -c usbasp -P usb -p atmega2560 -U hfuse:w:0x11:m -U lfuse:w:0xd7:m -U efuse:w:0xfc:m`
 
 ----
-*Q*. How to fix intermittent power lock-on problem?
+*Q*. *How to fix intermittent power lock-on problem?*
 
 *A*. There is a small design flaw in the v4.1 soft-off circuitry that can sometimes cause the radio to lock in the power-on state, after turning off the power switch. This fault can, quite literally, come and go with changes in the weather, moisture level sin the air, local static field, etc. Thus, not all radios will be affected and radios that have been fine for weeks could begin to exhibit the behaviour from time to time.
 
