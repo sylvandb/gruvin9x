@@ -32,7 +32,7 @@ You can probably find the same products in other eBay store languages / location
 *A*. *VERY CAREFULLY* Seriously. The centre pin is GND and the RIGHT-hand pin (labelled '1') is +ve output power for an LED back-light. It includes a 200 ohm series current limiting resistor, which gives a comfortable and practical brightness on the HobbyKing LED back-light module. 
 
 If you need a different brightness, you could use your own series current limiting resistor off the left hand pin (3), which is a switched 5V output, utilising its own dedicated regulator as well as a safety fuse. The regulator is rated at _maximum_ 100mA and fused for safety at 250mA (if it gets fried and shorts out, it shouldn't take out the radio. This has not been tested.) 
-1145
+
 *CAUTION*: There is no series current limiting resistor on the the left-hand, pin-3!
 
 ----
