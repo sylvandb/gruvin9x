@@ -1,4 +1,4 @@
-### Module positions - created on 7/05/2012 8:42:57 p.m. ###
+### Module positions - created on 18/05/2012 12:57:21 p.m. ###
 ### Printed by Pcbnew version pcbnew (2011-11-27 BZR 3249)-stable
 ## Unit = inches, Angle = deg.
 ## Side : Front
@@ -32,7 +32,7 @@ C26      0u1                  1.5256     1.6535       0.0    Front
 C27      0u1                  5.3829     1.7795       0.0    Front
 C28      0u1                  3.7043     3.2441     270.0    Front
 C29      0u1                  3.7665     3.2441     270.0    Front
-C30      0u1                  4.0043     2.2154     180.0    Front
+C30      0u1                  4.0362     2.2906     270.0    Front
 C31      47u                  1.7319     2.5358       0.0    Front
 C32      22u                  1.6937     2.9571       0.0    Front
 C33      0u1                  1.6902     3.0488       0.0    Front
@@ -89,7 +89,7 @@ K4       CONN_5               5.8728     1.3433       0.0    Front
 K5       CONN_3               6.5161     1.3524     180.0    Front
 K6       CONN_3               3.9642     3.2374       0.0    Front
 L1       10u                  3.3967     2.7756     180.0    Front
-L2       10u                  3.8150     2.1315     180.0    Front
+L2       10u                  3.8252     2.1370     180.0    Front
 P1       CONN_3X2             7.5197     2.8553     270.0    Front
 P2       CONN_5               1.3339     1.7504      90.0    Front
 P3       CONN_6               7.6598     1.7055     270.0    Front
@@ -222,12 +222,13 @@ R108     5K1                  6.8886     2.1894     180.0    Front
 R109     5K1                  2.8531     2.8598     180.0    Front
 R110     5K1                  6.8453     2.2780     180.0    Front
 R111     5K1                  3.6307     2.0169       0.0    Front
-R112     5K1                  3.7205     2.0476      90.0    Front
+R112     5K1                  3.6811     2.0882     180.0    Front
 R113     100K                 3.8224     1.6512      90.0    Front
 R114     5K1                  3.7933     1.7370     180.0    Front
 R115     100K                 3.6469     1.7567     180.0    Front
 R116     NC                   3.5059     1.7161     270.0    Front
 R117     1K                   6.9114     3.0728     180.0    Front
+R118     10K                  3.7484     1.9906       0.0    Front
 U1       78L05                3.3669     1.6106       0.0    Front
 U2       78L05                6.2012     1.7173      90.0    Front
 U3       LN-6206-30           3.3701     1.8789       0.0    Front
