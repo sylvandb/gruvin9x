@@ -1,4 +1,4 @@
-EESchema Schematic File Version 2  date 13/05/2012 19:29:45
+EESchema Schematic File Version 2  date 20/05/2012 01:47:44
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -36,7 +36,7 @@ $Descr A4 11700 8267
 encoding utf-8
 Sheet 1 1
 Title "noname.sch"
-Date "21 jun 2011"
+Date "20 may 2012"
 Rev ""
 Comp ""
 Comment1 ""
@@ -423,7 +423,7 @@ P 9150 6450
 F 0 "P8" V 9100 6450 60  0000 C CNN
 F 1 "CONN_6" V 9200 6450 60  0000 C CNN
 	1    9150 6450
-	0    1    1    0   
+	0    -1   1    0   
 $EndComp
 $Comp
 L POT RV2
@@ -639,7 +639,7 @@ P 4450 6450
 F 0 "P6" V 4400 6450 60  0000 C CNN
 F 1 "CONN_12" V 4500 6450 60  0000 C CNN
 	1    4450 6450
-	0    1    1    0   
+	0    -1   1    0   
 $EndComp
 $Comp
 L BATTERY BT1
