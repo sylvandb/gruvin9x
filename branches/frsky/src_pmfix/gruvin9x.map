@@ -1,0 +1,2140 @@
+Archive member included because of file (symbol)
+
+/usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_mulsi3.o)
+                              obj/gruvin9x.o (__mulsi3)
+/usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_udivmodqi4.o)
+                              obj/rtc.o (__udivmodqi4)
+/usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_udivmodhi4.o)
+                              obj/gruvin9x.o (__udivmodhi4)
+/usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_divmodhi4.o)
+                              obj/gruvin9x.o (__divmodhi4)
+/usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_udivmodsi4.o)
+                              obj/gruvin9x.o (__udivmodsi4)
+/usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_divmodsi4.o)
+                              obj/gruvin9x.o (__divmodsi4)
+/usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_exit.o)
+                              /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o (exit)
+/usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_copy_data.o)
+                              obj/gruvin9x.o (__do_copy_data)
+/usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_clear_bss.o)
+                              obj/gruvin9x.o (__do_clear_bss)
+/usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/libc.a(memcpy_P.o)
+                              obj/gruvin9x.o (memcpy_P)
+/usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/libc.a(memmove.o)
+                              obj/model_menus.o (memmove)
+/usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/libc.a(memset.o)
+                              obj/file.o (memset)
+/usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/libc.a(strcpy.o)
+                              obj/frsky.o (strcpy)
+/usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/libc.a(eerd_block_atmega2560.o)
+                              obj/file.o (__eerd_block_m2560)
+/usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/libc.a(memcpy.o)
+                              /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/libc.a(memmove.o) (memcpy)
+
+Allocating common symbols
+Common symbol       size              file
+
+trace()::s_time     0x2               obj/gruvin9x.o
+timer(unsigned char)::last_tmr
+                    0x2               obj/gruvin9x.o
+trace()::s_sum      0x2               obj/gruvin9x.o
+timer(unsigned char)::lastSwPos
+                    0x1               obj/gruvin9x.o
+trace()::s_cnt      0x2               obj/gruvin9x.o
+timer(unsigned char)::s_time
+                    0x2               obj/gruvin9x.o
+timer(unsigned char)::s_sum
+                    0x2               obj/gruvin9x.o
+timer(unsigned char)::sw_toggled
+                    0x1               obj/gruvin9x.o
+timer(unsigned char)::s_cnt
+                    0x2               obj/gruvin9x.o
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+text             0x00000000         0x00100000         xr
+data             0x00800200         0x0000fe00         rw !x
+eeprom           0x00810000         0x00010000         rw !x
+fuse             0x00820000         0x00000400         rw !x
+lock             0x00830000         0x00000400         rw !x
+signature        0x00840000         0x00000400         rw !x
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+Address of section .data set to 0x800200
+LOAD /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+LOAD obj/gruvin9x.o
+LOAD obj/stamp.o
+LOAD obj/menus.o
+LOAD obj/model_menus.o
+LOAD obj/general_menus.o
+LOAD obj/main_views.o
+LOAD obj/statistics_views.o
+LOAD obj/pers.o
+LOAD obj/file.o
+LOAD obj/lcd.o
+LOAD obj/drivers.o
+LOAD obj/time.o
+LOAD obj/rtc.o
+LOAD obj/ff.o
+LOAD obj/diskio.o
+LOAD obj/frsky.o
+LOAD obj/templates.o
+LOAD /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/libm.a
+LOAD /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a
+LOAD /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/libc.a
+LOAD /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a
+
+.hash
+ *(.hash)
+
+.dynsym
+ *(.dynsym)
+
+.dynstr
+ *(.dynstr)
+
+.gnu.version
+ *(.gnu.version)
+
+.gnu.version_d
+ *(.gnu.version_d)
+
+.gnu.version_r
+ *(.gnu.version_r)
+
+.rel.init
+ *(.rel.init)
+
+.rela.init
+ *(.rela.init)
+
+.rel.text
+ *(.rel.text)
+ *(.rel.text.*)
+ *(.rel.gnu.linkonce.t*)
+
+.rela.text
+ *(.rela.text)
+ *(.rela.text.*)
+ *(.rela.gnu.linkonce.t*)
+
+.rel.fini
+ *(.rel.fini)
+
+.rela.fini
+ *(.rela.fini)
+
+.rel.rodata
+ *(.rel.rodata)
+ *(.rel.rodata.*)
+ *(.rel.gnu.linkonce.r*)
+
+.rela.rodata
+ *(.rela.rodata)
+ *(.rela.rodata.*)
+ *(.rela.gnu.linkonce.r*)
+
+.rel.data
+ *(.rel.data)
+ *(.rel.data.*)
+ *(.rel.gnu.linkonce.d*)
+
+.rela.data
+ *(.rela.data)
+ *(.rela.data.*)
+ *(.rela.gnu.linkonce.d*)
+
+.rel.ctors
+ *(.rel.ctors)
+
+.rela.ctors
+ *(.rela.ctors)
+
+.rel.dtors
+ *(.rel.dtors)
+
+.rela.dtors
+ *(.rela.dtors)
+
+.rel.got
+ *(.rel.got)
+
+.rela.got
+ *(.rela.got)
+
+.rel.bss
+ *(.rel.bss)
+
+.rela.bss
+ *(.rela.bss)
+
+.rel.plt
+ *(.rel.plt)
+
+.rela.plt
+ *(.rela.plt)
+
+.text           0x00000000    0x1575e
+ *(.vectors)
+ .vectors       0x00000000       0xe4 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+                0x00000000                __vectors
+                0x00000000                __vector_default
+ *(.vectors)
+ *(.progmem.gcc*)
+ *(.progmem*)
+ .progmem.data  0x000000e4       0xdc obj/gruvin9x.o
+                0x000000e4                modi12x3
+ .progmem.data  0x000001c0       0x4d obj/stamp.o
+                0x000001c0                stamp1
+                0x000001d2                stamp2
+                0x000001e3                stamp3
+                0x000001f2                stamp4
+                0x00000204                stamp5
+ .progmem.data  0x0000020d       0x48 obj/menus.o
+ .progmem.data  0x00000255      0x4bf obj/model_menus.o
+                0x00000458                _ZZ16displayMixerLinehhhhhhE3__c
+                0x00000533                _ZZ12editExpoValshhbhhE3__c
+ .progmem.data  0x00000714      0x235 obj/general_menus.o
+ .progmem.data  0x00000949       0x79 obj/main_views.o
+ .progmem.data  0x000009c2       0x9d obj/statistics_views.o
+ .progmem.data  0x00000a5f       0x54 obj/pers.o
+ .progmem.data  0x00000ab3       0x10 obj/file.o
+ .progmem.data  0x00000ac3       0xdb obj/lcd.o
+ .progmem.data  0x00000b9e        0xe obj/templates.o
+                0x00000b9e                n_Templates
+                0x00000bac                . = ALIGN (0x2)
+                0x00000bac                __trampolines_start = .
+ *(.trampolines)
+ .trampolines   0x00000bac        0x0 linker stubs
+ *(.trampolines*)
+                0x00000bac                __trampolines_end = .
+ *(.jumptables)
+ *(.jumptables*)
+ *(.lowtext)
+ *(.lowtext*)
+                0x00000bac                __ctors_start = .
+ *(.ctors)
+                0x00000bac                __ctors_end = .
+                0x00000bac                __dtors_start = .
+ *(.dtors)
+                0x00000bac                __dtors_end = .
+ SORT(*)(.ctors)
+ SORT(*)(.dtors)
+ *(.init0)
+ .init0         0x00000bac        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+                0x00000bac                __init
+ *(.init0)
+ *(.init1)
+ *(.init1)
+ *(.init2)
+ .init2         0x00000bac       0x10 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+ *(.init2)
+ *(.init3)
+ *(.init3)
+ *(.init4)
+ .init4         0x00000bbc       0x1a /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_copy_data.o)
+                0x00000bbc                __do_copy_data
+ .init4         0x00000bd6       0x10 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_clear_bss.o)
+                0x00000bd6                __do_clear_bss
+ *(.init4)
+ *(.init5)
+ *(.init5)
+ *(.init6)
+ *(.init6)
+ *(.init7)
+ *(.init7)
+ *(.init8)
+ *(.init8)
+ *(.init9)
+ .init9         0x00000be6        0x8 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+ *(.init9)
+ *(.text)
+ .text          0x00000bee        0x4 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+                0x00000bee                __vector_42
+                0x00000bee                __vector_22
+                0x00000bee                __vector_28
+                0x00000bee                __vector_1
+                0x00000bee                __vector_32
+                0x00000bee                __vector_34
+                0x00000bee                __vector_24
+                0x00000bee                __vector_12
+                0x00000bee                __vector_55
+                0x00000bee                __vector_46
+                0x00000bee                __bad_interrupt
+                0x00000bee                __vector_35
+                0x00000bee                __vector_39
+                0x00000bee                __vector_23
+                0x00000bee                __vector_45
+                0x00000bee                __vector_11
+                0x00000bee                __vector_54
+                0x00000bee                __vector_19
+                0x00000bee                __vector_56
+                0x00000bee                __vector_49
+                0x00000bee                __vector_41
+                0x00000bee                __vector_43
+                0x00000bee                __vector_27
+                0x00000bee                __vector_5
+                0x00000bee                __vector_33
+                0x00000bee                __vector_47
+                0x00000bee                __vector_52
+                0x00000bee                __vector_37
+                0x00000bee                __vector_44
+                0x00000bee                __vector_51
+                0x00000bee                __vector_9
+                0x00000bee                __vector_2
+                0x00000bee                __vector_21
+                0x00000bee                __vector_36
+                0x00000bee                __vector_29
+                0x00000bee                __vector_40
+                0x00000bee                __vector_8
+                0x00000bee                __vector_48
+                0x00000bee                __vector_14
+                0x00000bee                __vector_53
+                0x00000bee                __vector_10
+                0x00000bee                __vector_50
+                0x00000bee                __vector_16
+                0x00000bee                __vector_18
+                0x00000bee                __vector_20
+                0x00000bee                __vector_38
+ .text          0x00000bf2     0x3698 obj/gruvin9x.o
+                0x00000bf2                _Z11getADC_filtv
+                0x00000c6a                _Z11getADC_osmpv
+                0x00000cba                _Z13getADC_singlev
+                0x00000cfc                _Z13calc100toRESXa
+                0x00000d26                _Z14calc1000toRESXi
+                0x00000d54                _Z11get_tmr10msv
+                0x00000d64                _Z16isFunctionActiveh
+                0x00000d8e                _Z8char2idxc
+                0x00000dde                _Z8idx2chara
+                0x00000e22                _Z12phaseaddressh
+                0x00000e3e                _Z11expoaddressh
+                0x00000e52                _Z10mixaddressh
+                0x00000e6c                _Z12limitaddressh
+                0x00000e84                _Z6intpolih
+                0x00000f64                _Z10applyCurveihh
+                0x00000ff6                _Z5expoujj
+                0x000010b4                _Z4expoii
+                0x00001110                _Z11__getSwitcha
+                0x00001466                _Z9getSwitchab
+                0x0000147e                _Z14getFlightPhasev
+                0x000014b0                _Z10applyExposPih
+                0x000016d4                _Z12getTrimValuehh
+                0x0000172a                _Z12setTrimValuehhi
+                0x00001798                _Z18getTrimFlightPhasehh
+                0x000017d8                _Z7keyDownv
+                0x000017e2                _Z14clearKeyEventsv
+                0x000017f0                _Z13alertMessagesPKcS0_
+                0x00001848                _Z13checkSwitchesv
+                0x000018c0                _Z7messagePKc
+                0x000018f4                _Z5alertPKcb
+                0x0000197e                _Z10checkAlarmv
+                0x00001996                _Z14checkLowEEPROMv
+                0x000019b4                _Z9checkTrimh
+                0x00001bce                _Z5anaInh
+                0x00001bea                _Z8checkTHRv
+                0x00001c8e                _Z8doSplashv
+                0x00001da0                _Z14getADC_bandgapv
+                0x00001e22                _Z14checkSlaveModev
+                0x00001e2a                _Z11resetTimer1v
+                0x00001e50                _Z11resetTimer2v
+                0x00001e5e                _Z5timerh
+                0x00002256                _Z5tracev
+                0x000023d2                _Z9evalTrimsh
+                0x00002510                _Z10evalSticksh
+                0x0000273c                _Z13evalFunctionsv
+                0x000027b2                _Z6perOutPih
+                0x00003110                _Z7perMainv
+                0x000038e8                __vector_17
+                0x000039f8                __vector_15
+                0x00003a1a                _Z11getTmr16KHzv
+                0x00003a38                __vector_13
+                0x00003b98                __vector_31
+                0x00003c9a                get_fattime
+                0x00003d96                _Z11instantTrimv
+                0x00003e7c                _Z18moveTrimsToOffsetsv
+                0x00003f72                __vector_3
+                0x00003f9e                __vector_4
+                0x00003fca                __vector_6
+                0x00003ff6                __vector_7
+                0x00004022                _Z10stack_freev
+                0x00004036                main
+ .text          0x0000428a        0x0 obj/stamp.o
+ .text          0x0000428a      0xb36 obj/menus.o
+                0x0000428a                _Z5minitv
+                0x00004294                _Z14menu_lcd_onoffhhhh
+                0x000042b6                _Z16menu_lcd_HYPHINVhhhh
+                0x000042d8                _Z18DisplayScreenIndexhhh
+                0x00004328                _Z11checkIncDechiiih
+                0x000044cc                _Z16checkIncDecModelhaaa
+                0x000044ea                _Z14checkIncDecGenhaaa
+                0x00004508                _Z7popMenuv
+                0x00004554                _Z9chainMenuPFvhE
+                0x0000457a                _Z5checkhhPPFvhEhPhhh
+                0x000048b0                _Z12check_simplehhPPFvhEhh
+                0x000048ce                _Z20check_submenu_simplehh
+                0x000048e2                _Z8pushMenuPFvhE
+                0x00004932                _Z14setupPulsesPPMv
+                0x00004a6a                _Z10_send_hilojj
+                0x00004a8c                _Z11sendBitSilvh
+                0x00004aa2                _Z13send2BitsSilvh
+                0x00004ab8                _Z17setupPulsesSilverv
+                0x00004c06                _Z10sendBitTrah
+                0x00004c22                _Z11sendByteTrah
+                0x00004c3e                _Z24setupPulsesTracerCtp1009v
+                0x00004d8c                _Z11setupPulsesv
+ .text          0x00004dc0     0x414a obj/model_menus.o
+                0x00004dc0                _Z17menuProcTemplatesh
+                0x00004ee2                _Z17menuProcTelemetryh
+                0x000056c8                _Z22menuProcSafetySwitchesh
+                0x00005806                _Z24menuProcFunctionSwitchesh
+                0x0000595c                _Z22menuProcCustomSwitchesh
+                0x00005c70                _Z17menuProcCurvesAllh
+                0x00005dca                _Z14menuProcLimitsh
+                0x000060a2                _Z14menuProcMixOneh
+                0x000064dc                _Z6expoFni
+                0x0000656e                _Z7curveFni
+                0x00006578                _Z17menuProcPhasesAllh
+                0x00006734                _Z7eeFlushv
+                0x0000673e                _Z10displayBoxv
+                0x00006776                _Z12displayPopupPKc
+                0x00006790                _Z14displayWarningh
+                0x000067c8                _Z19displayConfirmationh
+                0x00006822                _Z19menuProcModelSelecth
+                0x00006e20                _Z8EditNamehhPchhbRh
+                0x00006f7a                _Z16menuProcPhaseOneh
+                0x00007256                _Z13menuProcModelh
+                0x000079b2                _Z9DrawCurvePFiiE
+                0x00007a46                _Z16menuProcCurveOneh
+                0x00007d5a                _Z15getExpoMixCounth
+                0x00007da0                _Z22reachExpoMixCountLimith
+                0x00007de0                _Z13deleteExpoMixhh
+                0x00007e80                _Z13insertExpoMixhh
+                0x00007f36                _Z11copyExpoMixhh
+                0x00007f90                _Z7memswapPvS_h
+                0x00007faa                _Z8swapExpoRhh
+                0x00008086                _Z7swapMixRhh
+                0x00008150                _Z11swapExpoMixhRhh
+                0x0000817a                _Z12editExpoValshhbhh
+                0x000083ca                _Z15menuProcExpoOneh
+                0x000085b2                _Z16displayMixerLinehhhhhh
+                0x00008730                _Z15displayExpoLinehhhhhh
+                0x000088ac                _Z15menuProcExpoMixhh
+                0x00008ef6                _Z14menuProcMixAllh
+                0x00008f00                _Z16menuProcExposAllh
+ .text          0x00008f0a     0x149e obj/general_menus.o
+                0x00008f0a                _Z17menuProcDiagCalibh
+                0x0000916c                _Z15menuProcDiagAnah
+                0x00009304                _Z16menuProcDiagKeysh
+                0x00009436                _Z16menuProcDiagVersh
+                0x000094bc                _Z15menuProcTrainerh
+                0x000097b0                _Z12menuProcTimeh
+                0x00009b70                _Z13menuProcSetuph
+ .text          0x0000a3a8     0x1084 obj/main_views.o
+                0x0000a3a8                _Z10lcd_squarehhhh
+                0x0000a3e8                _Z11lastPopMenuv
+                0x0000a3fc                _Z19doMainScreenGrphicsv
+                0x0000a598                _Z12menuMainViewh
+ .text          0x0000b42c      0x296 obj/statistics_views.o
+                0x0000b42c                _Z18menuProcStatistic2h
+                0x0000b56a                _Z17menuProcStatistich
+ .text          0x0000b6c2      0xafa obj/pers.o
+                0x0000b6c2                _ZN7RlcFile8readRlc1EPhj
+                0x0000b6ca                _ZN7RlcFile7readRlcEPhj
+                0x0000b6dc                _Z20applyDefaultTemplatev
+                0x0000b6e4                _Z14generalDefaultv
+                0x0000b736                _Z9Translatev
+                0x0000bf22                _Z13eeLoadGeneralv
+                0x0000bf9e                _Z12modelDefaulth
+                0x0000bfb8                _Z15eeLoadModelNamehPc
+                0x0000c018                _Z13eeModelExistsh
+                0x0000c020                _Z16eeFindEmptyModelhb
+                0x0000c07e                _Z7eeDirtyh
+                0x0000c08a                _Z7eeCheckb
+                0x0000c0f4                _Z11eeLoadModelh
+                0x0000c142                _Z9eeReadAllv
+ .text          0x0000c1bc      0xaf4 obj/file.o
+                0x0000c29a                _Z11EeFsGetFreev
+                0x0000c2ba                _Z6EeFsckv
+                0x0000c39e                _Z10EeFsFormatv
+                0x0000c3f4                _Z8EeFsOpenv
+                0x0000c41e                _ZN5EFile6existsEh
+                0x0000c43a                _ZN5EFile4swapEhh
+                0x0000c4d2                _ZN5EFile2rmEh
+                0x0000c514                _ZN5EFile4sizeEv
+                0x0000c530                _ZN5EFile6openRdEh
+                0x0000c558                _ZN7RlcFile7openRlcEh
+                0x0000c56c                _ZN5EFile4readEPhj
+                0x0000c60a                _ZN7RlcFile9readRlc12EPhjb
+                0x0000c718                _ZN7RlcFile6createEhhh
+                0x0000c760                _ZN7RlcFile16nextRlcWriteStepEv
+                0x0000c932                _ZN7RlcFile8writeRlcEhhPhjh
+                0x0000c998                _ZN7RlcFile13nextWriteStepEv
+                0x0000cad8                _ZN7RlcFile5writeEPhh
+                0x0000cb06                _ZN7RlcFile4copyEhh
+                0x0000cbe8                _ZN7RlcFile6write1Eh
+                0x0000cbfa                _ZN7RlcFile5flushEv
+                0x0000cc48                _ZN7RlcFile18DisplayProgressBarEh
+ .text          0x0000ccb0      0xd5c obj/lcd.o
+                0x0000ccb0                _Z9lcd_clearv
+                0x0000ccc6                _Z7lcd_imghhPKhhh
+                0x0000cd8c                _Z11lcd_putcAtthhch
+                0x0000ceee                _Z8lcd_putchhc
+                0x0000cef6                _Z12lcd_putsnAtthhPKchh
+                0x0000cf7e                _Z11lcd_putsn_PhhPKch
+                0x0000cf8a                _Z11lcd_putsAtthhPKch
+                0x0000d00e                _Z10lcd_puts_PhhPKc
+                0x0000d016                _Z11lcd_outhex4hhj
+                0x0000d072                _Z8lcd_maskPhhh
+                0x0000d092                _Z8lcd_plothhh
+                0x0000d0d0                _Z13lcd_hlineStipahahh
+                0x0000d17e                _Z9lcd_hlinehhah
+                0x0000d18c                _Z13lcd_vlineStiphaah
+                0x0000d24a                _Z9lcd_vlinehaa
+                0x0000d252                _Z14lcd_outdezNAtthhihh
+                0x0000d478                _Z13lcd_outdezAtthhih
+                0x0000d484                _Z11lcd_outdez8hha
+                0x0000d492                _Z8lcd_recthhhhhh
+                0x0000d500                _Z15lcd_filled_recthahhh
+                0x0000d566                _Z8putsTimehhihh
+                0x0000d604                _Z9putsVoltshhjh
+                0x0000d62a                _Z8putsVBathhh
+                0x0000d638                _Z10putsStrIdxhhPKchh
+                0x0000d666                _Z10putsChnRawhhhh
+                0x0000d6ec                _Z7putsChnhhhh
+                0x0000d6fc                _Z13putsChnLetterhhhh
+                0x0000d72a                _Z13putsModelNamehhPchh
+                0x0000d75e                _Z12putsSwitcheshhah
+                0x0000d7de                _Z15putsFlightPhasehhah
+                0x0000d826                _Z9putsCurvehhhh
+                0x0000d852                _Z11putsTmrModehhh
+                0x0000d8f8                _Z13putsTelemetryhhhhh
+                0x0000d914                _Z10lcdSendCtlh
+                0x0000d926                _Z11delay_1_5usi
+                0x0000d940                _Z8lcd_initv
+                0x0000d9ac                _Z13lcdSetRefVolth
+                0x0000d9c0                _Z14refreshDisplayv
+ .text          0x0000da0c      0x54e obj/drivers.o
+                0x0000da0c                _Z17__eewr_byte_m2560v
+                0x0000da3c                __vector_30
+                0x0000daa2                _Z15eeWriteBlockCmpPKvjj
+                0x0000dad0                _Z8putEventh
+                0x0000dad6                _Z8getEventv
+                0x0000dae0                _ZN3Key5inputEb8EnumKeys
+                0x0000dc3c                _Z8keyState8EnumKeys
+                0x0000dcfa                _Z11pauseEventsh
+                0x0000dd18                _Z10killEventsh
+                0x0000dd3a                _Z7per10msv
+ .text          0x0000df5a      0xc68 obj/time.o
+                0x0000e1f0                _Z9__offtimePllP2tm
+                0x0000e5d6                _Z13__localtime_rPlP2tm
+                0x0000e5f6                _Z17__mktime_internalP2tmPFS0_PlS0_ES1_
+                0x0000eb98                _Z6mktimeP2tm
+                0x0000eba6                _Z6filltmPlP2tm
+ .text          0x0000ebc2      0x4ca obj/rtc.o
+                0x0000ec70                _Z8iic_readhjjPh
+                0x0000ed68                _Z9iic_writehjjPKh
+                0x0000ee06                _Z11rtc_gettimeP3RTC
+                0x0000ef38                _Z11rtc_settimePK3RTC
+                0x0000efdc                _Z8rtc_initv
+ .text          0x0000f08c     0x4b92 obj/ff.o
+                0x0000fd7e                _Z10clust2sectP5FATFSm
+                0x0000fddc                _Z7get_fatP5FATFSm
+                0x00010172                _Z7put_fatP5FATFSmm
+                0x00010caa                f_mount
+                0x00010cdc                f_open
+                0x00010fd0                _Z6f_readP3FILPhjPj
+                0x000112e6                _Z7f_writeP3FILPKhjPj
+                0x00011706                f_sync
+                0x0001179c                f_close
+                0x000117b8                f_chdrive
+                0x000117ce                f_chdir
+                0x000118c8                f_getcwd
+                0x00011b60                f_lseek
+                0x00011eec                f_opendir
+                0x00011fca                f_readdir
+                0x00012080                f_stat
+                0x00012110                f_getfree
+                0x00012390                f_truncate
+                0x000124ba                f_unlink
+                0x00012648                f_mkdir
+                0x0001295e                f_chmod
+                0x00012a0e                f_utime
+                0x00012acc                f_rename
+                0x00012d16                f_mkfs
+                0x000137d2                f_gets
+                0x00013888                f_putc
+                0x000138d4                f_puts
+                0x0001391c                f_printf
+ .text          0x00013c1e      0x8a4 obj/diskio.o
+                0x00013e44                _Z15disk_initializeh
+                0x00013fd4                _Z11disk_statush
+                0x00013fe2                _Z9disk_readhPhmh
+                0x0001408e                _Z10disk_writehPKhmh
+                0x0001417a                _Z10disk_ioctlhhPh
+                0x00014492                _Z14disk_timerprocv
+ .text          0x000144c2      0x77a obj/frsky.o
+                0x000144c2                _Z17frskyComputeVoltshjh
+                0x0001450c                _Z14frskyPutAValuehhhhh
+                0x000145ac                _Z14frskyPushValueRPhh
+                0x000145f0                _Z18parseTelemHubIndexh
+                0x00014614                _Z17parseTelemHubByteh
+                0x000146bc                __vector_26
+                0x0001470a                _Z19frskyTransmitBufferv
+                0x00014716                _Z13FRSKY10mspollv
+                0x0001480c                _Z17FRSKY_alarmRaisedh
+                0x000148fa                _Z15FRSKY_EnableTXDv
+                0x0001490a                _Z15FRSKY_EnableRXDv
+                0x0001491c                _ZN9FrskyData3setEh
+                0x0001493a                _Z18processFrskyPacketPh
+                0x000149d8                __vector_25
+                0x00014aec                _Z14resetTelemetryv
+                0x00014bf0                _Z10FRSKY_Initv
+ .text          0x00014c3c      0x97c obj/templates.o
+                0x00014c3c                _Z7setDesth
+                0x00014d02                _Z10clearMixesv
+                0x00014d1e                _Z11clearCurvesv
+                0x00014d3a                _Z8setCurvehPKa
+                0x00014da8                _Z9setSwitchhhaa
+                0x00014dd2                _Z13applyTemplateh
+ .text          0x000155b8        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_mulsi3.o)
+ .text          0x000155b8        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_udivmodqi4.o)
+ .text          0x000155b8        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_udivmodhi4.o)
+ .text          0x000155b8        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_divmodhi4.o)
+ .text          0x000155b8        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_udivmodsi4.o)
+ .text          0x000155b8        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_divmodsi4.o)
+ .text          0x000155b8        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_exit.o)
+ .text          0x000155b8        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_copy_data.o)
+ .text          0x000155b8        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_clear_bss.o)
+ .text          0x000155b8        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/libc.a(memcpy_P.o)
+ .text          0x000155b8        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/libc.a(memmove.o)
+ .text          0x000155b8        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/libc.a(memset.o)
+ .text          0x000155b8        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/libc.a(strcpy.o)
+ .text          0x000155b8        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/libc.a(eerd_block_atmega2560.o)
+ .text          0x000155b8        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/libc.a(memcpy.o)
+                0x000155b8                . = ALIGN (0x2)
+ *(.text.*)
+ .text.libgcc   0x000155b8       0x3e /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_mulsi3.o)
+                0x000155b8                __mulsi3
+ .text.libgcc   0x000155f6       0x18 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_udivmodqi4.o)
+                0x000155f6                __udivmodqi4
+ .text.libgcc   0x0001560e       0x28 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_udivmodhi4.o)
+                0x0001560e                __udivmodhi4
+ .text.libgcc   0x00015636       0x26 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_divmodhi4.o)
+                0x00015636                __divmodhi4
+                0x00015636                _div
+ .text.libgcc   0x0001565c       0x44 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_udivmodsi4.o)
+                0x0001565c                __udivmodsi4
+ .text.libgcc   0x000156a0       0x36 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_divmodsi4.o)
+                0x000156a0                __divmodsi4
+ .text.libgcc   0x000156d6        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_exit.o)
+ .text.libgcc   0x000156d6        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_copy_data.o)
+ .text.libgcc   0x000156d6        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_clear_bss.o)
+ .text.avr-libc
+                0x000156d6       0x12 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/libc.a(memcpy_P.o)
+                0x000156d6                memcpy_P
+ .text.avr-libc
+                0x000156e8       0x24 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/libc.a(memmove.o)
+                0x000156e8                memmove
+ .text.avr-libc
+                0x0001570c        0xe /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/libc.a(memset.o)
+                0x0001570c                memset
+ .text.avr-libc
+                0x0001571a        0xe /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/libc.a(strcpy.o)
+                0x0001571a                strcpy
+ .text.avr-libc
+                0x00015728       0x20 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/libc.a(eerd_block_atmega2560.o)
+                0x00015728                __eerd_block_m2560
+                0x0001572c                __eerd_blraw_m2560
+ .text.avr-libc
+                0x00015748       0x12 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/libc.a(memcpy.o)
+                0x00015748                memcpy
+                0x0001575a                . = ALIGN (0x2)
+ *(.fini9)
+ .fini9         0x0001575a        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_exit.o)
+                0x0001575a                exit
+                0x0001575a                _exit
+ *(.fini9)
+ *(.fini8)
+ *(.fini8)
+ *(.fini7)
+ *(.fini7)
+ *(.fini6)
+ *(.fini6)
+ *(.fini5)
+ *(.fini5)
+ *(.fini4)
+ *(.fini4)
+ *(.fini3)
+ *(.fini3)
+ *(.fini2)
+ *(.fini2)
+ *(.fini1)
+ *(.fini1)
+ *(.fini0)
+ .fini0         0x0001575a        0x4 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_exit.o)
+ *(.fini0)
+                0x0001575e                _etext = .
+
+.data           0x00800200     0x103a load address 0x0001575e
+                0x00800200                PROVIDE (__data_start, .)
+ *(.data)
+ .data          0x00800200        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+ .data          0x00800200      0x4a4 obj/gruvin9x.o
+                0x00800200                s9xsplashv4
+                0x00800602                chout_ar
+                0x00800662                modn12x3
+                0x00800672                BandGap
+                0x00800674                getADC
+ .data          0x008006a4        0x0 obj/stamp.o
+ .data          0x008006a4        0x3 obj/menus.o
+ .data          0x008006a7       0x4b obj/model_menus.o
+                0x008006a7                menuTabModel
+ .data          0x008006f2       0x73 obj/general_menus.o
+                0x008006f2                sticks
+                0x0080073c                menuTabDiag
+ .data          0x00800765        0xd obj/main_views.o
+                0x00800765                tabViews
+ .data          0x00800772        0x0 obj/statistics_views.o
+ .data          0x00800772        0x0 obj/pers.o
+ .data          0x00800772        0x0 obj/file.o
+ .data          0x00800772      0x964 obj/lcd.o
+                0x00800772                font
+                0x00800954                font_dblsize
+ .data          0x008010d6        0x9 obj/drivers.o
+ .data          0x008010df       0x34 obj/time.o
+                0x008010df                __mon_yday
+ .data          0x00801113        0x0 obj/rtc.o
+ .data          0x00801113       0x6f obj/ff.o
+ .data          0x00801182        0x1 obj/diskio.o
+ .data          0x00801183       0x5c obj/frsky.o
+ .data          0x008011df       0x5b obj/templates.o
+ .data          0x0080123a        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_mulsi3.o)
+ .data          0x0080123a        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_udivmodqi4.o)
+ .data          0x0080123a        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_udivmodhi4.o)
+ .data          0x0080123a        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_divmodhi4.o)
+ .data          0x0080123a        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_udivmodsi4.o)
+ .data          0x0080123a        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_divmodsi4.o)
+ .data          0x0080123a        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_exit.o)
+ .data          0x0080123a        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_copy_data.o)
+ .data          0x0080123a        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_clear_bss.o)
+ .data          0x0080123a        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/libc.a(memcpy_P.o)
+ .data          0x0080123a        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/libc.a(memmove.o)
+ .data          0x0080123a        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/libc.a(memset.o)
+ .data          0x0080123a        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/libc.a(strcpy.o)
+ .data          0x0080123a        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/libc.a(eerd_block_atmega2560.o)
+ .data          0x0080123a        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/libc.a(memcpy.o)
+ *(.data*)
+ *(.rodata)
+ *(.rodata*)
+ *(.gnu.linkonce.d*)
+                0x0080123a                . = ALIGN (0x2)
+                0x0080123a                _edata = .
+                0x0080123a                PROVIDE (__data_end, .)
+
+.bss            0x0080123a      0xff3
+                0x0080123a                PROVIDE (__bss_start, .)
+ *(.bss)
+ .bss           0x0080123a        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+ .bss           0x0080123a      0x6ad obj/gruvin9x.o
+                0x0080123a                g_unixTime
+                0x0080123e                g_eeGeneral
+                0x0080128b                g_model
+                0x00801565                g_tmr1Latency_max
+                0x00801566                g_tmr1Latency_min
+                0x00801567                g_timeMain
+                0x00801569                g_time_per10
+                0x0080156b                warble
+                0x0080156c                s_noStickInputs
+                0x0080156d                s_last_switch_used
+                0x0080156f                s_last_switch_value
+                0x00801571                g_beepCnt
+                0x00801572                g_beepVal
+                0x00801577                abRunningAvg
+                0x00801579                g_vbat100mV
+                0x0080157a                tick10ms
+                0x0080157b                g_LightOffCounter
+                0x0080157d                beepAgain
+                0x0080157e                beepAgainOrig
+                0x0080157f                beepOn
+                0x00801580                p1val
+                0x00801582                s_timeCumTot
+                0x00801584                s_timeCumAbs
+                0x00801586                s_timeCumSw
+                0x00801588                s_timeCumThr
+                0x0080158a                s_timeCum16ThrP
+                0x0080158c                s_timerState
+                0x0080158d                s_timerVal
+                0x0080158f                Timer2_running
+                0x00801590                Timer2_pre
+                0x00801591                timer2
+                0x00801593                trimsCheckTimer
+                0x00801594                s_traceBuf
+                0x0080160c                s_traceWr
+                0x0080160e                s_traceCnt
+                0x00801610                pulses2MHz
+                0x00801700                anas
+                0x0080174c                trims
+                0x00801754                chans
+                0x00801794                inacCounter
+                0x00801798                inacSum
+                0x0080179a                bpanaCenter
+                0x0080179b                sDelay
+                0x008017db                act
+                0x0080185b                swOn
+                0x0080187b                mixWarning
+                0x0080187c                active_functions
+                0x0080187e                g_ppmIns
+                0x0080188e                ppmInState
+                0x0080188f                heartbeat
+                0x00801890                g_tmr16KHz
+                0x00801891                g_rotenc1
+                0x00801892                g_rotenc2
+ .bss           0x008018e7        0x0 obj/stamp.o
+ .bss           0x008018e7       0x69 obj/menus.o
+                0x008018e7                calibratedStick
+                0x008018f5                ex_chans
+                0x00801915                s_pgOfs
+                0x00801916                s_editMode
+                0x00801917                s_noHi
+                0x00801918                s_noScroll
+                0x00801919                g_chans512
+                0x00801939                p1valdiff
+                0x0080193b                checkIncDec_Ret
+                0x0080193c                g_menuStack
+                0x00801946                g_menuPos
+                0x0080194a                g_menuStackPtr
+                0x0080194b                m_posVert
+                0x0080194c                m_posHorz
+                0x0080194d                pulses2MHzPtr
+ .bss           0x00801950       0x1f obj/model_menus.o
+                0x00801950                s_warning
+                0x00801952                s_warning_info
+                0x00801954                s_warning_info_len
+                0x00801955                s_confirmation
+ .bss           0x0080196f       0x34 obj/general_menus.o
+ .bss           0x008019a3        0x9 obj/main_views.o
+ .bss           0x008019ac        0x0 obj/statistics_views.o
+ .bss           0x008019ac       0x14 obj/pers.o
+                0x008019ac                theFile
+                0x008019bf                s_eeDirtyMsk
+ .bss           0x008019c0      0x142 obj/file.o
+                0x008019c0                s_write_err
+                0x008019c1                s_sync_write
+                0x008019c2                eeFs
+ .bss           0x00801b02      0x401 obj/lcd.o
+                0x00801b02                displayBuf
+                0x00801f02                lcd_lastPos
+ .bss           0x00801f03       0x34 obj/drivers.o
+                0x00801f03                eeprom_pointer
+                0x00801f05                eeprom_buffer_data
+                0x00801f07                eeprom_buffer_size
+                0x00801f08                keys
+                0x00801f32                g_tmr10ms
+                0x00801f34                g_blinkTmr10ms
+                0x00801f35                g_ms100
+ .bss           0x00801f37        0x4 obj/time.o
+ .bss           0x00801f3b        0x0 obj/rtc.o
+ .bss           0x00801f3b        0x5 obj/ff.o
+ .bss           0x00801f40        0x3 obj/diskio.o
+                0x00801f40                Timer1
+                0x00801f41                Timer2
+ .bss           0x00801f43      0x2da obj/frsky.o
+                0x00801f43                frskyRxBuffer
+                0x00801f56                frskyTxBuffer
+                0x00801f62                frskyTxBufferCount
+                0x00801f63                FrskyRxBufferReady
+                0x00801f64                frskyStreaming
+                0x00801f65                frskyTelemetry
+                0x00801f6b                frskyRSSI
+                0x00801f71                frskyAlarms
+                0x00801f7d                frskyHubData
+                0x00801faf                FrskyAlarmSendState
+                0x00801fb0                g_logFilename
+                0x00801fc6                FATFS_Obj
+                0x008021f8                g_oLogFile
+ .bss           0x0080221d        0x0 obj/templates.o
+ .bss           0x0080221d        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_mulsi3.o)
+ .bss           0x0080221d        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_udivmodqi4.o)
+ .bss           0x0080221d        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_udivmodhi4.o)
+ .bss           0x0080221d        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_divmodhi4.o)
+ .bss           0x0080221d        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_udivmodsi4.o)
+ .bss           0x0080221d        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_divmodsi4.o)
+ .bss           0x0080221d        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_exit.o)
+ .bss           0x0080221d        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_copy_data.o)
+ .bss           0x0080221d        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_clear_bss.o)
+ .bss           0x0080221d        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/libc.a(memcpy_P.o)
+ .bss           0x0080221d        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/libc.a(memmove.o)
+ .bss           0x0080221d        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/libc.a(memset.o)
+ .bss           0x0080221d        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/libc.a(strcpy.o)
+ .bss           0x0080221d        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/libc.a(eerd_block_atmega2560.o)
+ .bss           0x0080221d        0x0 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/libc.a(memcpy.o)
+ *(.bss*)
+ *(COMMON)
+ COMMON         0x0080221d       0x10 obj/gruvin9x.o
+                0x0080221d                _ZZ5tracevE6s_time
+                0x0080221f                _ZZ5timerhE8last_tmr
+                0x00802221                _ZZ5tracevE5s_sum
+                0x00802223                _ZZ5timerhE9lastSwPos
+                0x00802224                _ZZ5tracevE5s_cnt
+                0x00802226                _ZZ5timerhE6s_time
+                0x00802228                _ZZ5timerhE5s_sum
+                0x0080222a                _ZZ5timerhE10sw_toggled
+                0x0080222b                _ZZ5timerhE5s_cnt
+                0x0080222d                PROVIDE (__bss_end, .)
+                0x0001575e                __data_load_start = LOADADDR (.data)
+                0x00016798                __data_load_end = (__data_load_start + SIZEOF (.data))
+
+.noinit         0x0080222d        0x0
+                0x0080222d                PROVIDE (__noinit_start, .)
+ *(.noinit*)
+                0x0080222d                PROVIDE (__noinit_end, .)
+                0x0080222d                _end = .
+                0x0080222d                PROVIDE (__heap_start, .)
+
+.eeprom         0x00810000        0x0
+ *(.eeprom*)
+                0x00810000                __eeprom_end = .
+
+.fuse
+ *(.fuse)
+ *(.lfuse)
+ *(.hfuse)
+ *(.efuse)
+
+.lock
+ *(.lock*)
+
+.signature
+ *(.signature*)
+
+.stab           0x00000000      0xab0
+ *(.stab)
+ .stab          0x00000000      0x6e4 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+ .stab          0x000006e4       0x84 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/libc.a(memcpy_P.o)
+                                 0x90 (size before relaxing)
+ .stab          0x00000768       0xe4 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/libc.a(memmove.o)
+                                 0xf0 (size before relaxing)
+ .stab          0x0000084c       0x6c /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/libc.a(memset.o)
+                                 0x78 (size before relaxing)
+ .stab          0x000008b8       0x6c /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/libc.a(strcpy.o)
+                                 0x78 (size before relaxing)
+ .stab          0x00000924      0x108 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/libc.a(eerd_block_atmega2560.o)
+                                0x114 (size before relaxing)
+ .stab          0x00000a2c       0x84 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/libc.a(memcpy.o)
+                                 0x90 (size before relaxing)
+
+.stabstr        0x00000000      0x2aa
+ *(.stabstr)
+ .stabstr       0x00000000      0x2aa /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+
+.stab.excl
+ *(.stab.excl)
+
+.stab.exclstr
+ *(.stab.exclstr)
+
+.stab.index
+ *(.stab.index)
+
+.stab.indexstr
+ *(.stab.indexstr)
+
+.comment
+ *(.comment)
+
+.debug
+ *(.debug)
+
+.line
+ *(.line)
+
+.debug_srcinfo
+ *(.debug_srcinfo)
+
+.debug_sfnames
+ *(.debug_sfnames)
+
+.debug_aranges  0x00000000      0x200
+ *(.debug_aranges)
+ .debug_aranges
+                0x00000000       0x20 obj/gruvin9x.o
+ .debug_aranges
+                0x00000020       0x20 obj/menus.o
+ .debug_aranges
+                0x00000040       0x20 obj/model_menus.o
+ .debug_aranges
+                0x00000060       0x20 obj/general_menus.o
+ .debug_aranges
+                0x00000080       0x20 obj/main_views.o
+ .debug_aranges
+                0x000000a0       0x20 obj/statistics_views.o
+ .debug_aranges
+                0x000000c0       0x20 obj/pers.o
+ .debug_aranges
+                0x000000e0       0x20 obj/file.o
+ .debug_aranges
+                0x00000100       0x20 obj/lcd.o
+ .debug_aranges
+                0x00000120       0x20 obj/drivers.o
+ .debug_aranges
+                0x00000140       0x20 obj/time.o
+ .debug_aranges
+                0x00000160       0x20 obj/rtc.o
+ .debug_aranges
+                0x00000180       0x20 obj/ff.o
+ .debug_aranges
+                0x000001a0       0x20 obj/diskio.o
+ .debug_aranges
+                0x000001c0       0x20 obj/frsky.o
+ .debug_aranges
+                0x000001e0       0x20 obj/templates.o
+
+.debug_pubnames
+                0x00000000     0x1b47
+ *(.debug_pubnames)
+ .debug_pubnames
+                0x00000000      0x798 obj/gruvin9x.o
+ .debug_pubnames
+                0x00000798       0x49 obj/stamp.o
+ .debug_pubnames
+                0x000007e1      0x27a obj/menus.o
+ .debug_pubnames
+                0x00000a5b      0x33e obj/model_menus.o
+ .debug_pubnames
+                0x00000d99       0xb8 obj/general_menus.o
+ .debug_pubnames
+                0x00000e51       0x7c obj/main_views.o
+ .debug_pubnames
+                0x00000ecd       0x3f obj/statistics_views.o
+ .debug_pubnames
+                0x00000f0c      0x134 obj/pers.o
+ .debug_pubnames
+                0x00001040      0x1d0 obj/file.o
+ .debug_pubnames
+                0x00001210      0x29e obj/lcd.o
+ .debug_pubnames
+                0x000014ae      0x124 obj/drivers.o
+ .debug_pubnames
+                0x000015d2       0x6d obj/time.o
+ .debug_pubnames
+                0x0000163f       0x5a obj/rtc.o
+ .debug_pubnames
+                0x00001699      0x16c obj/ff.o
+ .debug_pubnames
+                0x00001805       0x8b obj/diskio.o
+ .debug_pubnames
+                0x00001890      0x23d obj/frsky.o
+ .debug_pubnames
+                0x00001acd       0x7a obj/templates.o
+
+.debug_info     0x00000000    0x178a9
+ *(.debug_info)
+ .debug_info    0x00000000     0x38bd obj/gruvin9x.o
+ .debug_info    0x000038bd      0x525 obj/stamp.o
+ .debug_info    0x00003de2     0x188f obj/menus.o
+ .debug_info    0x00005671     0x2aa3 obj/model_menus.o
+ .debug_info    0x00008114     0x12f0 obj/general_menus.o
+ .debug_info    0x00009404     0x172a obj/main_views.o
+ .debug_info    0x0000ab2e      0x729 obj/statistics_views.o
+ .debug_info    0x0000b257     0x1f0e obj/pers.o
+ .debug_info    0x0000d165     0x1003 obj/file.o
+ .debug_info    0x0000e168     0x2233 obj/lcd.o
+ .debug_info    0x0001039b     0x1486 obj/drivers.o
+ .debug_info    0x00011821      0x8b2 obj/time.o
+ .debug_info    0x000120d3      0x403 obj/rtc.o
+ .debug_info    0x000124d6     0x1ee2 obj/ff.o
+ .debug_info    0x000143b8      0x556 obj/diskio.o
+ .debug_info    0x0001490e     0x18aa obj/frsky.o
+ .debug_info    0x000161b8     0x16f1 obj/templates.o
+ *(.gnu.linkonce.wi.*)
+
+.debug_abbrev   0x00000000     0x343a
+ *(.debug_abbrev)
+ .debug_abbrev  0x00000000      0x560 obj/gruvin9x.o
+ .debug_abbrev  0x00000560      0x132 obj/stamp.o
+ .debug_abbrev  0x00000692      0x391 obj/menus.o
+ .debug_abbrev  0x00000a23      0x3e1 obj/model_menus.o
+ .debug_abbrev  0x00000e04      0x313 obj/general_menus.o
+ .debug_abbrev  0x00001117      0x360 obj/main_views.o
+ .debug_abbrev  0x00001477      0x1eb obj/statistics_views.o
+ .debug_abbrev  0x00001662      0x391 obj/pers.o
+ .debug_abbrev  0x000019f3      0x3fb obj/file.o
+ .debug_abbrev  0x00001dee      0x3a1 obj/lcd.o
+ .debug_abbrev  0x0000218f      0x3b0 obj/drivers.o
+ .debug_abbrev  0x0000253f      0x26b obj/time.o
+ .debug_abbrev  0x000027aa      0x1bb obj/rtc.o
+ .debug_abbrev  0x00002965      0x26e obj/ff.o
+ .debug_abbrev  0x00002bd3      0x1e5 obj/diskio.o
+ .debug_abbrev  0x00002db8      0x3f7 obj/frsky.o
+ .debug_abbrev  0x000031af      0x28b obj/templates.o
+
+.debug_line     0x00000000     0xede3
+ *(.debug_line)
+ .debug_line    0x00000000     0x288c obj/gruvin9x.o
+ .debug_line    0x0000288c       0xc6 obj/stamp.o
+ .debug_line    0x00002952      0xa5f obj/menus.o
+ .debug_line    0x000033b1     0x2dd8 obj/model_menus.o
+ .debug_line    0x00006189      0xd67 obj/general_menus.o
+ .debug_line    0x00006ef0      0xab7 obj/main_views.o
+ .debug_line    0x000079a7      0x291 obj/statistics_views.o
+ .debug_line    0x00007c38      0x8ed obj/pers.o
+ .debug_line    0x00008525      0xb7f obj/file.o
+ .debug_line    0x000090a4      0xf47 obj/lcd.o
+ .debug_line    0x00009feb      0x5cc obj/drivers.o
+ .debug_line    0x0000a5b7      0x50a obj/time.o
+ .debug_line    0x0000aac1      0x46b obj/rtc.o
+ .debug_line    0x0000af2c     0x2a0f obj/ff.o
+ .debug_line    0x0000d93b      0x8e0 obj/diskio.o
+ .debug_line    0x0000e21b      0x782 obj/frsky.o
+ .debug_line    0x0000e99d      0x446 obj/templates.o
+
+.debug_frame    0x00000000     0x1520
+ *(.debug_frame)
+ .debug_frame   0x00000000      0x3e0 obj/gruvin9x.o
+ .debug_frame   0x000003e0      0x170 obj/menus.o
+ .debug_frame   0x00000550      0x270 obj/model_menus.o
+ .debug_frame   0x000007c0       0x80 obj/general_menus.o
+ .debug_frame   0x00000840       0x60 obj/main_views.o
+ .debug_frame   0x000008a0       0x30 obj/statistics_views.o
+ .debug_frame   0x000008d0      0x100 obj/pers.o
+ .debug_frame   0x000009d0      0x1d0 obj/file.o
+ .debug_frame   0x00000ba0      0x270 obj/lcd.o
+ .debug_frame   0x00000e10       0xb0 obj/drivers.o
+ .debug_frame   0x00000ec0       0x80 obj/time.o
+ .debug_frame   0x00000f40       0xa0 obj/rtc.o
+ .debug_frame   0x00000fe0      0x2d0 obj/ff.o
+ .debug_frame   0x000012b0       0xf0 obj/diskio.o
+ .debug_frame   0x000013a0      0x110 obj/frsky.o
+ .debug_frame   0x000014b0       0x70 obj/templates.o
+
+.debug_str      0x00000000     0x3fc9
+ *(.debug_str)
+ .debug_str     0x00000000     0x17c5 obj/gruvin9x.o
+                               0x198d (size before relaxing)
+ .debug_str     0x000017c5       0x2d obj/stamp.o
+                                0x45b (size before relaxing)
+ .debug_str     0x000017f2      0x3f3 obj/menus.o
+                                0xcd7 (size before relaxing)
+ .debug_str     0x00001be5      0x792 obj/model_menus.o
+                               0x12f6 (size before relaxing)
+ .debug_str     0x00002377      0x1b8 obj/general_menus.o
+                                0xabb (size before relaxing)
+ .debug_str     0x0000252f      0x267 obj/main_views.o
+                                0xdc6 (size before relaxing)
+ .debug_str     0x00002796       0x71 obj/statistics_views.o
+                                0x668 (size before relaxing)
+ .debug_str     0x00002807      0x275 obj/pers.o
+                                0xcbf (size before relaxing)
+ .debug_str     0x00002a7c      0x1bb obj/file.o
+                                0x674 (size before relaxing)
+ .debug_str     0x00002c37      0x4ce obj/lcd.o
+                                0xfa1 (size before relaxing)
+ .debug_str     0x00003105      0x1f9 obj/drivers.o
+                                0xc9f (size before relaxing)
+ .debug_str     0x000032fe      0x2d0 obj/time.o
+                                0x433 (size before relaxing)
+ .debug_str     0x000035ce       0xd8 obj/rtc.o
+                                0x1bc (size before relaxing)
+ .debug_str     0x000036a6      0x384 obj/ff.o
+                                0x659 (size before relaxing)
+ .debug_str     0x00003a2a      0x14c obj/diskio.o
+                                0x293 (size before relaxing)
+ .debug_str     0x00003b76      0x33e obj/frsky.o
+                               0x100d (size before relaxing)
+ .debug_str     0x00003eb4      0x115 obj/templates.o
+                                0xa65 (size before relaxing)
+
+.debug_loc      0x00000000     0xf751
+ *(.debug_loc)
+ .debug_loc     0x00000000     0x204e obj/gruvin9x.o
+ .debug_loc     0x0000204e      0xb64 obj/menus.o
+ .debug_loc     0x00002bb2     0x2166 obj/model_menus.o
+ .debug_loc     0x00004d18      0x7e4 obj/general_menus.o
+ .debug_loc     0x000054fc      0x5ef obj/main_views.o
+ .debug_loc     0x00005aeb       0xa8 obj/statistics_views.o
+ .debug_loc     0x00005b93      0x39c obj/pers.o
+ .debug_loc     0x00005f2f      0xca7 obj/file.o
+ .debug_loc     0x00006bd6     0x19cc obj/lcd.o
+ .debug_loc     0x000085a2      0x2d3 obj/drivers.o
+ .debug_loc     0x00008875      0xcb9 obj/time.o
+ .debug_loc     0x0000952e      0x3e8 obj/rtc.o
+ .debug_loc     0x00009916     0x478c obj/ff.o
+ .debug_loc     0x0000e0a2      0x7f7 obj/diskio.o
+ .debug_loc     0x0000e899      0x419 obj/frsky.o
+ .debug_loc     0x0000ecb2      0xa9f obj/templates.o
+
+.debug_macinfo
+ *(.debug_macinfo)
+OUTPUT(gruvin9x.elf elf32-avr)
+LOAD linker stubs
+
+.debug_pubtypes
+                0x00000000     0x1669
+ .debug_pubtypes
+                0x00000000      0x299 obj/gruvin9x.o
+ .debug_pubtypes
+                0x00000299       0x41 obj/stamp.o
+ .debug_pubtypes
+                0x000002da      0x16f obj/menus.o
+ .debug_pubtypes
+                0x00000449      0x27a obj/model_menus.o
+ .debug_pubtypes
+                0x000006c3      0x159 obj/general_menus.o
+ .debug_pubtypes
+                0x0000081c      0x1ff obj/main_views.o
+ .debug_pubtypes
+                0x00000a1b       0x4e obj/statistics_views.o
+ .debug_pubtypes
+                0x00000a69      0x2cf obj/pers.o
+ .debug_pubtypes
+                0x00000d38       0x60 obj/file.o
+ .debug_pubtypes
+                0x00000d98      0x1de obj/lcd.o
+ .debug_pubtypes
+                0x00000f76      0x1e3 obj/drivers.o
+ .debug_pubtypes
+                0x00001159       0x3b obj/time.o
+ .debug_pubtypes
+                0x00001194       0x2d obj/rtc.o
+ .debug_pubtypes
+                0x000011c1       0x76 obj/ff.o
+ .debug_pubtypes
+                0x00001237       0x50 obj/diskio.o
+ .debug_pubtypes
+                0x00001287      0x211 obj/frsky.o
+ .debug_pubtypes
+                0x00001498      0x1d1 obj/templates.o
+
+.debug_ranges   0x00000000      0xb50
+ .debug_ranges  0x00000000      0x308 obj/gruvin9x.o
+ .debug_ranges  0x00000308       0x30 obj/menus.o
+ .debug_ranges  0x00000338      0x210 obj/model_menus.o
+ .debug_ranges  0x00000548       0x90 obj/general_menus.o
+ .debug_ranges  0x000005d8       0x78 obj/main_views.o
+ .debug_ranges  0x00000650       0xb8 obj/pers.o
+ .debug_ranges  0x00000708       0xa8 obj/file.o
+ .debug_ranges  0x000007b0       0xc0 obj/lcd.o
+ .debug_ranges  0x00000870       0x18 obj/drivers.o
+ .debug_ranges  0x00000888       0x30 obj/time.o
+ .debug_ranges  0x000008b8       0x30 obj/rtc.o
+ .debug_ranges  0x000008e8      0x1f0 obj/ff.o
+ .debug_ranges  0x00000ad8       0x30 obj/diskio.o
+ .debug_ranges  0x00000b08       0x18 obj/frsky.o
+ .debug_ranges  0x00000b20       0x30 obj/templates.o
+
+Cross Reference Table
+
+Symbol                                            File
+BandGap                                           obj/gruvin9x.o
+                                                  obj/general_menus.o
+DisplayScreenIndex(unsigned char, unsigned char, unsigned char) obj/menus.o
+                                                  obj/model_menus.o
+DrawCurve(int (*)(int))                           obj/model_menus.o
+EFile::exists(unsigned char)                      obj/file.o
+                                                  obj/pers.o
+                                                  obj/model_menus.o
+EFile::openRd(unsigned char)                      obj/file.o
+EFile::read(unsigned char*, unsigned int)         obj/file.o
+EFile::rm(unsigned char)                          obj/file.o
+                                                  obj/model_menus.o
+EFile::size()                                     obj/file.o
+                                                  obj/pers.o
+EFile::swap(unsigned char, unsigned char)         obj/file.o
+                                                  obj/model_menus.o
+EditName(unsigned char, unsigned char, char*, unsigned char, unsigned char, bool, unsigned char&) obj/model_menus.o
+EeFsFormat()                                      obj/file.o
+                                                  obj/pers.o
+EeFsGetFree()                                     obj/file.o
+                                                  obj/model_menus.o
+                                                  obj/gruvin9x.o
+EeFsOpen()                                        obj/file.o
+                                                  obj/pers.o
+EeFsck()                                          obj/file.o
+                                                  obj/pers.o
+FATFS_Obj                                         obj/frsky.o
+                                                  obj/gruvin9x.o
+FRSKY10mspoll()                                   obj/frsky.o
+                                                  obj/drivers.o
+FRSKY_EnableRXD()                                 obj/frsky.o
+FRSKY_EnableTXD()                                 obj/frsky.o
+FRSKY_Init()                                      obj/frsky.o
+                                                  obj/gruvin9x.o
+FRSKY_alarmRaised(unsigned char)                  obj/frsky.o
+                                                  obj/main_views.o
+FrskyAlarmSendState                               obj/frsky.o
+                                                  obj/drivers.o
+                                                  obj/pers.o
+                                                  obj/model_menus.o
+FrskyData::set(unsigned char)                     obj/frsky.o
+FrskyRxBufferReady                                obj/frsky.o
+Key::input(bool, EnumKeys)                        obj/drivers.o
+RlcFile::DisplayProgressBar(unsigned char)        obj/file.o
+                                                  obj/main_views.o
+                                                  obj/model_menus.o
+                                                  obj/menus.o
+RlcFile::copy(unsigned char, unsigned char)       obj/file.o
+                                                  obj/model_menus.o
+RlcFile::create(unsigned char, unsigned char, unsigned char) obj/file.o
+RlcFile::flush()                                  obj/file.o
+                                                  obj/pers.o
+                                                  obj/model_menus.o
+RlcFile::nextRlcWriteStep()                       obj/file.o
+RlcFile::nextWriteStep()                          obj/file.o
+                                                  obj/gruvin9x.o
+RlcFile::openRlc(unsigned char)                   obj/file.o
+                                                  obj/pers.o
+RlcFile::readRlc(unsigned char*, unsigned int)    obj/pers.o
+RlcFile::readRlc1(unsigned char*, unsigned int)   obj/pers.o
+RlcFile::readRlc12(unsigned char*, unsigned int, bool) obj/file.o
+                                                  obj/pers.o
+RlcFile::write(unsigned char*, unsigned char)     obj/file.o
+RlcFile::write1(unsigned char)                    obj/file.o
+RlcFile::writeRlc(unsigned char, unsigned char, unsigned char*, unsigned int, unsigned char) obj/file.o
+                                                  obj/pers.o
+Timer1                                            obj/diskio.o
+Timer2                                            obj/diskio.o
+Timer2_pre                                        obj/gruvin9x.o
+Timer2_running                                    obj/gruvin9x.o
+                                                  obj/main_views.o
+Translate()                                       obj/pers.o
+__bad_interrupt                                   /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__bss_end                                         /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_clear_bss.o)
+                                                  obj/gruvin9x.o
+__bss_start                                       /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_clear_bss.o)
+__data_end                                        /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_copy_data.o)
+__data_load_start                                 /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_copy_data.o)
+__data_start                                      /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_copy_data.o)
+__divmodhi4                                       /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_divmodhi4.o)
+                                                  obj/time.o
+                                                  obj/drivers.o
+                                                  obj/lcd.o
+                                                  obj/pers.o
+                                                  obj/statistics_views.o
+                                                  obj/main_views.o
+                                                  obj/general_menus.o
+                                                  obj/model_menus.o
+                                                  obj/menus.o
+                                                  obj/gruvin9x.o
+__divmodsi4                                       /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_divmodsi4.o)
+                                                  obj/time.o
+                                                  obj/main_views.o
+                                                  obj/general_menus.o
+                                                  obj/gruvin9x.o
+__do_clear_bss                                    /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_clear_bss.o)
+                                                  obj/frsky.o
+                                                  obj/diskio.o
+                                                  obj/ff.o
+                                                  obj/time.o
+                                                  obj/drivers.o
+                                                  obj/lcd.o
+                                                  obj/file.o
+                                                  obj/pers.o
+                                                  obj/main_views.o
+                                                  obj/general_menus.o
+                                                  obj/model_menus.o
+                                                  obj/menus.o
+                                                  obj/gruvin9x.o
+__do_copy_data                                    /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_copy_data.o)
+                                                  obj/templates.o
+                                                  obj/frsky.o
+                                                  obj/diskio.o
+                                                  obj/ff.o
+                                                  obj/time.o
+                                                  obj/drivers.o
+                                                  obj/lcd.o
+                                                  obj/main_views.o
+                                                  obj/general_menus.o
+                                                  obj/model_menus.o
+                                                  obj/menus.o
+                                                  obj/gruvin9x.o
+__eerd_block_m2560                                /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/libc.a(eerd_block_atmega2560.o)
+                                                  obj/file.o
+__eerd_blraw_m2560                                /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/libc.a(eerd_block_atmega2560.o)
+__eewr_byte_m2560()                               obj/drivers.o
+__getSwitch(signed char)                          obj/gruvin9x.o
+__heap_end                                        /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__init                                            /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__localtime_r(long*, tm*)                         obj/time.o
+__mktime_internal(tm*, tm* (*)(long*, tm*), long*) obj/time.o
+__mon_yday                                        obj/time.o
+__mulsi3                                          /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_mulsi3.o)
+                                                  obj/frsky.o
+                                                  obj/ff.o
+                                                  obj/time.o
+                                                  obj/main_views.o
+                                                  obj/general_menus.o
+                                                  obj/gruvin9x.o
+__offtime(long*, long, tm*)                       obj/time.o
+__stack                                           /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__udivmodhi4                                      /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_udivmodhi4.o)
+                                                  /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_divmodhi4.o)
+                                                  obj/rtc.o
+                                                  obj/drivers.o
+                                                  obj/lcd.o
+                                                  obj/file.o
+                                                  obj/main_views.o
+                                                  obj/model_menus.o
+                                                  obj/gruvin9x.o
+__udivmodqi4                                      /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_udivmodqi4.o)
+                                                  obj/frsky.o
+                                                  obj/rtc.o
+__udivmodsi4                                      /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_udivmodsi4.o)
+                                                  /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_divmodsi4.o)
+                                                  obj/frsky.o
+                                                  obj/ff.o
+                                                  obj/time.o
+                                                  obj/general_menus.o
+                                                  obj/gruvin9x.o
+__vector_1                                        /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_10                                       /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_11                                       /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_12                                       /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_13                                       obj/gruvin9x.o
+                                                  /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_14                                       /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_15                                       obj/gruvin9x.o
+                                                  /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_16                                       /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_17                                       obj/gruvin9x.o
+                                                  /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_18                                       /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_19                                       /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_2                                        /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_20                                       /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_21                                       /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_22                                       /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_23                                       /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_24                                       /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_25                                       obj/frsky.o
+                                                  /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_26                                       obj/frsky.o
+                                                  /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_27                                       /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_28                                       /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_29                                       /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_3                                        obj/gruvin9x.o
+                                                  /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_30                                       obj/drivers.o
+                                                  /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_31                                       obj/gruvin9x.o
+                                                  /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_32                                       /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_33                                       /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_34                                       /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_35                                       /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_36                                       /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_37                                       /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_38                                       /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_39                                       /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_4                                        obj/gruvin9x.o
+                                                  /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_40                                       /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_41                                       /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_42                                       /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_43                                       /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_44                                       /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_45                                       /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_46                                       /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_47                                       /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_48                                       /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_49                                       /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_5                                        /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_50                                       /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_51                                       /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_52                                       /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_53                                       /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_54                                       /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_55                                       /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_56                                       /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_6                                        obj/gruvin9x.o
+                                                  /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_7                                        obj/gruvin9x.o
+                                                  /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_8                                        /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_9                                        /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vector_default                                  /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+__vectors                                         /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+_div                                              /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_divmodhi4.o)
+_exit                                             /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_exit.o)
+_send_hilo(unsigned int, unsigned int)            obj/menus.o
+abRunningAvg                                      obj/gruvin9x.o
+                                                  obj/general_menus.o
+act                                               obj/gruvin9x.o
+active_functions                                  obj/gruvin9x.o
+                                                  obj/main_views.o
+alert(char const*, bool)                          obj/gruvin9x.o
+                                                  obj/file.o
+                                                  obj/pers.o
+                                                  obj/menus.o
+alertMessages(char const*, char const*)           obj/gruvin9x.o
+anaIn(unsigned char)                              obj/gruvin9x.o
+                                                  obj/general_menus.o
+anas                                              obj/gruvin9x.o
+applyCurve(int, unsigned char, unsigned char)     obj/gruvin9x.o
+applyDefaultTemplate()                            obj/pers.o
+applyExpos(int*, unsigned char)                   obj/gruvin9x.o
+                                                  obj/model_menus.o
+applyTemplate(unsigned char)                      obj/templates.o
+                                                  obj/pers.o
+                                                  obj/model_menus.o
+beepAgain                                         obj/gruvin9x.o
+beepAgainOrig                                     obj/gruvin9x.o
+beepOn                                            obj/gruvin9x.o
+bpanaCenter                                       obj/gruvin9x.o
+calc1000toRESX(int)                               obj/gruvin9x.o
+calc100toRESX(signed char)                        obj/gruvin9x.o
+calibratedStick                                   obj/menus.o
+                                                  obj/main_views.o
+                                                  obj/general_menus.o
+                                                  obj/model_menus.o
+                                                  obj/gruvin9x.o
+chainMenu(void (*)(unsigned char))                obj/menus.o
+                                                  obj/statistics_views.o
+                                                  obj/main_views.o
+                                                  obj/model_menus.o
+chans                                             obj/gruvin9x.o
+char2idx(char)                                    obj/gruvin9x.o
+                                                  obj/pers.o
+check(unsigned char, unsigned char, void (**)(unsigned char), unsigned char, unsigned char*, unsigned char, unsigned char) obj/menus.o
+                                                  obj/general_menus.o
+                                                  obj/model_menus.o
+checkAlarm()                                      obj/gruvin9x.o
+checkIncDec(unsigned char, int, int, int, unsigned char) obj/menus.o
+                                                  obj/general_menus.o
+                                                  obj/model_menus.o
+checkIncDecGen(unsigned char, signed char, signed char, signed char) obj/menus.o
+                                                  obj/general_menus.o
+checkIncDecModel(unsigned char, signed char, signed char, signed char) obj/menus.o
+                                                  obj/model_menus.o
+checkIncDec_Ret                                   obj/menus.o
+                                                  obj/model_menus.o
+checkLowEEPROM()                                  obj/gruvin9x.o
+checkSlaveMode()                                  obj/gruvin9x.o
+checkSwitches()                                   obj/gruvin9x.o
+checkTHR()                                        obj/gruvin9x.o
+checkTrim(unsigned char)                          obj/gruvin9x.o
+check_simple(unsigned char, unsigned char, void (**)(unsigned char), unsigned char, unsigned char) obj/menus.o
+                                                  obj/general_menus.o
+                                                  obj/model_menus.o
+check_submenu_simple(unsigned char, unsigned char) obj/menus.o
+                                                  obj/model_menus.o
+chout_ar                                          obj/gruvin9x.o
+                                                  obj/templates.o
+                                                  obj/lcd.o
+                                                  obj/general_menus.o
+clearCurves()                                     obj/templates.o
+clearKeyEvents()                                  obj/gruvin9x.o
+clearMixes()                                      obj/templates.o
+                                                  obj/model_menus.o
+clust2sect(FATFS*, unsigned long)                 obj/ff.o
+copyExpoMix(unsigned char, unsigned char)         obj/model_menus.o
+curveFn(int)                                      obj/model_menus.o
+delay_1_5us(int)                                  obj/lcd.o
+deleteExpoMix(unsigned char, unsigned char)       obj/model_menus.o
+disk_initialize(unsigned char)                    obj/diskio.o
+                                                  obj/ff.o
+disk_ioctl(unsigned char, unsigned char, unsigned char*) obj/diskio.o
+                                                  obj/ff.o
+disk_read(unsigned char, unsigned char*, unsigned long, unsigned char) obj/diskio.o
+                                                  obj/ff.o
+disk_status(unsigned char)                        obj/diskio.o
+                                                  obj/ff.o
+disk_timerproc()                                  obj/diskio.o
+                                                  obj/gruvin9x.o
+disk_write(unsigned char, unsigned char const*, unsigned long, unsigned char) obj/diskio.o
+                                                  obj/ff.o
+displayBox()                                      obj/model_menus.o
+displayBuf                                        obj/lcd.o
+displayConfirmation(unsigned char)                obj/model_menus.o
+displayExpoLine(unsigned char, unsigned char, unsigned char, unsigned char, unsigned char, unsigned char) obj/model_menus.o
+displayMixerLine(unsigned char, unsigned char, unsigned char, unsigned char, unsigned char, unsigned char) obj/model_menus.o
+displayMixerLine(unsigned char, unsigned char, unsigned char, unsigned char, unsigned char, unsigned char)::__c obj/model_menus.o
+displayPopup(char const*)                         obj/model_menus.o
+displayWarning(unsigned char)                     obj/model_menus.o
+doMainScreenGrphics()                             obj/main_views.o
+                                                  obj/general_menus.o
+doSplash()                                        obj/gruvin9x.o
+editExpoVals(unsigned char, unsigned char, bool, unsigned char, unsigned char) obj/model_menus.o
+editExpoVals(unsigned char, unsigned char, bool, unsigned char, unsigned char)::__c obj/model_menus.o
+eeCheck(bool)                                     obj/pers.o
+                                                  obj/model_menus.o
+                                                  obj/gruvin9x.o
+eeDirty(unsigned char)                            obj/pers.o
+                                                  obj/templates.o
+                                                  obj/main_views.o
+                                                  obj/general_menus.o
+                                                  obj/model_menus.o
+                                                  obj/menus.o
+                                                  obj/gruvin9x.o
+eeFindEmptyModel(unsigned char, bool)             obj/pers.o
+                                                  obj/model_menus.o
+eeFlush()                                         obj/model_menus.o
+eeFs                                              obj/file.o
+eeLoadGeneral()                                   obj/pers.o
+eeLoadModel(unsigned char)                        obj/pers.o
+                                                  obj/model_menus.o
+eeLoadModelName(unsigned char, char*)             obj/pers.o
+                                                  obj/model_menus.o
+eeModelExists(unsigned char)                      obj/pers.o
+eeReadAll()                                       obj/pers.o
+                                                  obj/gruvin9x.o
+eeWriteBlockCmp(void const*, unsigned int, unsigned int) obj/drivers.o
+                                                  obj/file.o
+eeprom_buffer_data                                obj/drivers.o
+eeprom_buffer_size                                obj/drivers.o
+                                                  obj/file.o
+                                                  obj/gruvin9x.o
+eeprom_pointer                                    obj/drivers.o
+evalFunctions()                                   obj/gruvin9x.o
+evalSticks(unsigned char)                         obj/gruvin9x.o
+evalTrims(unsigned char)                          obj/gruvin9x.o
+ex_chans                                          obj/menus.o
+                                                  obj/gruvin9x.o
+exit                                              /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/avr6/libgcc.a(_exit.o)
+                                                  /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+expo(int, int)                                    obj/gruvin9x.o
+expoFn(int)                                       obj/model_menus.o
+expoaddress(unsigned char)                        obj/gruvin9x.o
+                                                  obj/model_menus.o
+expou(unsigned int, unsigned int)                 obj/gruvin9x.o
+f_chdir                                           obj/ff.o
+f_chdrive                                         obj/ff.o
+f_chmod                                           obj/ff.o
+f_close                                           obj/ff.o
+                                                  obj/frsky.o
+                                                  obj/gruvin9x.o
+f_getcwd                                          obj/ff.o
+f_getfree                                         obj/ff.o
+f_gets                                            obj/ff.o
+f_lseek                                           obj/ff.o
+                                                  obj/gruvin9x.o
+f_mkdir                                           obj/ff.o
+                                                  obj/frsky.o
+f_mkfs                                            obj/ff.o
+f_mount                                           obj/ff.o
+                                                  obj/frsky.o
+                                                  obj/gruvin9x.o
+f_open                                            obj/ff.o
+                                                  obj/frsky.o
+                                                  obj/gruvin9x.o
+f_opendir                                         obj/ff.o
+f_printf                                          obj/ff.o
+f_putc                                            obj/ff.o
+f_puts                                            obj/ff.o
+f_read(FIL*, unsigned char*, unsigned int, unsigned int*) obj/ff.o
+f_readdir                                         obj/ff.o
+f_rename                                          obj/ff.o
+f_stat                                            obj/ff.o
+f_sync                                            obj/ff.o
+f_truncate                                        obj/ff.o
+f_unlink                                          obj/ff.o
+f_utime                                           obj/ff.o
+f_write(FIL*, unsigned char const*, unsigned int, unsigned int*) obj/ff.o
+filltm(long*, tm*)                                obj/time.o
+                                                  obj/general_menus.o
+                                                  obj/gruvin9x.o
+font                                              obj/lcd.o
+font_dblsize                                      obj/lcd.o
+frskyAlarms                                       obj/frsky.o
+frskyComputeVolts(unsigned char, unsigned int, unsigned char) obj/frsky.o
+                                                  obj/main_views.o
+frskyHubData                                      obj/frsky.o
+                                                  obj/main_views.o
+frskyPushValue(unsigned char*&, unsigned char)    obj/frsky.o
+frskyPutAValue(unsigned char, unsigned char, unsigned char, unsigned char, unsigned char) obj/frsky.o
+                                                  obj/model_menus.o
+frskyRSSI                                         obj/frsky.o
+                                                  obj/main_views.o
+frskyRxBuffer                                     obj/frsky.o
+frskyStreaming                                    obj/frsky.o
+                                                  obj/drivers.o
+                                                  obj/main_views.o
+frskyTelemetry                                    obj/frsky.o
+                                                  obj/main_views.o
+                                                  obj/model_menus.o
+                                                  obj/gruvin9x.o
+frskyTransmitBuffer()                             obj/frsky.o
+frskyTxBuffer                                     obj/frsky.o
+frskyTxBufferCount                                obj/frsky.o
+g_LightOffCounter                                 obj/gruvin9x.o
+g_beepCnt                                         obj/gruvin9x.o
+                                                  obj/drivers.o
+                                                  obj/statistics_views.o
+                                                  obj/main_views.o
+                                                  obj/general_menus.o
+                                                  obj/model_menus.o
+                                                  obj/menus.o
+g_beepVal                                         obj/gruvin9x.o
+                                                  obj/drivers.o
+                                                  obj/statistics_views.o
+                                                  obj/main_views.o
+                                                  obj/general_menus.o
+                                                  obj/model_menus.o
+                                                  obj/menus.o
+g_blinkTmr10ms                                    obj/drivers.o
+                                                  obj/lcd.o
+                                                  obj/menus.o
+g_chans512                                        obj/menus.o
+                                                  obj/main_views.o
+                                                  obj/model_menus.o
+                                                  obj/gruvin9x.o
+g_eeGeneral                                       obj/gruvin9x.o
+                                                  obj/templates.o
+                                                  obj/frsky.o
+                                                  obj/drivers.o
+                                                  obj/lcd.o
+                                                  obj/pers.o
+                                                  obj/main_views.o
+                                                  obj/general_menus.o
+                                                  obj/model_menus.o
+g_logFilename                                     obj/frsky.o
+                                                  obj/main_views.o
+                                                  obj/gruvin9x.o
+g_menuPos                                         obj/menus.o
+g_menuStack                                       obj/menus.o
+                                                  obj/main_views.o
+                                                  obj/gruvin9x.o
+g_menuStackPtr                                    obj/menus.o
+                                                  obj/main_views.o
+                                                  obj/gruvin9x.o
+g_model                                           obj/gruvin9x.o
+                                                  obj/templates.o
+                                                  obj/frsky.o
+                                                  obj/drivers.o
+                                                  obj/lcd.o
+                                                  obj/pers.o
+                                                  obj/main_views.o
+                                                  obj/model_menus.o
+                                                  obj/menus.o
+g_ms100                                           obj/drivers.o
+                                                  obj/general_menus.o
+g_oLogFile                                        obj/frsky.o
+                                                  obj/gruvin9x.o
+g_ppmIns                                          obj/gruvin9x.o
+                                                  obj/general_menus.o
+g_rotenc1                                         obj/gruvin9x.o
+                                                  obj/main_views.o
+g_rotenc2                                         obj/gruvin9x.o
+                                                  obj/main_views.o
+g_timeMain                                        obj/gruvin9x.o
+                                                  obj/statistics_views.o
+g_time_per10                                      obj/gruvin9x.o
+                                                  obj/statistics_views.o
+g_tmr10ms                                         obj/drivers.o
+                                                  obj/gruvin9x.o
+g_tmr16KHz                                        obj/gruvin9x.o
+g_tmr1Latency_max                                 obj/gruvin9x.o
+                                                  obj/statistics_views.o
+g_tmr1Latency_min                                 obj/gruvin9x.o
+                                                  obj/statistics_views.o
+g_unixTime                                        obj/gruvin9x.o
+                                                  obj/drivers.o
+                                                  obj/general_menus.o
+g_vbat100mV                                       obj/gruvin9x.o
+                                                  obj/lcd.o
+                                                  obj/main_views.o
+                                                  obj/general_menus.o
+generalDefault()                                  obj/pers.o
+getADC                                            obj/gruvin9x.o
+getADC_bandgap()                                  obj/gruvin9x.o
+getADC_filt()                                     obj/gruvin9x.o
+getADC_osmp()                                     obj/gruvin9x.o
+getADC_single()                                   obj/gruvin9x.o
+getEvent()                                        obj/drivers.o
+                                                  obj/gruvin9x.o
+getExpoMixCount(unsigned char)                    obj/model_menus.o
+getFlightPhase()                                  obj/gruvin9x.o
+                                                  obj/main_views.o
+                                                  obj/model_menus.o
+getSwitch(signed char, bool)                      obj/gruvin9x.o
+                                                  obj/main_views.o
+getTmr16KHz()                                     obj/gruvin9x.o
+getTrimFlightPhase(unsigned char, unsigned char)  obj/gruvin9x.o
+                                                  obj/main_views.o
+getTrimValue(unsigned char, unsigned char)        obj/gruvin9x.o
+                                                  obj/main_views.o
+                                                  obj/model_menus.o
+get_fat(FATFS*, unsigned long)                    obj/ff.o
+get_fattime                                       obj/gruvin9x.o
+                                                  obj/ff.o
+get_tmr10ms()                                     obj/gruvin9x.o
+heartbeat                                         obj/gruvin9x.o
+idx2char(signed char)                             obj/gruvin9x.o
+                                                  obj/lcd.o
+                                                  obj/model_menus.o
+iic_read(unsigned char, unsigned int, unsigned int, unsigned char*) obj/rtc.o
+iic_write(unsigned char, unsigned int, unsigned int, unsigned char const*) obj/rtc.o
+inacCounter                                       obj/gruvin9x.o
+inacSum                                           obj/gruvin9x.o
+insertExpoMix(unsigned char, unsigned char)       obj/model_menus.o
+instantTrim()                                     obj/gruvin9x.o
+                                                  obj/main_views.o
+intpol(int, unsigned char)                        obj/gruvin9x.o
+                                                  obj/model_menus.o
+isFunctionActive(unsigned char)                   obj/gruvin9x.o
+keyDown()                                         obj/gruvin9x.o
+keyState(EnumKeys)                                obj/drivers.o
+                                                  obj/general_menus.o
+                                                  obj/menus.o
+                                                  obj/gruvin9x.o
+keys                                              obj/drivers.o
+killEvents(unsigned char)                         obj/drivers.o
+                                                  obj/main_views.o
+                                                  obj/general_menus.o
+                                                  obj/model_menus.o
+                                                  obj/menus.o
+                                                  obj/gruvin9x.o
+lastPopMenu()                                     obj/main_views.o
+lcdSendCtl(unsigned char)                         obj/lcd.o
+lcdSetRefVolt(unsigned char)                      obj/lcd.o
+                                                  obj/general_menus.o
+                                                  obj/gruvin9x.o
+lcd_clear()                                       obj/lcd.o
+                                                  obj/gruvin9x.o
+lcd_filled_rect(unsigned char, signed char, unsigned char, unsigned char, unsigned char) obj/lcd.o
+                                                  obj/file.o
+                                                  obj/main_views.o
+                                                  obj/model_menus.o
+lcd_hline(unsigned char, unsigned char, signed char, unsigned char) obj/lcd.o
+                                                  obj/statistics_views.o
+                                                  obj/main_views.o
+                                                  obj/model_menus.o
+lcd_hlineStip(signed char, unsigned char, signed char, unsigned char, unsigned char) obj/lcd.o
+                                                  obj/main_views.o
+                                                  obj/model_menus.o
+lcd_img(unsigned char, unsigned char, unsigned char const*, unsigned char, unsigned char) obj/lcd.o
+                                                  obj/general_menus.o
+                                                  obj/gruvin9x.o
+lcd_init()                                        obj/lcd.o
+                                                  obj/gruvin9x.o
+lcd_lastPos                                       obj/lcd.o
+                                                  obj/frsky.o
+                                                  obj/main_views.o
+                                                  obj/general_menus.o
+                                                  obj/model_menus.o
+                                                  obj/menus.o
+lcd_mask(unsigned char*, unsigned char, unsigned char) obj/lcd.o
+lcd_outdez8(unsigned char, unsigned char, signed char) obj/lcd.o
+                                                  obj/statistics_views.o
+                                                  obj/general_menus.o
+lcd_outdezAtt(unsigned char, unsigned char, int, unsigned char) obj/lcd.o
+                                                  obj/statistics_views.o
+                                                  obj/main_views.o
+                                                  obj/general_menus.o
+                                                  obj/model_menus.o
+                                                  obj/menus.o
+lcd_outdezNAtt(unsigned char, unsigned char, int, unsigned char, unsigned char) obj/lcd.o
+                                                  obj/frsky.o
+                                                  obj/main_views.o
+                                                  obj/general_menus.o
+                                                  obj/model_menus.o
+lcd_outhex4(unsigned char, unsigned char, unsigned int) obj/lcd.o
+                                                  obj/general_menus.o
+lcd_plot(unsigned char, unsigned char, unsigned char) obj/lcd.o
+                                                  obj/main_views.o
+                                                  obj/model_menus.o
+lcd_putc(unsigned char, unsigned char, char)      obj/lcd.o
+                                                  obj/main_views.o
+                                                  obj/general_menus.o
+                                                  obj/model_menus.o
+lcd_putcAtt(unsigned char, unsigned char, char, unsigned char) obj/lcd.o
+                                                  obj/frsky.o
+                                                  obj/general_menus.o
+                                                  obj/model_menus.o
+                                                  obj/menus.o
+lcd_putsAtt(unsigned char, unsigned char, char const*, unsigned char) obj/lcd.o
+                                                  obj/statistics_views.o
+                                                  obj/main_views.o
+                                                  obj/general_menus.o
+                                                  obj/model_menus.o
+                                                  obj/gruvin9x.o
+lcd_puts_P(unsigned char, unsigned char, char const*) obj/lcd.o
+                                                  obj/statistics_views.o
+                                                  obj/main_views.o
+                                                  obj/general_menus.o
+                                                  obj/model_menus.o
+                                                  obj/gruvin9x.o
+lcd_putsnAtt(unsigned char, unsigned char, char const*, unsigned char, unsigned char) obj/lcd.o
+                                                  obj/main_views.o
+                                                  obj/general_menus.o
+                                                  obj/model_menus.o
+                                                  obj/menus.o
+lcd_putsn_P(unsigned char, unsigned char, char const*, unsigned char) obj/lcd.o
+                                                  obj/general_menus.o
+lcd_rect(unsigned char, unsigned char, unsigned char, unsigned char, unsigned char, unsigned char) obj/lcd.o
+                                                  obj/main_views.o
+                                                  obj/model_menus.o
+lcd_square(unsigned char, unsigned char, unsigned char, unsigned char) obj/main_views.o
+lcd_vline(unsigned char, signed char, signed char) obj/lcd.o
+                                                  obj/statistics_views.o
+                                                  obj/main_views.o
+                                                  obj/model_menus.o
+lcd_vlineStip(unsigned char, signed char, signed char, unsigned char) obj/lcd.o
+                                                  obj/model_menus.o
+limitaddress(unsigned char)                       obj/gruvin9x.o
+                                                  obj/model_menus.o
+m_posHorz                                         obj/menus.o
+                                                  obj/general_menus.o
+                                                  obj/model_menus.o
+m_posVert                                         obj/menus.o
+                                                  obj/general_menus.o
+                                                  obj/model_menus.o
+main                                              obj/gruvin9x.o
+                                                  /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/crtm2560.o
+memcpy                                            /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/libc.a(memcpy.o)
+                                                  /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/libc.a(memmove.o)
+memcpy_P                                          /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/libc.a(memcpy_P.o)
+                                                  obj/gruvin9x.o
+memmove                                           /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/libc.a(memmove.o)
+                                                  obj/templates.o
+                                                  obj/pers.o
+                                                  obj/model_menus.o
+memset                                            /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/libc.a(memset.o)
+                                                  obj/file.o
+memswap(void*, void*, unsigned char)              obj/model_menus.o
+menuMainView(unsigned char)                       obj/main_views.o
+                                                  obj/statistics_views.o
+                                                  obj/gruvin9x.o
+menuProcCurveOne(unsigned char)                   obj/model_menus.o
+menuProcCurvesAll(unsigned char)                  obj/model_menus.o
+menuProcCustomSwitches(unsigned char)             obj/model_menus.o
+menuProcDiagAna(unsigned char)                    obj/general_menus.o
+menuProcDiagCalib(unsigned char)                  obj/general_menus.o
+menuProcDiagKeys(unsigned char)                   obj/general_menus.o
+menuProcDiagVers(unsigned char)                   obj/general_menus.o
+menuProcExpoMix(unsigned char, unsigned char)     obj/model_menus.o
+menuProcExpoOne(unsigned char)                    obj/model_menus.o
+menuProcExposAll(unsigned char)                   obj/model_menus.o
+menuProcFunctionSwitches(unsigned char)           obj/model_menus.o
+menuProcLimits(unsigned char)                     obj/model_menus.o
+menuProcMixAll(unsigned char)                     obj/model_menus.o
+menuProcMixOne(unsigned char)                     obj/model_menus.o
+menuProcModel(unsigned char)                      obj/model_menus.o
+menuProcModelSelect(unsigned char)                obj/model_menus.o
+                                                  obj/main_views.o
+                                                  obj/gruvin9x.o
+menuProcPhaseOne(unsigned char)                   obj/model_menus.o
+menuProcPhasesAll(unsigned char)                  obj/model_menus.o
+menuProcSafetySwitches(unsigned char)             obj/model_menus.o
+menuProcSetup(unsigned char)                      obj/general_menus.o
+                                                  obj/main_views.o
+menuProcStatistic(unsigned char)                  obj/statistics_views.o
+                                                  obj/main_views.o
+menuProcStatistic2(unsigned char)                 obj/statistics_views.o
+                                                  obj/main_views.o
+menuProcTelemetry(unsigned char)                  obj/model_menus.o
+menuProcTemplates(unsigned char)                  obj/model_menus.o
+menuProcTime(unsigned char)                       obj/general_menus.o
+menuProcTrainer(unsigned char)                    obj/general_menus.o
+menuTabDiag                                       obj/general_menus.o
+menuTabModel                                      obj/model_menus.o
+menu_lcd_HYPHINV(unsigned char, unsigned char, unsigned char, unsigned char) obj/menus.o
+menu_lcd_onoff(unsigned char, unsigned char, unsigned char, unsigned char) obj/menus.o
+                                                  obj/general_menus.o
+                                                  obj/model_menus.o
+message(char const*)                              obj/gruvin9x.o
+                                                  obj/pers.o
+minit()                                           obj/menus.o
+mixWarning                                        obj/gruvin9x.o
+                                                  obj/drivers.o
+mixaddress(unsigned char)                         obj/gruvin9x.o
+                                                  obj/model_menus.o
+mktime(tm*)                                       obj/time.o
+                                                  obj/general_menus.o
+                                                  obj/gruvin9x.o
+modelDefault(unsigned char)                       obj/pers.o
+modi12x3                                          obj/gruvin9x.o
+                                                  obj/lcd.o
+modn12x3                                          obj/gruvin9x.o
+                                                  obj/templates.o
+moveTrimsToOffsets()                              obj/gruvin9x.o
+                                                  obj/main_views.o
+                                                  obj/model_menus.o
+n_Templates                                       obj/templates.o
+p1val                                             obj/gruvin9x.o
+p1valdiff                                         obj/menus.o
+                                                  obj/general_menus.o
+                                                  obj/model_menus.o
+                                                  obj/gruvin9x.o
+parseTelemHubByte(unsigned char)                  obj/frsky.o
+parseTelemHubIndex(unsigned char)                 obj/frsky.o
+pauseEvents(unsigned char)                        obj/drivers.o
+                                                  obj/menus.o
+per10ms()                                         obj/drivers.o
+                                                  obj/gruvin9x.o
+perMain()                                         obj/gruvin9x.o
+perOut(int*, unsigned char)                       obj/gruvin9x.o
+phaseaddress(unsigned char)                       obj/gruvin9x.o
+                                                  obj/model_menus.o
+popMenu()                                         obj/menus.o
+                                                  obj/model_menus.o
+ppmInState                                        obj/gruvin9x.o
+processFrskyPacket(unsigned char*)                obj/frsky.o
+pulses2MHz                                        obj/gruvin9x.o
+                                                  obj/menus.o
+pulses2MHzPtr                                     obj/menus.o
+pushMenu(void (*)(unsigned char))                 obj/menus.o
+                                                  obj/main_views.o
+                                                  obj/model_menus.o
+putEvent(unsigned char)                           obj/drivers.o
+                                                  obj/gruvin9x.o
+put_fat(FATFS*, unsigned long, unsigned long)     obj/ff.o
+putsChn(unsigned char, unsigned char, unsigned char, unsigned char) obj/lcd.o
+                                                  obj/model_menus.o
+putsChnLetter(unsigned char, unsigned char, unsigned char, unsigned char) obj/lcd.o
+                                                  obj/general_menus.o
+                                                  obj/model_menus.o
+putsChnRaw(unsigned char, unsigned char, unsigned char, unsigned char) obj/lcd.o
+                                                  obj/general_menus.o
+                                                  obj/model_menus.o
+putsCurve(unsigned char, unsigned char, unsigned char, unsigned char) obj/lcd.o
+                                                  obj/model_menus.o
+putsFlightPhase(unsigned char, unsigned char, signed char, unsigned char) obj/lcd.o
+                                                  obj/model_menus.o
+putsModelName(unsigned char, unsigned char, char*, unsigned char, unsigned char) obj/lcd.o
+                                                  obj/main_views.o
+                                                  obj/model_menus.o
+putsStrIdx(unsigned char, unsigned char, char const*, unsigned char, unsigned char) obj/lcd.o
+                                                  obj/model_menus.o
+putsSwitches(unsigned char, unsigned char, signed char, unsigned char) obj/lcd.o
+                                                  obj/main_views.o
+                                                  obj/general_menus.o
+                                                  obj/model_menus.o
+putsTelemetry(unsigned char, unsigned char, unsigned char, unsigned char, unsigned char) obj/lcd.o
+                                                  obj/main_views.o
+putsTime(unsigned char, unsigned char, int, unsigned char, unsigned char) obj/lcd.o
+                                                  obj/statistics_views.o
+                                                  obj/main_views.o
+                                                  obj/model_menus.o
+putsTmrMode(unsigned char, unsigned char, unsigned char) obj/lcd.o
+                                                  obj/main_views.o
+                                                  obj/model_menus.o
+putsVBat(unsigned char, unsigned char, unsigned char) obj/lcd.o
+                                                  obj/main_views.o
+putsVolts(unsigned char, unsigned char, unsigned int, unsigned char) obj/lcd.o
+                                                  obj/general_menus.o
+reachExpoMixCountLimit(unsigned char)             obj/model_menus.o
+refreshDisplay()                                  obj/lcd.o
+                                                  obj/model_menus.o
+                                                  obj/gruvin9x.o
+resetTelemetry()                                  obj/frsky.o
+                                                  obj/pers.o
+                                                  obj/main_views.o
+resetTimer1()                                     obj/gruvin9x.o
+                                                  obj/pers.o
+                                                  obj/main_views.o
+resetTimer2()                                     obj/gruvin9x.o
+                                                  obj/pers.o
+                                                  obj/main_views.o
+rtc_gettime(RTC*)                                 obj/rtc.o
+                                                  obj/gruvin9x.o
+rtc_init()                                        obj/rtc.o
+rtc_settime(RTC const*)                           obj/rtc.o
+                                                  obj/general_menus.o
+s9xsplashv4                                       obj/gruvin9x.o
+sDelay                                            obj/gruvin9x.o
+s_confirmation                                    obj/model_menus.o
+s_editMode                                        obj/menus.o
+                                                  obj/general_menus.o
+                                                  obj/model_menus.o
+s_eeDirtyMsk                                      obj/pers.o
+                                                  obj/file.o
+                                                  obj/gruvin9x.o
+s_last_switch_used                                obj/gruvin9x.o
+s_last_switch_value                               obj/gruvin9x.o
+s_noHi                                            obj/menus.o
+                                                  obj/model_menus.o
+                                                  obj/gruvin9x.o
+s_noScroll                                        obj/menus.o
+                                                  obj/general_menus.o
+s_noStickInputs                                   obj/gruvin9x.o
+s_pgOfs                                           obj/menus.o
+                                                  obj/general_menus.o
+                                                  obj/model_menus.o
+s_sync_write                                      obj/file.o
+                                                  obj/drivers.o
+s_timeCum16ThrP                                   obj/gruvin9x.o
+                                                  obj/statistics_views.o
+s_timeCumAbs                                      obj/gruvin9x.o
+                                                  obj/statistics_views.o
+s_timeCumSw                                       obj/gruvin9x.o
+                                                  obj/statistics_views.o
+s_timeCumThr                                      obj/gruvin9x.o
+                                                  obj/statistics_views.o
+s_timeCumTot                                      obj/gruvin9x.o
+                                                  obj/statistics_views.o
+s_timerState                                      obj/gruvin9x.o
+                                                  obj/main_views.o
+s_timerVal                                        obj/gruvin9x.o
+                                                  obj/main_views.o
+s_traceBuf                                        obj/gruvin9x.o
+                                                  obj/statistics_views.o
+s_traceCnt                                        obj/gruvin9x.o
+                                                  obj/statistics_views.o
+s_traceWr                                         obj/gruvin9x.o
+                                                  obj/statistics_views.o
+s_warning                                         obj/model_menus.o
+s_warning_info                                    obj/model_menus.o
+s_warning_info_len                                obj/model_menus.o
+s_write_err                                       obj/file.o
+send2BitsSilv(unsigned char)                      obj/menus.o
+sendBitSilv(unsigned char)                        obj/menus.o
+sendBitTra(unsigned char)                         obj/menus.o
+sendByteTra(unsigned char)                        obj/menus.o
+setCurve(unsigned char, signed char const*)       obj/templates.o
+setDest(unsigned char)                            obj/templates.o
+setSwitch(unsigned char, unsigned char, signed char, signed char) obj/templates.o
+setTrimValue(unsigned char, unsigned char, int)   obj/gruvin9x.o
+                                                  obj/pers.o
+                                                  obj/model_menus.o
+setupPulses()                                     obj/menus.o
+                                                  obj/gruvin9x.o
+setupPulsesPPM()                                  obj/menus.o
+setupPulsesSilver()                               obj/menus.o
+setupPulsesTracerCtp1009()                        obj/menus.o
+stack_free()                                      obj/gruvin9x.o
+                                                  obj/statistics_views.o
+stamp1                                            obj/stamp.o
+                                                  obj/general_menus.o
+stamp2                                            obj/stamp.o
+                                                  obj/general_menus.o
+stamp3                                            obj/stamp.o
+                                                  obj/general_menus.o
+stamp4                                            obj/stamp.o
+                                                  obj/general_menus.o
+stamp5                                            obj/stamp.o
+                                                  obj/general_menus.o
+sticks                                            obj/general_menus.o
+strcpy                                            /usr/local/CrossPack-AVR-20120217/lib/gcc/avr/4.5.1/../../../../avr/lib/avr6/libc.a(strcpy.o)
+                                                  obj/frsky.o
+swOn                                              obj/gruvin9x.o
+swapExpo(unsigned char&, unsigned char)           obj/model_menus.o
+swapExpoMix(unsigned char, unsigned char&, unsigned char) obj/model_menus.o
+swapMix(unsigned char&, unsigned char)            obj/model_menus.o
+tabViews                                          obj/main_views.o
+theFile                                           obj/pers.o
+                                                  obj/main_views.o
+                                                  obj/model_menus.o
+                                                  obj/menus.o
+                                                  obj/gruvin9x.o
+tick10ms                                          obj/gruvin9x.o
+timer(unsigned char)                              obj/gruvin9x.o
+timer(unsigned char)::lastSwPos                   obj/gruvin9x.o
+timer(unsigned char)::last_tmr                    obj/gruvin9x.o
+timer(unsigned char)::s_cnt                       obj/gruvin9x.o
+timer(unsigned char)::s_sum                       obj/gruvin9x.o
+timer(unsigned char)::s_time                      obj/gruvin9x.o
+timer(unsigned char)::sw_toggled                  obj/gruvin9x.o
+timer2                                            obj/gruvin9x.o
+                                                  obj/main_views.o
+trace()                                           obj/gruvin9x.o
+trace()::s_cnt                                    obj/gruvin9x.o
+trace()::s_sum                                    obj/gruvin9x.o
+trace()::s_time                                   obj/gruvin9x.o
+trims                                             obj/gruvin9x.o
+trimsCheckTimer                                   obj/gruvin9x.o
+                                                  obj/model_menus.o
+warble                                            obj/gruvin9x.o
