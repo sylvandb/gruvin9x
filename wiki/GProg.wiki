@@ -19,3 +19,5 @@ The stand-off shown in the above image is 10.5mm in length -- PVC 2.5mm I.D. tub
 == Wiring gProg to a stock standard '9X ... ==
 
 [http://gruvin9x.googlecode.com/svn/wiki/GProg.Attach/gprog-stock-wiring.jpg]
+
+[http://gruvin9x.googlecode.com/svn/wiki/GProg.Attach/viewfromtop.jpg]
