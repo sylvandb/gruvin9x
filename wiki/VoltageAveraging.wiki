@@ -80,3 +80,6 @@ But this still requires 24-bit math for higher voltages, whereas we want to keep
 Wow. So, in the end, all I really changed is how the calibration figure affects the final result -- which just happens to have fixed the original overflow issue. 
 
 For people who prefer the original system, and who have 7.4V batteries (I guess!), TH's original formula has been reserved and can be used instead by supplying a `-DTHBATVOLTS` command line directive to the compiler.
+
+
+Some time after the above brain exercise, we added the bandgap reference thing into the mix and I pretty much lost it about there. It took me another day of massive frustration to work out how to make that work to 2 decimal places for calibration (with rounding, I think) and I honestly cannot remember how I did it or how to do it again for these notes. *sigh*
