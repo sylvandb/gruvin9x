@@ -150,17 +150,15 @@ If you wish to install a pre-compiled .HEX binary firmware version, rather than 
 ----
 *Q*. *How to fix intermittent power lock-on problem?*
 
-*A*. There is a small design flaw in the v4.1 soft-off circuitry that can sometimes cause the radio to lock in the power-on state, after turning off the power switch. 
+*A*. *This fault was remedied on the v4.2 boards.* For v4.1 board owners, ...
 
-NOTE: this fault was remedied on the v4.2 boards.
+There is a small design flaw in the v4.1 soft-off circuitry that can sometimes cause the radio to lock in the power-on state, after turning off the power switch. 
 
-This fault can, quite literally, come and go with changes in the weather, moisture level sin the air, local static field, etc. Thus, not all radios will be affected and radios that have been fine for weeks could begin to exhibit the behaviour from time to time.
+ _This fault can, quite literally, come and go with changes in the weather, moisture levels in the air, local static-electric fields, etc. Thus, not all radios will be affected and some that have been fine for weeks could begin to exhibit the unwanted behaviour later on._
 
 The fix is to solder a 10K resistor across (or on top of) C63, which is located 2 components to the right of the (lower) 3.3V regulator and directly beneath transistor Q9. (Board viewed with LCD screen socket at the "top".)
 
 Note that it is also possible for certain types of system crash to cause this problem. This though is theoretically very unlikely, due to watchdog timer configuration. Never the less, if you have soldered in the new resistor but still have the problem, please let us know. 
-
-The resistor is a standard part in v4.2 boards, none of which have actually been manufactured, at the time of this writing.
 
 ----
 
