@@ -7,12 +7,19 @@
 
 *A*. Install [http://subversion.apache.org/ Subversion], then "check out" (download) the entire pcb-v4.1-frozen directory.
 
-Instructions for doing that (command line version) are on the standard Google "Source" page (see menu, above.) You'll need to change the source path though ...
+Instructions for doing that (command line version) are on the standard Google "Source" page (see menu, above.) You'll need to change the source path though, as follows.
+
+*For the v4.1(a) files* ...
 {{{
     svn checkout https://gruvin9x.googlecode.com/svn/archive/pcb-v4.1a-frozen g9x-pcb-v4.1
 }}}
 
 That will create a directory named `g9x-pcb-v4.1/`, containing all the files and subdirectories. You can of course use whatever folder name you please. Various bill-of-materials (BOM) files can be found in the `assembly/` sub-folder.
+
+*For the v4.2 files* ...
+{{{
+    svn checkout https://gruvin9x.googlecode.com/svn/archive/pcb-v4.2-frozen g9x-pcb-v4.2
+}}}
 
 ----
 *Q*. Where do I find v4.1 board construction tips and advice?
