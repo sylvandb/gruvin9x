@@ -21,6 +21,9 @@ That will create a directory named `g9x-pcb-v4.1/`, containing all the files and
     svn checkout https://gruvin9x.googlecode.com/svn/archive/pcb-v4.2-frozen g9x-pcb-v4.2
 }}}
 
+(The RTC/SD-card and prototype receiver multiplexer files should be included in this archive also and the BOM files were moved to the main PCB directory.)
+
+
 ----
 *Q*. Where do I find v4.1 board construction tips and advice?
 
