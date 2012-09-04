@@ -77,11 +77,9 @@ You may want to refer to the circuit schematic to learn what the other positions
 
 *Q*. *Why doesn't the internal piezo beeper work?*
 
-*A*. Because the v4 firmware currently only supports a 'speaker' (usually a cheap headphone element) connected to the 'Spkr' port on the PCB. This is the 2-pin header, labelled 'Spkr' if the upper center-right area of the PC board. 
+*A*. Because open9x firmware currently only supports a 'speaker' (usually a cheap headphone element) connected to the 'Spkr' port on the PCB. This is the 2-pin header, labelled 'Spkr' if the upper center-right area of the PC board. 
 
-The factory installed piezo beeper (shrieker in some cases! :p) should work just fine, once code exists to turn it on and off.
-
-The same is true of the Vibrator output. Although the port has been tested to provide the correct, regulated voltage under firmware control, there hasn't actually been any real code written for it yet.
+The factory installed piezo beeper (shrieker in some cases! :p) should work just fine, once code exists to turn it on and off. We're hoping to see this added by the open9x team soon. (Time of writing, 2012-09-04.)
 
 ----
 *Q*. *What type of 'speaker' element should I use?
