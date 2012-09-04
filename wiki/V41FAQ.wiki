@@ -123,6 +123,8 @@ The above wiring will make it such that pushing the top of the encoder knob away
 
 Here are some images of Cam's nice and tidy installation ...
 
+(Please note that wire colours may differ ... so use the diagrams above as the definitive reference.)
+
 || [http://gruvin9x.googlecode.com/svn/wiki/V41FAQ.attach/rot-enc-inside1.jpg] || [http://gruvin9x.googlecode.com/svn/wiki/V41FAQ.attach/rot-enc-inside2.jpg] || 
 || [http://gruvin9x.googlecode.com/svn/wiki/V41FAQ.attach/rot-enc-outside.jpg] || [http://gruvin9x.googlecode.com/svn/wiki/V41FAQ.attach/rot-enc-wiring.jpg] ||
 
