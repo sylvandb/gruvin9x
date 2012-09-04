@@ -16,8 +16,14 @@ shorts out on something. Probably not required.
 || [http://gruvin9x.googlecode.com/svn/wiki/PcbAssembly.attach/sdcard_inst3.jpg] ||
 || The original piezo "beeper" is removed and re-soldered as shown, to make room. ||
 
-*NOTE*: A recent Turnigy branded '9X was converted and found to have slightly *different piezo beeper circuitry* (a different switching transistor and PCB design around it) which doesn't quite match the photo above. In this case, the piezo was changed by simply 'swapping sides' of the board, such that it end up pointing 'up' (toward the back of the case.)
+*NOTES*
+
+A recent Turnigy branded '9X was converted and found to have slightly *different piezo beeper circuitry* (a different switching transistor and PCB design around it) which doesn't quite match the photo above. In this case, the piezo was changed by simply 'swapping sides' of the board, such that it end up pointing 'up' (toward the back of the case.)
 
 I probably over-did the hot glue a little. :-D
 
 Oh by the way ... do NOT put a fancy, bulky, plastic connector on the SD card board where the wiring terminates. There isn't room for it. Just solder wires directly and apply some hot-glue to prevent them breaking over time.
+
+An MMC card in an SD-card adapter works just fine. (Gruvin uses a 2GB MMC in this manner.)
+
+The card should be pre-formatted in a computer as "Windows FAT32" -- _not_ NTFS. Most cards are supplied already formatted in FAT32 format. If you have problems, try formatting again yourself. Some people have reported problems with older, slower cards. However, this system should not require anything fancy. Class 2 or higher should be OK -- the higher the better but definitely no need to get the expensive, ultra high speed video recorder versions. 
