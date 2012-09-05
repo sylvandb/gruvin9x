@@ -16,6 +16,12 @@ The stand-off shown in the above image is 10.5mm in length -- PVC 2.5mm I.D. tub
 
 [http://gruvin9x.googlecode.com/svn/wiki/GProg.Attach/g9x-prog%20USB%20socket.jpg]
 
+*WARNING* To get a snug _but not too tight_ fit in the slot, you may need to file down one or both sides of the USB socket carrier board, a little. DO NOT apply any pressure directly to the USB socket itself. Use a broad, blunt tool, like large, flat edge screwdriver and apply only low to moderate force. If the board does not slide in easily, then STOP and file the board, else something _will_ break. 
+
+If you end up with too loose a fit, then try the other slot (one is a little more narrow than the other) or use hot-glue or a drop of blue thread locking cement (loctite™ 243) to secure the board, yet enable later removal if needed.
+
+Of course, you cn also mount the USB socket almost anywhere else you like, using hot-glue or some other supporting arrangement, along with a suitable access hole, for example.
+
 == Wiring gProg to a stock standard '9X ... ==
 
 [http://gruvin9x.googlecode.com/svn/wiki/GProg.Attach/gprog-stock-wiring.jpg]
