@@ -86,15 +86,13 @@ The factory installed piezo beeper (shrieker in some cases! :p) should work just
 
 *A*. This one can actually be a bit of a problem, as it turns out.
 
-The first few headphone elements used by Gruvin, over several prototype builds, all produced plenty of audio volume. He thus concluded that this would be the most common case. However since then, we have all (including Gruvin) had difficulty finding new elements that make enough noise. (It is possible, though unlikely, that the change to the ATmega2560 chip might somehow have something to do with this?) 
+The first few headphone elements used by Gruvin, over several prototype builds, all produced plenty of audio volume. He thus concluded that this would be the most common case. However since then, we have all (including Gruvin) had difficulty finding new elements that make enough noise. We now realise that Gruvin's junk box contained several seemingly uncommon 24ohm headphone elements, whereas those commonly available new are all 32ohm. Doh.
 
-That said, the 'speaker' element from one side of some cheap headphones is what was intended. These are the commonly used, roughly 1 inch (25mm) diameter types, with the clear plastic diaphragm. They're usually rated somewhere around 32-ohm impedance and are to be found in most computer or portable music headphones (other than the type that plug inside your ear canal, of course.) Old laptops are another potential source.
+That said, the 'speaker' element used for the prototype was salvaged from one side of a pair of cheap audio headphones. These are the commonly used, roughly 1-inch (25mm) diameter types, with the clear plastic diaphragm and are to be found in most computer or portable music headphones -- the _outside-your-ear_ type, of course. Some (but not all) of the really cheap versions are _far_ too quiet for our purposes. So be prepared from some experimentation. (Ideally, you will find a 24ohm version. (see above). If you do find a stockist for these, please let gruvin know. Thanks! )
 
-There are also two 200-ohm resistors near the 'Spkr' socket on the v4.x boards. These are in fact wired in parallel, to provide 100-ohms total. The intention here was to allow for variations in available speaker elements. You can either short the resistors out with a fine wire link for more volume or carefully remove one resistor to reduce sound output. (Removal is unlikely to be needed.) 
-
-Consequently -- and as mentioned above -- a lot of us have been needing to short out the resistors (for 0-ohms) to get more volume from quieter speaker elements -- only to find that it's still not loud enough in about half the most recent cases.
+There are also two 200-ohm resistors near the 'Spkr' socket on the v4.x boards. These are wired in parallel, to provide 100-ohms total. The idea here was, somewhat ironically as it turns out, to allow simply removal of one resistor to _reduce_ the volume. Hmmm! In practice,  you'll probably want to short the resistors out with a fine wire link over either one of them, to get maximum sound output.
  
-A long term solution for this is still 'being formulated'. The obvious quick solution would be to update the firmware to go back to using the factory supplied piezo beeper, which s almost always much louder than any speaker. Plans to do this exist, but we haven't got around to it as at this writing, sorry.
+A long term solution for this is still, 'being formulated' (kicked around, aimlessly?) One solution would be to go back to using the factory supplied piezo beeper -- at least for important alarm sounds -- since the piezo is almost always _much_ louder. We're hoping open9x will add a feature for this, perhaps by way of a menu selectable system, similar to the optional haptic (vibrator) device.
 
 ----
 *Q*. *How are the rotary encoders supposed to be wired?*
