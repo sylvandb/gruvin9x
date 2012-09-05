@@ -3,6 +3,31 @@
 <b>F</b>requently <b>A</b>sked <b>Q</b>uestions
 
 ----
+
+*Q*. How do I install my new v4 board?
+
+*A*. General installation is fairly simple. The approximate steps are ...
+
+ # *Always observe anti-static precautions with electronic parts.*
+ # Remove the six screws from the transmitter casing and split the two halves.
+ # Unplug the wire loom connecting the rear half of the casing to the front
+ # Unplug all of the white (JST) connectors from the stock controller board
+ # *CAREFULLY* unlock the LCD ribbon cable socket by pushing the locking clip (usually black or brown, plastic) away from the board, one end at a time, with a small screwdriver. *BE ESPECIALLY CAREFUL* to operate the tool such that no movement greater than a millimetre (1/16 inch) or so can happen at any time, just in case the clip suddenly gives way. (It is quite easy to break the clip if that occurs.)
+ # Remove the nine screws that hold the board into the transmitter casing. Do this with the casing laid out flat on a soft piece of foam or similar, because the LCD screen beneath the board is secured in place only by the main controller board itself -- you do not want it falling out. Place the removed, stock board to one side.
+ # Check that the two front panel buttons to ensure they are properly seated. These are on your left, assuming the bottom of the casing is facing you. The other set of four buttons are held in place by two screws, so nothing should be required there.
+ # Install a previously prepared LED back-light and stick the foam spacer pad to your new v4 controller board, using the white rectangle drawn on the back as a placement guide -- OR -- if you are not installing an LED back-light, you will need to somehow arrange a 6mm thick, SOFT foam spacer pad. IT MUST BE SOFT, to allow compression. Use the foam on the stock board as a guide. (It is possible, with considerable patience, to remove the padding from the stock board and transfer it to the new board, albeit not so tidily -- but still functional. However, try to come up with something better, if you can. At a pinch, several small foam pieces in the corners, center and long-side mid-points will suffice.)
+ # Carefully lower the new board into place, painstakingly moving all the connector plugs out of the way as you go. You will need to do this whilst keeping the board fairly horizontal, in order to have the push-buttons line up with the front panel button inserts. In practice, you can more or less just drop the board rough in place, then move it about side to side to get the buttons to drop into place.
+ # BEFORE PUTTING ANY SCREWS IN ... hold the board firmly in place with one hand and check for proper mechanical operation of all six front panel push-buttons. If one or more do not have sufficient travel, you might need to check the installation alignment of the PCB buttons (home made board) or file down the black stalks of same as needed to effect a remedy. (All assembled v4 boards from the gruinv9x.com store have already been installed and adjusted in this regard ... but your casing or PCB mounting hole positions may differ slightly.)
+ # Re-install the nine PCB mounting screws, noting that the four larger screws go in the four extreme corners. DO NOT OVER TIGHTEN. Just snug and a micro-nip more is sufficient.
+ # Double check proper mechanical 'click-click' of all six front panel buttons before continuing. If there's a problem, remove the nine screws and take action to remedy the problem.
+ # Plug in the several white JST connector plugs, leaving the loom from the rear-casing and the LCD ribbon cable, for now.
+ # Open the LCD socket lock and insert the LCD ribbon cable. This could be a little tricky. GENTLE use of a pair of tweezers, acting in small increments on each side of the cable, usually gets the job done. (DO NOT TOUCH the exposed LCD ribbon cable contacts for ANY reason with your fingers!) Once the cable is fully inserted, use either your index finger and thumb on one side and tweezers or _small_ pliers on the other -- or two pairs of tweezers -- to clamp the LCD socket's lock tightly closed. This action requires a delicate balance of force and patience. For newer sockets, you might need to work in smaller increments, one side at a time, so as to reduce total force required and thus avoid breaking something.
+ # If installed, connect the LED back-light 3-pin JST plug to the LED B/L socket in the upper right of the board. BE VERY CAREFUL to ensure that the left hand pin is NOT connected to anything here. Only the center (Gnd) and right (+5 current limited) pins are used.
+ # Hold the rear casing over the front casing, somewhat to the left, off center to give enough working slack on the wire loom, allowing it to be firmly plugged back into the 12 pin JST socket.
+ # Align the two halves of the casing, lock them together and set about re-installing the six case screws, which are all the same size.
+ # Take a moment to admire your fine work -- and how nothing seems different, from the outside. SUCCESS!
+
+----
 *Q*. How do I get a local copy of the PCB design files?
 
 *A*. Install [http://subversion.apache.org/ Subversion], then "check out" (download) the entire pcb-v4.1-frozen directory.
