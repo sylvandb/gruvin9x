@@ -2,6 +2,8 @@
 = Custom Board v4.x FAQ =
 <b>F</b>requently <b>A</b>sked <b>Q</b>uestions
 
+There is NO PARTICULAR ORDER to this list. Please read the entire Q and A to get all required information. If you can't find what you need, either contact Gruvin personally (via Google Code links elsewhere or the [http://gruvin9x.com gruvin9x.com] contact form) or make a post a question at [http://9xforums.com 9xforums.com]. Thanks.
+
 ----
 
 *Q*. How do I install my new v4 board?
