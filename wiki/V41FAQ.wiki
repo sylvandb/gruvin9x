@@ -1,5 +1,5 @@
 #summary v4.1/4.2 Custom Board FAQ
-= Custom Board v4.1 FAQ =
+= Custom Board v4.x FAQ =
 <b>F</b>requently <b>A</b>sked <b>Q</b>uestions
 
 ----
@@ -134,6 +134,13 @@ Here are some images of Cam's nice and tidy installation ...
 *A*. Any way you like, really. But [SdcardBoard please see here] for how Gruvin does it.
 
 ----
+
+*Q*. How to install the gProg board and associated USB socket?
+
+*A*. The gProg USBasp AVR programmer has its own wiki page, [GProg here].
+
+----
+
 
 *Q*. *How do I set the v4 board's ATmega2560 MCU option fuses, before the first Flash programming?*
 
