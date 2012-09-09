@@ -166,6 +166,15 @@ Here are some images of Cam's nice and tidy installation ...
 
 ----
 
+*Q*. *I have a Fr-Sky DHT DIY module. Where are the signals I need?*
+
+*A*. You'll find the most conveniently located GND, BATT+ and PPM connections on the 9X's rear case PCB. Here's an image showing which pin is what ...
+
+[http://gruvin9x.googlecode.com/svn/wiki/V41FAQ.attach/dht-wiring-guide.jpg]
+
+Use the 3-pin pseudo-RS232 (left hand one, at the lower right of the G9X board) to connect to GND, Txd and Rxd on the DHT module for telemetry, assuming you have the newer two-way version.
+
+----
 
 *Q*. *How do I set the v4 board's ATmega2560 MCU option fuses, before the first Flash programming?*
 
