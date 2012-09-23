@@ -8,7 +8,7 @@ _Photo to the right is the v4.0 prototype (R.I.P). An image of the V4.1 board ca
 == Update 2012-09-23 ==
 The second batch of [http://gruvin9x.com/shop/gruvin9x/22-gruvin9x-v41-pcb-fully-assembled.html G9X v4.2 fully assembled and tested boards] have been on sale at gruvin9x.com for a few weeks now. Sales are progressing steadily, indicating continually expanding interest.
 
-Meanwhile, we are having the Chinese factor also do small runs of the RTS/SD card and gProg boards, which should result in further resale price reductions. More to come on this as information comes to hand.
+Meanwhile, we are having the Chinese factory also do small runs of the RTC/SD-card and gProg boards, which should result in further resale price reductions. _Yay!_ \o/ More to come on this, as information comes to hand.
 
 == Past Update 2012-05-14 ==
 The first test run of v4.1 fully assembled boards is sold out. We are in the quoting phase with the factory over the latest v4.2 design. (Very little difference from v4.1.) We hope to have some stock of the v4.2 boards by the end of July. Timing is very difficult to predict, due to several factors.
