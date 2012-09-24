@@ -27,3 +27,10 @@ Oh by the way ... do NOT put a fancy, bulky, plastic connector on the SD card bo
 An MMC card in an SD-card adapter works just fine. (Gruvin uses a 2GB MMC in this manner.)
 
 The card should be pre-formatted in a computer as "Windows FAT32" -- _not_ NTFS. Most cards are supplied already formatted in FAT32 format. If you have problems, try formatting again yourself. Some people have reported problems with older, slower cards. However, this system should not require anything fancy. Class 2 or higher should be OK -- the higher the better but definitely no need to get the expensive, ultra high speed video recorder versions. 
+
+=== Some more photos, of a different install ===
+
+These photos show a different installation Gruvin did. Note that the Turnigy power switch board in this one is a later version, with different PCB trace layout around the piezo beeper area. So we simply mount the piezo on the opposite side of the board. *shrug* ...
+[http://gruvin9x.googlecode.com/svn/wiki/PcbAssembly.attach/sd-card-install1.jpg]
+[http://gruvin9x.googlecode.com/svn/wiki/PcbAssembly.attach/sd-card-install2.jpg]
+[http://gruvin9x.googlecode.com/svn/wiki/PcbAssembly.attach/sd-card-install3.jpg]
