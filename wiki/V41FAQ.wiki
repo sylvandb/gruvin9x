@@ -176,6 +176,14 @@ Here are some images of Cam's nice and tidy installation ...
 
 Use the 3-pin pseudo-RS232 (left hand one, at the lower right of the G9X board) to connect to GND, Txd and Rxd on the DHT module for telemetry, assuming you have the newer two-way version.
 
+The following images relate to the DJT, external module, but should suffice to add clarity for the DHT as well ...
+
+[http://gruvin9x.googlecode.com/svn/wiki/V41FAQ.attach/telemetry-rs232.jpg]
+
+Gruvin uses an external DJT module, with two wire links added inside, to link pins 2 and 5 of the module socket to _Rxd_ and _Txd_ of the Fr-Sky data port, respectively. Inside the '9X case, on the rear PCB, things look like this ...
+
+[http://gruvin9x.googlecode.com/svn/wiki/V41FAQ.attach/djt_modified1.jpg]
+
 ----
 
 *Q*. *How do I set the v4 board's ATmega2560 MCU option fuses, before the first Flash programming?*
