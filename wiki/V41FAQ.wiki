@@ -184,6 +184,10 @@ Gruvin uses an external DJT module, with two wire links added inside, to link pi
 
 [http://gruvin9x.googlecode.com/svn/wiki/V41FAQ.attach/djt_modified1.jpg]
 
+*Note that pin 2 has to be broken from the ground plane on this PCB on BOTH sides of the PCB*, as noted in the above image. First, remove the board. On the under-side, where the pins protrude outside the case, temporarily slide the black plastic pin holder bar up the pins (it's quite tight, so ease it a little at a time from each end) then make the break on each side of the pin, then slide the bar back into place and re-fit the board.
+
+*Using TTL* -- others have found the 3.3V TTL lines inside the DJT module and connected to those directly, presumably with something like 1K5 series resistors, tot he TTL socket on the G9X main board. I (gruvin) have not tried this, so cannot advise further. Pseudo RS-232 and the method described above, works fine for me.  
+
 ----
 
 *Q*. *How do I set the v4 board's ATmega2560 MCU option fuses, before the first Flash programming?*
