@@ -37,6 +37,18 @@ There is NO PARTICULAR ORDER to this list. *Please read the entire Q and A to ge
  # Take a moment to admire your fine work -- and how nothing seems different, from the outside. SUCCESS!
 
 ----
+*Q*. *What CAD software did you use for the board design?*
+
+*A*. [http://en.wikipedia.org/wiki/KiCad KiCAD] (wikipedia link).
+
+----
+*Q*. *Why KiCAD' and not the ever popular Cadsoft Eagle suite?*
+
+*A*. Apart from actually liking KiCAD, this is an open and more importantly FREE for ALL project. KiCAD does everything we need and is free and open source. Eagle on the other hand, demands a hugely expensive (minimum USD$1,145 ATOW) "Pro" license for boards of this size and complexity. So really, it's a no-brainer. Eagle is of no practical use to us what-so-ever. 
+
+KiCAD was chosen over another alternative because we (well, gruvin) found that it is easy to download and install on both Linux and Windows (the latter still being the most commonly used platform, for who on Earth knows why, right? :P)
+
+----
 *Q*. How do I get a local copy of the PCB design files?
 
 *A*. Install [http://subversion.apache.org/ Subversion], then "check out" (download) the entire pcb-v4.1-frozen directory.
@@ -221,13 +233,5 @@ There is a small design flaw in the v4.1 soft-off circuitry that can sometimes c
 The fix is to solder a 10K resistor across (or on top of) C63, which is located 2 components to the right of the (lower) 3.3V regulator and directly beneath transistor Q9. (Board viewed with LCD screen socket at the "top".)
 
 Note that it is also possible for certain types of system crash to cause this problem. This though is theoretically very unlikely, due to watchdog timer configuration. Never the less, if you have soldered in the new resistor but still have the problem, please let us know. 
-
-----
-
-*Q*. *Why KiCAD' and not the ever popular Cadsoft Eagle suite?*
-
-*A*. Apart from actually liking KiCAD, this is an open and more importantly FREE for ALL project. KiCAD does everything we need and is free and open source. Eagle on the other hand, demands a hugely expensive (minimum USD$1,145 ATOW) "Pro" license for boards of this size and complexity. So really, it's a no-brainer. Eagle is of no practical use to us what-so-ever. 
-
-KiCAD was chosen over another alternative because we (well, gruvin) found that it is easy to download and install on both Linux and Windows (the latter still being the most commonly used platform, for who on Earth knows why, right? :P)
 
 ----
