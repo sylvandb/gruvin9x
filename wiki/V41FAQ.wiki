@@ -2,6 +2,13 @@
 = Custom Board v4.x FAQ =
 <b>F</b>requently <b>A</b>sked <b>Q</b>uestions
 
+
+== G9X v4.x BOARD DISCONTINUED but still fully supported ==
+
+See the [http://gruvin9x.googlecode.com project home page] for details. More also at the online store [http://gruvin9x.com/shop/gruvin9x/22-gruvin9x-v41-pcb-fully-assembled.html product page].
+
+----
+
 There is NO PARTICULAR ORDER to this list. Please read the entire Q and A to get all required information. If you can't find what you need, either contact Gruvin personally (via Google Code links elsewhere or the [http://gruvin9x.com gruvin9x.com] contact form) or make a post a question at [http://9xforums.com 9xforums.com]. Thanks.
 
 ----
