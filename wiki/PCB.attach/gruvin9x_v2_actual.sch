@@ -1,4 +1,4 @@
-EESchema Schematic File Version 2  date 25/11/2010 7:00:05 p.m.
+EESchema Schematic File Version 2  date Mon 06 May 2013 09:57:27 PM NZST
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -29,13 +29,14 @@ LIBS:opto
 LIBS:atmel
 LIBS:contrib
 LIBS:valves
-LIBS:gruvin9x_v2_actual-cache
-EELAYER 24  0
+LIBS:gruvin
+EELAYER 25  0
 EELAYER END
 $Descr A3 16535 11700
+encoding utf-8
 Sheet 1 1
 Title "Main Controller PCB (Stock)"
-Date "25 nov 2010"
+Date "6 may 2013"
 Rev "1.1"
 Comp "gruvin9x"
 Comment1 "(Layout designed to suit easy conversion to 2xA4 if required.)"
@@ -43,6 +44,15 @@ Comment2 "for use with KiCad. Some corrections and notation improvements have be
 Comment3 "This is a re-work of an orgininal reverse engineered schematic by an unknown author"
 Comment4 ""
 $EndDescr
+$Comp
+L ATMEGA64_GRUVIN IC1
+U 1 1 51877DDF
+P 4850 8000
+F 0 "IC1" H 5550 10300 60  0000 C CNN
+F 1 "ATMEGA64A" H 4800 9350 60  0000 C CNN
+	1    4850 8000
+	1    0    0    -1  
+$EndComp
 Wire Wire Line
 	13300 4450 13300 4550
 Wire Wire Line
@@ -2952,14 +2962,5 @@ F 0 "R17" V 3030 8200 50  0000 C CNN
 F 1 "200" V 2950 8200 50  0000 C CNN
 	1    2950 8200
 	0    1    1    0   
-$EndComp
-$Comp
-L ATMEGA64 I1
-U 1 1 4CE70A3F
-P 4850 8000
-F 0 "I1" H 5550 10300 60  0000 C CNN
-F 1 "ATMEGA64A" H 5500 5700 60  0000 C CNN
-	1    4850 8000
-	1    0    0    -1  
 $EndComp
 $EndSCHEMATC
