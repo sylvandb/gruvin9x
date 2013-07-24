@@ -1,6 +1,11 @@
 #summary Progress notes for Fr-Sky telemetry support
 #labels Phase-Implementation,Featured
 
+=This project has been superseded by [http://opentx.googlecode.com/ opentx]=
+
+The following data is likely obsolete, kept here for mostly just for historical record.
+
+
 = Telemetry =
 
 There are a number of "all-in-one" transmitter/telemetry solutions on the market, including those from [http://jetimodel.com/index.php?page=products&old=0&category=4 JETI] and [http://www.frsky-rc.com/Products.asp?BigClassID=17 Fr-Sky], plus a number of stand-alone solutions including the amazing FPV-empowering [http://www.eagletreesystems.com/ Eagle-Tree] gear and even DIY systems employing things like SparkFun's [http://www.sparkfun.com/categories/111 XBee] modules, teamed up with an [http://diydrones.com/profiles/blogs/ardupilot-mega-home-page ArduPilot-Mega] for example.
