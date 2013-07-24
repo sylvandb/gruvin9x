@@ -1,5 +1,10 @@
 #summary Connecting a Flash programmer to your '9X
 #labels Phase-Implementation,Featured
+
+=This project has been superseded by [http://opentx.googlecode.com/ opentx]=
+
+The following data is likely obsolete, kept here for mostly just for historical record.
+
 = Getting Wired =
 
 *UPDATE* 2011-11-24: Current versions of AVRDUDE do not seem to work well with the Sparkfun USB Pocket Programmer. I have switched to a USBasp based USB programmer and it is now working flawlessly. Original article (to be updated) continues ...
