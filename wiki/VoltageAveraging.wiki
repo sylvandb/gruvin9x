@@ -1,5 +1,10 @@
 #summary Battery voltage averaging. (Losing the jitters.)
 
+=This project has been superseded by [http://opentx.googlecode.com/ opentx]=
+
+The following data is likely obsolete, kept here for mostly just for historical record.
+
+
 *NOTE:* Much of this is no longer relevant since incorporating new code to work with self-calibrating band gap reference, which was done to prevent falsely high battery voltage levels when actually below 6v -- when the external ADC reference voltage also starts to fall.
 
 = Why =
