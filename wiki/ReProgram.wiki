@@ -1,6 +1,11 @@
 #summary Re-programming your 9X radio
 #labels Phase-Deploy
 
+=This project has been superseded by [http://opentx.googlecode.com/ opentx]=
+
+The following data is likely obsolete, kept here for mostly just for historical record.
+
+
 = Re-programming Your 9X Radio =
 
 == Two options ==
