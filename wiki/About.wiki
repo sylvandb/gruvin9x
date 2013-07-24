@@ -1,7 +1,7 @@
 #summary About this project / Contact information
 #labels Featured
 
-=This project has been supersede by opentx=
+=This project has been supersede by [http://opentx.googlecode.com/ opentx]=
 
 The following data is likely obsolete, kept here for mostly just for historical record.
 
