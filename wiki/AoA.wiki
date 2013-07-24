@@ -1,4 +1,9 @@
 #summary Random notes/links regarding Angle of Attack sensors
+
+=This project has been superseded by [http://opentx.googlecode.com/ opentx]=
+
+The following data is likely obsolete, kept here for mostly just for historical record.
+
 = DIY AoA Sensor Ideas / Notes =
 
 == Links ==
