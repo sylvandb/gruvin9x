@@ -1,5 +1,10 @@
 #summary G9X Features
 
+=This project has been superseded by [http://opentx.googlecode.com/ opentx]=
+
+The following data is likely obsolete, kept here for mostly just for historical record.
+
+
 = G9X Features =
 
 We'll add a bunch of screen shots here at first and maybe flesh out some text around them later on.
