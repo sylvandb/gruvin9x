@@ -1,5 +1,10 @@
 #summary Frequently Asked Questions
 
+=This project has been superseded by [http://opentx.googlecode.com/ opentx]=
+
+The following data is likely obsolete, kept here for mostly just for historical record.
+
+
 = G9X FAQ =
 <b>F</b>requently <b>A</b>sked <b>Q</b>uestions
 
