@@ -1,5 +1,10 @@
 #summary PPM-in Compatibility (Hack)
 
+=This project has been superseded by [http://opentx.googlecode.com/ opentx]=
+
+The following data is likely obsolete, kept here for mostly just for historical record.
+
+
 = PPM-in Compatibility (Hack) =
 *Relates to Issue 15*
 
