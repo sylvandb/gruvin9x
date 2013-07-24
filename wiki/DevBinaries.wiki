@@ -1,5 +1,10 @@
 #summary Development Binaries No Longer Available
 
+=This project has been superseded by [http://opentx.googlecode.com/ opentx]=
+
+The following data is likely obsolete, kept here for mostly just for historical record.
+
+
 == Development Binaries No Longer Produced ==
 Since the public release of the first fully tested gruvin9x firmware was made in December, 2011, we are not longer building development binaries for direct download. This is partly to try and prevent accidents occurring from the use of incomplete, potentially buggy software and partly because we simply see no point in doing so.
 
