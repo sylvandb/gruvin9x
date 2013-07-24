@@ -1,4 +1,9 @@
 #summary Fr-Sky Interfacing
+
+=This project has been superseded by [http://opentx.googlecode.com/ opentx]=
+
+The following data is likely obsolete, kept here for mostly just for historical record.
+
 = Fr-Sky Interfacing =
 
 Gruvin (more or less) followed the original TH/ER9X 'JETI' wiring instructions to get RS-232 (TTL level) TX and RX signal for my Fr-Sky two-way transmitter module. Those instructions can be found [http://code.google.com/p/er9x/wiki/JETI here].
