@@ -1,4 +1,9 @@
 #summary Back-light Information
+
+=This project has been superseded by [http://opentx.googlecode.com/ opentx]=
+
+The following data is likely obsolete, kept here for mostly just for historical record.
+
 = Backlight Information =
 
 *BRIEF NOTES ONLY*
