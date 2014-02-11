@@ -3,9 +3,9 @@
 
 =Getting your own G9X v4.2d PCB's made=
 
-A Hong Kong based organisation going by the name ITead Studios is the cheapest
+A Hong Kong based organisation, "ITead Studio" is the cheapest
 and most accessible PCB prototyping service we have yet found. They can supply
-five (5) HASL finished, professionally produced and fully silk screened etc
+five (5) HASL (hot air solder levelled) professionally produced and fully silk screened etc
 G9X v4.2d PCBs for about USD$61, plus shipping. Shipping costs are under USD$20 for
 registered air mail. That's less than USD$20 for each board, landed.
 
