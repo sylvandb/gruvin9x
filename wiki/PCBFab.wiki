@@ -11,7 +11,7 @@ registered air mail.
 
 That's less than USD$15 for each board, landed at your door! Here's how you do it ...
 
-==How to Order five G9X v4.2d Boards from ITead==
+==How to Order five G9X v4.2d Boards from ITead Studio==
 
 Go to [http://imall.iteadstudio.com/open-pcb/pcb-prototyping/im120418010.html]
 
