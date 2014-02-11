@@ -1,0 +1,39 @@
+#summary Getting your own G9X PCB's made
+#labels Featured
+
+=Getting your own G9X v4.2d PCB's made=
+
+A Hong Kong based organisation going by the name ITead Studios is the cheapest
+and most accessible PCB prototyping service we have yet found. They can supply
+five (5) HASL finished, professionally produced and fully silk screened etc
+G9X v4.2d PCBs for about USD$61, plus shipping. Shipping costs are under USD$20 for
+registered air mail. That's less than USD$20 for each board, landed.
+
+==How to Order five G9X v4.2d Boards from ITead==
+
+Go to [http://imall.iteadstudio.com/open-pcb/pcb-prototyping/im120418010.html]
+
+That should be a direct link to their PCB prototyping service, for _2LAYER PCB
+LARGER THAN 10CM X 10CM._ 
+
+You need to select some options. Here's an image of that, which I just did on
+their site ...
+
+[http://gruvin9x.googlecode.com/svn/wiki/PCBFab.attach/itead-specs.jpg]
+
+
+Once you have paid for your order, ITead will send a confirmation email
+containing instructions for sending the Gerber files to them. That amounts to
+sending an email to pcb[=at=]iteadstudio[dt]com, with the gerber
+files attached. Put your order number in the subject and message body.
+
+Here is a link to the Gerbers files, already in a convenient ZIP file. 
+
+[https://gruvin9x.googlecode.com/svn/archive/pcb-v4.2d-frozen/production/g9x_v4-2d_gerbers.zip ZIPped Gerber files for ITead]
+
+Just send the ZIP as a single file.
+
+That's it!
+
+Time from placing order to receiving the boards (way down here in New Zealand)
+is usually inside two weeks. (They come from Hong Kong, China.)
