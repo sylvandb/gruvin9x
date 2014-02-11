@@ -18,6 +18,7 @@
    * [ReferenceImages Reference Images]
    * [SchematicV2 V2 Circuit Schematic]
   * *[V41FAQ v4.x Custom Board FAQ]*
+  * *[PCBFab Get your own PCB made]*
  * [GProg USB Programmer]
  * [Telemetry]
   * [FrSky Fr-Sky Support]
