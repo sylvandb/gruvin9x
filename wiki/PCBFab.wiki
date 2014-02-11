@@ -19,7 +19,7 @@ LARGER THAN 10CM X 10CM._
 You need to select some options. Here's an image of that, which I just did on
 their site ...
 
-[http://gruvin9x.googlecode.com/svn/wiki/PCBFab.attach/itead-specs.jpg]
+[http://gruvin9x.googlecode.com/svn/wiki/PCBFab.attach/itead-specs.png]
 
 
 Once you have paid for your order, ITead will send a confirmation email
