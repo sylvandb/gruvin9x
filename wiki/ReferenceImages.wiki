@@ -22,7 +22,7 @@ We believe the following are the main specifications of this display ...
  * *Replacement part availability* ...
   * Try [http://www.buydisplay.com www.BuyDisplay.com]. I found nothing the same size with the same 30-pin connector. There is [http://www.buydisplay.com/default/2-9-inch-cog-lcd-module-128x64-display-arduino-st7565p-white-on-black.html this one] at US$6.52, which is the right size and controller chip, but with a 26-pin cable. :-/ There's also smaller 2.1" displays that would fit in a '9X and which do have the right chip and a 30-pin cable.
 
-A similar, but not quite exact (it's 3.0V) display datasheet can be found [http://www.hwdisplay.com/admin/products/up_img/20064271359888913.pdf here].
+[http://www.hwdisplay.com/admin/products/up_img/20064271359888913.pdf Mechanical data sheet] for similar display,  [http://www.hwdisplay.com/admin/products/up_img/20064271359888913.pdf here]. Thanks [https://code.google.com/u/100578513419733812290/ @devnow].
 
 - - -
 
