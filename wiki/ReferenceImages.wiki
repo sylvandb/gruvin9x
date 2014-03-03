@@ -10,17 +10,17 @@ Note: Some of the images are fairly high resolution on purpose.
 == LCD Screen ==
 We believe the following are the main specifications of this display ...
  * Dimensions:  77 x 48mm.
- * Pixel View Area: 66.52mm x 33.24mm -- 2.9" diagonal (0.48mm sq. pixels with 0.04mm gaps.)
+ * Pixel View Area: 66.52mm x 33.24mm -- 2.9" diagonal (0.48mm sq. pixels with 0.04mm gaps)
  * Front Polariser: Transmissive (Adhesive)
  * Back Polariser: Transflective (Adhesive)
  * Display Mode: FSTN
  * Viewing Angle: 90-degrees perpendicular (6:00 o'clock)
- * Controller IC: *ST7565P* (very common) -- "chip on glass" version (very clever!)
+ * Controller IC: *ST7565P* (very common) -- "chip on glass" version
  * Operating Voltage: 3.3V (not 3.0V)
- * Connector: COG+FPC (30-pin)
+ * Connector: COG+FPC 30-pin, 0.5mm pitch
  * Manufacturer: Unknown
  * *Replacement part availability* ...
-  * Try [http://www.buydisplay.com www.BuyDisplay.com]. I found nothing the same size with the same 30-pin connector. There is [http://www.buydisplay.com/default/2-9-inch-cog-lcd-module-128x64-display-arduino-st7565p-white-on-black.html this one] at US$6.52, which is the right size and controller chip, but with a 26-pin cable. :-/ There's also smaller 2.1" displays that would fit in a '9X and which do have the right chip and a 30-pin cable.
+  * Try [http://www.ebay.com eBay] or [http://www.buydisplay.com www.BuyDisplay.com]. I found nothing the same size with the same 30-pin connector, at BuyDisplay. But there is [http://www.buydisplay.com/default/2-9-inch-cog-lcd-module-128x64-display-arduino-st7565p-white-on-black.html this one] at US$6.52, which is the right size and controller chip, but with a 26 contact cable. :-/ There is also a smaller 2.1" display, which would fit in a '9X and does have the right 30-pin cable. (The R2Hobbies supply of TH9X spare parts displays has dried up.)
 
 [http://www.hwdisplay.com/admin/products/up_img/20064271359888913.pdf Mechanical data sheet] for similar display,  [http://www.hwdisplay.com/admin/products/up_img/20064271359888913.pdf here]. Thanks [https://code.google.com/u/100578513419733812290/ @devnow].
 
