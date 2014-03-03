@@ -23,7 +23,7 @@ We believe the following are the main specifications of this display ...
 
  * *Replacement part availability* ...
   * Try [http://www.ebay.com eBay.com] 
-  * Or [http://www.buydisplay.com www.BuyDisplay.com]. I found nothing the same size with the same 30-pin connector, at BuyDisplay. But there is [http://www.buydisplay.com/default/2-9-inch-cog-lcd-module-128x64-display-arduino-st7565p-white-on-black.html this one] at US$6.52, which is the right size and controller chip, but with a 26 contact cable. :-/ There is also a smaller 2.1" display, which would fit in a '9X and does have the right 30-pin cable.
+  * Or [http://www.buydisplay.com www.BuyDisplay.com]. I found nothing the same size with the same 30-pin connector, at BuyDisplay. But there is [http://www.buydisplay.com/default/2-9-inch-cog-lcd-module-128x64-display-arduino-st7565p-white-on-black.html this one] at US$6.52, which is the right size and controller chip, but a 26 contact cable. :-/ There is also a smaller 2.1" display, which would fit in a '9X and does have the right 30-pin cable.
   * The [http://www.r2hobbies.com/eng/proddetail.php?prod=rcps2845001 R2Hobbies] supply of TH9X spare part displays has dried up.
 
 - - -
