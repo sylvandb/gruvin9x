@@ -10,7 +10,7 @@ Note: Some of the images are fairly high resolution on purpose.
 == LCD Screen ==
 We believe the following are the main specifications of this display ...
  * Dimensions:  77 x 48mm.
- * Pixel View Area: 66.52mm x 33.24mm -- 2.9" diagonal.
+ * Pixel View Area: 66.52mm x 33.24mm -- 2.9" diagonal (0.48mm sq. pixels with 0.04mm gaps.)
  * Front Polariser: Transmissive (Adhesive)
  * Back Polariser: Transflective (Adhesive)
  * Display Mode: FSTN
