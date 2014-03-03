@@ -14,7 +14,7 @@ We believe the following are the main specifications of this display ...
  * Front Polariser: Transmissive (Adhesive)
  * Back Polariser: Transflective (Adhesive)
  * Display Mode: FSTN
- * Viewing Angle: 90-degrees (6:00 o'clock)
+ * Viewing Angle: 90-degrees perpendicular (6:00 o'clock)
  * Controller IC: *ST7565P* (very common) -- "chip on glass" version (very clever!)
  * Operating Voltage: 3.3V (not 3.0V)
  * Connector: COG+FPC (30-pin)
