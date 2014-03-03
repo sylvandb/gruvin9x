@@ -19,7 +19,7 @@ We believe the following are the main specifications of this display ...
  * Operating Voltage: 3.3V (not 3.0V)
  * Connector: COG+FPC 30-pin, 0.5mm pitch
  * Manufacturer: Unknown
- * [http://www.hwdisplay.com/admin/products/up_img/20064271359888913.pdf Mechanical data sheet] for similar display,  [http://www.hwdisplay.com/admin/products/up_img/20064271359888913.pdf here]. (Thanks [https://code.google.com/u/100578513419733812290/ @devnow].)
+ * [http://gruvin9x.googlecode.com/svn/wiki/ReferenceImages.attach/lcd-display-mechanical.pdf Mechanical data sheet] for similar display,  [http://gruvin9x.googlecode.com/svn/wiki/ReferenceImages.attach/lcd-display-mechanical.pdf here]. (Thanks [https://code.google.com/u/100578513419733812290/ @devnow].)
 
  * *Replacement part availability* ...
   * Try [http://www.ebay.com eBay.com] 
