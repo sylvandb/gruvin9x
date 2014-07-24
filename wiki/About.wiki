@@ -1,9 +1,7 @@
 #summary About this project / Contact information
 #labels Featured
 
-=This project has been superseded by [https://github.com/opentx/opentx opentx]=
-
-*This project site remains online as a historical record, only.*
+=This project superseded by [https://github.com/opentx/opentx opentx] and [http://www.frsky-rc.com/product/pro.php?pro_id=113 Fr-Sky's Taranis]=
 
 The gruvin9x project was launched in October of 2010 and retired some time in 2012. A massive amount of work has since been done over at the [https://github.com/opentx/opentx opentx] project, which was forked from gruvin9x by Bertrand Songis, in France. 
 
@@ -12,6 +10,8 @@ Bertrand is an incredibly talented programmer and has achieved far more than I (
 We are happy to have played an unofficial but IMO significant role in the lead up to the creation of [http://www.frsky-rc.com/product/pro.php?pro_id=113 Fr-Sky X9D Taranis RC controller]. 
 
 The Taranis is a high quality unit, shipped with open source [https://github.com/opentx/opentx opentx] firmware as standard. The [http://www.frsky-rc.com/product/pro.php?pro_id=113 Taranis] represents just about everything the gruvin9x project could have ever wished for and at a very fair price. Indeed, the G9X project was originally inspired by our desire to utilise Fr-Sky's two way telemetry radio modules. So we are thrilled that Fr-Sky were the ones to create the world's first commercial open source RC controller and we support their ongoing endeavours enthusiastically.
+
+*This site remains online as a historical record, only.* Original content follows ...
 
 <img src="http://gruvin9x.googlecode.com/svn/wiki/About.attach/turnigy9x_v4.gif" align="right">
 = Summary Introduction =
