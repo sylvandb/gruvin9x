@@ -3,9 +3,7 @@
 
 =This project superseded by [https://github.com/opentx/opentx opentx] and [http://www.frsky-rc.com/product/pro.php?pro_id=113 Fr-Sky's Taranis]=
 
-The gruvin9x project was launched in October of 2010 and retired some time in 2012. A massive amount of work has since been done over at the [https://github.com/opentx/opentx opentx] project, which was forked from gruvin9x by Bertrand Songis, in France. 
-
-Bertrand is an incredibly talented programmer and has achieved far more than I (Gruvin) ever could have. I fully support [https://github.com/opentx/opentx opentx] and _highly_ recommend it. 
+The gruvin9x project was launched in October of 2010 and retired some time in 2012. A massive amount of work has since been done over at the [https://github.com/opentx/opentx opentx] project, which was forked from gruvin9x by Bertrand Songis, in France. Bertrand is an incredibly talented programmer and has achieved far more than I (Gruvin) ever could have. I fully support [https://github.com/opentx/opentx opentx] and _highly_ recommend it. 
 
 We are happy to have played an unofficial but IMO significant role in the lead up to the creation of [http://www.frsky-rc.com/product/pro.php?pro_id=113 Fr-Sky X9D Taranis RC controller]. 
 
