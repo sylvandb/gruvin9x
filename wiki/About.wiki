@@ -9,6 +9,8 @@ Fr-Sky's [http://www.frsky-rc.com/product/pro.php?pro_id=113 X9D Taranis] is a h
 
 (Note: Gruvin has absolutely no affiliation with Fr-Sky. I doubt they even know who I am. :P)
 
+The *openrc community* now resides at [http://openrcforums.com/forum/ Open RC Forums]. They're a great bunch. Go check them out.
+
 *This site remains online as a historical record, only.* Original content follows ...
 
 <img src="http://gruvin9x.googlecode.com/svn/wiki/About.attach/turnigy9x_v4.gif" align="right">
