@@ -10,9 +10,9 @@ Cam (in the UK) has graciously made some videos of his soldering techniques, usi
 
 Since a picture tells a thousand words and a video streams pictures at 15+ frames per second, here are the links to Cam's two videos ...
 
-[http://www.youtube.com/watch?v=nMZq0CZ67WY Soldering SMD 0603 sized parts]
+<wiki:gadget url="http://gruvin9x.googlecode.com/svn/wiki/gcVideo.xml" up_video="https://vimeo.com/108601753" width="640" height="384"/>
 
-[http://www.youtube.com/watch?v=r69WvRybgCU Soldering the TQFP 0.5mm pitch, 100-pin ATmega2560 chip]
+<wiki:gadget url="http://gruvin9x.googlecode.com/svn/wiki/gcVideo.xml" up_video="https://vimeo.com/108526858" width="640" height="384"/>
 
 Thanks Cam!
 
